@@ -71,7 +71,8 @@
       "skills": [
         "./scientific-thinking/hypothesis-generation",
         "./scientific-thinking/scientific-critical-thinking",
-        "./scientific-thinking/statistical-analysis"
+        "./scientific-thinking/statistical-analysis",
+        "./scientific-thinking/scientific-visualization"
       ]
     }
   ]
