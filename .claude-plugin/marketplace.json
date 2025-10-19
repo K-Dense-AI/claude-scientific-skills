@@ -62,6 +62,15 @@
         "./scientific-databases/pubchem-database",
         "./scientific-databases/pubmed-database"
       ]
+    },
+    {
+      "name": "scientific-thinking",
+      "description": "Collection of scientific thinking methodologies",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./scientific-thinking/hypothesis-generation"
+      ]
     }
   ]
 }
