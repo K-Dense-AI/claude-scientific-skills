@@ -68,6 +68,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 ### Scientific Thinking & Analysis
 
+- **Exploratory Data Analysis** - Comprehensive EDA toolkit with automated statistics, visualizations, and insights for any tabular dataset
 - **Hypothesis Generation** - Structured frameworks for generating and evaluating scientific hypotheses
 - **Scientific Critical Thinking** - Tools and approaches for rigorous scientific reasoning and evaluation
 - **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures
