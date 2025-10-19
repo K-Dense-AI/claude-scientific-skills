@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -61,6 +61,7 @@
       "skills": [
         "./scientific-databases/chembl-database",
         "./scientific-databases/gene-database",
+        "./scientific-databases/pdb-database",
         "./scientific-databases/pubchem-database",
         "./scientific-databases/pubmed-database"
       ]
