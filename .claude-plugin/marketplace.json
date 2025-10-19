@@ -69,7 +69,9 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./scientific-thinking/hypothesis-generation"
+        "./scientific-thinking/hypothesis-generation",
+        "./scientific-thinking/scientific-critical-thinking",
+        "./scientific-thinking/statistical-analysis"
       ]
     }
   ]
