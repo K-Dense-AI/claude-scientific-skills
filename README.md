@@ -10,7 +10,8 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
-- **PubMed** - Access to PubMed literature database with advanced search capabilities.
+- **PubMed** - Access to PubMed literature database with advanced search capabilities
+- **ZINC** - Free database of commercially-available compounds for virtual screening and drug discovery (230M+ purchasable compounds in ready-to-dock 3D formats)
 
 ### Scientific Packages
 
@@ -110,7 +111,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **STRING** - Protein-protein interaction networks
 - **GEO (Gene Expression Omnibus)** - Functional genomics data repository
 - **European Nucleotide Archive (ENA)** - Comprehensive nucleotide sequence database
-- **ZINC** - Free database of commercially available compounds for virtual screening
 
 ### Bioinformatics & Genomics
 - **pysam** - Interface to SAM/BAM/CRAM format files
