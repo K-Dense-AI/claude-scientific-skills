@@ -35,7 +35,6 @@
         "./scientific-packages/medchem",
         "./scientific-packages/molfeat",
         "./scientific-packages/polars",
-        "./scientific-packages/pubchem-database",
         "./scientific-packages/pydeseq2",
         "./scientific-packages/pymatgen",
         "./scientific-packages/pymc",
@@ -60,7 +59,8 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./scientific-databases/pubchem-database"
+        "./scientific-databases/pubchem-database",
+        "./scientific-databases/pubmed-database"
       ]
     }
   ]
