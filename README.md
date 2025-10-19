@@ -1,12 +1,13 @@
 # Claude Scientific Skills
 
-A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis.
+A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
 ## Available Skills
 
 ### Scientific Databases
 
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
+- **PubMed** - Access to PubMed literature database with advanced search capabilities.
 
 ### Scientific Packages
 
