@@ -60,6 +60,7 @@
       "strict": false,
       "skills": [
         "./scientific-databases/chembl-database",
+        "./scientific-databases/gene-database",
         "./scientific-databases/pubchem-database",
         "./scientific-databases/pubmed-database"
       ]
