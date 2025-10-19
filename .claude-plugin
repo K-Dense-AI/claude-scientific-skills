@@ -1,0 +1,33 @@
+
+{
+  "name": "claude-scientific-skills",
+  "owner": {
+    "name": "Timothy Kassis",
+    "email": "timothy.kassis@k-dense.ai"
+  },
+  "metadata": {
+    "description": "Claude scientific skills from K-Dense Inc",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "scientific-packages",
+      "description": "Collection of python scientific packages",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./scientific-packages/anndata",
+        "./scientific-packages/arboreto"
+      ]
+    },
+    {
+      "name": "scientific-databases",
+      "description": "Collection of scientific databases",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./scientific-databases/pubchem-database"
+      ]
+    }
+  ]
+}
