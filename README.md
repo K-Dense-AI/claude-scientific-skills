@@ -6,6 +6,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 ### Scientific Databases
 
+- **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
 - **PubMed** - Access to PubMed literature database with advanced search capabilities.
 
@@ -101,7 +102,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 ### Scientific Databases
 - **UniProt** - Protein sequence and functional information database
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for pathways and metabolism
-- **ChEMBL** - Bioactive molecules with drug-like properties database
 - **NCBI Gene** - Gene-specific information from RefSeq, GenBank, and other sources
 - **Protein Data Bank (PDB)** - 3D structural data of biological macromolecules
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer
