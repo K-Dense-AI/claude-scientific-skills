@@ -60,7 +60,14 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **Zarr** - Chunked, compressed N-dimensional array storage
 
 **Multi-omics & Integration:**
-- **BioMNI** - Multi-omics data integration with LLM-powered analysis
+- **BIOMNI** - Multi-omics data integration with LLM-powered analysis
+
+### Scientific Thinking & Analysis
+
+- **Hypothesis Generation** - Structured frameworks for generating and evaluating scientific hypotheses
+- **Scientific Critical Thinking** - Tools and approaches for rigorous scientific reasoning and evaluation
+- **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures
+- **Statistical Analysis** - Comprehensive statistical testing, power analysis, and experimental design
 
 ## Try in Claude Code, Claude.ai, and the API
 
@@ -88,3 +95,116 @@ To use any skill from this repository or upload custom skills, follow the instru
 
 ### Claude API
 You can use Anthropic's pre-built skills, and upload custom skills, via the Claude API. See the [Skills API Quickstart](https://docs.anthropic.com/claude/skills-api-quickstart) for more.
+
+## TODO: Future Scientific Capabilities (Availble currently in K-Dense)
+
+### Scientific Databases
+- **UniProt** - Protein sequence and functional information database
+- **KEGG** - Kyoto Encyclopedia of Genes and Genomes for pathways and metabolism
+- **ChEMBL** - Bioactive molecules with drug-like properties database
+- **NCBI Gene** - Gene-specific information from RefSeq, GenBank, and other sources
+- **Protein Data Bank (PDB)** - 3D structural data of biological macromolecules
+- **COSMIC** - Catalogue of Somatic Mutations in Cancer
+- **ClinVar** - Clinical significance of genomic variants
+- **AlphaFold DB** - Protein structure predictions from DeepMind
+- **STRING** - Protein-protein interaction networks
+- **GEO (Gene Expression Omnibus)** - Functional genomics data repository
+- **European Nucleotide Archive (ENA)** - Comprehensive nucleotide sequence database
+- **ZINC** - Free database of commercially available compounds for virtual screening
+
+### Bioinformatics & Genomics
+- **pysam** - Interface to SAM/BAM/CRAM format files
+- **pybedtools** - Wrapper for BEDTools genome arithmetic operations
+- **mygene** - Python client for MyGene.Info gene query service
+- **pyensembl** - Python interface to Ensembl reference genome metadata
+- **nglview** - IPython/Jupyter widget for molecular visualization
+- **pyvcf** - Variant Call Format (VCF) file parser
+- **pyfaidx** - Efficient FASTA file indexing and retrieval
+- **kipoiseq** - Genomic sequence data loading for ML models
+- **genomepy** - Download and manage genome assemblies
+- **MACS2/3** - Peak calling for ChIP-seq data
+
+### Cheminformatics & Drug Discovery
+- **Open Babel** - Chemical file format conversion and molecular mechanics
+- **ChemPy** - Chemistry and thermodynamics calculations
+- **Psi4** - Quantum chemistry software for ab initio calculations
+- **pmapper** - Pharmacophore modeling and fingerprinting
+- **ODDT** - Open Drug Discovery Toolkit for structure-based drug design
+- **ProLIF** - Protein-ligand interaction fingerprints
+- **Mordred** - Molecular descriptor calculator (1800+ descriptors)
+- **ProteinMPNN** - Deep learning for protein sequence design
+- **ESM** - Evolutionary Scale Modeling for protein language models
+- **OpenMM** - Molecular dynamics simulation toolkit
+
+### Proteomics & Mass Spectrometry
+- **pyteomics** - Mass spectrometry data analysis
+- **pyOpenMS** - OpenMS Python bindings for proteomics
+- **matchms** - Processing and similarity matching of mass spectrometry data
+- **MSstats** - Statistical analysis of quantitative proteomics
+
+### Systems Biology & Networks
+- **NetworkX** - Complex network analysis and graph algorithms
+- **igraph** - Fast network analysis library
+- **PyBioNetFit** - Biological network modeling and fitting
+- **PINT** - Pathway integration analysis
+- **GEMEditor** - Graphical tool for genome-scale metabolic models
+
+### Structural Biology
+- **MDAnalysis** - Molecular dynamics trajectory analysis
+- **ProDy** - Protein dynamics and structure analysis
+- **PyMOL** - Molecular visualization scripting
+- **Chimera/ChimeraX** - UCSF molecular visualization
+- **FreeSASA** - Solvent accessible surface area calculations
+- **DSSP** - Secondary structure assignment
+
+### Machine Learning for Science
+- **DGL-LifeSci** - Deep Graph Library for life sciences
+- **ChemBERTa** - Transformer models for chemistry
+- **TorchDrug** - PyTorch library for drug discovery
+- **GraNNField** - Graph neural networks for force fields
+- **SchNet/DimeNet** - Continuous-filter convolutional networks for molecules
+- **MoleculeNet** - Benchmark datasets for molecular machine learning
+- **TorchMD** - Molecular dynamics with PyTorch
+- **jax-md** - Differentiable molecular dynamics in JAX
+
+### Imaging & Microscopy
+- **scikit-image** - Image processing algorithms
+- **CellProfiler** - Cell image analysis
+- **Napari** - Multi-dimensional image viewer
+- **Fiji/ImageJ** - Image processing scripting
+- **StarDist** - Cell/nucleus detection with deep learning
+- **Cellpose** - Generalist cell segmentation
+
+### Phylogenetics & Evolution
+- **DendroPy** - Phylogenetic computing library
+- **PyCogent** - Comparative genomics toolkit
+- **TreeTime** - Phylodynamic analysis and molecular clock inference
+
+### Metabolomics
+- **PyCytoData** - Cytometry data processing
+- **MS-DIAL** - Data-independent MS/MS deconvolution
+- **XCMS** - LC/MS and GC/MS data processing
+
+### Climate & Environmental Science
+- **xarray** - N-dimensional labeled arrays and datasets
+- **Iris** - Climate and weather data analysis
+- **MetPy** - Meteorological data toolkit
+- **climlab** - Climate modeling and analysis
+
+### Statistics & Experimental Design
+- **statsmodels** - Statistical models and hypothesis testing
+- **pingouin** - Statistical tests with clear output
+- **PyDOE2** - Design of experiments
+- **scipy.stats** - Statistical functions and distributions
+
+### Data Management & Processing
+- **Dask** - Parallel computing for analytics
+- **Parquet** - Columnar storage format for big data
+- **DuckDB** - Analytical SQL database
+- **SQLAlchemy** - SQL toolkit and ORM
+
+### Visualization
+- **Plotly** - Interactive graphing library
+- **Bokeh** - Interactive visualization for web browsers
+- **Altair** - Declarative statistical visualization
+- **PyVista** - 3D plotting and mesh analysis
