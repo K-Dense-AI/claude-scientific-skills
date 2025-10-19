@@ -85,7 +85,7 @@ Then, to install a specific set of skills:
 
 1. Select Browse and install plugins
 2. Select claude-scientific-skills
-3. Select scientific-databases or scientific-packages
+3. Select scientific-databases, scientific-packages or scientific-thinking
 4. Select Install now
 
 
