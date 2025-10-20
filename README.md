@@ -18,6 +18,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
 - **PubMed** - Access to PubMed literature database with advanced search capabilities
 - **STRING** - Protein-protein interaction network database (5000+ genomes, 59.3M proteins, 20B+ interactions) with functional enrichment analysis, interaction partner discovery, and network visualization from experimental data, computational prediction, and text-mining
+- **UniProt** - Universal Protein Resource for protein sequences, annotations, and functional information (UniProtKB/Swiss-Prot reviewed entries, TrEMBL unreviewed entries) with REST API access for search, retrieval, ID mapping, and batch operations across 200+ databases
 - **ZINC** - Free database of commercially-available compounds for virtual screening and drug discovery (230M+ purchasable compounds in ready-to-dock 3D formats)
 
 ### Scientific Packages
@@ -116,9 +117,6 @@ To use any skill from this repository or upload custom skills, follow the instru
 You can use Anthropic's pre-built skills, and upload custom skills, via the Claude API. See the [Skills API Quickstart](https://docs.anthropic.com/claude/skills-api-quickstart) for more.
 
 ## TODO: Future Scientific Capabilities
-
-### Scientific Databases
-- **UniProt** - Protein sequence and functional information database
 
 ### Bioinformatics & Genomics
 - **pysam** - Interface to SAM/BAM/CRAM format files

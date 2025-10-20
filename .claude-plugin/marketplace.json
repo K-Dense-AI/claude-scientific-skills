@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.11.0"
+    "version": "1.12.0"
   },
   "plugins": [
     {
@@ -71,6 +71,7 @@
         "./scientific-databases/pubchem-database",
         "./scientific-databases/pubmed-database",
         "./scientific-databases/string-database",
+        "./scientific-databases/uniprot-database",
         "./scientific-databases/zinc-database"
       ]
     },
