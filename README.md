@@ -16,6 +16,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
 - **PubMed** - Access to PubMed literature database with advanced search capabilities
+- **STRING** - Protein-protein interaction network database (5000+ genomes, 59.3M proteins, 20B+ interactions) with functional enrichment analysis, interaction partner discovery, and network visualization from experimental data, computational prediction, and text-mining
 - **ZINC** - Free database of commercially-available compounds for virtual screening and drug discovery (230M+ purchasable compounds in ready-to-dock 3D formats)
 
 ### Scientific Packages
@@ -117,7 +118,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 
 ### Scientific Databases
 - **UniProt** - Protein sequence and functional information database
-- **STRING** - Protein-protein interaction networks
 - **European Nucleotide Archive (ENA)** - Comprehensive nucleotide sequence database
 
 ### Bioinformatics & Genomics
