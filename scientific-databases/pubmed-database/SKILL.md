@@ -1,6 +1,6 @@
 ---
 name: pubmed-database
-description: Toolkit for searching and accessing PubMed, the U.S. National Library of Medicine's free database of biomedical literature. Use this skill when working with medical research literature, searching for scientific articles, constructing advanced search queries with MeSH terms and field tags, accessing articles programmatically via E-utilities API, or conducting systematic literature reviews in life sciences, medicine, or biomedical research.
+description: Search and retrieve biomedical research articles from PubMed. Use when users need to find medical/scientific papers, search for literature on diseases/treatments/drugs, get research articles by author/topic/PMID, conduct literature reviews, construct advanced search queries, or access biomedical publications programmatically. Covers medicine, biology, pharmacology, genetics, and all life sciences research.
 ---
 
 # PubMed Database
