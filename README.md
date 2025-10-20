@@ -12,6 +12,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer, the world's largest database of somatic cancer mutations (millions of mutations across thousands of cancer types, Cancer Gene Census, mutational signatures, structural variants, and drug resistance data)
 - **ENA (European Nucleotide Archive)** - Comprehensive public repository for nucleotide sequence data and metadata with REST APIs for accessing sequences, assemblies, samples, studies, and reads; supports advanced search, taxonomy lookups, and bulk downloads via FTP/Aspera (rate limit: 50 req/sec)
 - **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
+- **HMDB (Human Metabolome Database)** - Comprehensive metabolomics resource with 220K+ metabolite entries, detailed chemical/biological data, concentration ranges, disease associations, pathways, and spectral data for metabolite identification and biomarker discovery
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for biological pathway analysis, gene-to-pathway mapping, compound searches, and molecular interaction networks (pathway enrichment, metabolic pathways, gene annotations, drug-drug interactions, ID conversion)
 - **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
@@ -127,7 +128,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **Ensembl** - Genome browser with annotation, comparative genomics, and variant data
 - **GenBank** - NIH genetic sequence database (part of NCBI but with specific access patterns)
 - **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies
-- **HMDB** - Human Metabolome Database with detailed metabolite information
 - **InterPro** - Protein sequence analysis and classification with functional annotations
 - **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
 - **Metabolomics Workbench** - NIH Common Fund metabolomics data repository
