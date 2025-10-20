@@ -118,6 +118,28 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 
 ## TODO: Future Scientific Capabilities
 
+### Scientific Databases
+- **ArrayExpress** - EMBL-EBI gene expression database with functional genomics experiments
+- **BioGRID** - Biological General Repository for Interaction Datasets (protein, genetic, and chemical interactions)
+- **DAVID** - Database for Annotation, Visualization and Integrated Discovery for functional enrichment analysis
+- **dbSNP** - NCBI's database of single nucleotide polymorphisms and short genetic variations
+- **DrugBank** - Comprehensive drug and drug target database with pharmacological and pharmaceutical data
+- **Ensembl** - Genome browser with annotation, comparative genomics, and variant data
+- **GenBank** - NIH genetic sequence database (part of NCBI but with specific access patterns)
+- **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies
+- **HMDB** - Human Metabolome Database with detailed metabolite information
+- **InterPro** - Protein sequence analysis and classification with functional annotations
+- **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
+- **Metabolomics Workbench** - NIH Common Fund metabolomics data repository
+- **OMIM** - Online Mendelian Inheritance in Man for genetic disorders and genes
+- **Pfam** - Protein families database with multiple sequence alignments and HMMs
+- **PharmGKB** - Pharmacogenomics Knowledge Base linking genetic variation to drug response
+- **Reactome** - Curated pathway database with biological processes and molecular interactions
+- **RefSeq** - NCBI's non-redundant reference sequence database
+- **TCGA** - The Cancer Genome Atlas with multi-omic cancer genomics data
+- **UCSC Genome Browser** - Genomic data visualization and custom track integration
+- **WikiPathways** - Community-curated biological pathway database
+
 ### Bioinformatics & Genomics
 - **pysam** - Interface to SAM/BAM/CRAM format files
 - **pybedtools** - Wrapper for BEDTools genome arithmetic operations
