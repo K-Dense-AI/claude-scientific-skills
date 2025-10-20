@@ -2,6 +2,24 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
+## Getting Started
+
+### Claude Code
+You can register this repository as a Claude Code Plugin marketplace by running the following command in Claude Code:
+
+```
+/plugin marketplace add K-Dense-AI/claude-scientific-skills
+```
+
+Then, to install a specific set of skills:
+
+1. Select Browse and install plugins
+2. Select claude-scientific-skills
+3. Select scientific-databases, scientific-packages, or scientific-thinking (includes document processing)
+4. Select Install now
+
+After installing the plugin, you can use the skill by just mentioning it. Additionally, in most case, Claude Code will figure out what to use based on the task.
+
 ## Available Skills
 
 ### Scientific Databases
@@ -96,25 +114,6 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **PDF** - PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms
 - **PPTX** - Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes
 - **XLSX** - Spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization
-
-## Try in Claude Code, Claude.ai, and the API
-
-### Claude Code
-You can register this repository as a Claude Code Plugin marketplace by running the following command in Claude Code:
-
-```
-/plugin marketplace add K-Dense-AI/claude-scientific-skills
-```
-
-Then, to install a specific set of skills:
-
-1. Select Browse and install plugins
-2. Select claude-scientific-skills
-3. Select scientific-databases, scientific-packages, or scientific-thinking (includes document processing)
-4. Select Install now
-
-After installing the plugin, you can use the skill by just mentioning it. Additionally, in most case, Claude Code will figure out what to use based on the task.
-
 
 ## TODO: Future Scientific Capabilities
 
