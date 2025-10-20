@@ -130,7 +130,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **BioGRID** - Biological General Repository for Interaction Datasets (protein, genetic, and chemical interactions)
 - **DAVID** - Database for Annotation, Visualization and Integrated Discovery for functional enrichment analysis
 - **dbSNP** - NCBI's database of single nucleotide polymorphisms and short genetic variations
-- **DrugBank** - Comprehensive drug and drug target database with pharmacological and pharmaceutical data
 - **GenBank** - NIH genetic sequence database (part of NCBI but with specific access patterns)
 - **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies
 - **InterPro** - Protein sequence analysis and classification with functional annotations
@@ -138,7 +137,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **OMIM** - Online Mendelian Inheritance in Man for genetic disorders and genes
 - **Pfam** - Protein families database with multiple sequence alignments and HMMs
 - **RefSeq** - NCBI's non-redundant reference sequence database
-- **TCGA** - The Cancer Genome Atlas with multi-omic cancer genomics data
 - **UCSC Genome Browser** - Genomic data visualization and custom track integration
 - **WikiPathways** - Community-curated biological pathway database
 
