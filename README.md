@@ -8,6 +8,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 - **AlphaFold DB** - AI-predicted protein structure database with 200M+ predictions, confidence metrics (pLDDT, PAE), and Google Cloud bulk access
 - **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
+- **ClinVar** - NCBI's public archive of genomic variants and their clinical significance with standardized classifications (pathogenic, benign, VUS), E-utilities API access, and bulk FTP downloads for variant interpretation and precision medicine research
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer, the world's largest database of somatic cancer mutations (millions of mutations across thousands of cancer types, Cancer Gene Census, mutational signatures, structural variants, and drug resistance data)
 - **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for biological pathway analysis, gene-to-pathway mapping, compound searches, and molecular interaction networks (pathway enrichment, metabolic pathways, gene annotations, drug-drug interactions, ID conversion)
@@ -116,7 +117,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 
 ### Scientific Databases
 - **UniProt** - Protein sequence and functional information database
-- **ClinVar** - Clinical significance of genomic variants
 - **STRING** - Protein-protein interaction networks
 - **European Nucleotide Archive (ENA)** - Comprehensive nucleotide sequence database
 
