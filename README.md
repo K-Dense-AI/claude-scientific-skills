@@ -8,16 +8,20 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 - **AlphaFold DB** - AI-predicted protein structure database with 200M+ predictions, confidence metrics (pLDDT, PAE), and Google Cloud bulk access
 - **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
+- **ClinPGx** - Clinical pharmacogenomics database (successor to PharmGKB) providing gene-drug interactions, CPIC clinical guidelines, allele functions, drug labels, and pharmacogenomic annotations for precision medicine and personalized pharmacotherapy (consolidates PharmGKB, CPIC, and PharmCAT resources)
 - **ClinVar** - NCBI's public archive of genomic variants and their clinical significance with standardized classifications (pathogenic, benign, VUS), E-utilities API access, and bulk FTP downloads for variant interpretation and precision medicine research
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer, the world's largest database of somatic cancer mutations (millions of mutations across thousands of cancer types, Cancer Gene Census, mutational signatures, structural variants, and drug resistance data)
 - **ENA (European Nucleotide Archive)** - Comprehensive public repository for nucleotide sequence data and metadata with REST APIs for accessing sequences, assemblies, samples, studies, and reads; supports advanced search, taxonomy lookups, and bulk downloads via FTP/Aspera (rate limit: 50 req/sec)
+- **Ensembl** - Genome browser and bioinformatics database providing genomic annotations, sequences, variants, and comparative genomics data for 250+ vertebrate species (Release 115, 2025) with comprehensive REST API for gene lookups, sequence retrieval, variant effect prediction (VEP), ortholog finding, assembly mapping (GRCh37/GRCh38), and region analysis
 - **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
 - **HMDB (Human Metabolome Database)** - Comprehensive metabolomics resource with 220K+ metabolite entries, detailed chemical/biological data, concentration ranges, disease associations, pathways, and spectral data for metabolite identification and biomarker discovery
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for biological pathway analysis, gene-to-pathway mapping, compound searches, and molecular interaction networks (pathway enrichment, metabolic pathways, gene annotations, drug-drug interactions, ID conversion)
+- **Metabolomics Workbench** - NIH Common Fund metabolomics data repository with 4,200+ processed studies, standardized nomenclature (RefMet), mass spectrometry searches, and comprehensive REST API for accessing metabolite structures, study metadata, experimental results, and gene/protein-metabolite associations
 - **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
 - **PubMed** - Access to PubMed literature database with advanced search capabilities
+- **Reactome** - Curated pathway database for biological processes and molecular interactions (2,825+ human pathways, 16K+ reactions, 11K+ proteins) with pathway enrichment analysis, expression data analysis, and species comparison using Content Service and Analysis Service APIs
 - **STRING** - Protein-protein interaction network database (5000+ genomes, 59.3M proteins, 20B+ interactions) with functional enrichment analysis, interaction partner discovery, and network visualization from experimental data, computational prediction, and text-mining
 - **UniProt** - Universal Protein Resource for protein sequences, annotations, and functional information (UniProtKB/Swiss-Prot reviewed entries, TrEMBL unreviewed entries) with REST API access for search, retrieval, ID mapping, and batch operations across 200+ databases
 - **ZINC** - Free database of commercially-available compounds for virtual screening and drug discovery (230M+ purchasable compounds in ready-to-dock 3D formats)
@@ -125,16 +129,12 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **DAVID** - Database for Annotation, Visualization and Integrated Discovery for functional enrichment analysis
 - **dbSNP** - NCBI's database of single nucleotide polymorphisms and short genetic variations
 - **DrugBank** - Comprehensive drug and drug target database with pharmacological and pharmaceutical data
-- **Ensembl** - Genome browser with annotation, comparative genomics, and variant data
 - **GenBank** - NIH genetic sequence database (part of NCBI but with specific access patterns)
 - **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies
 - **InterPro** - Protein sequence analysis and classification with functional annotations
 - **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
-- **Metabolomics Workbench** - NIH Common Fund metabolomics data repository
 - **OMIM** - Online Mendelian Inheritance in Man for genetic disorders and genes
 - **Pfam** - Protein families database with multiple sequence alignments and HMMs
-- **PharmGKB** - Pharmacogenomics Knowledge Base linking genetic variation to drug response
-- **Reactome** - Curated pathway database with biological processes and molecular interactions
 - **RefSeq** - NCBI's non-redundant reference sequence database
 - **TCGA** - The Cancer Genome Atlas with multi-omic cancer genomics data
 - **UCSC Genome Browser** - Genomic data visualization and custom track integration
