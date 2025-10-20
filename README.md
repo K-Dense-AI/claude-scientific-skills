@@ -8,6 +8,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 - **AlphaFold DB** - AI-predicted protein structure database with 200M+ predictions, confidence metrics (pLDDT, PAE), and Google Cloud bulk access
 - **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
+- **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
 - **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
@@ -102,7 +103,7 @@ To use any skill from this repository or upload custom skills, follow the instru
 ### Claude API
 You can use Anthropic's pre-built skills, and upload custom skills, via the Claude API. See the [Skills API Quickstart](https://docs.anthropic.com/claude/skills-api-quickstart) for more.
 
-## TODO: Future Scientific Capabilities (Availble currently in K-Dense)
+## TODO: Future Scientific Capabilities
 
 ### Scientific Databases
 - **UniProt** - Protein sequence and functional information database
@@ -110,7 +111,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer
 - **ClinVar** - Clinical significance of genomic variants
 - **STRING** - Protein-protein interaction networks
-- **GEO (Gene Expression Omnibus)** - Functional genomics data repository
 - **European Nucleotide Archive (ENA)** - Comprehensive nucleotide sequence database
 
 ### Bioinformatics & Genomics
