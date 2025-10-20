@@ -112,16 +112,8 @@ Then, to install a specific set of skills:
 3. Select scientific-databases, scientific-packages, or scientific-thinking (includes document processing)
 4. Select Install now
 
-
 After installing the plugin, you can use the skill by just mentioning it. Additionally, in most case, Claude Code will figure out what to use based on the task.
 
-### Claude.ai
-These example skills are all already available to paid plans in Claude.ai.
-
-To use any skill from this repository or upload custom skills, follow the instructions in [Using skills in Claude](https://docs.anthropic.com/claude/skills).
-
-### Claude API
-You can use Anthropic's pre-built skills, and upload custom skills, via the Claude API. See the [Skills API Quickstart](https://docs.anthropic.com/claude/skills-api-quickstart) for more.
 
 ## TODO: Future Scientific Capabilities
 
