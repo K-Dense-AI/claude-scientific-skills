@@ -1,6 +1,6 @@
 ---
 name: scientific-critical-thinking
-description: Apply rigorous scientific critical thinking to evaluate research, methodology, claims, and evidence. Use this skill when analyzing scientific papers, reviewing experimental designs, evaluating statistical analyses, identifying biases or logical fallacies, assessing evidence quality, designing studies, or critically examining any scientific claims or arguments.
+description: Apply systematic scientific critical thinking to rigorously evaluate research methodology, statistical analyses, evidence quality, and scientific claims. Use this skill when: analyzing research papers for methodological flaws and biases; evaluating experimental designs for validity threats; assessing statistical methods, power, multiple comparisons, and effect sizes; identifying logical fallacies and cognitive biases in scientific arguments; reviewing evidence hierarchies and GRADE criteria; critiquing causal claims vs correlational findings; evaluating study quality using established frameworks (Cochrane ROB, Newcastle-Ottawa); detecting publication bias, p-hacking, and selective reporting; assessing confounding, selection bias, and measurement validity; reviewing research proposals and study protocols; evaluating media reports of scientific findings; conducting systematic literature reviews; determining confidence levels in scientific conclusions; distinguishing between exploratory and confirmatory findings; and providing constructive methodological feedback for improving research rigor.
 ---
 
 # Scientific Critical Thinking
