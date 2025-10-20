@@ -1,6 +1,6 @@
 ---
 name: peer-review
-description: Toolkit for conducting comprehensive scientific peer review and critical evaluation of manuscripts. Use this skill when reviewing academic papers, manuscripts, preprints, or research documents to provide high-quality, constructive feedback on methodology, analysis, interpretation, presentation, and scientific rigor. Applicable for all scientific disciplines including biology, chemistry, physics, medicine, and computational sciences.
+description: Comprehensive scientific peer review toolkit for evaluating manuscripts, papers, preprints, and research documents across all disciplines. Use this skill to conduct systematic peer review following established scientific standards, providing constructive feedback on methodology, statistical analysis, experimental design, data interpretation, reproducibility, ethical considerations, and scientific rigor. Includes structured evaluation workflows, reporting standards compliance checks, figure/data integrity assessment, and guidance for writing professional review reports. Applicable to original research articles, reviews, meta-analyses, methods papers, short reports, and preprints in biology, chemistry, physics, medicine, computational sciences, and interdisciplinary research. Essential for manuscript evaluation, grant review, conference paper assessment, and maintaining scientific quality standards.
 ---
 
 # Scientific Critical Evaluation and Peer Review

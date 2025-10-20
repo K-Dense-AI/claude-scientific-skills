@@ -1,6 +1,6 @@
 ---
 name: statistical-analysis
-description: Toolkit for rigorous academic-grade statistical analysis using Python. Perform hypothesis testing (t-tests, ANOVA, chi-square), regression analysis (linear, logistic), and Bayesian statistics with comprehensive assumption checking, effect sizes, power analysis, and publication-ready reporting. Use this skill when conducting statistical analyses for research, requiring proper diagnostics, effect size interpretation, or following APA reporting standards.
+description: Comprehensive statistical analysis toolkit for rigorous academic research using Python. This skill handles hypothesis testing (t-tests, ANOVA, chi-square, non-parametric tests), regression analysis (linear, multiple, logistic), correlation analysis, Bayesian statistics, and power analysis. It provides systematic workflows for test selection, assumption checking, effect size calculation, diagnostic visualization, and APA-style reporting. Use this skill when you need to: analyze data statistically, choose appropriate statistical tests, check assumptions before analysis, calculate effect sizes and confidence intervals, conduct power analysis for study planning, perform hypothesis testing or regression analysis, interpret statistical results, create publication-ready statistical reports, handle assumption violations, conduct Bayesian analysis, or generate diagnostic plots and statistical visualizations. Essential for research data analysis, experimental design validation, statistical modeling, and academic reporting.
 ---
 
 # Statistical Analysis
