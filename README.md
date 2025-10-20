@@ -14,6 +14,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 - **ENA (European Nucleotide Archive)** - Comprehensive public repository for nucleotide sequence data and metadata with REST APIs for accessing sequences, assemblies, samples, studies, and reads; supports advanced search, taxonomy lookups, and bulk downloads via FTP/Aspera (rate limit: 50 req/sec)
 - **Ensembl** - Genome browser and bioinformatics database providing genomic annotations, sequences, variants, and comparative genomics data for 250+ vertebrate species (Release 115, 2025) with comprehensive REST API for gene lookups, sequence retrieval, variant effect prediction (VEP), ortholog finding, assembly mapping (GRCh37/GRCh38), and region analysis
 - **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
+- **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies with curated SNP-trait associations (thousands of studies, genome-wide significant associations p≤5×10⁻⁸), full summary statistics, REST API access for variant/trait/gene queries, and FTP downloads for genetic epidemiology and precision medicine research
 - **HMDB (Human Metabolome Database)** - Comprehensive metabolomics resource with 220K+ metabolite entries, detailed chemical/biological data, concentration ranges, disease associations, pathways, and spectral data for metabolite identification and biomarker discovery
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for biological pathway analysis, gene-to-pathway mapping, compound searches, and molecular interaction networks (pathway enrichment, metabolic pathways, gene annotations, drug-drug interactions, ID conversion)
 - **Metabolomics Workbench** - NIH Common Fund metabolomics data repository with 4,200+ processed studies, standardized nomenclature (RefMet), mass spectrometry searches, and comprehensive REST API for accessing metabolite structures, study metadata, experimental results, and gene/protein-metabolite associations
@@ -123,7 +124,6 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **DAVID** - Database for Annotation, Visualization and Integrated Discovery for functional enrichment analysis
 - **dbSNP** - NCBI's database of single nucleotide polymorphisms and short genetic variations
 - **GenBank** - NIH genetic sequence database (part of NCBI but with specific access patterns)
-- **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies
 - **InterPro** - Protein sequence analysis and classification with functional annotations
 - **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
 - **OMIM** - Online Mendelian Inheritance in Man for genetic disorders and genes
