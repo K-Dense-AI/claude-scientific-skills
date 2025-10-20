@@ -6,6 +6,7 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 ### Scientific Databases
 
+- **AlphaFold DB** - AI-predicted protein structure database with 200M+ predictions, confidence metrics (pLDDT, PAE), and Google Cloud bulk access
 - **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
 - **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
@@ -108,7 +109,6 @@ You can use Anthropic's pre-built skills, and upload custom skills, via the Clau
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for pathways and metabolism
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer
 - **ClinVar** - Clinical significance of genomic variants
-- **AlphaFold DB** - Protein structure predictions from DeepMind
 - **STRING** - Protein-protein interaction networks
 - **GEO (Gene Expression Omnibus)** - Functional genomics data repository
 - **European Nucleotide Archive (ENA)** - Comprehensive nucleotide sequence database
