@@ -1,6 +1,6 @@
 ---
 name: flowio
-description: Toolkit for working with Flow Cytometry Standard (FCS) files in Python. Use this skill when reading, parsing, creating, or exporting FCS files (versions 2.0, 3.0, 3.1), extracting flow cytometry metadata, accessing event data, handling multi-dataset FCS files, or converting between FCS formats. Essential for flow cytometry data processing, channel analysis, and cytometry file manipulation tasks.
+description: Python library for reading, writing, and manipulating Flow Cytometry Standard (FCS) files. Use this skill for: parsing FCS files (versions 2.0, 3.0, 3.1) to extract event data as NumPy arrays, reading FCS metadata and channel information, creating new FCS files from NumPy arrays, converting FCS data to CSV/DataFrame formats, handling multi-dataset FCS files, extracting scatter/fluorescence/time channels, batch processing multiple FCS files, filtering events and re-exporting, validating FCS file structure, accessing TEXT segment keywords, handling problematic files with offset discrepancies, memory-efficient metadata-only reading, and FCS file format conversion. Essential for flow cytometry data preprocessing, file format conversion, metadata extraction, and cytometry data pipeline operations. Supports both raw and preprocessed event data extraction with gain scaling and logarithmic transformations.
 ---
 
 # FlowIO: Flow Cytometry Standard File Handler

@@ -1,6 +1,6 @@
 ---
 name: scikit-bio
-description: Comprehensive toolkit for biological data analysis in Python including DNA/RNA/protein sequence manipulation, sequence alignments, phylogenetic tree construction and analysis, microbial diversity metrics (alpha/beta diversity, UniFrac), ordination methods (PCoA, CCA, RDA), and statistical hypothesis testing (PERMANOVA, ANOSIM, Mantel). Use this skill when working with FASTA/FASTQ files, biological sequences, phylogenetic trees, microbiome data, ecological community analysis, or any bioinformatics workflow requiring sequence analysis, alignment, diversity calculations, or multivariate statistics on biological data.
+description: Comprehensive Python toolkit for biological data analysis and bioinformatics workflows. Handles DNA/RNA/protein sequence manipulation, sequence alignments (global/local), phylogenetic tree construction and analysis, microbial diversity metrics (alpha/beta diversity, UniFrac distances), ordination methods (PCoA, CCA, RDA), statistical hypothesis testing (PERMANOVA, ANOSIM, Mantel), and biological file format I/O. Use this skill for sequence analysis, alignment, phylogenetics, microbiome analysis, ecological community analysis, diversity calculations, ordination visualization, statistical testing on biological data, phylogenetic tree manipulation, protein embeddings, biological table processing, distance matrix calculations, and format conversion between 19+ biological file formats including FASTA, FASTQ, GenBank, Newick, BIOM, Clustal, PHYLIP, Stockholm, BLAST, GFF3, and more.
 ---
 
 # scikit-bio

@@ -1,6 +1,6 @@
 ---
 name: datamol
-description: Comprehensive toolkit for molecular cheminformatics using datamol, a Pythonic layer built on RDKit. Use this skill when working with molecular structures, SMILES strings, chemical reactions, molecular descriptors, conformer generation, molecular clustering, scaffold analysis, or any cheminformatics tasks. This skill should be applied when users need to process molecules, analyze chemical properties, visualize molecular structures, fragment compounds, or perform molecular similarity calculations.
+description: Complete molecular cheminformatics toolkit using datamol (Pythonic RDKit wrapper). Use for SMILES parsing/conversion, molecular standardization/sanitization, descriptor calculation, fingerprint generation, similarity analysis, clustering, diversity selection, scaffold extraction, molecular fragmentation (BRICS/RECAP), 3D conformer generation, chemical reactions, molecular visualization, file I/O (SDF/CSV/Excel), cloud storage access, batch processing with parallelization, drug-likeness filtering, virtual screening, SAR analysis, and machine learning feature generation. Essential for drug discovery, medicinal chemistry, chemical informatics, molecular property prediction, compound library analysis, lead optimization, and any computational chemistry workflows involving molecular data processing and analysis.
 ---
 
 # Datamol Cheminformatics Skill

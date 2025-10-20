@@ -1,6 +1,6 @@
 ---
 name: cobrapy
-description: Comprehensive toolkit for constraint-based reconstruction and analysis (COBRA) of metabolic models. Use when working with genome-scale metabolic models, performing flux balance analysis (FBA), simulating cellular metabolism, conducting gene/reaction knockout studies, gapfilling metabolic networks, analyzing flux distributions, calculating minimal media requirements, or any systems biology task involving computational modeling of cellular metabolism. Supports SBML, JSON, YAML, and MATLAB formats.
+description: Python library for constraint-based reconstruction and analysis (COBRA) of metabolic models. Essential for systems biology, metabolic engineering, and computational biology tasks involving genome-scale metabolic models. Use for flux balance analysis (FBA), flux variability analysis (FVA), gene knockout simulations, reaction deletion studies, metabolic flux sampling, production envelope calculations, minimal media optimization, gapfilling metabolic networks, model reconstruction, metabolic pathway analysis, phenotype prediction, drug target identification, metabolic engineering design, and constraint-based modeling. Supports loading/saving models in SBML, JSON, YAML, and MATLAB formats. Handles metabolic networks, stoichiometric matrices, gene-protein-reaction rules, exchange reactions, cellular compartments, and metabolic flux distributions. Ideal for analyzing E. coli, yeast, human, and other organism metabolic models.
 ---
 
 # COBRApy - Constraint-Based Reconstruction and Analysis

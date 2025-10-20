@@ -1,6 +1,6 @@
 ---
 name: reportlab
-description: This skill provides comprehensive guidance for creating PDF documents using the ReportLab Python library. Use this skill when generating PDFs programmatically, including invoices, reports, certificates, labels, forms, and any document requiring precise layout control. The skill covers both low-level Canvas API for pixel-perfect positioning and high-level Platypus for flowing multi-page documents, along with tables, charts, barcodes, text formatting, and PDF features.
+description: ReportLab PDF generation skill for creating professional PDF documents programmatically in Python. Use this skill for generating invoices, reports, certificates, labels, forms, charts, tables, barcodes, QR codes, and multi-page documents. Covers both Canvas API (low-level coordinate-based drawing) and Platypus (high-level flowing document layout). Includes text formatting, custom fonts, images, interactive forms, headers/footers, page breaks, and PDF features like bookmarks and encryption. Provides templates for invoices, reports, certificates, and labels. Supports all major barcode formats (Code128, EAN, UPC, QR) and chart types (bar, line, pie, scatter). Essential for document automation, billing systems, report generation, certificate creation, label printing, and any PDF output requiring precise layout control or professional formatting.
 ---
 
 # ReportLab PDF Generation

@@ -1,6 +1,6 @@
 ---
 name: bioservices
-description: Toolkit for accessing 40+ biological web services and databases programmatically. Use when working with protein sequences, gene pathways (KEGG), identifier mapping (UniProt), compound databases (ChEBI, ChEMBL), sequence analysis (BLAST), pathway interactions, gene ontology, or any bioinformatics data retrieval tasks requiring integration across multiple biological databases.
+description: Python toolkit for programmatic access to 40+ biological web services and databases including UniProt, KEGG, ChEBI, ChEMBL, PubChem, NCBI BLAST, PSICQUIC, QuickGO, BioMart, ArrayExpress, ENA, PDB, Pfam, Reactome, and many others. Use this skill for retrieving protein sequences and annotations, analyzing metabolic pathways and gene functions, searching compound databases, converting identifiers between biological databases (UniProt↔KEGG↔ChEMBL), running BLAST searches, querying gene ontology terms, accessing protein-protein interactions, mining genomic data, performing sequence alignments, cross-referencing compounds across databases, and integrating data from multiple bioinformatics resources in Python workflows. Essential for bioinformatics data retrieval, identifier mapping, pathway analysis, compound searches, sequence similarity analysis, and multi-database integration tasks.
 ---
 
 # BioServices
