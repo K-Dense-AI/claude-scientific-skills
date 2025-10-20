@@ -1,6 +1,6 @@
 ---
 name: matplotlib
-description: Comprehensive toolkit for creating publication-quality data visualizations in Python. Use this skill when creating plots, charts, or any scientific/statistical visualizations including line plots, scatter plots, bar charts, histograms, heatmaps, 3D plots, and more. Applies to tasks involving data visualization, figure generation, plot customization, or exporting graphics to various formats.
+description: Python's foundational data visualization library for creating publication-quality plots, charts, and scientific figures. Use this skill for any visualization task including line plots, scatter plots, bar charts, histograms, heatmaps, contour plots, 3D visualizations, subplots, animations, and statistical plots. Essential for data analysis visualization, scientific plotting, figure generation, plot customization, color mapping, exporting graphics (PNG, PDF, SVG), creating multi-panel figures, interactive plots, and integrating visualizations into reports, papers, presentations, or web applications. Covers both pyplot interface and object-oriented API with best practices for styling, layout management, accessibility, and performance optimization.
 ---
 
 # Matplotlib

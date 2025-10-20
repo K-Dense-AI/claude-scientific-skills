@@ -1,6 +1,6 @@
 ---
 name: biomni
-description: General-purpose biomedical AI agent for autonomously executing research tasks across diverse biomedical domains. Use this skill when working with biomedical data analysis, CRISPR screening, single-cell RNA-seq, molecular property prediction, genomics, proteomics, drug discovery, or any computational biology task requiring LLM-powered code generation and retrieval-augmented planning.
+description: Use this skill for autonomous biomedical research execution across genomics, proteomics, drug discovery, and computational biology. Biomni is an AI agent that combines LLM reasoning with retrieval-augmented planning and code generation to autonomously execute complex biomedical tasks. Use when you need: CRISPR guide RNA design and screening experiments, single-cell RNA-seq analysis workflows, molecular ADMET property prediction, GWAS analysis, protein structure prediction, disease classification from multi-omics data, pathway analysis, drug repurposing, biomarker discovery, variant interpretation, cell type annotation, or any biomedical computational task requiring automated code generation, data analysis, and scientific reasoning. The agent autonomously decomposes tasks, retrieves relevant biomedical knowledge from its 11GB knowledge base, generates and executes analysis code, and provides comprehensive results. Ideal for researchers needing automated execution of complex biomedical workflows without manual coding.
 ---
 
 # Biomni

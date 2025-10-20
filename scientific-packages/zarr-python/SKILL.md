@@ -1,6 +1,6 @@
 ---
 name: zarr-python
-description: Toolkit for working with Zarr, a Python library for chunked, compressed N-dimensional arrays optimized for cloud storage and large-scale scientific computing. Use this skill when working with large datasets that need efficient storage and parallel access, multidimensional arrays requiring chunking and compression, cloud-native data workflows (S3, GCS), or when integrating with NumPy, Dask, and Xarray for scientific computing tasks.
+description: Toolkit for working with Zarr, a Python library for chunked, compressed N-dimensional arrays optimized for cloud storage and large-scale scientific computing. Use this skill when working with large datasets that need efficient storage and parallel access, multidimensional arrays requiring chunking and compression, cloud-native data workflows (S3, GCS), or when integrating with NumPy, Dask, and Xarray for scientific computing tasks. Essential for handling datasets larger than memory, implementing parallel I/O operations, optimizing storage with compression, creating hierarchical data structures, converting between scientific data formats (HDF5, NetCDF, NumPy), managing cloud storage workflows, implementing chunked array operations, and building scalable scientific computing pipelines.
 ---
 
 # Zarr Python
