@@ -1,6 +1,6 @@
 ---
 name: gene-database
-description: Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways. This skill should be used when querying gene databases, looking up gene symbols or IDs, retrieving gene sequences or metadata, analyzing gene functions, or accessing NCBI Gene programmatically using E-utilities or Datasets API.
+description: Access and query NCBI Gene database programmatically using E-utilities and Datasets API. Search genes by symbol, name, ID, or biological context across organisms. Retrieve comprehensive gene information including nomenclature, aliases, reference sequences (RefSeqs), chromosomal locations, Gene Ontology annotations, phenotypes, pathways, and cross-references. Perform batch gene lookups, validate gene lists, analyze gene functions, and access gene metadata. Handle gene symbol resolution, organism-specific queries, and gene identifier mapping. Use for gene annotation, functional analysis, pathway enrichment, variant interpretation, and genomic data integration workflows. Supports JSON, XML, GenBank, FASTA, and text output formats with rate limiting and error handling.
 ---
 
 # Gene Database

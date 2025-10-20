@@ -1,6 +1,6 @@
 ---
 name: pubmed-database
-description: Search and retrieve biomedical research articles from PubMed. Use when users need to find medical/scientific papers, search for literature on diseases/treatments/drugs, get research articles by author/topic/PMID, conduct literature reviews, construct advanced search queries, or access biomedical publications programmatically. Covers medicine, biology, pharmacology, genetics, and all life sciences research.
+description: Comprehensive PubMed database expertise for searching, retrieving, and analyzing biomedical research literature. Use for literature searches, systematic reviews, meta-analyses, citation discovery, programmatic data access, and biomedical research workflows. Handles advanced search queries with Boolean operators, MeSH terms, field tags, publication type filters, and date ranges. Provides E-utilities API integration for automated workflows, batch processing, and large-scale data extraction. Supports citation management, export formats, search history, and related article discovery. Covers medicine, biology, pharmacology, genetics, clinical trials, epidemiology, drug discovery, disease research, treatment protocols, and all life sciences domains. Essential for researchers, clinicians, students, and anyone conducting biomedical literature analysis or evidence-based research.
 ---
 
 # PubMed Database
