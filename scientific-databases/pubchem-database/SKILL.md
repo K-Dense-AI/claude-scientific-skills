@@ -1,6 +1,6 @@
 ---
 name: pubchem-database
-description: Access chemical compound data from PubChem, the world's largest free chemical database. This skill should be used when retrieving compound properties, searching for chemicals by name/SMILES/InChI, performing similarity or substructure searches, accessing bioactivity data, converting between chemical formats, or generating chemical structure images. Works with over 110 million compounds and 270 million bioactivities through PUG-REST API and PubChemPy library.
+description: Access and analyze chemical compound data from PubChem database using PubChemPy and PUG-REST API. Use this skill when you need to: search compounds by name/CID/SMILES/InChI/formula, retrieve molecular properties (MW/LogP/TPSA/H-bond counts), perform similarity searches with Tanimoto thresholds, conduct substructure searches for pharmacophores, convert between chemical formats (SMILES/InChI/SDF/JSON), generate 2D structure images, access bioactivity data from assays, get compound synonyms and annotations, screen compounds using Lipinski's Rule of Five, batch process multiple compounds, or find drug-like candidates. Handles 110M+ compounds and 270M+ bioactivities with rate limiting (5 req/sec, 400 req/min). Includes error handling for timeouts, not found errors, and missing properties. Supports both synchronous and asynchronous operations for large similarity/substructure searches.
 ---
 
 # PubChem Database

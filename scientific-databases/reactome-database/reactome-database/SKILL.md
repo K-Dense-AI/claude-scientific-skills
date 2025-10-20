@@ -1,6 +1,6 @@
 ---
 name: reactome-database
-description: Work with Reactome pathway database for analyzing biological pathways, performing pathway enrichment analysis, querying molecular interactions, and analyzing gene expression data. This skill should be used when working with biological pathways, performing overrepresentation analysis, mapping gene identifiers to pathways, analyzing gene expression datasets, or exploring disease-related pathways. Supports both direct REST API access and the reactome2py Python package.
+description: Comprehensive Reactome pathway database integration for biological pathway analysis, enrichment studies, molecular interaction queries, and gene expression analysis. Use this skill for pathway overrepresentation analysis, gene-to-pathway mapping, expression dataset analysis, disease pathway exploration, molecular interaction networks, pathway hierarchy queries, species comparison studies, pathway visualization, and statistical pathway enrichment. Supports REST API access to Content Service (data retrieval) and Analysis Service (computational analysis), plus reactome2py Python package integration. Handles gene symbols, UniProt IDs, Ensembl IDs, EntrezGene IDs, ChEBI IDs, and expression data formats. Provides pathway statistics, literature references, molecular entities, reactions, complexes, and pathway browser visualization links.
 ---
 
 # Reactome Database

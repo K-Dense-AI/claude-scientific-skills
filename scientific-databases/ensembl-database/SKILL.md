@@ -1,6 +1,6 @@
 ---
 name: ensembl-database
-description: Work with the Ensembl genome database to query genomic data, retrieve sequences, analyze variants, and perform comparative genomics. This skill should be used when working with vertebrate genomic data, gene annotations, variant analysis, ortholog identification, or when users need to query the Ensembl REST API for genomic information across multiple species.
+description: Access and query the Ensembl genome database for comprehensive vertebrate genomic data analysis. Use this skill for gene lookups, sequence retrieval, variant analysis, comparative genomics, ortholog/paralog identification, genomic region analysis, assembly mapping, and VEP predictions. Handles gene symbols, Ensembl IDs, rsIDs, genomic coordinates, chromosome regions, cross-species comparisons, evolutionary analysis, regulatory elements, transcript/protein sequences, population genetics, phenotype associations, and genome assembly conversions. Supports REST API queries across 250+ species including human, mouse, zebrafish, and other vertebrates. Essential for genomics research, variant interpretation, evolutionary studies, gene annotation pipelines, and bioinformatics workflows requiring authoritative genomic reference data.
 ---
 
 # Ensembl Database
