@@ -71,11 +71,18 @@ A comprehensive collection of ready-to-use scientific skills for Claude, curated
 
 ### Scientific Thinking & Analysis
 
+**Analysis & Methodology:**
 - **Exploratory Data Analysis** - Comprehensive EDA toolkit with automated statistics, visualizations, and insights for any tabular dataset
 - **Hypothesis Generation** - Structured frameworks for generating and evaluating scientific hypotheses
 - **Scientific Critical Thinking** - Tools and approaches for rigorous scientific reasoning and evaluation
 - **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures
 - **Statistical Analysis** - Comprehensive statistical testing, power analysis, and experimental design
+
+**Document Processing:**
+- **DOCX** - Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction
+- **PDF** - PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms
+- **PPTX** - Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes
+- **XLSX** - Spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization
 
 ## Try in Claude Code, Claude.ai, and the API
 
@@ -90,7 +97,7 @@ Then, to install a specific set of skills:
 
 1. Select Browse and install plugins
 2. Select claude-scientific-skills
-3. Select scientific-databases, scientific-packages or scientific-thinking
+3. Select scientific-databases, scientific-packages, or scientific-thinking (includes document processing)
 4. Select Install now
 
 

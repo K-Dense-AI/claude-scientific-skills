@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.6.0"
+    "version": "1.7.0"
   },
   "plugins": [
     {
@@ -80,7 +80,11 @@
         "./scientific-thinking/hypothesis-generation",
         "./scientific-thinking/scientific-critical-thinking",
         "./scientific-thinking/statistical-analysis",
-        "./scientific-thinking/scientific-visualization"
+        "./scientific-thinking/scientific-visualization",
+        "./scientific-thinking/document-skills/docx",
+        "./scientific-thinking/document-skills/pdf",
+        "./scientific-thinking/document-skills/pptx",
+        "./scientific-thinking/document-skills/xlsx"
       ]
     }
   ]
