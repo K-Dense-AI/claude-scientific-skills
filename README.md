@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **21 scientific databases**, **44 scientific packages**, **4 scientific integrations**, and **103 unique workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **22 scientific databases**, **44 scientific packages**, **4 scientific integrations**, and **103 unique workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -34,6 +34,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer, the world's largest database of somatic cancer mutations (millions of mutations across thousands of cancer types, Cancer Gene Census, mutational signatures, structural variants, and drug resistance data)
 - **ENA (European Nucleotide Archive)** - Comprehensive public repository for nucleotide sequence data and metadata with REST APIs for accessing sequences, assemblies, samples, studies, and reads; supports advanced search, taxonomy lookups, and bulk downloads via FTP/Aspera (rate limit: 50 req/sec)
 - **Ensembl** - Genome browser and bioinformatics database providing genomic annotations, sequences, variants, and comparative genomics data for 250+ vertebrate species (Release 115, 2025) with comprehensive REST API for gene lookups, sequence retrieval, variant effect prediction (VEP), ortholog finding, assembly mapping (GRCh37/GRCh38), and region analysis
+- **FDA Databases** - Comprehensive access to all FDA (Food and Drug Administration) regulatory databases through openFDA API covering drugs (adverse events, labeling, NDC, recalls, approvals, shortages), medical devices (adverse events, 510k clearances, PMA, UDI, classifications), foods (recalls, adverse events, allergen tracking), animal/veterinary medicines (species-specific adverse events), and substances (UNII/CAS lookup, chemical structures, molecular data) for drug safety research, pharmacovigilance, regulatory compliance, and scientific analysis
 - **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
 - **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies with curated SNP-trait associations (thousands of studies, genome-wide significant associations p≤5×10⁻⁸), full summary statistics, REST API access for variant/trait/gene queries, and FTP downloads for genetic epidemiology and precision medicine research
 - **HMDB (Human Metabolome Database)** - Comprehensive metabolomics resource with 220K+ metabolite entries, detailed chemical/biological data, concentration ranges, disease associations, pathways, and spectral data for metabolite identification and biomarker discovery
