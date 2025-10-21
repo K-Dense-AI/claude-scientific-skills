@@ -131,110 +131,96 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 
 ## TODO: Future Scientific Capabilities
 
+### Scientific Integrations
+- **LabArchives** - Electronic lab notebook (ELN) integration for research documentation, protocol management, and collaboration
+- **Dotmatics** - Scientific informatics platform integration for data management, inventory, and workflow automation
+- **Thermo Fisher Connect** - Integration with Thermo Fisher cloud platform for instrument data, LIMS, and analytics workflows
+- **PerkinElmer Signals** - Scientific data management and ELN platform integration
+- **CDD Vault** - Collaborative Drug Discovery platform integration for chemical registration and bioassay data
+- **Geneious** - Molecular biology and NGS analysis software integration
+- **SnapGene** - Molecular cloning and DNA visualization platform integration
+- **GraphPad Prism** - Statistics and graphing software integration for publication-quality analysis
+- **Synthego ICE** - CRISPR editing analysis platform integration
+- **OpenTrons** - Laboratory automation platform integration for liquid handling protocols
+- **TeselaGen** - Synthetic biology design and automation platform integration
+- **Strateos** - Cloud laboratory automation platform integration
+- **Jupyter Hub/Lab** - Multi-user scientific computing environment integration
+- **Weights & Biases** - Experiment tracking and ML model monitoring integration
+- **MLflow** - ML lifecycle management platform integration
+- **DVC (Data Version Control)** - Data and ML model versioning integration
+- **Omero** - Bio-image data management platform integration
+- **Galaxy** - Web-based bioinformatics workflow platform integration
+- **Nextflow/nf-core** - Workflow management system integration for reproducible pipelines
+- **Seven Bridges** - Genomics analysis platform and workspace integration
+- **DNAnexus** - Cloud-based genome sequencing analysis platform integration
+- **BaseSpace** - Illumina genomics data analysis and management platform integration
+
 ### Scientific Databases
-- **ArrayExpress** - EMBL-EBI gene expression database with functional genomics experiments
 - **BioGRID** - Biological General Repository for Interaction Datasets (protein, genetic, and chemical interactions)
-- **DAVID** - Database for Annotation, Visualization and Integrated Discovery for functional enrichment analysis
 - **dbSNP** - NCBI's database of single nucleotide polymorphisms and short genetic variations
-- **GenBank** - NIH genetic sequence database (part of NCBI but with specific access patterns)
 - **InterPro** - Protein sequence analysis and classification with functional annotations
-- **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
 - **OMIM** - Online Mendelian Inheritance in Man for genetic disorders and genes
 - **Pfam** - Protein families database with multiple sequence alignments and HMMs
 - **RefSeq** - NCBI's non-redundant reference sequence database
 - **UCSC Genome Browser** - Genomic data visualization and custom track integration
 - **WikiPathways** - Community-curated biological pathway database
+- **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
 
 ### Bioinformatics & Genomics
 - **pybedtools** - Wrapper for BEDTools genome arithmetic operations
 - **mygene** - Python client for MyGene.Info gene query service
-- **pyensembl** - Python interface to Ensembl reference genome metadata
 - **nglview** - IPython/Jupyter widget for molecular visualization
-- **pyvcf** - Variant Call Format (VCF) file parser
 - **pyfaidx** - Efficient FASTA file indexing and retrieval
-- **kipoiseq** - Genomic sequence data loading for ML models
-- **genomepy** - Download and manage genome assemblies
 - **MACS2/3** - Peak calling for ChIP-seq data
 
 ### Cheminformatics & Drug Discovery
 - **Open Babel** - Chemical file format conversion and molecular mechanics
-- **ChemPy** - Chemistry and thermodynamics calculations
 - **Psi4** - Quantum chemistry software for ab initio calculations
-- **pmapper** - Pharmacophore modeling and fingerprinting
-- **ODDT** - Open Drug Discovery Toolkit for structure-based drug design
-- **ProLIF** - Protein-ligand interaction fingerprints
-- **Mordred** - Molecular descriptor calculator (1800+ descriptors)
 - **ProteinMPNN** - Deep learning for protein sequence design
-- **ESM** - Evolutionary Scale Modeling for protein language models
+- **ESM (Evolutionary Scale Modeling)** - Protein language models for structure and function prediction
 - **OpenMM** - Molecular dynamics simulation toolkit
 
 ### Proteomics & Mass Spectrometry
-- **pyteomics** - Mass spectrometry data analysis
-- **MSstats** - Statistical analysis of quantitative proteomics
+- **pyteomics** - Mass spectrometry data analysis and peptide/protein identification
 
 ### Systems Biology & Networks
 - **NetworkX** - Complex network analysis and graph algorithms
-- **igraph** - Fast network analysis library
-- **PyBioNetFit** - Biological network modeling and fitting
-- **PINT** - Pathway integration analysis
-- **GEMEditor** - Graphical tool for genome-scale metabolic models
+- **igraph** - Fast network analysis library with efficient algorithms
 
 ### Structural Biology
 - **MDAnalysis** - Molecular dynamics trajectory analysis
 - **ProDy** - Protein dynamics and structure analysis
 - **PyMOL** - Molecular visualization scripting
-- **Chimera/ChimeraX** - UCSF molecular visualization
-- **FreeSASA** - Solvent accessible surface area calculations
-- **DSSP** - Secondary structure assignment
 
 ### Machine Learning for Science
 - **DGL-LifeSci** - Deep Graph Library for life sciences
 - **ChemBERTa** - Transformer models for chemistry
 - **TorchDrug** - PyTorch library for drug discovery
-- **GraNNField** - Graph neural networks for force fields
 - **SchNet/DimeNet** - Continuous-filter convolutional networks for molecules
-- **MoleculeNet** - Benchmark datasets for molecular machine learning
-- **TorchMD** - Molecular dynamics with PyTorch
-- **jax-md** - Differentiable molecular dynamics in JAX
 
 ### Imaging & Microscopy
 - **scikit-image** - Image processing algorithms
-- **CellProfiler** - Cell image analysis
 - **Napari** - Multi-dimensional image viewer
-- **Fiji/ImageJ** - Image processing scripting
-- **StarDist** - Cell/nucleus detection with deep learning
+- **CellProfiler** - Cell image analysis
 - **Cellpose** - Generalist cell segmentation
+- **StarDist** - Cell/nucleus detection with deep learning
 
 ### Phylogenetics & Evolution
 - **DendroPy** - Phylogenetic computing library
-- **PyCogent** - Comparative genomics toolkit
-- **TreeTime** - Phylodynamic analysis and molecular clock inference
-
-### Metabolomics
-- **PyCytoData** - Cytometry data processing
-- **MS-DIAL** - Data-independent MS/MS deconvolution
-- **XCMS** - LC/MS and GC/MS data processing
 
 ### Climate & Environmental Science
-- **xarray** - N-dimensional labeled arrays and datasets
-- **Iris** - Climate and weather data analysis
-- **MetPy** - Meteorological data toolkit
-- **climlab** - Climate modeling and analysis
+- **xarray** - N-dimensional labeled arrays and datasets for scientific computing
 
 ### Statistics & Experimental Design
-- **statsmodels** - Statistical models and hypothesis testing
-- **pingouin** - Statistical tests with clear output
-- **PyDOE2** - Design of experiments
+- **pingouin** - Statistical tests with clear output and effect sizes
 - **scipy.stats** - Statistical functions and distributions
 
 ### Data Management & Processing
+- **DuckDB** - Analytical SQL database for in-process analytics
 - **Parquet** - Columnar storage format for big data
-- **DuckDB** - Analytical SQL database
-- **SQLAlchemy** - SQL toolkit and ORM
 
 ### Visualization
-- **Plotly** - Interactive graphing library
-- **Bokeh** - Interactive visualization for web browsers
+- **Plotly** - Interactive graphing library for web-based visualizations
 - **Altair** - Declarative statistical visualization
 - **PyVista** - 3D plotting and mesh analysis
 
