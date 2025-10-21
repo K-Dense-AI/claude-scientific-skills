@@ -643,6 +643,125 @@ better cognitive function.
 - Script your figure generation for reproducibility
 - Save original data files separately from figure files
 
+## Journal-Specific Figure and Table Requirements
+
+### Understanding Journal Expectations
+
+**Different journals have vastly different requirements for figures and tables.** Before creating display items, always consult your target journal's author guidelines for specific requirements.
+
+### Common Journal-Specific Variations
+
+| Aspect | Variation by Journal | Example Journals |
+|--------|---------------------|------------------|
+| **Number allowed** | 4-10 display items for research articles | Nature (4-6), PLOS ONE (unlimited), Science (4-5) |
+| **File format** | TIFF, EPS, PDF, AI, or specific formats | Nature (EPS/PDF for line art), Cell (TIFF preferred) |
+| **Resolution** | 300-1000 dpi depending on type | JAMA (300-600 dpi), Nature (300+ dpi) |
+| **Color** | RGB vs. CMYK | Print journals: CMYK; Online: RGB |
+| **Dimensions** | Single vs. double column widths | Nature (89mm or 183mm), Science (specific templates) |
+| **Figure legends** | Length limits, specific format | Some journals: 150 word max per legend |
+| **Table format** | Editable vs. image | Most prefer editable tables, not images |
+
+### Venue-Specific Requirements Summary
+
+| Venue Type | Display Limit | Format | Resolution | Key Features |
+|-----------|--------------|--------|------------|--------------|
+| **Nature/Science** | 4-6 main | EPS/PDF/TIFF | 300+ dpi | Extended data allowed; multi-panel figures |
+| **Medical journals** | 3-5 | TIFF/EPS | 300-600 dpi | CONSORT diagrams; conservative design |
+| **PLOS ONE** | Unlimited | TIFF/EPS/PDF | 300+ dpi | Must work in grayscale |
+| **ML conferences** | 4-6 in 8-page limit | PDF (vector preferred) | Print quality | Compact design; info-dense figures |
+
+**ML Conference Figure Requirements:**
+
+**NeurIPS/ICML/ICLR:**
+- Figures count toward page limit (typically 8 pages including references)
+- Vector graphics (PDF) preferred for plots
+- High information density expected
+- Supplementary material for additional figures
+- LaTeX template provided (use neurips_2024.sty or equivalent)
+- Figures must be legible when printed in grayscale
+
+**Computer Vision (CVPR/ICCV/ECCV):**
+- Qualitative results figures critical
+- Side-by-side comparisons standard
+- Must show failure cases
+- Supplementary material for videos/additional examples
+- Often 6-8 main figures in 8-page papers
+
+**Key ML conference figure practices:**
+- **Ablation studies**: Compact tables/plots showing component contributions
+- **Architecture diagrams**: Clear, professional block diagrams
+- **Performance plots**: Include error bars/confidence intervals
+- **Qualitative examples**: Show diverse, representative samples
+- **Comparison tables**: Concise, bold best results
+
+### Evaluation Criteria Across Venues
+
+**What reviewers check:**
+- **Necessity**: Each figure/table supports conclusions
+- **Quality**: Professional appearance, sufficient resolution
+- **Clarity**: Self-explanatory with captions; proper labeling
+- **Statistics**: Error bars, sample sizes, significance indicators
+- **Consistency**: Formatting uniform across display items
+
+**Common rejection reasons:**
+- Poor resolution or image quality
+- Missing error bars or sample sizes
+- Unclear or missing labels
+- Too many figures (exceeds venue limits)
+- Figures duplicate text information
+
+**ML conference specific evaluation:**
+- **Ablation studies**: Must demonstrate component contributions
+- **Baselines**: Comparison with relevant prior work required
+- **Error bars**: Confidence intervals/std dev expected
+- **Architecture diagrams**: Must be clear and informative
+- **Space efficiency**: Information density valued (page limits strict)
+
+### Caption/Legend Styles by Venue
+
+| Venue Type | Style | Example Features |
+|-----------|-------|------------------|
+| **Nature/Science** | Concise | Brief; *P<0.05; minimal methods |
+| **Medical** | Formal | Title case; 95% CIs; statistical tests spelled out |
+| **PLOS/BMC** | Detailed | Complete sentences; all abbreviations defined |
+| **ML conferences** | Technical | Architecture details; hyperparameters; dataset info |
+
+**ML conference caption example:**
+```
+Figure 1. Architecture of proposed model. (a) Encoder with 12 transformer layers.
+(b) Attention visualization. (c) Performance vs. baseline on ImageNet (error bars:
+95% CI over 3 runs).
+```
+- Technical precision
+- Hyperparameters when relevant
+- Dataset/experimental setup details
+- Compact to save space
+
+### Quick Adaptation Guide
+
+**When changing venues:**
+- **Journal → ML conference**: Compress figures; increase information density; add hyperparameters to captions
+- **ML conference → journal**: Expand captions; separate dense figures; add more methodological detail
+- **Specialist → broad journal**: Simplify; add explanatory panels; define terms in captions
+- **Broad → specialist journal**: Add technical detail; use field-standard plot types
+
+### Pre-Submission Figure/Table Checklist
+
+**Technical (all venues):**
+- [ ] Meets format requirements (PDF/EPS/TIFF)
+- [ ] Sufficient resolution (300+ dpi) 
+- [ ] Fits venue dimensions/page limits
+- [ ] Self-explanatory captions
+- [ ] All symbols/abbreviations defined
+- [ ] Error bars defined; sample sizes noted
+
+**ML conferences additional:**
+- [ ] Figures fit in page limit (8-9 pages typical)
+- [ ] Comparison with baselines shown
+- [ ] Ablation studies included
+- [ ] Architecture diagram clear
+- [ ] Legible in grayscale
+
 ## Checklist for Final Review
 
 ### Before Submission
@@ -650,7 +769,10 @@ better cognitive function.
 **For every figure:**
 - [ ] High enough resolution (300+ dpi)?
 - [ ] Correct file format per journal requirements?
+- [ ] Correct dimensions for journal (single/double column)?
+- [ ] Meets journal's RGB/CMYK requirements?
 - [ ] Self-explanatory caption with all abbreviations defined?
+- [ ] Caption length within journal limits?
 - [ ] All symbols/colors explained in caption or legend?
 - [ ] Error bars included and defined?
 - [ ] Sample sizes noted?
@@ -659,19 +781,26 @@ better cognitive function.
 - [ ] Readable text at final print size?
 - [ ] Works in grayscale or color-blind friendly?
 - [ ] Referenced in text in correct order?
+- [ ] Style matches target journal's published figures?
 
 **For every table:**
 - [ ] Clear, descriptive title?
+- [ ] Title capitalization matches journal style?
 - [ ] Column headers include units?
 - [ ] Appropriate numerical precision?
 - [ ] Abbreviations defined in footnotes?
 - [ ] Statistical methods explained?
 - [ ] Sample sizes included?
 - [ ] Consistent formatting with other tables?
+- [ ] Editable format (not image)?
 - [ ] Referenced in text in correct order?
+- [ ] Formatting matches target journal's tables?
 
 **Overall:**
+- [ ] Number of display items within journal limits?
 - [ ] Appropriate number of display items (~1 per 1000 words)?
 - [ ] No duplication between text, figures, and tables?
 - [ ] Consistent formatting across all display items?
 - [ ] All display items necessary (each tells important part of story)?
+- [ ] Visual style matches target journal?
+- [ ] Quality comparable to published examples in journal?
