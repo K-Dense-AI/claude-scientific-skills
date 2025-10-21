@@ -1,450 +1,437 @@
 ---
 name: biopython
-description: "Molecular biology toolkit. Sequence manipulation, FASTA/GenBank I/O, NCBI Entrez, BLAST, alignments, phylogenetic trees, PDB structures, for bioinformatics workflows."
+description: Work with Biopython for computational molecular biology tasks including sequence manipulation, file I/O, alignment analysis, BLAST searches, database access (NCBI/Entrez), protein structure analysis (PDB), phylogenetic tree operations, motif finding, population genetics, and other bioinformatics workflows. This skill should be used when working with biological sequences (DNA, RNA, protein), parsing biological file formats (FASTA, GenBank, FASTQ, PDB, etc.), accessing biological databases, running sequence analyses, or performing structural bioinformatics tasks.
 ---
 
-# BioPython
+# Biopython: Computational Molecular Biology in Python
 
 ## Overview
 
-BioPython is a comprehensive Python library for computational molecular biology and bioinformatics. This skill provides guidance on using BioPython's extensive modules for sequence manipulation, file I/O, database access, sequence similarity searches, alignments, phylogenetics, structural biology, and population genetics.
+Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks. The current version is **Biopython 1.85** (released January 2025), which supports Python 3 and requires NumPy.
 
 ## When to Use This Skill
 
-This skill should be used when:
-- Working with biological sequences (DNA, RNA, protein)
-- Reading or writing sequence files (FASTA, GenBank, FASTQ, etc.)
-- Accessing NCBI databases (GenBank, PubMed, Protein, Nucleotide)
-- Running or parsing BLAST searches
-- Performing sequence alignments (pairwise or multiple)
-- Building or analyzing phylogenetic trees
-- Analyzing protein structures (PDB files)
-- Calculating sequence properties (GC content, melting temp, molecular weight)
-- Converting between sequence file formats
-- Performing population genetics analysis
-- Any bioinformatics task requiring BioPython
+Use this skill when:
+
+- Working with biological sequences (DNA, RNA, or protein)
+- Reading, writing, or converting biological file formats (FASTA, GenBank, FASTQ, PDB, mmCIF, etc.)
+- Accessing NCBI databases (GenBank, PubMed, Protein, Gene, etc.) via Entrez
+- Running BLAST searches or parsing BLAST results
+- Performing sequence alignments (pairwise or multiple sequence alignments)
+- Analyzing protein structures from PDB files
+- Creating, manipulating, or visualizing phylogenetic trees
+- Finding sequence motifs or analyzing motif patterns
+- Calculating sequence statistics (GC content, molecular weight, melting temperature, etc.)
+- Performing structural bioinformatics tasks
+- Working with population genetics data
+- Any other computational molecular biology task
 
 ## Core Capabilities
 
-### 1. Sequence Manipulation
+Biopython is organized into modular sub-packages, each addressing specific bioinformatics domains:
 
-Create and manipulate biological sequences using `Bio.Seq`:
+1. **Sequence Handling** - Bio.Seq and Bio.SeqIO for sequence manipulation and file I/O
+2. **Alignment Analysis** - Bio.Align and Bio.AlignIO for pairwise and multiple sequence alignments
+3. **Database Access** - Bio.Entrez for programmatic access to NCBI databases
+4. **BLAST Operations** - Bio.Blast for running and parsing BLAST searches
+5. **Structural Bioinformatics** - Bio.PDB for working with 3D protein structures
+6. **Phylogenetics** - Bio.Phylo for phylogenetic tree manipulation and visualization
+7. **Advanced Features** - Motifs, population genetics, sequence utilities, and more
 
-```python
-from Bio.Seq import Seq
+## Installation and Setup
 
-dna_seq = Seq("ATGGTGCATCTGACT")
-rna_seq = dna_seq.transcribe()           # DNA → RNA
-protein = dna_seq.translate()             # DNA → Protein
-rev_comp = dna_seq.reverse_complement()   # Reverse complement
-```
-
-**Common operations:**
-- Transcription and back-transcription
-- Translation with custom genetic codes
-- Complement and reverse complement
-- Sequence slicing and concatenation
-- Pattern searching and counting
-
-**Reference:** See `references/core_modules.md` (section: Bio.Seq) for detailed operations and examples.
-
-### 2. File Input/Output
-
-Read and write sequence files in multiple formats using `Bio.SeqIO`:
+Install Biopython using pip (requires Python 3 and NumPy):
 
 ```python
-from Bio import SeqIO
-
-# Read sequences
-for record in SeqIO.parse("sequences.fasta", "fasta"):
-    print(record.id, len(record.seq))
-
-# Write sequences
-SeqIO.write(records, "output.gb", "genbank")
-
-# Convert formats
-SeqIO.convert("input.fasta", "fasta", "output.gb", "genbank")
+pip install biopython
 ```
 
-**Supported formats:** FASTA, FASTQ, GenBank, EMBL, Swiss-Prot, PDB, Clustal, PHYLIP, NEXUS, Stockholm, and many more.
-
-**Common workflows:**
-- Format conversion (FASTA ↔ GenBank ↔ FASTQ)
-- Filtering sequences by length, ID, or content
-- Batch processing large files with iterators
-- Random access with `SeqIO.index()` for large files
-
-**Script:** Use `scripts/file_io.py` for file I/O examples and patterns.
-
-**Reference:** See `references/core_modules.md` (section: Bio.SeqIO) for comprehensive format details and workflows.
-
-### 3. NCBI Database Access
-
-Access NCBI databases (GenBank, PubMed, Protein, etc.) using `Bio.Entrez`:
+For NCBI database access, always set your email address (required by NCBI):
 
 ```python
 from Bio import Entrez
+Entrez.email = "your.email@example.com"
 
-Entrez.email = "your.email@example.com"  # Required!
-
-# Search database
-handle = Entrez.esearch(db="nucleotide", term="human kinase", retmax=100)
-record = Entrez.read(handle)
-id_list = record["IdList"]
-
-# Fetch sequences
-handle = Entrez.efetch(db="nucleotide", id=id_list, rettype="fasta", retmode="text")
-records = SeqIO.parse(handle, "fasta")
+# Optional: API key for higher rate limits (10 req/s instead of 3 req/s)
+Entrez.api_key = "your_api_key_here"
 ```
 
-**Key Entrez functions:**
-- `esearch()`: Search databases, retrieve IDs
-- `efetch()`: Download full records
-- `esummary()`: Get document summaries
-- `elink()`: Find related records across databases
-- `einfo()`: Get database information
-- `epost()`: Upload ID lists for large queries
+## Using This Skill
 
-**Important:** Always set `Entrez.email` before using Entrez functions.
+This skill provides comprehensive documentation organized by functionality area. When working on a task, consult the relevant reference documentation:
 
-**Script:** Use `scripts/ncbi_entrez.py` for complete Entrez workflows including batch downloads and WebEnv usage.
+### 1. Sequence Handling (Bio.Seq & Bio.SeqIO)
 
-**Reference:** See `references/database_tools.md` (section: Bio.Entrez) for detailed function documentation and parameters.
+**Reference:** `references/sequence_io.md`
 
-### 4. BLAST Searches
+Use for:
+- Creating and manipulating biological sequences
+- Reading and writing sequence files (FASTA, GenBank, FASTQ, etc.)
+- Converting between file formats
+- Extracting sequences from large files
+- Sequence translation, transcription, and reverse complement
+- Working with SeqRecord objects
 
-Run BLAST searches and parse results using `Bio.Blast`:
-
+**Quick example:**
 ```python
-from Bio.Blast import NCBIWWW, NCBIXML
+from Bio import SeqIO
 
-# Run BLAST online
-result_handle = NCBIWWW.qblast("blastn", "nt", sequence)
+# Read sequences from FASTA file
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    print(f"{record.id}: {len(record.seq)} bp")
 
-# Save results
-with open("blast_results.xml", "w") as out:
-    out.write(result_handle.read())
-
-# Parse results
-with open("blast_results.xml") as result_handle:
-    blast_record = NCBIXML.read(result_handle)
-
-    for alignment in blast_record.alignments:
-        for hsp in alignment.hsps:
-            if hsp.expect < 0.001:
-                print(f"Hit: {alignment.title}")
-                print(f"E-value: {hsp.expect}")
-                print(f"Identity: {hsp.identities}/{hsp.align_length}")
+# Convert GenBank to FASTA
+SeqIO.convert("input.gb", "genbank", "output.fasta", "fasta")
 ```
 
-**BLAST programs:** blastn, blastp, blastx, tblastn, tblastx
+### 2. Alignment Analysis (Bio.Align & Bio.AlignIO)
 
-**Key result attributes:**
-- `alignment.title`: Hit description
-- `hsp.expect`: E-value
-- `hsp.identities`: Number of identical residues
-- `hsp.query`, `hsp.match`, `hsp.sbjct`: Aligned sequences
+**Reference:** `references/alignment.md`
 
-**Script:** Use `scripts/blast_search.py` for complete BLAST workflows including result filtering and extraction.
+Use for:
+- Pairwise sequence alignment (global and local)
+- Reading and writing multiple sequence alignments
+- Using substitution matrices (BLOSUM, PAM)
+- Calculating alignment statistics
+- Customizing alignment parameters
 
-**Reference:** See `references/database_tools.md` (section: Bio.Blast) for detailed parsing and filtering strategies.
-
-### 5. Sequence Alignment
-
-Perform pairwise and multiple sequence alignments using `Bio.Align`:
-
-**Pairwise alignment:**
+**Quick example:**
 ```python
 from Bio import Align
 
+# Pairwise alignment
 aligner = Align.PairwiseAligner()
-aligner.mode = 'global'  # or 'local'
-aligner.match_score = 2
-aligner.mismatch_score = -1
-aligner.gap_score = -2
-
-alignments = aligner.align(seq1, seq2)
+aligner.mode = 'global'
+alignments = aligner.align("ACCGGT", "ACGGT")
 print(alignments[0])
-print(f"Score: {alignments.score}")
 ```
 
-**Multiple sequence alignment I/O:**
+### 3. Database Access (Bio.Entrez)
+
+**Reference:** `references/databases.md`
+
+Use for:
+- Searching NCBI databases (PubMed, GenBank, Protein, Gene, etc.)
+- Downloading sequences and records
+- Fetching publication information
+- Finding related records across databases
+- Batch downloading with proper rate limiting
+
+**Quick example:**
 ```python
-from Bio import AlignIO
+from Bio import Entrez
+Entrez.email = "your.email@example.com"
 
-# Read alignment
-alignment = AlignIO.read("alignment.clustal", "clustal")
-
-# Write alignment
-AlignIO.write(alignment, "output.phylip", "phylip")
-
-# Convert formats
-AlignIO.convert("input.clustal", "clustal", "output.fasta", "fasta")
+# Search PubMed
+handle = Entrez.esearch(db="pubmed", term="biopython", retmax=10)
+results = Entrez.read(handle)
+handle.close()
+print(f"Found {results['Count']} results")
 ```
 
-**Supported formats:** Clustal, PHYLIP, Stockholm, NEXUS, FASTA, MAF
+### 4. BLAST Operations (Bio.Blast)
 
-**Script:** Use `scripts/alignment_phylogeny.py` for alignment examples and workflows.
+**Reference:** `references/blast.md`
 
-**Reference:** See `references/core_modules.md` (sections: Bio.Align, Bio.AlignIO) for detailed alignment capabilities.
+Use for:
+- Running BLAST searches via NCBI web services
+- Running local BLAST searches
+- Parsing BLAST XML output
+- Filtering results by E-value or identity
+- Extracting hit sequences
 
-### 6. Phylogenetic Analysis
+**Quick example:**
+```python
+from Bio.Blast import NCBIWWW, NCBIXML
 
-Build and analyze phylogenetic trees using `Bio.Phylo`:
+# Run BLAST search
+result_handle = NCBIWWW.qblast("blastn", "nt", "ATCGATCGATCG")
+blast_record = NCBIXML.read(result_handle)
 
+# Display top hits
+for alignment in blast_record.alignments[:5]:
+    print(f"{alignment.title}: E-value={alignment.hsps[0].expect}")
+```
+
+### 5. Structural Bioinformatics (Bio.PDB)
+
+**Reference:** `references/structure.md`
+
+Use for:
+- Parsing PDB and mmCIF structure files
+- Navigating protein structure hierarchy (SMCRA: Structure/Model/Chain/Residue/Atom)
+- Calculating distances, angles, and dihedrals
+- Secondary structure assignment (DSSP)
+- Structure superimposition and RMSD calculation
+- Extracting sequences from structures
+
+**Quick example:**
+```python
+from Bio.PDB import PDBParser
+
+# Parse structure
+parser = PDBParser(QUIET=True)
+structure = parser.get_structure("1crn", "1crn.pdb")
+
+# Calculate distance between alpha carbons
+chain = structure[0]["A"]
+distance = chain[10]["CA"] - chain[20]["CA"]
+print(f"Distance: {distance:.2f} Å")
+```
+
+### 6. Phylogenetics (Bio.Phylo)
+
+**Reference:** `references/phylogenetics.md`
+
+Use for:
+- Reading and writing phylogenetic trees (Newick, NEXUS, phyloXML)
+- Building trees from distance matrices or alignments
+- Tree manipulation (pruning, rerooting, ladderizing)
+- Calculating phylogenetic distances
+- Creating consensus trees
+- Visualizing trees
+
+**Quick example:**
 ```python
 from Bio import Phylo
+
+# Read and visualize tree
+tree = Phylo.read("tree.nwk", "newick")
+Phylo.draw_ascii(tree)
+
+# Calculate distance
+distance = tree.distance("Species_A", "Species_B")
+print(f"Distance: {distance:.3f}")
+```
+
+### 7. Advanced Features
+
+**Reference:** `references/advanced.md`
+
+Use for:
+- **Sequence motifs** (Bio.motifs) - Finding and analyzing motif patterns
+- **Population genetics** (Bio.PopGen) - GenePop files, Fst calculations, Hardy-Weinberg tests
+- **Sequence utilities** (Bio.SeqUtils) - GC content, melting temperature, molecular weight, protein analysis
+- **Restriction analysis** (Bio.Restriction) - Finding restriction enzyme sites
+- **Clustering** (Bio.Cluster) - K-means and hierarchical clustering
+- **Genome diagrams** (GenomeDiagram) - Visualizing genomic features
+
+**Quick example:**
+```python
+from Bio.SeqUtils import gc_fraction, molecular_weight
+from Bio.Seq import Seq
+
+seq = Seq("ATCGATCGATCG")
+print(f"GC content: {gc_fraction(seq):.2%}")
+print(f"Molecular weight: {molecular_weight(seq, seq_type='DNA'):.2f} g/mol")
+```
+
+## General Workflow Guidelines
+
+### Reading Documentation
+
+When a user asks about a specific Biopython task:
+
+1. **Identify the relevant module** based on the task description
+2. **Read the appropriate reference file** using the Read tool
+3. **Extract relevant code patterns** and adapt them to the user's specific needs
+4. **Combine multiple modules** when the task requires it
+
+Example search patterns for reference files:
+```bash
+# Find information about specific functions
+grep -n "SeqIO.parse" references/sequence_io.md
+
+# Find examples of specific tasks
+grep -n "BLAST" references/blast.md
+
+# Find information about specific concepts
+grep -n "alignment" references/alignment.md
+```
+
+### Writing Biopython Code
+
+Follow these principles when writing Biopython code:
+
+1. **Import modules explicitly**
+   ```python
+   from Bio import SeqIO, Entrez
+   from Bio.Seq import Seq
+   ```
+
+2. **Set Entrez email** when using NCBI databases
+   ```python
+   Entrez.email = "your.email@example.com"
+   ```
+
+3. **Use appropriate file formats** - Check which format best suits the task
+   ```python
+   # Common formats: "fasta", "genbank", "fastq", "clustal", "phylip"
+   ```
+
+4. **Handle files properly** - Close handles after use or use context managers
+   ```python
+   with open("file.fasta") as handle:
+       records = SeqIO.parse(handle, "fasta")
+   ```
+
+5. **Use iterators for large files** - Avoid loading everything into memory
+   ```python
+   for record in SeqIO.parse("large_file.fasta", "fasta"):
+       # Process one record at a time
+   ```
+
+6. **Handle errors gracefully** - Network operations and file parsing can fail
+   ```python
+   try:
+       handle = Entrez.efetch(db="nucleotide", id=accession)
+   except HTTPError as e:
+       print(f"Error: {e}")
+   ```
+
+## Common Patterns
+
+### Pattern 1: Fetch Sequence from GenBank
+
+```python
+from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+# Fetch sequence
+handle = Entrez.efetch(db="nucleotide", id="EU490707", rettype="gb", retmode="text")
+record = SeqIO.read(handle, "genbank")
+handle.close()
+
+print(f"Description: {record.description}")
+print(f"Sequence length: {len(record.seq)}")
+```
+
+### Pattern 2: Sequence Analysis Pipeline
+
+```python
+from Bio import SeqIO
+from Bio.SeqUtils import gc_fraction
+
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    # Calculate statistics
+    gc = gc_fraction(record.seq)
+    length = len(record.seq)
+
+    # Find ORFs, translate, etc.
+    protein = record.seq.translate()
+
+    print(f"{record.id}: {length} bp, GC={gc:.2%}")
+```
+
+### Pattern 3: BLAST and Fetch Top Hits
+
+```python
+from Bio.Blast import NCBIWWW, NCBIXML
+from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+# Run BLAST
+result_handle = NCBIWWW.qblast("blastn", "nt", sequence)
+blast_record = NCBIXML.read(result_handle)
+
+# Get top hit accessions
+accessions = [aln.accession for aln in blast_record.alignments[:5]]
+
+# Fetch sequences
+for acc in accessions:
+    handle = Entrez.efetch(db="nucleotide", id=acc, rettype="fasta", retmode="text")
+    record = SeqIO.read(handle, "fasta")
+    handle.close()
+    print(f">{record.description}")
+```
+
+### Pattern 4: Build Phylogenetic Tree from Sequences
+
+```python
+from Bio import AlignIO, Phylo
 from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
 
 # Read alignment
-alignment = AlignIO.read("sequences.fasta", "fasta")
+alignment = AlignIO.read("alignment.fasta", "fasta")
 
-# Calculate distance matrix
-calculator = DistanceCalculator('identity')
+# Calculate distances
+calculator = DistanceCalculator("identity")
 dm = calculator.get_distance(alignment)
 
-# Build tree (UPGMA or Neighbor-Joining)
-constructor = DistanceTreeConstructor(calculator)
-tree = constructor.upgma(dm)  # or constructor.nj(dm)
+# Build tree
+constructor = DistanceTreeConstructor()
+tree = constructor.nj(dm)
 
-# Visualize tree
+# Visualize
 Phylo.draw_ascii(tree)
-Phylo.draw(tree)  # matplotlib visualization
-
-# Save tree
-Phylo.write(tree, "tree.nwk", "newick")
 ```
-
-**Tree manipulation:**
-- `tree.ladderize()`: Sort branches
-- `tree.root_at_midpoint()`: Root at midpoint
-- `tree.prune()`: Remove taxa
-- `tree.collapse_all()`: Collapse short branches
-- `tree.distance()`: Calculate distances between clades
-
-**Supported formats:** Newick, NEXUS, PhyloXML, NeXML
-
-**Script:** Use `scripts/alignment_phylogeny.py` for tree construction and manipulation examples.
-
-**Reference:** See `references/specialized_modules.md` (section: Bio.Phylo) for comprehensive tree analysis capabilities.
-
-### 7. Structural Bioinformatics
-
-Analyze protein structures using `Bio.PDB`:
-
-```python
-from Bio.PDB import PDBParser, PDBList
-
-# Download structure
-pdbl = PDBList()
-pdbl.retrieve_pdb_file("1ABC", file_format="pdb", pdir=".")
-
-# Parse structure
-parser = PDBParser()
-structure = parser.get_structure("protein", "1abc.pdb")
-
-# Navigate hierarchy: Structure → Model → Chain → Residue → Atom
-for model in structure:
-    for chain in model:
-        for residue in chain:
-            for atom in residue:
-                print(atom.name, atom.coord)
-
-# Secondary structure with DSSP
-from Bio.PDB import DSSP
-dssp = DSSP(model, "structure.pdb")
-
-# Structural alignment
-from Bio.PDB import Superimposer
-sup = Superimposer()
-sup.set_atoms(ref_atoms, alt_atoms)
-print(f"RMSD: {sup.rms}")
-```
-
-**Key capabilities:**
-- Parse PDB, mmCIF, MMTF formats
-- Secondary structure analysis (DSSP)
-- Solvent accessibility calculations
-- Structural superimposition
-- Distance and angle calculations
-- Structure quality validation
-
-**Reference:** See `references/specialized_modules.md` (section: Bio.PDB) for complete structural analysis capabilities.
-
-### 8. Sequence Analysis Utilities
-
-Calculate sequence properties using `Bio.SeqUtils`:
-
-```python
-from Bio.SeqUtils import gc_fraction, MeltingTemp as mt
-from Bio.SeqUtils.ProtParam import ProteinAnalysis
-
-# DNA analysis
-gc = gc_fraction(dna_seq) * 100
-tm = mt.Tm_NN(dna_seq)  # Melting temperature
-
-# Protein analysis
-protein_analysis = ProteinAnalysis(str(protein_seq))
-mw = protein_analysis.molecular_weight()
-pi = protein_analysis.isoelectric_point()
-aromaticity = protein_analysis.aromaticity()
-instability = protein_analysis.instability_index()
-```
-
-**Available analyses:**
-- GC content and GC skew
-- Melting temperature (multiple methods)
-- Molecular weight
-- Isoelectric point
-- Aromaticity
-- Instability index
-- Secondary structure prediction
-- Sequence checksums
-
-**Script:** Use `scripts/sequence_operations.py` for sequence analysis examples.
-
-**Reference:** See `references/core_modules.md` (section: Bio.SeqUtils) for all available utilities.
-
-### 9. Specialized Modules
-
-**Restriction enzymes:**
-```python
-from Bio import Restriction
-enzyme = Restriction.EcoRI
-sites = enzyme.search(seq)
-```
-
-**Motif analysis:**
-```python
-from Bio import motifs
-m = motifs.create([seq1, seq2, seq3])
-pwm = m.counts.normalize(pseudocounts=0.5)
-```
-
-**Population genetics:**
-Use `Bio.PopGen` for allele frequencies, Hardy-Weinberg equilibrium, FST calculations.
-
-**Clustering:**
-Use `Bio.Cluster` for hierarchical clustering, k-means, PCA on biological data.
-
-**Reference:** See `references/core_modules.md` and `references/specialized_modules.md` for specialized module documentation.
-
-## Common Workflows
-
-### Workflow 1: Download and Analyze NCBI Sequences
-
-1. Search NCBI database with `Entrez.esearch()`
-2. Fetch sequences with `Entrez.efetch()`
-3. Parse with `SeqIO.parse()`
-4. Analyze sequences (GC content, translation, etc.)
-5. Save results to file
-
-**Script:** Use `scripts/ncbi_entrez.py` for complete implementation.
-
-### Workflow 2: Sequence Similarity Search
-
-1. Run BLAST with `NCBIWWW.qblast()` or parse existing results
-2. Parse XML results with `NCBIXML.read()`
-3. Filter hits by E-value, identity, coverage
-4. Extract and save significant hits
-5. Perform downstream analysis
-
-**Script:** Use `scripts/blast_search.py` for complete implementation.
-
-### Workflow 3: Phylogenetic Tree Construction
-
-1. Read multiple sequence alignment with `AlignIO.read()`
-2. Calculate distance matrix with `DistanceCalculator`
-3. Build tree with `DistanceTreeConstructor` (UPGMA or NJ)
-4. Manipulate tree (ladderize, root, prune)
-5. Visualize with `Phylo.draw()` or `Phylo.draw_ascii()`
-6. Save tree with `Phylo.write()`
-
-**Script:** Use `scripts/alignment_phylogeny.py` for complete implementation.
-
-### Workflow 4: Format Conversion Pipeline
-
-1. Read sequences in original format with `SeqIO.parse()`
-2. Filter or modify sequences as needed
-3. Write to new format with `SeqIO.write()`
-4. Or use `SeqIO.convert()` for direct conversion
-
-**Script:** Use `scripts/file_io.py` for format conversion examples.
 
 ## Best Practices
 
-### Email Configuration
-Always set `Entrez.email` before using NCBI services:
-```python
-Entrez.email = "your.email@example.com"
-```
+1. **Always read relevant reference documentation** before writing code
+2. **Use grep to search reference files** for specific functions or examples
+3. **Validate file formats** before parsing
+4. **Handle missing data gracefully** - Not all records have all fields
+5. **Cache downloaded data** - Don't repeatedly download the same sequences
+6. **Respect NCBI rate limits** - Use API keys and proper delays
+7. **Test with small datasets** before processing large files
+8. **Keep Biopython updated** to get latest features and bug fixes
+9. **Use appropriate genetic code tables** for translation
+10. **Document analysis parameters** for reproducibility
 
-### Rate Limiting
-Be polite to NCBI servers:
-- Use `time.sleep()` between requests
-- Use WebEnv for large queries
-- Batch downloads in reasonable chunks (100-500 sequences)
+## Troubleshooting Common Issues
 
-### Memory Management
-For large files:
-- Use iterators (`SeqIO.parse()`) instead of lists
-- Use `SeqIO.index()` for random access without loading entire file
-- Process in batches when possible
+### Issue: "No handlers could be found for logger 'Bio.Entrez'"
+**Solution:** This is just a warning. Set Entrez.email to suppress it.
 
-### Error Handling
-Always handle potential errors:
-```python
-try:
-    record = SeqIO.read(handle, format)
-except Exception as e:
-    print(f"Error: {e}")
-```
+### Issue: "HTTP Error 400" from NCBI
+**Solution:** Check that IDs/accessions are valid and properly formatted.
 
-### File Format Selection
-Choose appropriate formats:
-- FASTA: Simple sequences, no annotations
-- GenBank: Rich annotations, features, references
-- FASTQ: Sequences with quality scores
-- PDB: 3D structural data
+### Issue: "ValueError: EOF" when parsing files
+**Solution:** Verify file format matches the specified format string.
 
-## Resources
+### Issue: Alignment fails with "sequences are not the same length"
+**Solution:** Ensure sequences are aligned before using AlignIO or MultipleSeqAlignment.
 
-### scripts/
-Executable Python scripts demonstrating common BioPython workflows:
+### Issue: BLAST searches are slow
+**Solution:** Use local BLAST for large-scale searches, or cache results.
 
-- `sequence_operations.py`: Basic sequence manipulation (transcription, translation, complement, GC content, melting temp)
-- `file_io.py`: Reading, writing, and converting sequence files; filtering; indexing large files
-- `ncbi_entrez.py`: Searching and downloading from NCBI databases; batch processing with WebEnv
-- `blast_search.py`: Running BLAST searches online; parsing and filtering results
-- `alignment_phylogeny.py`: Pairwise and multiple sequence alignment; phylogenetic tree construction and manipulation
-
-Run any script with `python3 scripts/<script_name>.py` to see examples.
-
-### references/
-Comprehensive reference documentation for BioPython modules:
-
-- `core_modules.md`: Core sequence handling (Seq, SeqRecord, SeqIO, AlignIO, Align, SeqUtils, CodonTable, motifs, Restriction)
-- `database_tools.md`: Database access and searches (Entrez, BLAST, SearchIO, BioSQL)
-- `specialized_modules.md`: Advanced analyses (PDB, Phylo, PAML, PopGen, Cluster, Graphics)
-
-Reference these files when:
-- Learning about specific module capabilities
-- Looking up function parameters and options
-- Understanding supported file formats
-- Finding example code patterns
-
-Use `grep` to search references for specific topics:
-```bash
-grep -n "secondary structure" references/specialized_modules.md
-grep -n "efetch" references/database_tools.md
-```
+### Issue: PDB parser warnings
+**Solution:** Use `PDBParser(QUIET=True)` to suppress warnings, or investigate structure quality.
 
 ## Additional Resources
 
-**Official Documentation:** https://biopython.org/docs/latest/
+- **Official Documentation**: https://biopython.org/docs/latest/
+- **Tutorial**: https://biopython.org/docs/latest/Tutorial/
+- **Cookbook**: https://biopython.org/docs/latest/Tutorial/ (advanced examples)
+- **GitHub**: https://github.com/biopython/biopython
+- **Mailing List**: biopython@biopython.org
 
-**Tutorial:** https://biopython.org/docs/latest/Tutorial/index.html
+## Quick Reference
 
-**API Reference:** https://biopython.org/docs/latest/api/index.html
+To locate information in reference files, use these search patterns:
 
-**Cookbook:** https://biopython.org/wiki/Category:Cookbook
+```bash
+# Search for specific functions
+grep -n "function_name" references/*.md
+
+# Find examples of specific tasks
+grep -n "example" references/sequence_io.md
+
+# Find all occurrences of a module
+grep -n "Bio.Seq" references/*.md
+```
+
+## Summary
+
+Biopython provides comprehensive tools for computational molecular biology. When using this skill:
+
+1. **Identify the task domain** (sequences, alignments, databases, BLAST, structures, phylogenetics, or advanced)
+2. **Consult the appropriate reference file** in the `references/` directory
+3. **Adapt code examples** to the specific use case
+4. **Combine multiple modules** when needed for complex workflows
+5. **Follow best practices** for file handling, error checking, and data management
+
+The modular reference documentation ensures detailed, searchable information for every major Biopython capability.
