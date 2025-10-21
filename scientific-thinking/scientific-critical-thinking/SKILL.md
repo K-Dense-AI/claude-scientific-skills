@@ -7,7 +7,18 @@ description: "Evaluate research rigor. Assess methodology, experimental design, 
 
 ## Overview
 
-Apply systematic, rigorous critical thinking to scientific work using established methodological principles, evidence evaluation frameworks, and logical reasoning. Analyze research methodology, identify biases and fallacies, evaluate statistical claims, assess evidence quality, and provide constructive critique grounded in scientific principles.
+Critical thinking is a systematic process for evaluating scientific rigor. Assess methodology, experimental design, statistical validity, biases, confounding, and evidence quality using GRADE and Cochrane ROB frameworks. Apply this skill for critical analysis of scientific claims.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Evaluating research methodology and experimental design
+- Assessing statistical validity and evidence quality
+- Identifying biases and confounding in studies
+- Reviewing scientific claims and conclusions
+- Conducting systematic reviews or meta-analyses
+- Applying GRADE or Cochrane risk of bias assessments
+- Providing critical analysis of research papers
 
 ## Core Capabilities
 

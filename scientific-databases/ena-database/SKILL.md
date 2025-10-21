@@ -7,7 +7,20 @@ description: "Access European Nucleotide Archive via API/FTP. Retrieve DNA/RNA s
 
 ## Overview
 
-This skill provides tools and guidance for working with the European Nucleotide Archive (ENA), a comprehensive public repository for nucleotide sequence data and associated metadata. ENA serves as a global platform for managing, sharing, and accessing DNA/RNA sequences, raw reads, genome assemblies, and functional annotations.
+The European Nucleotide Archive (ENA) is a comprehensive public repository for nucleotide sequence data and associated metadata. Access and query DNA/RNA sequences, raw reads, genome assemblies, and functional annotations through REST APIs and FTP for genomics and bioinformatics pipelines.
+
+## When to Use This Skill
+
+This skill should be used when:
+
+- Retrieving nucleotide sequences or raw sequencing reads by accession
+- Searching for samples, studies, or assemblies by metadata criteria
+- Downloading FASTQ files or genome assemblies for analysis
+- Querying taxonomic information for organisms
+- Accessing sequence annotations and functional data
+- Integrating ENA data into bioinformatics pipelines
+- Performing cross-reference searches to related databases
+- Bulk downloading datasets via FTP or Aspera
 
 ## Core Capabilities
 

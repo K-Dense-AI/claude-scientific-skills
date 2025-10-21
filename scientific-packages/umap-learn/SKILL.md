@@ -7,15 +7,7 @@ description: "UMAP dimensionality reduction. Fast nonlinear manifold learning fo
 
 ## Overview
 
-UMAP (Uniform Manifold Approximation and Projection) is a dimensionality reduction technique designed for both visualization and general non-linear dimensionality reduction. It is faster than t-SNE while producing comparable or superior results, and uniquely scales well to higher embedding dimensions (beyond 2D/3D). UMAP preserves both local and global structure in data and supports supervised learning, making it versatile for visualization, clustering preprocessing, and feature engineering.
-
-**Key capabilities:**
-- Fast, scalable dimensionality reduction for visualization
-- Supervised and semi-supervised learning with label information
-- Effective preprocessing for density-based clustering (HDBSCAN)
-- Transform new data using trained models
-- Parametric embeddings via neural networks
-- Inverse transforms for data reconstruction
+UMAP (Uniform Manifold Approximation and Projection) is a dimensionality reduction technique for visualization and general non-linear dimensionality reduction. Apply this skill for fast, scalable embeddings that preserve local and global structure, supervised learning, and clustering preprocessing.
 
 ## Quick Start
 

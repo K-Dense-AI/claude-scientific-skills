@@ -7,11 +7,11 @@ description: "Access USPTO APIs for patent/trademark searches, examination histo
 
 ## Overview
 
-Access comprehensive United States Patent and Trademark Office data through multiple specialized APIs. This skill enables patent and trademark searching, retrieval of examination history, analysis of citations and office actions, tracking of assignments and ownership, and access to litigation records.
+USPTO provides specialized APIs for patent and trademark data. Search patents by keywords/inventors/assignees, retrieve examination history via PEDS, track assignments, analyze citations and office actions, access TSDR for trademarks, for IP analysis and prior art searches.
 
 ## When to Use This Skill
 
-Use this skill for tasks involving:
+This skill should be used when:
 
 - **Patent Search**: Finding patents by keywords, inventors, assignees, classifications, or dates
 - **Patent Details**: Retrieving full patent data including claims, abstracts, citations

@@ -8,7 +8,7 @@ license: Proprietary. LICENSE.txt has complete terms
 
 ## Overview
 
-This skill supports creating, editing, or analyzing the contents of .docx files. A .docx file is essentially a ZIP archive containing XML files and other resources. Different tools and workflows are available for different tasks.
+A .docx file is a ZIP archive containing XML files and resources. Create, edit, or analyze Word documents using text extraction, raw XML access, or redlining workflows. Apply this skill for professional document processing, tracked changes, and content manipulation.
 
 ## Workflow Decision Tree
 

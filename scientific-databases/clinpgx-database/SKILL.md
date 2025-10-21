@@ -7,11 +7,11 @@ description: "Access ClinPGx pharmacogenomics data (successor to PharmGKB). Quer
 
 ## Overview
 
-Facilitate access to and querying of ClinPGx (Clinical Pharmacogenomics Database), a comprehensive resource for clinical pharmacogenomics information. ClinPGx is the successor to PharmGKB (launched officially in July 2025) and consolidates data from PharmGKB, CPIC (Clinical Pharmacogenetics Implementation Consortium), and PharmCAT (Pharmacogenomics Clinical Annotation Tool). The database provides curated information on how human genetic variation affects medication response, including gene-drug pairs, clinical guidelines, allele functions, and drug labels. Managed at Stanford University as a ClinGen (Clinical Genome Resource) affiliate grant.
+ClinPGx (Clinical Pharmacogenomics Database) is a comprehensive resource for clinical pharmacogenomics information, successor to PharmGKB. It consolidates data from PharmGKB, CPIC, and PharmCAT, providing curated information on how genetic variation affects medication response. Access gene-drug pairs, clinical guidelines, allele functions, and drug labels for precision medicine applications.
 
 ## When to Use This Skill
 
-This skill should be used when queries involve:
+This skill should be used when:
 
 - **Gene-drug interactions**: Querying how genetic variants affect drug metabolism, efficacy, or toxicity
 - **CPIC guidelines**: Accessing evidence-based clinical practice guidelines for pharmacogenetics

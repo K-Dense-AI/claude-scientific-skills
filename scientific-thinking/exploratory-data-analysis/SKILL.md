@@ -7,7 +7,7 @@ description: "EDA toolkit. Analyze CSV/Excel/JSON/Parquet files, statistical sum
 
 ## Overview
 
-Perform comprehensive exploratory data analysis on datasets of any format. This skill acts as a proficient data scientist, automatically analyzing data to generate meaningful summaries, advanced statistics, visualizations, and actionable insights. All textual outputs are generated as markdown for seamless integration into workflows.
+EDA is a process for discovering patterns, anomalies, and relationships in data. Analyze CSV/Excel/JSON/Parquet files to generate statistical summaries, distributions, correlations, outliers, and visualizations. All outputs are markdown-formatted for integration into workflows.
 
 ## When to Use This Skill
 

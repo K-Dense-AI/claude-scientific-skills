@@ -64,7 +64,7 @@ Unless otherwise stated by the user or existing template
 
 ## Overview
 
-A user may ask you to create, edit, or analyze the contents of an .xlsx file. You have different tools and workflows available for different tasks.
+Create, edit, or analyze Excel spreadsheets with formulas, formatting, and data analysis. Apply this skill for spreadsheet processing using openpyxl and pandas. Recalculate formulas and ensure zero errors for publication-quality outputs.
 
 ## Important Requirements
 

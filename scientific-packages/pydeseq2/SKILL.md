@@ -7,15 +7,7 @@ description: "Differential gene expression analysis (Python DESeq2). Identify DE
 
 ## Overview
 
-PyDESeq2 is a Python implementation of the DESeq2 method for differential expression analysis (DEA) with bulk RNA-seq data. This skill provides comprehensive support for designing and executing PyDESeq2 workflows, from data loading through result interpretation.
-
-**Key capabilities:**
-- Single-factor and multi-factor experimental designs
-- Statistical testing using Wald tests with multiple testing correction
-- Optional apeGLM log-fold-change shrinkage
-- Data preprocessing and quality control
-- Result export and visualization
-- Integration with pandas, AnnData, and the Python data science ecosystem
+PyDESeq2 is a Python implementation of DESeq2 for differential expression analysis with bulk RNA-seq data. Design and execute complete workflows from data loading through result interpretation, including single-factor and multi-factor designs, Wald tests with multiple testing correction, optional apeGLM shrinkage, and integration with pandas and AnnData.
 
 ## When to Use This Skill
 

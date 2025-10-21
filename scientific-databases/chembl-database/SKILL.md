@@ -7,11 +7,11 @@ description: "Query ChEMBL's bioactive molecules and drug discovery data. Search
 
 ## Overview
 
-Facilitate access to and querying of the ChEMBL database, a manually curated repository of bioactive molecules with drug-like properties maintained by the European Bioinformatics Institute (EBI). ChEMBL contains over 2 million compounds, 19 million bioactivity measurements, information on 13,000+ drug targets, and data on approved drugs and clinical candidates.
+ChEMBL is a manually curated database of bioactive molecules maintained by the European Bioinformatics Institute (EBI), containing over 2 million compounds, 19 million bioactivity measurements, 13,000+ drug targets, and data on approved drugs and clinical candidates. Access and query this data programmatically using the ChEMBL Python client for drug discovery and medicinal chemistry research.
 
 ## When to Use This Skill
 
-This skill should be used when queries involve:
+This skill should be used when:
 
 - **Compound searches**: Finding molecules by name, structure, or properties
 - **Target information**: Retrieving data about proteins, enzymes, or biological targets

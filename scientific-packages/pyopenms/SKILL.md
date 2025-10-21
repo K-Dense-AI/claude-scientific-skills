@@ -7,9 +7,17 @@ description: "Mass spectrometry toolkit (OpenMS Python). Process mzML/mzXML, pea
 
 ## Overview
 
-pyOpenMS is an open-source Python library providing comprehensive tools for mass spectrometry data analysis in proteomics and metabolomics research. It offers Python bindings to the OpenMS C++ library, enabling efficient processing of LC-MS/MS data, peptide identification, feature detection, quantification, and integration with common proteomics tools like Comet, Mascot, MSGF+, Percolator, and MSstats.
+pyOpenMS is an open-source Python library for mass spectrometry data analysis in proteomics and metabolomics. Process LC-MS/MS data, perform peptide identification, detect and quantify features, and integrate with common proteomics tools (Comet, Mascot, MSGF+, Percolator, MSstats) using Python bindings to the OpenMS C++ library.
 
-Use this skill when working with mass spectrometry data analysis tasks, processing proteomics or metabolomics datasets, or implementing computational workflows for biomolecular identification and quantification.
+## When to Use This Skill
+
+This skill should be used when:
+- Processing mass spectrometry data (mzML, mzXML files)
+- Performing peak picking and feature detection in LC-MS data
+- Conducting peptide and protein identification workflows
+- Quantifying metabolites or proteins
+- Integrating proteomics or metabolomics tools into Python pipelines
+- Working with OpenMS tools and file formats
 
 ## Core Capabilities
 

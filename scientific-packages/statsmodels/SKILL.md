@@ -7,11 +7,11 @@ description: "Statistical modeling toolkit. OLS, GLM, logistic, ARIMA, time seri
 
 ## Overview
 
-Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistical methods. This skill provides comprehensive guidance for conducting rigorous statistical analysis, from simple linear regression to complex time series models and econometric analyses.
+Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistical methods. Apply this skill for rigorous statistical analysis, from simple linear regression to complex time series models and econometric analyses.
 
 ## When to Use This Skill
 
-Activate this skill when:
+This skill should be used when:
 - Fitting regression models (OLS, WLS, GLS, quantile regression)
 - Performing generalized linear modeling (logistic, Poisson, Gamma, etc.)
 - Analyzing discrete outcomes (binary, multinomial, count, ordinal)

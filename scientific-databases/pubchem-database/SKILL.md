@@ -7,7 +7,18 @@ description: "Query PubChem via PUG-REST API/PubChemPy (110M+ compounds). Search
 
 ## Overview
 
-PubChem is the world's largest freely available chemical database maintained by the National Center for Biotechnology Information (NCBI). It contains over 110 million unique chemical structures and over 270 million bioactivities from more than 770 data sources. This skill provides guidance for programmatically accessing PubChem data using the PUG-REST API and PubChemPy Python library.
+PubChem is the world's largest freely available chemical database with 110M+ compounds and 270M+ bioactivities. Query chemical structures by name, CID, or SMILES, retrieve molecular properties, perform similarity and substructure searches, access bioactivity data using PUG-REST API and PubChemPy.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Searching for chemical compounds by name, structure (SMILES/InChI), or molecular formula
+- Retrieving molecular properties (MW, LogP, TPSA, hydrogen bonding descriptors)
+- Performing similarity searches to find structurally related compounds
+- Conducting substructure searches for specific chemical motifs
+- Accessing bioactivity data from screening assays
+- Converting between chemical identifier formats (CID, SMILES, InChI)
+- Batch processing multiple compounds for drug-likeness screening or property analysis
 
 ## Core Capabilities
 

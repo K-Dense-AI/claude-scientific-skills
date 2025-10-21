@@ -7,7 +7,7 @@ description: "NGS analysis toolkit. BAM to bigWig conversion, QC (correlation, P
 
 ## Overview
 
-deepTools is a comprehensive suite of Python command-line tools designed for processing and analyzing high-throughput sequencing data. This skill provides guidance for using deepTools to perform quality control, normalize data, compare samples, and generate publication-quality visualizations for ChIP-seq, RNA-seq, ATAC-seq, MNase-seq, and other NGS experiments.
+deepTools is a comprehensive suite of Python command-line tools designed for processing and analyzing high-throughput sequencing data. Use deepTools to perform quality control, normalize data, compare samples, and generate publication-quality visualizations for ChIP-seq, RNA-seq, ATAC-seq, MNase-seq, and other NGS experiments.
 
 **Core capabilities:**
 - Convert BAM alignments to normalized coverage tracks (bigWig/bedGraph)
@@ -18,7 +18,7 @@ deepTools is a comprehensive suite of Python command-line tools designed for pro
 
 ## When to Use This Skill
 
-This skill should be used when users request tasks involving:
+This skill should be used when:
 
 - **File conversion**: "Convert BAM to bigWig", "generate coverage tracks", "normalize ChIP-seq data"
 - **Quality control**: "check ChIP quality", "compare replicates", "assess sequencing depth", "QC analysis"

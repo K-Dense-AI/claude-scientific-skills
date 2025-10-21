@@ -7,9 +7,13 @@ description: "Query KEGG REST API for pathway analysis, gene-pathway mapping, me
 
 ## Overview
 
-KEGG (Kyoto Encyclopedia of Genes and Genomes) is a comprehensive bioinformatics resource for biological pathway analysis and molecular interaction networks. This skill enables interaction with KEGG's REST API to query pathways, genes, compounds, enzymes, diseases, and drugs across multiple organisms.
+KEGG (Kyoto Encyclopedia of Genes and Genomes) is a comprehensive bioinformatics resource for biological pathway analysis and molecular interaction networks.
 
 **Important**: KEGG API is made available only for academic use by academic users.
+
+## When to Use This Skill
+
+This skill should be used when querying pathways, genes, compounds, enzymes, diseases, and drugs across multiple organisms using KEGG's REST API.
 
 ## Quick Start
 

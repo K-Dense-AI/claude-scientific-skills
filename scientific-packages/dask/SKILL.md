@@ -14,9 +14,9 @@ Dask is a Python library for parallel and distributed computing that enables thr
 
 Dask scales from laptops (processing ~100 GiB) to clusters (processing ~100 TiB) while maintaining familiar Python APIs.
 
-## When to Use Dask
+## When to Use This Skill
 
-Apply this skill when users need to:
+This skill should be used when:
 - Process datasets that exceed available RAM
 - Scale pandas or NumPy operations to larger datasets
 - Parallelize computations for performance improvements

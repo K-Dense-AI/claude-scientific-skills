@@ -7,7 +7,7 @@ description: "Graph Neural Networks (PyG). Node/graph classification, link predi
 
 ## Overview
 
-PyTorch Geometric is a library built on PyTorch that enables development and training of Graph Neural Networks (GNNs) for applications involving structured data. It provides comprehensive tools for deep learning on graphs and other irregular structures (geometric deep learning), including mini-batch processing, multi-GPU support, and extensive benchmark datasets.
+PyTorch Geometric is a library built on PyTorch for developing and training Graph Neural Networks (GNNs). Apply this skill for deep learning on graphs and irregular structures, including mini-batch processing, multi-GPU training, and geometric deep learning applications.
 
 ## When to Use This Skill
 

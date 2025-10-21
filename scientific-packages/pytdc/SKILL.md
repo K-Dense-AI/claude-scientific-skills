@@ -7,9 +7,18 @@ description: "Therapeutics Data Commons. AI-ready drug discovery datasets (ADME,
 
 ## Overview
 
-PyTDC is an open-science platform providing AI-ready datasets and benchmarks for drug discovery and development. It offers curated datasets spanning the entire therapeutics pipeline, from target discovery through clinical development, with standardized evaluation metrics and meaningful data splits.
+PyTDC is an open-science platform providing AI-ready datasets and benchmarks for drug discovery and development. Access curated datasets spanning the entire therapeutics pipeline with standardized evaluation metrics and meaningful data splits, organized into three categories: single-instance prediction (molecular/protein properties), multi-instance prediction (drug-target interactions, DDI), and generation (molecule generation, retrosynthesis).
 
-The platform organizes therapeutic tasks into three major categories: single-instance prediction for properties of individual biomedical entities, multi-instance prediction for relationships between multiple entities, and generation for creating new therapeutic molecules.
+## When to Use This Skill
+
+This skill should be used when:
+- Working with drug discovery or therapeutic ML datasets
+- Benchmarking machine learning models on standardized pharmaceutical tasks
+- Predicting molecular properties (ADME, toxicity, bioactivity)
+- Predicting drug-target or drug-drug interactions
+- Generating novel molecules with desired properties
+- Accessing curated datasets with proper train/test splits (scaffold, cold-split)
+- Using molecular oracles for property optimization
 
 ## Installation & Setup
 

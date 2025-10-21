@@ -7,11 +7,11 @@ description: "Access ZINC (230M+ purchasable compounds). Search by ZINC ID/SMILE
 
 ## Overview
 
-Facilitate access to and querying of the ZINC database, a freely accessible repository of commercially-available compounds maintained by the Irwin and Shoichet Laboratories at UCSF. ZINC22 contains over 230 million purchasable compounds in ready-to-dock 3D formats, with an additional 750 million compounds searchable for analogs, making it one of the largest resources for virtual screening and ligand discovery.
+ZINC is a freely accessible repository of 230M+ purchasable compounds maintained by UCSF. Search by ZINC ID or SMILES, perform similarity searches, download 3D-ready structures for docking, discover analogs for virtual screening and drug discovery.
 
 ## When to Use This Skill
 
-This skill should be used when queries involve:
+This skill should be used when:
 
 - **Virtual screening**: Finding compounds for molecular docking studies
 - **Lead discovery**: Identifying commercially-available compounds for drug development

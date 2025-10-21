@@ -7,9 +7,17 @@ description: "Medicinal chemistry filters. Apply drug-likeness rules (Lipinski, 
 
 ## Overview
 
-Medchem is a Python library for molecular filtering and prioritization in drug discovery workflows. It provides hundreds of well-established and novel molecular filters, structural alerts, and medicinal chemistry rules to efficiently triage and prioritize compound libraries at scale.
+Medchem is a Python library for molecular filtering and prioritization in drug discovery workflows. Apply hundreds of well-established and novel molecular filters, structural alerts, and medicinal chemistry rules to efficiently triage and prioritize compound libraries at scale. Rules and filters are context-specific—use as guidelines combined with domain expertise.
 
-**Key Principle:** Rules and filters are always context-specific. Avoid blindly applying filters—marketed drugs often don't pass standard medchem filters, and prodrugs may intentionally violate rules. Use these tools as guidelines combined with domain expertise.
+## When to Use This Skill
+
+This skill should be used when:
+- Applying drug-likeness rules (Lipinski, Veber, etc.) to compound libraries
+- Filtering molecules by structural alerts or PAINS patterns
+- Prioritizing compounds for lead optimization
+- Assessing compound quality and medicinal chemistry properties
+- Detecting reactive or problematic functional groups
+- Calculating molecular complexity metrics
 
 ## Installation
 

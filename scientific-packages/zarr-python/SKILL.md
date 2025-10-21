@@ -7,15 +7,7 @@ description: "Chunked N-D arrays for cloud storage. Compressed arrays, parallel 
 
 ## Overview
 
-Zarr is a Python library for storage of large N-dimensional arrays that are chunked and compressed. It provides a NumPy-like API but divides data into manageable chunks stored separately, enabling efficient parallel I/O, cloud-native workflows, and seamless integration with the scientific Python ecosystem (NumPy, Dask, Xarray).
-
-**Key capabilities:**
-- Create and manipulate N-dimensional arrays with NumPy-like semantics
-- Configure chunking strategies for optimal parallel access and performance
-- Apply compression algorithms (Blosc, Zstandard, Gzip, etc.) to reduce storage
-- Use flexible storage backends: local filesystem, memory, ZIP files, or cloud storage (S3, GCS)
-- Organize data hierarchically using groups (similar to HDF5)
-- Integrate seamlessly with Dask for parallel computing and Xarray for labeled arrays
+Zarr is a Python library for storing large N-dimensional arrays with chunking and compression. Apply this skill for efficient parallel I/O, cloud-native workflows, and seamless integration with NumPy, Dask, and Xarray.
 
 ## Quick Start
 

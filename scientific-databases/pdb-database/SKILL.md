@@ -7,7 +7,16 @@ description: "Access RCSB PDB for 3D protein/nucleic acid structures. Search by 
 
 ## Overview
 
-This skill provides tools and guidance for working with the RCSB Protein Data Bank (PDB), the worldwide repository for 3D structural data of biological macromolecules. The PDB contains over 200,000 experimentally determined structures of proteins, nucleic acids, and complex assemblies, along with computed structure models. Use this skill to search for structures, retrieve structural data, perform sequence and structure similarity searches, and integrate PDB data into computational workflows.
+RCSB PDB is the worldwide repository for 3D structural data of biological macromolecules. Search for structures, retrieve coordinates and metadata, perform sequence and structure similarity searches across 200,000+ experimentally determined structures and computed models.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Searching for protein or nucleic acid 3D structures by text, sequence, or structural similarity
+- Downloading coordinate files in PDB, mmCIF, or BinaryCIF formats
+- Retrieving structural metadata, experimental methods, or quality metrics
+- Performing batch operations across multiple structures
+- Integrating PDB data into computational workflows for drug discovery, protein engineering, or structural biology research
 
 ## Core Capabilities
 

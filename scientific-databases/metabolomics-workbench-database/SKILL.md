@@ -9,7 +9,9 @@ description: "Access NIH Metabolomics Workbench via REST API (4,200+ studies). Q
 
 The Metabolomics Workbench is a comprehensive NIH Common Fund-sponsored platform hosted at UCSD that serves as the primary repository for metabolomics research data. It provides programmatic access to over 4,200 processed studies (3,790+ publicly available), standardized metabolite nomenclature through RefMet, and powerful search capabilities across multiple analytical platforms (GC-MS, LC-MS, NMR).
 
-This skill enables efficient interaction with the Metabolomics Workbench REST API to query metabolite structures, access study data, standardize nomenclature, perform mass spectrometry searches, and retrieve gene/protein-metabolite associations.
+## When to Use This Skill
+
+This skill should be used when querying metabolite structures, accessing study data, standardizing nomenclature, performing mass spectrometry searches, or retrieving gene/protein-metabolite associations through the Metabolomics Workbench REST API.
 
 ## Core Capabilities
 

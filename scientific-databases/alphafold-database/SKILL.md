@@ -7,7 +7,20 @@ description: "Access AlphaFold's 200M+ AI-predicted protein structures. Retrieve
 
 ## Overview
 
-This skill provides tools and guidance for working with the AlphaFold Protein Structure Database (AlphaFold DB), a public repository containing AI-predicted 3D protein structures for over 200 million proteins. Maintained by DeepMind and EMBL-EBI, AlphaFold DB provides structure predictions with confidence estimates for nearly complete proteomes across multiple organisms. Use this skill to search for predictions, retrieve structural data with confidence metrics, download coordinate files, access bulk datasets, and integrate AlphaFold predictions into computational workflows.
+AlphaFold DB is a public repository of AI-predicted 3D protein structures for over 200 million proteins, maintained by DeepMind and EMBL-EBI. Access structure predictions with confidence metrics, download coordinate files, retrieve bulk datasets, and integrate predictions into computational workflows.
+
+## When to Use This Skill
+
+This skill should be used when working with AI-predicted protein structures in scenarios such as:
+
+- Retrieving protein structure predictions by UniProt ID or protein name
+- Downloading PDB/mmCIF coordinate files for structural analysis
+- Analyzing prediction confidence metrics (pLDDT, PAE) to assess reliability
+- Accessing bulk proteome datasets via Google Cloud Platform
+- Comparing predicted structures with experimental data
+- Performing structure-based drug discovery or protein engineering
+- Building structural models for proteins lacking experimental structures
+- Integrating AlphaFold predictions into computational pipelines
 
 ## Core Capabilities
 

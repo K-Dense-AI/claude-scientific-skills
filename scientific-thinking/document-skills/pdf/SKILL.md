@@ -8,7 +8,7 @@ license: Proprietary. LICENSE.txt has complete terms
 
 ## Overview
 
-This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see reference.md. If you need to fill out a PDF form, read forms.md and follow its instructions.
+Extract text/tables, create PDFs, merge/split files, fill forms using Python libraries and command-line tools. Apply this skill for programmatic document processing and analysis. For advanced features or form filling, consult reference.md and forms.md.
 
 ## Quick Start
 

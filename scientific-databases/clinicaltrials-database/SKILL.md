@@ -7,9 +7,7 @@ description: "Query ClinicalTrials.gov via API v2. Search trials by condition, d
 
 ## Overview
 
-The ClinicalTrials.gov database is a comprehensive registry of clinical studies conducted around the world, maintained by the U.S. National Library of Medicine. This skill provides access to the ClinicalTrials.gov API v2, enabling programmatic queries to search for trials, retrieve detailed study information, filter by various criteria, and export data for analysis.
-
-The API is public (no authentication required) with a rate limit of approximately 50 requests per minute per IP address. It supports both JSON and CSV response formats and uses modern standards including ISO 8601 dates and CommonMark Markdown formatting.
+ClinicalTrials.gov is a comprehensive registry of clinical studies conducted worldwide, maintained by the U.S. National Library of Medicine. Access API v2 to search for trials, retrieve detailed study information, filter by various criteria, and export data for analysis. The API is public (no authentication required) with rate limits of ~50 requests per minute, supporting JSON and CSV formats.
 
 ## When to Use This Skill
 

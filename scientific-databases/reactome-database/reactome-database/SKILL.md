@@ -7,7 +7,18 @@ description: "Query Reactome REST API for pathway analysis, enrichment, gene-pat
 
 ## Overview
 
-This skill enables interaction with Reactome, a free, open-source, curated and peer-reviewed pathway database. Reactome provides comprehensive biological pathway data for research, genome analysis, modeling, and systems biology. The database contains thousands of human pathways, reactions, proteins, small molecules, and drugs, all supported by extensive literature references.
+Reactome is a free, open-source, curated pathway database with 2,825+ human pathways. Query biological pathways, perform overrepresentation and expression analysis, map genes to pathways, explore molecular interactions via REST API and Python client for systems biology research.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Performing pathway enrichment analysis on gene or protein lists
+- Analyzing gene expression data to identify relevant biological pathways
+- Querying specific pathway information, reactions, or molecular interactions
+- Mapping genes or proteins to biological pathways and processes
+- Exploring disease-related pathways and mechanisms
+- Visualizing analysis results in the Reactome Pathway Browser
+- Conducting comparative pathway analysis across species
 
 ## Core Capabilities
 

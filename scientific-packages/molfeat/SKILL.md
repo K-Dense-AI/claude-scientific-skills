@@ -7,18 +7,11 @@ description: "Molecular featurization for ML (100+ featurizers). ECFP, MACCS, de
 
 ## Overview
 
-Molfeat is a comprehensive Python library for molecular featurization that unifies pre-trained embeddings and hand-crafted featurizers into a single, fast, and user-friendly package. Convert chemical structures (SMILES strings or RDKit molecules) into numerical representations suitable for machine learning tasks including QSAR modeling, virtual screening, similarity searching, and deep learning applications.
-
-**Key Capabilities:**
-- 100+ featurizers including fingerprints, descriptors, and pretrained models
-- Fast parallel processing with simple API
-- Scikit-learn compatible transformers
-- Built-in caching and state persistence
-- Integration with PyTorch, TensorFlow, and graph neural networks
+Molfeat is a comprehensive Python library for molecular featurization that unifies 100+ pre-trained embeddings and hand-crafted featurizers. Convert chemical structures (SMILES strings or RDKit molecules) into numerical representations for machine learning tasks including QSAR modeling, virtual screening, similarity searching, and deep learning applications. Features fast parallel processing, scikit-learn compatible transformers, and built-in caching.
 
 ## When to Use This Skill
 
-Apply molfeat when working with:
+This skill should be used when working with:
 - **Molecular machine learning**: Building QSAR/QSPR models, property prediction
 - **Virtual screening**: Ranking compound libraries for biological activity
 - **Similarity searching**: Finding structurally similar molecules
