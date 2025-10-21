@@ -32,7 +32,7 @@
 - **scikit-learn** - Machine learning algorithms, preprocessing, and model selection
 - **statsmodels** - Statistical modeling and econometrics (OLS, GLM, logit/probit, ARIMA, time series forecasting, hypothesis testing, diagnostics)
 - **Torch Geometric** - Graph Neural Networks for molecular and geometric data
-- **Transformers** - Hugging Face transformers for NLU, image classification, and generation
+- **Transformers** - State-of-the-art machine learning models for NLP, computer vision, audio, and multimodal tasks. Provides 1M+ pre-trained models accessible via pipelines (text-classification, NER, QA, summarization, translation, text-generation, image-classification, object-detection, ASR, VQA), comprehensive training via Trainer API with distributed training and mixed precision, flexible text generation with multiple decoding strategies (greedy, beam search, sampling), and Auto classes for automatic architecture selection (BERT, GPT, T5, ViT, BART, etc.)
 - **UMAP-learn** - Dimensionality reduction and manifold learning
 
 ## Materials Science & Chemistry
