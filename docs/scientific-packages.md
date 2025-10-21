@@ -19,6 +19,7 @@
 - **Molfeat** - 100+ molecular featurizers including fingerprints, descriptors, and pretrained models
 - **PyTDC** - Therapeutics Data Commons for drug discovery datasets and benchmarks
 - **RDKit** - Cheminformatics toolkit for molecular I/O, descriptors, fingerprints, and SMARTS
+- **TorchDrug** - PyTorch-based machine learning platform for drug discovery with 40+ datasets, 20+ GNN models for molecular property prediction, protein modeling, knowledge graph reasoning, molecular generation, and retrosynthesis planning
 
 ## Proteomics & Mass Spectrometry
 - **matchms** - Processing and similarity matching of mass spectrometry data with 40+ filters, spectral library matching (Cosine, Modified Cosine, Neutral Losses), metadata harmonization, molecular fingerprint comparison, and support for multiple file formats (MGF, MSP, mzML, JSON)
