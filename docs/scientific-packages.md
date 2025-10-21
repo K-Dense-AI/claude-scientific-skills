@@ -28,7 +28,7 @@
 ## Machine Learning & Deep Learning
 - **PyMC** - Bayesian statistical modeling and probabilistic programming
 - **PyMOO** - Multi-objective optimization with evolutionary algorithms
-- **PyTorch Lightning** - Structured PyTorch training with automatic optimization
+- **PyTorch Lightning** - Deep learning framework that organizes PyTorch code to eliminate boilerplate while maintaining full flexibility. Automates training workflows (40+ tasks including epoch/batch iteration, optimizer steps, gradient management, checkpointing), supports multi-GPU/TPU training with DDP/FSDP/DeepSpeed strategies, includes LightningModule for model organization, Trainer for automation, LightningDataModule for data pipelines, callbacks for extensibility, and integrations with TensorBoard, Wandb, MLflow for experiment tracking
 - **scikit-learn** - Machine learning algorithms, preprocessing, and model selection
 - **statsmodels** - Statistical modeling and econometrics (OLS, GLM, logit/probit, ARIMA, time series forecasting, hypothesis testing, diagnostics)
 - **Torch Geometric** - Graph Neural Networks for molecular and geometric data

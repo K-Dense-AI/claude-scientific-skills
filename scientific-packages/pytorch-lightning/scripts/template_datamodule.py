@@ -1,221 +1,328 @@
 """
 Template for creating a PyTorch Lightning DataModule.
 
-This template includes all common hooks and patterns for organizing
-data processing workflows with best practices.
+This template provides a complete boilerplate for building a LightningDataModule
+with all essential methods and best practices for data handling.
 """
 
 import lightning as L
-from torch.utils.data import DataLoader, Dataset, random_split
+from torch.utils.data import Dataset, DataLoader, random_split
 import torch
 
 
-class TemplateDataset(Dataset):
-    """Example dataset - replace with your actual dataset."""
+class CustomDataset(Dataset):
+    """
+    Custom Dataset implementation.
 
-    def __init__(self, data, targets, transform=None):
-        self.data = data
-        self.targets = targets
+    Replace this with your actual dataset implementation.
+    """
+
+    def __init__(self, data_path, transform=None):
+        """
+        Initialize the dataset.
+
+        Args:
+            data_path: Path to data directory
+            transform: Optional transforms to apply
+        """
+        self.data_path = data_path
         self.transform = transform
 
+        # Load your data here
+        # self.data = load_data(data_path)
+        # self.labels = load_labels(data_path)
+
+        # Placeholder data
+        self.data = torch.randn(1000, 3, 224, 224)
+        self.labels = torch.randint(0, 10, (1000,))
+
     def __len__(self):
+        """Return the size of the dataset."""
         return len(self.data)
 
     def __getitem__(self, idx):
-        x = self.data[idx]
-        y = self.targets[idx]
+        """
+        Get a single item from the dataset.
+
+        Args:
+            idx: Index of the item
+
+        Returns:
+            Tuple of (data, label)
+        """
+        sample = self.data[idx]
+        label = self.labels[idx]
 
         if self.transform:
-            x = self.transform(x)
+            sample = self.transform(sample)
 
-        return x, y
+        return sample, label
 
 
 class TemplateDataModule(L.LightningDataModule):
-    """Template DataModule with all common hooks and patterns."""
+    """
+    Template LightningDataModule for data handling.
+
+    This class encapsulates all data processing steps:
+    1. Download/prepare data (prepare_data)
+    2. Create datasets (setup)
+    3. Create dataloaders (train/val/test/predict_dataloader)
+
+    Args:
+        data_dir: Directory containing the data
+        batch_size: Batch size for dataloaders
+        num_workers: Number of workers for data loading
+        train_val_split: Train/validation split ratio
+        pin_memory: Whether to pin memory for faster GPU transfer
+    """
 
     def __init__(
         self,
         data_dir: str = "./data",
         batch_size: int = 32,
         num_workers: int = 4,
-        train_val_split: tuple = (0.8, 0.2),
-        seed: int = 42,
+        train_val_split: float = 0.8,
         pin_memory: bool = True,
-        persistent_workers: bool = True,
     ):
         super().__init__()
 
         # Save hyperparameters
         self.save_hyperparameters()
 
-        # Initialize attributes
-        self.data_dir = data_dir
-        self.batch_size = batch_size
-        self.num_workers = num_workers
-        self.train_val_split = train_val_split
-        self.seed = seed
-        self.pin_memory = pin_memory
-        self.persistent_workers = persistent_workers
-
-        # Placeholders for datasets
+        # Initialize as None (will be set in setup)
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
         self.predict_dataset = None
 
-        # Placeholder for transforms
-        self.train_transform = None
-        self.val_transform = None
-        self.test_transform = None
-
     def prepare_data(self):
         """
-        Download and prepare data (called only on 1 GPU/TPU in distributed settings).
-        Use this for downloading, tokenizing, etc. Do NOT set state here (no self.x = y).
+        Download and prepare data.
+
+        This method is called only once and on a single process.
+        Do not set state here (e.g., self.x = y) because it's not
+        transferred to other processes.
+
+        Use this for:
+        - Downloading datasets
+        - Tokenizing text
+        - Saving processed data to disk
         """
-        # Example: Download datasets
-        # datasets.MNIST(self.data_dir, train=True, download=True)
-        # datasets.MNIST(self.data_dir, train=False, download=True)
+        # Example: Download data if not exists
+        # if not os.path.exists(self.hparams.data_dir):
+        #     download_dataset(self.hparams.data_dir)
+
+        # Example: Process and save data
+        # process_and_save(self.hparams.data_dir)
+
         pass
 
     def setup(self, stage: str = None):
         """
-        Load data and create train/val/test splits (called on every GPU/TPU in distributed).
-        Use this for splitting, creating datasets, etc. Setting state is OK here (self.x = y).
+        Create datasets for each stage.
+
+        This method is called on every process in distributed training.
+        Set state here (e.g., self.train_dataset = ...).
 
         Args:
-            stage: Either 'fit', 'validate', 'test', or 'predict'
+            stage: Current stage ('fit', 'validate', 'test', or 'predict')
         """
+        # Define transforms
+        train_transform = self._get_train_transforms()
+        test_transform = self._get_test_transforms()
 
-        # Fit stage: setup training and validation datasets
+        # Setup for training and validation
         if stage == "fit" or stage is None:
             # Load full dataset
-            # Example: full_dataset = datasets.MNIST(self.data_dir, train=True, transform=self.train_transform)
-
-            # Create dummy data for template
-            full_data = torch.randn(1000, 784)
-            full_targets = torch.randint(0, 10, (1000,))
-            full_dataset = TemplateDataset(full_data, full_targets, transform=self.train_transform)
+            full_dataset = CustomDataset(
+                self.hparams.data_dir, transform=train_transform
+            )
 
             # Split into train and validation
-            train_size = int(len(full_dataset) * self.train_val_split[0])
+            train_size = int(self.hparams.train_val_split * len(full_dataset))
             val_size = len(full_dataset) - train_size
 
             self.train_dataset, self.val_dataset = random_split(
                 full_dataset,
                 [train_size, val_size],
-                generator=torch.Generator().manual_seed(self.seed)
+                generator=torch.Generator().manual_seed(42),
             )
 
-            # Apply validation transform if different from train
-            if self.val_transform:
-                self.val_dataset.dataset.transform = self.val_transform
+            # Apply test transforms to validation set
+            # (Note: random_split doesn't support different transforms,
+            # you may need to implement a custom wrapper)
 
-        # Test stage: setup test dataset
+        # Setup for testing
         if stage == "test" or stage is None:
-            # Example: self.test_dataset = datasets.MNIST(
-            #     self.data_dir, train=False, transform=self.test_transform
-            # )
+            self.test_dataset = CustomDataset(
+                self.hparams.data_dir, transform=test_transform
+            )
 
-            # Create dummy test data for template
-            test_data = torch.randn(200, 784)
-            test_targets = torch.randint(0, 10, (200,))
-            self.test_dataset = TemplateDataset(test_data, test_targets, transform=self.test_transform)
+        # Setup for prediction
+        if stage == "predict":
+            self.predict_dataset = CustomDataset(
+                self.hparams.data_dir, transform=test_transform
+            )
 
-        # Predict stage: setup prediction dataset
-        if stage == "predict" or stage is None:
-            # Example: self.predict_dataset = YourCustomDataset(...)
+    def _get_train_transforms(self):
+        """
+        Define training transforms/augmentations.
 
-            # Create dummy predict data for template
-            predict_data = torch.randn(100, 784)
-            predict_targets = torch.zeros(100, dtype=torch.long)
-            self.predict_dataset = TemplateDataset(predict_data, predict_targets)
+        Returns:
+            Training transforms
+        """
+        # Example with torchvision:
+        # from torchvision import transforms
+        # return transforms.Compose([
+        #     transforms.RandomHorizontalFlip(),
+        #     transforms.RandomRotation(10),
+        #     transforms.Normalize(mean=[0.485, 0.456, 0.406],
+        #                         std=[0.229, 0.224, 0.225])
+        # ])
+
+        return None
+
+    def _get_test_transforms(self):
+        """
+        Define test/validation transforms (no augmentation).
+
+        Returns:
+            Test/validation transforms
+        """
+        # Example with torchvision:
+        # from torchvision import transforms
+        # return transforms.Compose([
+        #     transforms.Normalize(mean=[0.485, 0.456, 0.406],
+        #                         std=[0.229, 0.224, 0.225])
+        # ])
+
+        return None
 
     def train_dataloader(self):
-        """Return training dataloader."""
+        """
+        Create training dataloader.
+
+        Returns:
+            Training DataLoader
+        """
         return DataLoader(
             self.train_dataset,
-            batch_size=self.batch_size,
+            batch_size=self.hparams.batch_size,
             shuffle=True,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            persistent_workers=self.persistent_workers if self.num_workers > 0 else False,
+            num_workers=self.hparams.num_workers,
+            pin_memory=self.hparams.pin_memory,
+            persistent_workers=True if self.hparams.num_workers > 0 else False,
+            drop_last=True,  # Drop last incomplete batch
         )
 
     def val_dataloader(self):
-        """Return validation dataloader."""
+        """
+        Create validation dataloader.
+
+        Returns:
+            Validation DataLoader
+        """
         return DataLoader(
             self.val_dataset,
-            batch_size=self.batch_size,
+            batch_size=self.hparams.batch_size,
             shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            persistent_workers=self.persistent_workers if self.num_workers > 0 else False,
+            num_workers=self.hparams.num_workers,
+            pin_memory=self.hparams.pin_memory,
+            persistent_workers=True if self.hparams.num_workers > 0 else False,
         )
 
     def test_dataloader(self):
-        """Return test dataloader."""
+        """
+        Create test dataloader.
+
+        Returns:
+            Test DataLoader
+        """
         return DataLoader(
             self.test_dataset,
-            batch_size=self.batch_size,
+            batch_size=self.hparams.batch_size,
             shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            persistent_workers=self.persistent_workers if self.num_workers > 0 else False,
+            num_workers=self.hparams.num_workers,
         )
 
     def predict_dataloader(self):
-        """Return prediction dataloader."""
+        """
+        Create prediction dataloader.
+
+        Returns:
+            Prediction DataLoader
+        """
         return DataLoader(
             self.predict_dataset,
-            batch_size=self.batch_size,
+            batch_size=self.hparams.batch_size,
             shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=self.pin_memory,
-            persistent_workers=self.persistent_workers if self.num_workers > 0 else False,
+            num_workers=self.hparams.num_workers,
         )
 
-    def teardown(self, stage: str = None):
-        """Clean up after fit, validate, test, or predict."""
-        # Example: close database connections, clear caches, etc.
-        pass
+    # Optional: State management for checkpointing
 
     def state_dict(self):
-        """Save state for checkpointing."""
-        # Return anything you want to save in the checkpoint
-        return {}
+        """
+        Save DataModule state for checkpointing.
+
+        Returns:
+            State dictionary
+        """
+        return {"train_val_split": self.hparams.train_val_split}
 
     def load_state_dict(self, state_dict):
-        """Load state from checkpoint."""
-        # Restore state from checkpoint
-        pass
+        """
+        Restore DataModule state from checkpoint.
+
+        Args:
+            state_dict: State dictionary
+        """
+        self.hparams.train_val_split = state_dict["train_val_split"]
+
+    # Optional: Teardown for cleanup
+
+    def teardown(self, stage: str = None):
+        """
+        Cleanup after training/testing/prediction.
+
+        Args:
+            stage: Current stage ('fit', 'validate', 'test', or 'predict')
+        """
+        # Clean up resources
+        if stage == "fit":
+            self.train_dataset = None
+            self.val_dataset = None
+        elif stage == "test":
+            self.test_dataset = None
+        elif stage == "predict":
+            self.predict_dataset = None
 
 
 # Example usage
 if __name__ == "__main__":
-    # Create datamodule
-    datamodule = TemplateDataModule(
+    # Create DataModule
+    dm = TemplateDataModule(
         data_dir="./data",
-        batch_size=32,
-        num_workers=4,
-        train_val_split=(0.8, 0.2),
+        batch_size=64,
+        num_workers=8,
+        train_val_split=0.8,
     )
 
-    # Prepare and setup data
-    datamodule.prepare_data()
-    datamodule.setup("fit")
+    # Setup for training
+    dm.prepare_data()
+    dm.setup(stage="fit")
 
     # Get dataloaders
-    train_loader = datamodule.train_dataloader()
-    val_loader = datamodule.val_dataloader()
+    train_loader = dm.train_dataloader()
+    val_loader = dm.val_dataloader()
 
-    print("Template DataModule created successfully!")
+    print(f"Train dataset size: {len(dm.train_dataset)}")
+    print(f"Validation dataset size: {len(dm.val_dataset)}")
     print(f"Train batches: {len(train_loader)}")
-    print(f"Val batches: {len(val_loader)}")
-    print(f"Batch size: {datamodule.batch_size}")
+    print(f"Validation batches: {len(val_loader)}")
 
-    # Test a batch
-    batch = next(iter(train_loader))
-    x, y = batch
-    print(f"Batch shape: {x.shape}, {y.shape}")
+    # Example: Use with Trainer
+    # from template_lightning_module import TemplateLightningModule
+    # model = TemplateLightningModule()
+    # trainer = L.Trainer(max_epochs=10)
+    # trainer.fit(model, datamodule=dm)

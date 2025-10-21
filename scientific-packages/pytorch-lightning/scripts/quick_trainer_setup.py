@@ -1,8 +1,8 @@
 """
-Helper script to quickly set up a PyTorch Lightning Trainer with common configurations.
+Quick Trainer Setup Examples for PyTorch Lightning.
 
-This script provides preset configurations for different training scenarios
-and makes it easy to create a Trainer with best practices.
+This script provides ready-to-use Trainer configurations for common use cases.
+Copy and modify these configurations for your specific needs.
 """
 
 import lightning as L
@@ -10,253 +10,445 @@ from lightning.pytorch.callbacks import (
     ModelCheckpoint,
     EarlyStopping,
     LearningRateMonitor,
+    DeviceStatsMonitor,
     RichProgressBar,
-    ModelSummary,
 )
-from lightning.pytorch.loggers import TensorBoardLogger, CSVLogger
+from lightning.pytorch import loggers as pl_loggers
+from lightning.pytorch.strategies import DDPStrategy, FSDPStrategy
 
 
-def create_trainer(
-    preset: str = "default",
-    max_epochs: int = 100,
-    accelerator: str = "auto",
-    devices: int = 1,
-    log_dir: str = "./logs",
-    experiment_name: str = "lightning_experiment",
-    enable_checkpointing: bool = True,
-    enable_early_stopping: bool = True,
-    **kwargs
+# =============================================================================
+# 1. BASIC TRAINING (Single GPU/CPU)
+# =============================================================================
+
+def basic_trainer():
+    """
+    Simple trainer for quick prototyping.
+    Use for: Small models, debugging, single GPU training
+    """
+    trainer = L.Trainer(
+        max_epochs=10,
+        accelerator="auto",  # Automatically select GPU/CPU
+        devices="auto",      # Use all available devices
+        enable_progress_bar=True,
+        logger=True,
+    )
+    return trainer
+
+
+# =============================================================================
+# 2. DEBUGGING CONFIGURATION
+# =============================================================================
+
+def debug_trainer():
+    """
+    Trainer for debugging with fast dev run and anomaly detection.
+    Use for: Finding bugs, testing code quickly
+    """
+    trainer = L.Trainer(
+        fast_dev_run=True,           # Run 1 batch through train/val/test
+        accelerator="cpu",            # Use CPU for easier debugging
+        detect_anomaly=True,          # Detect NaN/Inf in gradients
+        log_every_n_steps=1,         # Log every step
+        enable_progress_bar=True,
+    )
+    return trainer
+
+
+# =============================================================================
+# 3. PRODUCTION TRAINING (Single GPU)
+# =============================================================================
+
+def production_single_gpu_trainer(
+    max_epochs=100,
+    log_dir="logs",
+    checkpoint_dir="checkpoints"
 ):
     """
-    Create a Lightning Trainer with preset configurations.
-
-    Args:
-        preset: Configuration preset - "default", "fast_dev", "production", "distributed"
-        max_epochs: Maximum number of training epochs
-        accelerator: Device to use ("auto", "gpu", "cpu", "tpu")
-        devices: Number of devices to use
-        log_dir: Directory for logs and checkpoints
-        experiment_name: Name for the experiment
-        enable_checkpointing: Whether to enable model checkpointing
-        enable_early_stopping: Whether to enable early stopping
-        **kwargs: Additional arguments to pass to Trainer
-
-    Returns:
-        Configured Lightning Trainer instance
+    Production-ready trainer for single GPU with checkpointing and logging.
+    Use for: Final training runs on single GPU
     """
-
-    callbacks = []
-    logger_list = []
-
-    # Configure based on preset
-    if preset == "fast_dev":
-        # Fast development run - minimal epochs, quick debugging
-        config = {
-            "fast_dev_run": False,
-            "max_epochs": 3,
-            "limit_train_batches": 100,
-            "limit_val_batches": 50,
-            "log_every_n_steps": 10,
-            "enable_progress_bar": True,
-            "enable_model_summary": True,
-        }
-
-    elif preset == "production":
-        # Production-ready configuration with all bells and whistles
-        config = {
-            "max_epochs": max_epochs,
-            "precision": "16-mixed",
-            "gradient_clip_val": 1.0,
-            "log_every_n_steps": 50,
-            "enable_progress_bar": True,
-            "enable_model_summary": True,
-            "deterministic": True,
-            "benchmark": True,
-        }
-
-        # Add model checkpointing
-        if enable_checkpointing:
-            callbacks.append(
-                ModelCheckpoint(
-                    dirpath=f"{log_dir}/{experiment_name}/checkpoints",
-                    filename="{epoch}-{val_loss:.2f}",
-                    monitor="val_loss",
-                    mode="min",
-                    save_top_k=3,
-                    save_last=True,
-                    verbose=True,
-                )
-            )
-
-        # Add early stopping
-        if enable_early_stopping:
-            callbacks.append(
-                EarlyStopping(
-                    monitor="val_loss",
-                    patience=10,
-                    mode="min",
-                    verbose=True,
-                )
-            )
-
-        # Add learning rate monitor
-        callbacks.append(LearningRateMonitor(logging_interval="epoch"))
-
-        # Add TensorBoard logger
-        logger_list.append(
-            TensorBoardLogger(
-                save_dir=log_dir,
-                name=experiment_name,
-                version=None,
-            )
-        )
-
-    elif preset == "distributed":
-        # Distributed training configuration
-        config = {
-            "max_epochs": max_epochs,
-            "strategy": "ddp",
-            "precision": "16-mixed",
-            "sync_batchnorm": True,
-            "use_distributed_sampler": True,
-            "log_every_n_steps": 50,
-            "enable_progress_bar": True,
-        }
-
-        # Add model checkpointing
-        if enable_checkpointing:
-            callbacks.append(
-                ModelCheckpoint(
-                    dirpath=f"{log_dir}/{experiment_name}/checkpoints",
-                    filename="{epoch}-{val_loss:.2f}",
-                    monitor="val_loss",
-                    mode="min",
-                    save_top_k=3,
-                    save_last=True,
-                )
-            )
-
-    else:  # default
-        # Default configuration - balanced for most use cases
-        config = {
-            "max_epochs": max_epochs,
-            "log_every_n_steps": 50,
-            "enable_progress_bar": True,
-            "enable_model_summary": True,
-        }
-
-        # Add basic checkpointing
-        if enable_checkpointing:
-            callbacks.append(
-                ModelCheckpoint(
-                    dirpath=f"{log_dir}/{experiment_name}/checkpoints",
-                    filename="{epoch}-{val_loss:.2f}",
-                    monitor="val_loss",
-                    save_last=True,
-                )
-            )
-
-        # Add CSV logger
-        logger_list.append(
-            CSVLogger(
-                save_dir=log_dir,
-                name=experiment_name,
-            )
-        )
-
-    # Add progress bar
-    if config.get("enable_progress_bar", True):
-        callbacks.append(RichProgressBar())
-
-    # Merge with provided kwargs
-    final_config = {
-        **config,
-        "accelerator": accelerator,
-        "devices": devices,
-        "callbacks": callbacks,
-        "logger": logger_list if logger_list else True,
-        **kwargs,
-    }
-
-    # Create and return trainer
-    return L.Trainer(**final_config)
-
-
-def create_debugging_trainer():
-    """Create a trainer optimized for debugging."""
-    return create_trainer(
-        preset="fast_dev",
-        max_epochs=1,
-        limit_train_batches=10,
-        limit_val_batches=5,
-        num_sanity_val_steps=2,
+    # Callbacks
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        filename="{epoch:02d}-{val_loss:.2f}",
+        monitor="val_loss",
+        mode="min",
+        save_top_k=3,
+        save_last=True,
+        verbose=True,
     )
 
+    early_stop_callback = EarlyStopping(
+        monitor="val_loss",
+        patience=10,
+        mode="min",
+        verbose=True,
+    )
 
-def create_gpu_trainer(num_gpus: int = 1, precision: str = "16-mixed"):
-    """Create a trainer optimized for GPU training."""
-    return create_trainer(
-        preset="production",
+    lr_monitor = LearningRateMonitor(logging_interval="step")
+
+    # Logger
+    tb_logger = pl_loggers.TensorBoardLogger(
+        save_dir=log_dir,
+        name="my_model",
+    )
+
+    # Trainer
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
+        accelerator="gpu",
+        devices=1,
+        precision="16-mixed",        # Mixed precision for speed
+        callbacks=[
+            checkpoint_callback,
+            early_stop_callback,
+            lr_monitor,
+        ],
+        logger=tb_logger,
+        log_every_n_steps=50,
+        gradient_clip_val=1.0,       # Clip gradients
+        enable_progress_bar=True,
+    )
+
+    return trainer
+
+
+# =============================================================================
+# 4. MULTI-GPU TRAINING (DDP)
+# =============================================================================
+
+def multi_gpu_ddp_trainer(
+    max_epochs=100,
+    num_gpus=4,
+    log_dir="logs",
+    checkpoint_dir="checkpoints"
+):
+    """
+    Multi-GPU training with Distributed Data Parallel.
+    Use for: Models <500M parameters, standard deep learning models
+    """
+    # Callbacks
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        filename="{epoch:02d}-{val_loss:.2f}",
+        monitor="val_loss",
+        mode="min",
+        save_top_k=3,
+        save_last=True,
+    )
+
+    early_stop_callback = EarlyStopping(
+        monitor="val_loss",
+        patience=10,
+        mode="min",
+    )
+
+    lr_monitor = LearningRateMonitor(logging_interval="step")
+
+    # Logger
+    wandb_logger = pl_loggers.WandbLogger(
+        project="my-project",
+        save_dir=log_dir,
+    )
+
+    # Trainer
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
         accelerator="gpu",
         devices=num_gpus,
-        precision=precision,
+        strategy=DDPStrategy(
+            find_unused_parameters=False,
+            gradient_as_bucket_view=True,
+        ),
+        precision="16-mixed",
+        callbacks=[
+            checkpoint_callback,
+            early_stop_callback,
+            lr_monitor,
+        ],
+        logger=wandb_logger,
+        log_every_n_steps=50,
+        gradient_clip_val=1.0,
+        sync_batchnorm=True,         # Sync batch norm across GPUs
     )
 
+    return trainer
 
-def create_distributed_trainer(num_gpus: int = 2, num_nodes: int = 1):
-    """Create a trainer for distributed training across multiple GPUs."""
-    return create_trainer(
-        preset="distributed",
+
+# =============================================================================
+# 5. LARGE MODEL TRAINING (FSDP)
+# =============================================================================
+
+def large_model_fsdp_trainer(
+    max_epochs=100,
+    num_gpus=8,
+    log_dir="logs",
+    checkpoint_dir="checkpoints"
+):
+    """
+    Training for large models (500M+ parameters) with FSDP.
+    Use for: Large transformers, models that don't fit in single GPU
+    """
+    import torch.nn as nn
+
+    # Callbacks
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        filename="{epoch:02d}-{val_loss:.2f}",
+        monitor="val_loss",
+        mode="min",
+        save_top_k=3,
+        save_last=True,
+    )
+
+    lr_monitor = LearningRateMonitor(logging_interval="step")
+
+    # Logger
+    wandb_logger = pl_loggers.WandbLogger(
+        project="large-model",
+        save_dir=log_dir,
+    )
+
+    # Trainer with FSDP
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
         accelerator="gpu",
         devices=num_gpus,
-        num_nodes=num_nodes,
-        strategy="ddp",
+        strategy=FSDPStrategy(
+            sharding_strategy="FULL_SHARD",
+            activation_checkpointing_policy={
+                nn.TransformerEncoderLayer,
+                nn.TransformerDecoderLayer,
+            },
+            cpu_offload=False,       # Set True if GPU memory insufficient
+        ),
+        precision="bf16-mixed",      # BFloat16 for A100/H100
+        callbacks=[
+            checkpoint_callback,
+            lr_monitor,
+        ],
+        logger=wandb_logger,
+        log_every_n_steps=10,
+        gradient_clip_val=1.0,
+        accumulate_grad_batches=4,   # Gradient accumulation
     )
 
+    return trainer
 
-# Example usage
-if __name__ == "__main__":
-    print("Creating different trainer configurations...\n")
 
-    # 1. Default trainer
-    print("1. Default trainer:")
-    trainer_default = create_trainer(preset="default", max_epochs=50)
-    print(f"   Max epochs: {trainer_default.max_epochs}")
-    print(f"   Accelerator: {trainer_default.accelerator}")
-    print(f"   Callbacks: {len(trainer_default.callbacks)}")
-    print()
+# =============================================================================
+# 6. VERY LARGE MODEL TRAINING (DeepSpeed)
+# =============================================================================
 
-    # 2. Fast development trainer
-    print("2. Fast development trainer:")
-    trainer_dev = create_trainer(preset="fast_dev")
-    print(f"   Max epochs: {trainer_dev.max_epochs}")
-    print(f"   Train batches limit: {trainer_dev.limit_train_batches}")
-    print()
+def deepspeed_trainer(
+    max_epochs=100,
+    num_gpus=8,
+    stage=3,
+    log_dir="logs",
+    checkpoint_dir="checkpoints"
+):
+    """
+    Training for very large models with DeepSpeed.
+    Use for: Models >10B parameters, maximum memory efficiency
+    """
+    # Callbacks
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        filename="{epoch:02d}-{step:06d}",
+        save_top_k=3,
+        save_last=True,
+        every_n_train_steps=1000,    # Save every N steps
+    )
 
-    # 3. Production trainer
-    print("3. Production trainer:")
-    trainer_prod = create_trainer(
-        preset="production",
+    lr_monitor = LearningRateMonitor(logging_interval="step")
+
+    # Logger
+    wandb_logger = pl_loggers.WandbLogger(
+        project="very-large-model",
+        save_dir=log_dir,
+    )
+
+    # Select DeepSpeed stage
+    strategy = f"deepspeed_stage_{stage}"
+
+    # Trainer
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
+        accelerator="gpu",
+        devices=num_gpus,
+        strategy=strategy,
+        precision="16-mixed",
+        callbacks=[
+            checkpoint_callback,
+            lr_monitor,
+        ],
+        logger=wandb_logger,
+        log_every_n_steps=10,
+        gradient_clip_val=1.0,
+        accumulate_grad_batches=4,
+    )
+
+    return trainer
+
+
+# =============================================================================
+# 7. HYPERPARAMETER TUNING
+# =============================================================================
+
+def hyperparameter_tuning_trainer(max_epochs=50):
+    """
+    Lightweight trainer for hyperparameter search.
+    Use for: Quick experiments, hyperparameter tuning
+    """
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
+        accelerator="auto",
+        devices=1,
+        enable_checkpointing=False,  # Don't save checkpoints
+        logger=False,                 # Disable logging
+        enable_progress_bar=False,
+        limit_train_batches=0.5,     # Use 50% of training data
+        limit_val_batches=0.5,       # Use 50% of validation data
+    )
+    return trainer
+
+
+# =============================================================================
+# 8. OVERFITTING TEST
+# =============================================================================
+
+def overfit_test_trainer(num_batches=10):
+    """
+    Trainer for overfitting on small subset to verify model capacity.
+    Use for: Testing if model can learn, debugging
+    """
+    trainer = L.Trainer(
         max_epochs=100,
-        experiment_name="my_experiment"
+        accelerator="auto",
+        devices=1,
+        overfit_batches=num_batches,  # Overfit on N batches
+        log_every_n_steps=1,
+        enable_progress_bar=True,
     )
-    print(f"   Max epochs: {trainer_prod.max_epochs}")
-    print(f"   Precision: {trainer_prod.precision}")
-    print(f"   Callbacks: {len(trainer_prod.callbacks)}")
+    return trainer
+
+
+# =============================================================================
+# 9. TIME-LIMITED TRAINING (SLURM)
+# =============================================================================
+
+def time_limited_trainer(
+    max_time_hours=23.5,
+    max_epochs=1000,
+    checkpoint_dir="checkpoints"
+):
+    """
+    Training with time limit for SLURM clusters.
+    Use for: Cluster jobs with time limits
+    """
+    from datetime import timedelta
+
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        save_top_k=3,
+        save_last=True,              # Important for resuming
+        every_n_epochs=5,
+    )
+
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
+        max_time=timedelta(hours=max_time_hours),
+        accelerator="gpu",
+        devices="auto",
+        callbacks=[checkpoint_callback],
+        log_every_n_steps=50,
+    )
+
+    return trainer
+
+
+# =============================================================================
+# 10. REPRODUCIBLE RESEARCH
+# =============================================================================
+
+def reproducible_trainer(seed=42, max_epochs=100):
+    """
+    Fully reproducible trainer for research papers.
+    Use for: Publications, reproducible results
+    """
+    # Set seed
+    L.seed_everything(seed, workers=True)
+
+    # Callbacks
+    checkpoint_callback = ModelCheckpoint(
+        dirpath="checkpoints",
+        filename="{epoch:02d}-{val_loss:.2f}",
+        monitor="val_loss",
+        mode="min",
+        save_top_k=3,
+        save_last=True,
+    )
+
+    # Trainer
+    trainer = L.Trainer(
+        max_epochs=max_epochs,
+        accelerator="gpu",
+        devices=1,
+        precision="32-true",         # Full precision for reproducibility
+        deterministic=True,          # Use deterministic algorithms
+        benchmark=False,             # Disable cudnn benchmarking
+        callbacks=[checkpoint_callback],
+        log_every_n_steps=50,
+    )
+
+    return trainer
+
+
+# =============================================================================
+# USAGE EXAMPLES
+# =============================================================================
+
+if __name__ == "__main__":
+    print("PyTorch Lightning Trainer Configurations\n")
+
+    # Example 1: Basic training
+    print("1. Basic Trainer:")
+    trainer = basic_trainer()
+    print(f"   - Max epochs: {trainer.max_epochs}")
+    print(f"   - Accelerator: {trainer.accelerator}")
     print()
 
-    # 4. Debugging trainer
-    print("4. Debugging trainer:")
-    trainer_debug = create_debugging_trainer()
-    print(f"   Max epochs: {trainer_debug.max_epochs}")
-    print(f"   Train batches: {trainer_debug.limit_train_batches}")
+    # Example 2: Debug training
+    print("2. Debug Trainer:")
+    trainer = debug_trainer()
+    print(f"   - Fast dev run: {trainer.fast_dev_run}")
+    print(f"   - Detect anomaly: {trainer.detect_anomaly}")
     print()
 
-    # 5. GPU trainer
-    print("5. GPU trainer:")
-    trainer_gpu = create_gpu_trainer(num_gpus=1)
-    print(f"   Accelerator: {trainer_gpu.accelerator}")
-    print(f"   Precision: {trainer_gpu.precision}")
+    # Example 3: Production single GPU
+    print("3. Production Single GPU Trainer:")
+    trainer = production_single_gpu_trainer(max_epochs=100)
+    print(f"   - Max epochs: {trainer.max_epochs}")
+    print(f"   - Precision: {trainer.precision}")
+    print(f"   - Callbacks: {len(trainer.callbacks)}")
     print()
 
-    print("All trainer configurations created successfully!")
+    # Example 4: Multi-GPU DDP
+    print("4. Multi-GPU DDP Trainer:")
+    trainer = multi_gpu_ddp_trainer(num_gpus=4)
+    print(f"   - Strategy: {trainer.strategy}")
+    print(f"   - Devices: {trainer.num_devices}")
+    print()
+
+    # Example 5: FSDP for large models
+    print("5. FSDP Trainer for Large Models:")
+    trainer = large_model_fsdp_trainer(num_gpus=8)
+    print(f"   - Strategy: {trainer.strategy}")
+    print(f"   - Precision: {trainer.precision}")
+    print()
+
+    print("\nTo use these configurations:")
+    print("1. Import the desired function")
+    print("2. Create trainer: trainer = production_single_gpu_trainer()")
+    print("3. Train model: trainer.fit(model, datamodule=dm)")

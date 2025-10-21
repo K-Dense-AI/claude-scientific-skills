@@ -209,7 +209,7 @@ Once you've installed the skills, you can ask Claude:
 ---
 
 ### 🔬 Scientific Packages
-**40 specialized Python packages** organized by domain.
+**41 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
