@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.21.0"
+    "version": "1.22.0"
   },
   "plugins": [
     {
@@ -42,6 +42,7 @@
         "./scientific-packages/pymc",
         "./scientific-packages/pymoo",
         "./scientific-packages/pyopenms",
+        "./scientific-packages/pysam",
         "./scientific-packages/pytdc",
         "./scientific-packages/pytorch-lightning",
         "./scientific-packages/rdkit",
