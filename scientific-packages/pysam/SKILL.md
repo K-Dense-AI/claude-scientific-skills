@@ -1,6 +1,6 @@
 ---
 name: pysam
-description: Toolkit for working with genomic data files in Python, including SAM/BAM/CRAM alignment files, VCF/BCF variant files, and FASTA/FASTQ sequence files. This skill should be used when reading, writing, or manipulating genomic datasets, performing operations like extracting reads from specific regions, calculating coverage, analyzing variants, querying reference sequences, processing sequencing data, or implementing bioinformatics pipelines that work with high-throughput sequencing data formats.
+description: "Toolkit for working with genomic data files in Python, including SAM/BAM/CRAM alignment files, VCF/BCF variant files, and FASTA/FASTQ sequence files. This skill should be used when reading, writing, or manipulating genomic datasets, performing operations like extracting reads from specific regions, calculating coverage, analyzing variants, querying reference sequences, processing sequencing data, or implementing bioinformatics pipelines that work with high-throughput sequencing data formats."
 ---
 
 # Pysam
