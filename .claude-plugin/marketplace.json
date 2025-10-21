@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.23.0"
+    "version": "1.24.0"
   },
   "plugins": [
     {
@@ -103,6 +103,15 @@
         "./scientific-thinking/document-skills/pdf",
         "./scientific-thinking/document-skills/pptx",
         "./scientific-thinking/document-skills/xlsx"
+      ]
+    },
+    {
+      "name": "scientific-integrations",
+      "description": "Collection of scientific platform integrations",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./scientific-integrations/benchling-integration"
       ]
     }
   ]
