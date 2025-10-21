@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.19.0"
+    "version": "1.20.0"
   },
   "plugins": [
     {
@@ -24,6 +24,7 @@
         "./scientific-packages/bioservices",
         "./scientific-packages/cellxgene-census",
         "./scientific-packages/cobrapy",
+        "./scientific-packages/dask",
         "./scientific-packages/datamol",
         "./scientific-packages/deepchem",
         "./scientific-packages/deeptools",
