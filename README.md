@@ -96,7 +96,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Dask** - Parallel computing for larger-than-memory datasets with distributed DataFrames, Arrays, Bags, and Futures
 - **Matplotlib** - Publication-quality plotting and visualization
 - **Polars** - High-performance DataFrame operations with lazy evaluation
-- **Seaborn** - Statistical data visualization
+- **Seaborn** - Statistical data visualization with dataset-oriented interface, automatic confidence intervals, publication-quality themes, colorblind-safe palettes, and comprehensive support for exploratory analysis, distribution comparisons, correlation matrices, regression plots, and multi-panel figures
 - **ReportLab** - Programmatic PDF generation for reports and documents
 
 **Phylogenetics & Trees:**
@@ -119,8 +119,8 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Peer Review** - Comprehensive toolkit for conducting high-quality scientific peer review with structured evaluation of methodology, statistics, reproducibility, ethics, and presentation across all scientific disciplines
 - **Scientific Brainstorming** - Conversational brainstorming partner for generating novel research ideas, exploring connections, challenging assumptions, and developing creative approaches through structured ideation workflows
 - **Scientific Critical Thinking** - Tools and approaches for rigorous scientific reasoning and evaluation
-- **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures
-- **Scientific Writing** - Comprehensive toolkit for writing, structuring, and formatting scientific research papers using IMRAD format, multiple citation styles (APA, AMA, Vancouver, Chicago, IEEE), reporting guidelines (CONSORT, STROBE, PRISMA), effective figures and tables, and core writing principles for clarity, conciseness, and accuracy across all scientific disciplines
+- **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures with matplotlib and seaborn, including statistical plots with automatic confidence intervals, colorblind-safe palettes, multi-panel figures, heatmaps, and journal-specific formatting
+- **Scientific Writing** - Comprehensive toolkit for writing, structuring, and formatting scientific research papers using IMRAD format, multiple citation styles (APA, AMA, Vancouver, Chicago, IEEE), reporting guidelines (CONSORT, STROBE, PRISMA), effective figures and tables, field-specific terminology, venue-specific structure expectations, and core writing principles for clarity, conciseness, and accuracy across all scientific disciplines
 - **Statistical Analysis** - Comprehensive statistical testing, power analysis, and experimental design
 
 **Document Processing:**
