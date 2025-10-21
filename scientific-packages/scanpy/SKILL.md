@@ -1,6 +1,6 @@
 ---
 name: scanpy
-description: "Use this skill for comprehensive single-cell RNA-seq analysis with scanpy. Essential for: loading single-cell data (.h5ad, 10X Genomics, CSV, HDF5), performing quality control and filtering, normalization and preprocessing, dimensionality reduction (PCA, UMAP, t-SNE), clustering (Leiden, Louvain), marker gene identification, cell type annotation, trajectory inference, differential expression analysis, batch correction, gene set scoring, creating publication-quality visualizations, and complete scRNA-seq workflows. Use when analyzing single-cell genomics data, identifying cell populations, characterizing gene expression patterns, performing pseudotime analysis, comparing conditions or treatments, visualizing cellular heterogeneity, or conducting any single-cell omics analysis requiring scalable Python tools."
+description: "Single-cell RNA-seq analysis. Load .h5ad/10X data, QC, normalization, PCA/UMAP/t-SNE, Leiden clustering, marker genes, cell type annotation, trajectory, for scRNA-seq analysis."
 ---
 
 # Scanpy: Single-Cell Analysis

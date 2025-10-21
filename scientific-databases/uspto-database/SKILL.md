@@ -1,6 +1,6 @@
 ---
 name: uspto-database
-description: Access and analyze United States Patent and Trademark Office (USPTO) data including patent searches, trademark lookups, patent examination history, office actions, assignments, citations, and litigation records. Use this skill when working with US patents or trademarks, analyzing patent prosecution, tracking IP ownership, conducting prior art searches, monitoring trademark status, retrieving patent examination data from PEDS, searching patent citations, or analyzing patent portfolios. Supports PatentSearch API (ElasticSearch-based patent search), PEDS (Patent Examination Data System), TSDR (Trademark Status & Document Retrieval), Patent/Trademark Assignment APIs, Office Action APIs, PTAB proceedings, and patent litigation data.
+description: "Access USPTO APIs for patent/trademark searches, examination history (PEDS), assignments, citations, office actions, TSDR, for IP analysis and prior art searches."
 ---
 
 # USPTO Database

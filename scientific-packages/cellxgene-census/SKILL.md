@@ -1,6 +1,6 @@
 ---
 name: cellxgene-census
-description: "Access, query, and analyze single-cell genomics data from the CZ CELLxGENE Census containing 61+ million cells from human and mouse. Use this skill for single-cell RNA-seq analysis, cell type identification, gene expression queries, tissue-specific analysis, disease studies, cross-dataset integration, machine learning model training, and large-scale genomics workflows. Supports filtering by cell type, tissue, disease, donor, and gene expression patterns. Provides both in-memory (AnnData) and out-of-core processing for datasets of any size. Integrates with PyTorch for ML workflows, scanpy for standard single-cell analysis, and supports batch processing for computational efficiency. Essential for exploring cell type diversity, marker gene analysis, differential expression studies, multi-tissue comparisons, COVID-19 research, developmental biology, and population-scale genomics projects."
+description: "Query CZ CELLxGENE Census (61M+ cells). Filter by cell type/tissue/disease, retrieve expression data, integrate with scanpy/PyTorch, for population-scale single-cell analysis."
 ---
 
 # CZ CELLxGENE Census

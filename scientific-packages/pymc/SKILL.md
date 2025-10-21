@@ -1,6 +1,6 @@
 ---
 name: pymc-bayesian-modeling
-description: "Comprehensive toolkit for Bayesian modeling, probabilistic programming, and statistical inference using PyMC. Use this skill for building, fitting, validating, and analyzing Bayesian models including linear regression, logistic regression, hierarchical/multilevel models, time series analysis, mixture models, count data models, and survival analysis. Essential for MCMC sampling, variational inference, model comparison using LOO/WAIC, prior and posterior predictive checks, uncertainty quantification, Bayesian hypothesis testing, parameter estimation with credible intervals, handling missing data, measurement error modeling, and hierarchical data structures. Includes diagnostic procedures for convergence checking, effective sample size assessment, divergence detection, and model validation. Use for Bayesian model selection, model averaging, posterior predictive simulation, and making predictions with uncertainty intervals. Covers both NUTS and variational inference methods, distribution selection for priors and likelihoods, non-centered parameterization for hierarchical models, and best practices for reproducible Bayesian analyses."
+description: "Bayesian modeling with PyMC. Build hierarchical models, MCMC (NUTS), variational inference, LOO/WAIC comparison, posterior checks, for probabilistic programming and inference."
 ---
 
 # PyMC Bayesian Modeling

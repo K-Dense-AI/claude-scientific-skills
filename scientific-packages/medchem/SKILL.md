@@ -1,6 +1,6 @@
 ---
 name: medchem
-description: "Python library for medicinal chemistry filtering and compound prioritization in drug discovery workflows. Use medchem when you need to: apply drug-likeness rules (Lipinski Rule of Five, CNS rules, leadlike criteria, Veber rules, Oprea rules), detect structural alerts and problematic substructures (PAINS filters, NIBR alerts, Lilly demerits, common structural alerts), filter compound libraries by medicinal chemistry criteria, calculate molecular complexity metrics (Bertz, Whitlock, Barone), identify specific chemical groups (hinge binders, phosphate binders, Michael acceptors), apply property-based constraints (molecular weight, LogP, TPSA, rotatable bonds), screen large compound collections for drug-like properties, prioritize hits from virtual screening, optimize lead compounds during medicinal chemistry campaigns, validate compound libraries before biological testing, or perform batch processing of molecular datasets. Medchem integrates with RDKit and datamol, accepts SMILES strings and RDKit mol objects, provides parallel processing for large datasets, includes a query language for complex filtering criteria, and offers both functional and object-oriented APIs. Essential for computational medicinal chemistry, compound library management, hit-to-lead optimization, and drug discovery pipeline workflows."
+description: "Medicinal chemistry filters. Apply drug-likeness rules (Lipinski, Veber), PAINS filters, structural alerts, complexity metrics, for compound prioritization and library filtering."
 ---
 
 # Medchem

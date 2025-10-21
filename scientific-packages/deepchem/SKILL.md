@@ -1,6 +1,6 @@
 ---
 name: deepchem
-description: "DeepChem toolkit for molecular machine learning, drug discovery, and materials science. Use for: molecular property prediction (solubility, toxicity, ADMET, binding affinity, drug-likeness), molecular featurization (fingerprints, descriptors, graph representations), graph neural networks (GCN, GAT, MPNN, AttentiveFP, DMPNN), MoleculeNet benchmark datasets (Tox21, BBBP, Delaney, HIV, ClinTox, FreeSolv, Lipophilicity), transfer learning with pretrained models (ChemBERTa, GROVER, MolFormer), materials property prediction (crystal structures, bandgap, formation energy), protein/DNA sequence analysis, molecular data loading (SMILES, SDF, FASTA), scaffold-based data splitting, molecular generation, hyperparameter optimization, model evaluation and comparison, custom model integration, and end-to-end drug discovery workflows."
+description: "Molecular machine learning toolkit. Property prediction (ADMET, toxicity), GNNs (GCN, MPNN), MoleculeNet benchmarks, pretrained models, featurization, for drug discovery ML."
 ---
 
 # DeepChem

@@ -1,6 +1,6 @@
 ---
 name: omero-integration
-description: Toolkit for interacting with OMERO microscopy data management systems using Python. Use this skill when working with microscopy images stored in OMERO servers, retrieving datasets and screening data, analyzing pixel data from scientific images, creating or managing annotations and metadata, working with regions of interest (ROIs), batch processing images, creating OMERO scripts, or integrating OMERO data into computational workflows. Essential for researchers working with high-content screening data, multi-dimensional microscopy datasets, or collaborative image repositories.
+description: "OMERO microscopy data management. Access images via Python, retrieve datasets, analyze pixels, manage ROIs/annotations, batch processing, for high-content screening and microscopy workflows."
 ---
 
 # OMERO Integration

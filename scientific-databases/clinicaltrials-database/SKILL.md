@@ -1,6 +1,6 @@
 ---
 name: clinicaltrials-database
-description: Query and analyze clinical trial data from the ClinicalTrials.gov database using their API v2. Use this skill when searching for clinical trials by condition/disease, intervention/drug, location, sponsor, study status, or phase; when retrieving detailed information about specific trials by NCT ID; when analyzing clinical trial data for research; when finding recruiting trials for patients; or when exporting clinical trial data to CSV/JSON formats. This skill provides comprehensive API access, query helpers, and data extraction capabilities for working with the ClinicalTrials.gov registry containing information about clinical studies conducted worldwide.
+description: "Query ClinicalTrials.gov via API v2. Search trials by condition, drug, location, status, or phase. Retrieve trial details by NCT ID, export data, for clinical research and patient matching."
 ---
 
 # ClinicalTrials.gov Database

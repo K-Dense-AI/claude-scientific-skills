@@ -1,6 +1,6 @@
 ---
 name: scientific-writing
-description: Comprehensive toolkit for writing, structuring, and formatting scientific research papers, manuscripts, and academic documents. This skill should be used when drafting or revising scientific manuscripts, structuring research papers using IMRAD format, formatting citations and references, creating effective figures and tables, applying reporting guidelines (CONSORT, STROBE, PRISMA), writing abstracts or specific paper sections, adhering to journal submission requirements, ensuring proper use of field-specific terminology and nomenclature, or improving scientific writing clarity and precision. Supports multiple citation styles (APA, AMA, Vancouver, Chicago), provides field-specific reporting standards and linguistic conventions, and ensures compliance with academic writing conventions across biomedical, life sciences, engineering, physical sciences, neuroscience, ecology, and social sciences disciplines.
+description: "Write scientific manuscripts. IMRAD structure, citations (APA/AMA/Vancouver), figures/tables, reporting guidelines (CONSORT/STROBE/PRISMA), abstracts, for research papers and journal submissions."
 ---
 
 # Scientific Writing

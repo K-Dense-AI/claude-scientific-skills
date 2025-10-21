@@ -1,6 +1,6 @@
 ---
 name: rdkit
-description: "Comprehensive cheminformatics toolkit for molecular manipulation, analysis, and visualization. Use this skill when working with chemical structures (SMILES, MOL files, SDF, InChI), calculating molecular descriptors (molecular weight, LogP, TPSA, HBD/HBA), performing substructure searches with SMARTS patterns, generating molecular fingerprints (Morgan, RDKit, MACCS), visualizing molecules, processing chemical reactions, conducting drug discovery workflows, generating 2D/3D coordinates, calculating molecular similarity, clustering compounds, standardizing molecules, analyzing pharmacophores, or any cheminformatics/computational chemistry tasks involving molecular data processing, structure-activity relationships, virtual screening, or chemical informatics analysis."
+description: "Cheminformatics toolkit for molecules. Parse SMILES/SDF, calculate descriptors (MW, LogP, TPSA), fingerprints, substructure search, 2D/3D generation, similarity, for drug discovery."
 ---
 
 # RDKit Cheminformatics Toolkit

@@ -1,6 +1,6 @@
 ---
 name: scikit-learn
-description: "Comprehensive machine learning toolkit using scikit-learn for Python. Use this skill for supervised learning (classification, regression), unsupervised learning (clustering, dimensionality reduction), data preprocessing (scaling, encoding, imputation, feature engineering), model evaluation (cross-validation, metrics, hyperparameter tuning), ML pipeline creation, anomaly detection, ensemble methods, feature selection, algorithm comparison, model deployment, and best practices. Covers RandomForest, SVM, LogisticRegression, KMeans, PCA, preprocessing pipelines, GridSearch, cross-validation, imbalanced data handling, mixed data types, text classification, and preventing data leakage. Essential for any machine learning project requiring predictive modeling, pattern recognition, or data analysis workflows."
+description: "ML toolkit. Classification, regression, clustering, PCA, preprocessing, pipelines, GridSearch, cross-validation, RandomForest, SVM, for general machine learning workflows."
 ---
 
 # Scikit-learn: Machine Learning in Python

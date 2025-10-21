@@ -1,6 +1,6 @@
 ---
 name: fda-database
-description: Access and query all FDA (Food and Drug Administration) databases through openFDA API using Python. This skill should be used when working with pharmaceutical drugs, medical devices, food products, veterinary medicines, or chemical substances regulated by the FDA. Use this for drug safety research, adverse event analysis, product recalls, regulatory submissions (510k, PMA), substance identification (UNII lookup), device surveillance, food safety monitoring, or any task requiring FDA regulatory data.
+description: "Query openFDA API for drugs, devices, adverse events, recalls, regulatory submissions (510k, PMA), substance identification (UNII), for FDA regulatory data analysis and safety research."
 ---
 
 # FDA Database Access

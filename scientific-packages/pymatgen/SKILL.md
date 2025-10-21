@@ -1,6 +1,6 @@
 ---
 name: pymatgen
-description: "Python Materials Genomics (pymatgen) toolkit for comprehensive materials science analysis and computational chemistry workflows. Use for crystal structure manipulation, molecular systems, materials property analysis, electronic structure calculations, phase diagram construction, surface and interface studies, thermodynamic stability analysis, symmetry operations, coordination environment analysis, band structure and density of states calculations, Materials Project database integration, file format conversion between 100+ formats (CIF, POSCAR, XYZ, VASP, Gaussian, Quantum ESPRESSO, etc.), high-throughput materials screening, computational workflow setup, diffraction pattern analysis, elastic properties, magnetic ordering, adsorption site finding, slab generation, Wulff shape construction, Pourbaix diagrams, reaction energy calculations, diffusion analysis, and integration with electronic structure codes. Essential for computational materials science, crystal structure analysis, materials discovery, DFT calculations, surface science, catalysis research, battery materials, semiconductor analysis, and any materials informatics applications requiring structure-property relationships."
+description: "Materials science toolkit. Crystal structures (CIF, POSCAR), phase diagrams, band structure, DOS, Materials Project integration, format conversion, for computational materials science."
 ---
 
 # Pymatgen - Python Materials Genomics

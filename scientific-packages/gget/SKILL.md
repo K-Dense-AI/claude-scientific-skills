@@ -1,6 +1,6 @@
 ---
 name: gget
-description: "Comprehensive bioinformatics toolkit for genomic database queries, sequence analysis, and molecular biology workflows. Use this skill for: gene information retrieval (Ensembl, UniProt, NCBI), sequence analysis (BLAST, BLAT, multiple sequence alignment), protein structure prediction (AlphaFold), gene expression analysis (ARCHS4, single-cell RNA-seq), enrichment analysis (Enrichr), disease and drug associations (OpenTargets), cancer genomics (cBioPortal, COSMIC), orthology analysis (Bgee), reference genome downloads, mutation analysis, and comparative genomics. Handles nucleotide/amino acid sequences, gene symbols, Ensembl IDs, UniProt accessions, PDB structures, mutation annotations, tissue expression data, and genomic annotations. Supports both command-line and Python interfaces with automatic database updates and comprehensive error handling for reliable bioinformatics analysis workflows."
+description: "Bioinformatics query toolkit. Gene info (Ensembl/UniProt), BLAST, AlphaFold, ARCHS4 expression, Enrichr, OpenTargets, COSMIC, genome downloads, CLI/Python, for rapid database queries."
 ---
 
 # gget

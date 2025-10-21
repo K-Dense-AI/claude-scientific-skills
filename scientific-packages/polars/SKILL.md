@@ -1,6 +1,6 @@
 ---
 name: polars
-description: "Use this skill for all Polars DataFrame operations, data manipulation, analysis, and processing tasks in Python. This includes: DataFrame creation and operations (select, filter, group_by, aggregations, joins, pivots, concatenation), lazy evaluation with LazyFrame for large datasets, data I/O (CSV, Parquet, JSON, Excel, databases), migrating from pandas to Polars, performance optimization, expression-based API usage, window functions, data transformations, statistical operations, and working with Apache Arrow-based data structures. Also use for questions about Polars syntax, best practices, query optimization, parallel processing, streaming data, type handling, null value management, and any data science or analytics workflows requiring fast DataFrame operations."
+description: "Fast DataFrame library (Apache Arrow). Select, filter, group_by, joins, lazy evaluation, CSV/Parquet I/O, expression API, for high-performance data analysis workflows."
 ---
 
 # Polars

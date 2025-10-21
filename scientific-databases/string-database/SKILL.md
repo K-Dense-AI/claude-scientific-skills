@@ -1,6 +1,6 @@
 ---
 name: string-database
-description: "Access and analyze the STRING database for comprehensive protein-protein interaction (PPI) network analysis, functional enrichment, pathway analysis, and protein interaction discovery. This skill enables querying protein interactions, building interaction networks, performing Gene Ontology (GO) enrichment, KEGG pathway analysis, Pfam domain enrichment, protein-protein interaction enrichment testing, network visualization, interaction partner discovery, homology analysis, and identifier mapping across 5000+ species. Use for analyzing protein lists from experiments (differential expression, proteomics, mass spectrometry), validating protein networks, discovering novel protein interactions, pathway enrichment analysis, functional annotation, network connectivity analysis, cross-species protein comparison, protein family analysis, hub protein identification, network expansion from seed proteins, and systems biology studies. Provides access to 59.3 million proteins and 20+ billion interactions from experimental data, computational predictions, text-mining, and curated databases. Supports confidence scoring, multiple evidence types (experimental, coexpression, phylogenetic, genomic context), physical vs functional networks, and visualization capabilities."
+description: "Query STRING API for protein-protein interactions (59M proteins, 20B interactions). Network analysis, GO/KEGG enrichment, interaction discovery, 5000+ species, for systems biology."
 ---
 
 # STRING Database

@@ -1,6 +1,6 @@
 ---
 name: geo-database
-description: "Work with the Gene Expression Omnibus (GEO) database to search, retrieve, download, and analyze high-throughput gene expression and functional genomics data. Use this skill for microarray data analysis, RNA-seq datasets, gene expression profiling, accessing GEO accessions (GSE series, GSM samples, GPL platforms, GDS datasets), downloading SOFT/MINiML/Matrix files, querying expression experiments, performing differential expression analysis, accessing GEO metadata, batch processing multiple datasets, quality control of expression data, correlation analysis, clustering, meta-analysis across studies, biomarker discovery, drug response studies, disease biology research, transcriptomics analysis, or when needing programmatic access to functional genomics repositories. This skill covers GEOparse library usage, NCBI E-utilities API, FTP downloads, data preprocessing, statistical analysis, visualization, and integration with downstream analysis workflows."
+description: "Access NCBI GEO for gene expression/genomics data. Search/download microarray and RNA-seq datasets (GSE, GSM, GPL), retrieve SOFT/Matrix files, for transcriptomics and expression analysis."
 ---
 
 # GEO Database

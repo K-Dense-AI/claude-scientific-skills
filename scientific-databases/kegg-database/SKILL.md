@@ -1,6 +1,6 @@
 ---
 name: kegg-database
-description: "Access and analyze the KEGG (Kyoto Encyclopedia of Genes and Genomes) database for comprehensive biological pathway analysis, molecular interaction networks, and cross-database integration. Use this skill for pathway enrichment analysis, gene-to-pathway mapping, metabolic pathway exploration, drug-drug interaction checking, compound structure retrieval, enzyme pathway analysis, disease pathway investigation, and identifier conversion between KEGG and external databases (UniProt, NCBI Gene, PubChem, ChEBI). Supports querying pathways, genes, compounds, enzymes, diseases, drugs, reactions, modules, and orthology groups across multiple organisms including human, mouse, yeast, E. coli, and fruit fly. Key operations include database information retrieval, entry listing and searching, detailed entry retrieval in multiple formats (FASTA sequences, MOL structures, pathway images, KGML XML, JSON), cross-referencing between databases, ID conversion, and drug interaction analysis. Essential for bioinformatics workflows involving pathway analysis, systems biology, drug discovery, metabolic engineering, comparative genomics, and functional annotation of genes and proteins."
+description: "Query KEGG REST API for pathway analysis, gene-pathway mapping, metabolic pathways, drug interactions, ID conversion, compound structures, for systems biology and enrichment analysis."
 ---
 
 # KEGG Database

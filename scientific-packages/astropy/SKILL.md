@@ -1,6 +1,6 @@
 ---
 name: astropy
-description: "Expert guidance for astronomical data analysis using the astropy Python library. Use this skill for FITS file operations (reading, writing, inspecting, modifying), coordinate transformations between celestial reference frames (ICRS, galactic, FK5, ecliptic, horizontal), cosmological distance and age calculations, astronomical time systems (UTC, TAI, TT, TDB), physical units and dimensional analysis, astronomical data tables with specialized column types, model fitting to astronomical data, World Coordinate System (WCS) transformations between pixel and sky coordinates, robust statistical analysis of astronomical datasets, and visualization of astronomical images with proper scaling. Essential for tasks involving celestial coordinates, astronomical file formats, photometry, spectroscopy, catalog matching, time series analysis, image processing, cosmological calculations, or any astronomy-specific Python computations requiring astropy's specialized tools and data structures."
+description: "Astronomy toolkit. FITS I/O, celestial coordinate transforms, cosmology calculations, time systems, WCS, units, astronomical tables, for astronomical data analysis and imaging."
 ---
 
 # Astropy

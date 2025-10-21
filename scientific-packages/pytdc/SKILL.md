@@ -1,6 +1,6 @@
 ---
 name: pytdc
-description: "PyTDC (Therapeutics Data Commons) provides AI-ready datasets and benchmarks for drug discovery, therapeutic machine learning, and pharmacological research. Use this skill for: loading curated drug discovery datasets (ADME properties like Caco2 permeability, HIA absorption, bioavailability, lipophilicity, solubility, BBB penetration, CYP metabolism; toxicity datasets like hERG cardiotoxicity, AMES mutagenicity, DILI liver injury, carcinogenicity; drug-target interaction datasets like BindingDB Kd/Ki/IC50, DAVIS, KIBA; drug-drug interaction prediction; protein-protein interactions; molecular generation and optimization; retrosynthesis prediction; benchmark evaluations with standardized metrics; data splitting strategies (scaffold, random, cold splits); molecular format conversions (SMILES, SELFIES, PyG, DGL, ECFP); oracle functions for molecular optimization; label transformations and unit conversions; entity retrieval (PubChem CID to SMILES, UniProt to sequence). Essential for therapeutic ML model development, pharmacological property prediction, drug discovery pipeline evaluation, molecular design optimization, and accessing standardized therapeutic datasets with proper train/validation/test splits."
+description: "Therapeutics Data Commons. AI-ready drug discovery datasets (ADME, toxicity, DTI), benchmarks, scaffold splits, molecular oracles, for therapeutic ML and pharmacological prediction."
 ---
 
 # PyTDC (Therapeutics Data Commons)
