@@ -2,3 +2,9 @@
 .DS_Store
 
 temp/
+
+pyproject.toml
+uv.lock
+
+.venv/
+.python-version

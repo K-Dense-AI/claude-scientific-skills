@@ -1,263 +1,437 @@
 # Claude Scientific Skills
 
-A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
+[![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
+[![Skills](https://img.shields.io/badge/Skills-70%2B-brightgreen.svg)](#what-s-included)
+[![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
-This repository provides access to **24 scientific databases**, **40 scientific packages**, **6 scientific integrations**, and **122 documented workflows** covering a wide range of scientific computing tasks.
+A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
 
-## Getting Started
+These skills enable Claude to work with specialized scientific libraries and databases across multiple scientific domains:
+- 🧬 Bioinformatics & Genomics
+- 🧪 Cheminformatics & Drug Discovery
+- 🔬 Proteomics & Mass Spectrometry
+- 🤖 Machine Learning & AI
+- 🔮 Materials Science & Chemistry
+- 📊 Data Analysis & Visualization
+
+**Transform Claude Code into an 'AI Scientist' on your desktop!**
+
+> 💼 For substantially more advanced capabilities, compute infrastructure, and enterprise-ready offerings, check out [k-dense.ai](https://k-dense.ai/).
+
+---
+
+## 📋 Table of Contents
+
+- [What's Included](#what-s-included)
+- [Why Use This?](#why-use-this)
+- [Getting Started](#getting-started)
+  - [Claude Code](#claude-code)
+  - [Any MCP Client](#any-mcp-client-including-chatgpt-cursor-google-adk-openai-agent-sdk-etc)
+- [Prerequisites](#prerequisites)
+- [Quick Examples](#quick-examples)
+- [Use Cases](#use-cases)
+- [Available Skills](#available-skills)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
+- [Support](#support)
+- [License](#license)
+
+---
+
+## 📦 What's Included
+
+| Category | Count | Description |
+|----------|-------|-------------|
+| 📊 **Scientific Databases** | 24 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, and more |
+| 🔬 **Scientific Packages** | 40 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
+| 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
+| 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
+
+---
+
+## 🚀 Why Use This?
+
+✅ **Save Time** - Skip days of API documentation research and integration work  
+✅ **Best Practices** - Curated workflows following scientific computing standards  
+✅ **Production Ready** - Tested and validated code examples  
+✅ **Regular Updates** - Maintained and expanded by K-Dense team  
+✅ **Comprehensive** - Coverage across major scientific domains  
+✅ **Enterprise Support** - Commercial offerings available for advanced needs
+
+---
+
+## 🎯 Getting Started
 
 ### Claude Code
-You can register this repository as a Claude Code Plugin marketplace by running the following command in Claude Code:
+Register this repository as a Claude Code Plugin marketplace by running:
 
-```
+```bash
 /plugin marketplace add K-Dense-AI/claude-scientific-skills
 ```
 
 Then, to install a specific set of skills:
 
-1. Select Browse and install plugins
-2. Select claude-scientific-skills
-3. Select scientific-databases, scientific-packages, scientific-thinking (includes document processing), or scientific-integrations
-4. Select Install now
+1. Select **Browse and install plugins**
+2. Select **claude-scientific-skills**
+3. Choose from:
+   - `scientific-databases` - Access to 24 scientific databases
+   - `scientific-packages` - 40 specialized Python packages
+   - `scientific-thinking` - Analysis tools and document processing
+   - `scientific-integrations` - Lab automation and platform integrations
+4. Select **Install now**
 
-After installing the plugin, you can use the skill by just mentioning it. Additionally, in most case, Claude Code will figure out what to use based on the task.
+After installation, simply mention the skill or describe your task - Claude Code will automatically use the appropriate skills!
 
-### Any MCP client including ChatGPT, Cursor, Google ADK, OpenAI Agent SDK...etc
-Use our newly recleased MPC server that allows you to use any Claude Skill out there in any client! https://github.com/K-Dense-AI/claude-skills-mcp
+### Any MCP Client (including ChatGPT, Cursor, Google ADK, OpenAI Agent SDK, etc.)
+Use our newly released MCP server that allows you to use any Claude Skill in any client!
 
-## Available Skills
+🔗 **[claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp)**
 
-### Scientific Databases
+---
 
-- **AlphaFold DB** - AI-predicted protein structure database with 200M+ predictions, confidence metrics (pLDDT, PAE), and Google Cloud bulk access
-- **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
-- **ClinPGx** - Clinical pharmacogenomics database (successor to PharmGKB) providing gene-drug interactions, CPIC clinical guidelines, allele functions, drug labels, and pharmacogenomic annotations for precision medicine and personalized pharmacotherapy (consolidates PharmGKB, CPIC, and PharmCAT resources)
-- **ClinVar** - NCBI's public archive of genomic variants and their clinical significance with standardized classifications (pathogenic, benign, VUS), E-utilities API access, and bulk FTP downloads for variant interpretation and precision medicine research
-- **ClinicalTrials.gov** - Comprehensive registry of clinical studies conducted worldwide (maintained by U.S. National Library of Medicine) with API v2 access for searching trials by condition, intervention, location, sponsor, study status, and phase; retrieve detailed trial information including eligibility criteria, outcomes, contacts, and locations; export to CSV/JSON formats for analysis (public API, no authentication required, ~50 req/min rate limit)
-- **COSMIC** - Catalogue of Somatic Mutations in Cancer, the world's largest database of somatic cancer mutations (millions of mutations across thousands of cancer types, Cancer Gene Census, mutational signatures, structural variants, and drug resistance data)
-- **ENA (European Nucleotide Archive)** - Comprehensive public repository for nucleotide sequence data and metadata with REST APIs for accessing sequences, assemblies, samples, studies, and reads; supports advanced search, taxonomy lookups, and bulk downloads via FTP/Aspera (rate limit: 50 req/sec)
-- **Ensembl** - Genome browser and bioinformatics database providing genomic annotations, sequences, variants, and comparative genomics data for 250+ vertebrate species (Release 115, 2025) with comprehensive REST API for gene lookups, sequence retrieval, variant effect prediction (VEP), ortholog finding, assembly mapping (GRCh37/GRCh38), and region analysis
-- **FDA Databases** - Comprehensive access to all FDA (Food and Drug Administration) regulatory databases through openFDA API covering drugs (adverse events, labeling, NDC, recalls, approvals, shortages), medical devices (adverse events, 510k clearances, PMA, UDI, classifications), foods (recalls, adverse events, allergen tracking), animal/veterinary medicines (species-specific adverse events), and substances (UNII/CAS lookup, chemical structures, molecular data) for drug safety research, pharmacovigilance, regulatory compliance, and scientific analysis
-- **GEO (Gene Expression Omnibus)** - High-throughput gene expression and functional genomics data repository (264K+ studies, 8M+ samples) with microarray, RNA-seq, and expression profile access
-- **GWAS Catalog** - NHGRI-EBI catalog of published genome-wide association studies with curated SNP-trait associations (thousands of studies, genome-wide significant associations p≤5×10⁻⁸), full summary statistics, REST API access for variant/trait/gene queries, and FTP downloads for genetic epidemiology and precision medicine research
-- **HMDB (Human Metabolome Database)** - Comprehensive metabolomics resource with 220K+ metabolite entries, detailed chemical/biological data, concentration ranges, disease associations, pathways, and spectral data for metabolite identification and biomarker discovery
-- **KEGG** - Kyoto Encyclopedia of Genes and Genomes for biological pathway analysis, gene-to-pathway mapping, compound searches, and molecular interaction networks (pathway enrichment, metabolic pathways, gene annotations, drug-drug interactions, ID conversion)
-- **Metabolomics Workbench** - NIH Common Fund metabolomics data repository with 4,200+ processed studies, standardized nomenclature (RefMet), mass spectrometry searches, and comprehensive REST API for accessing metabolite structures, study metadata, experimental results, and gene/protein-metabolite associations
-- **Open Targets** - Comprehensive therapeutic target identification and validation platform integrating genetics, omics, and chemical data (200M+ evidence strings, target-disease associations with scoring, tractability assessments, safety liabilities, known drugs from ChEMBL, GraphQL API) for drug target discovery, prioritization, evidence evaluation, drug repurposing, competitive intelligence, and mechanism research
-- **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
-- **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
-- **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
-- **PubMed** - Access to PubMed literature database with advanced search capabilities
-- **Reactome** - Curated pathway database for biological processes and molecular interactions (2,825+ human pathways, 16K+ reactions, 11K+ proteins) with pathway enrichment analysis, expression data analysis, and species comparison using Content Service and Analysis Service APIs
-- **STRING** - Protein-protein interaction network database (5000+ genomes, 59.3M proteins, 20B+ interactions) with functional enrichment analysis, interaction partner discovery, and network visualization from experimental data, computational prediction, and text-mining
-- **UniProt** - Universal Protein Resource for protein sequences, annotations, and functional information (UniProtKB/Swiss-Prot reviewed entries, TrEMBL unreviewed entries) with REST API access for search, retrieval, ID mapping, and batch operations across 200+ databases
-- **USPTO** - United States Patent and Trademark Office data access including patent searches, trademark lookups, patent examination history (PEDS), office actions, assignments, citations, and litigation records; supports PatentSearch API (ElasticSearch-based patent search), TSDR (Trademark Status & Document Retrieval), Patent/Trademark Assignment APIs, and additional specialized APIs for comprehensive IP analysis
-- **ZINC** - Free database of commercially-available compounds for virtual screening and drug discovery (230M+ purchasable compounds in ready-to-dock 3D formats)
+## ⚙️ Prerequisites
 
-### Scientific Packages
+- **Python**: 3.8+ (3.10+ recommended for best compatibility)
+- **Claude Code**: Latest version or any MCP-compatible client
+- **System**: macOS, Linux, or Windows with WSL2
+- **Dependencies**: Automatically handled by individual skills (check `SKILL.md` files for specific requirements)
 
-**Bioinformatics & Genomics:**
-- **AnnData** - Annotated data matrices for single-cell genomics and h5ad files
-- **Arboreto** - Gene regulatory network inference using GRNBoost2 and GENIE3
-- **BioPython** - Sequence manipulation, NCBI database access, BLAST searches, alignments, and phylogenetics
-- **BioServices** - Programmatic access to 40+ biological web services (KEGG, UniProt, ChEBI, ChEMBL)
-- **Cellxgene Census** - Query and analyze large-scale single-cell RNA-seq data
-- **gget** - Efficient genomic database queries (Ensembl, UniProt, NCBI, PDB, COSMIC)
-- **pysam** - Read, write, and manipulate genomic data files (SAM/BAM/CRAM alignments, VCF/BCF variants, FASTA/FASTQ sequences) with pileup analysis, coverage calculations, and bioinformatics workflows
-- **PyDESeq2** - Differential gene expression analysis for bulk RNA-seq data
-- **Scanpy** - Single-cell RNA-seq analysis with clustering, marker genes, and UMAP/t-SNE visualization
+---
 
-**Cheminformatics & Drug Discovery:**
-- **Datamol** - Molecular manipulation and featurization with enhanced RDKit workflows
-- **DeepChem** - Molecular machine learning, graph neural networks, and MoleculeNet benchmarks
-- **DiffDock** - Diffusion-based molecular docking for protein-ligand binding prediction
-- **MedChem** - Medicinal chemistry analysis, ADMET prediction, and drug-likeness assessment
-- **Molfeat** - 100+ molecular featurizers including fingerprints, descriptors, and pretrained models
-- **PyTDC** - Therapeutics Data Commons for drug discovery datasets and benchmarks
-- **RDKit** - Cheminformatics toolkit for molecular I/O, descriptors, fingerprints, and SMARTS
+## 💡 Quick Examples
 
-**Proteomics & Mass Spectrometry:**
-- **matchms** - Processing and similarity matching of mass spectrometry data with 40+ filters, spectral library matching (Cosine, Modified Cosine, Neutral Losses), metadata harmonization, molecular fingerprint comparison, and support for multiple file formats (MGF, MSP, mzML, JSON)
-- **pyOpenMS** - Comprehensive mass spectrometry data analysis for proteomics and metabolomics (LC-MS/MS processing, peptide identification, feature detection, quantification, chemical calculations, and integration with search engines like Comet, Mascot, MSGF+)
+Once you've installed the skills, you can ask Claude:
 
-**Machine Learning & Deep Learning:**
-- **PyMC** - Bayesian statistical modeling and probabilistic programming
-- **PyMOO** - Multi-objective optimization with evolutionary algorithms
-- **PyTorch Lightning** - Structured PyTorch training with automatic optimization
-- **scikit-learn** - Machine learning algorithms, preprocessing, and model selection
-- **statsmodels** - Statistical modeling and econometrics (OLS, GLM, logit/probit, ARIMA, time series forecasting, hypothesis testing, diagnostics)
-- **Torch Geometric** - Graph Neural Networks for molecular and geometric data
-- **Transformers** - Hugging Face transformers for NLU, image classification, and generation
-- **UMAP-learn** - Dimensionality reduction and manifold learning
+### Cheminformatics
+```
+"Use PubChem to find information about aspirin and calculate its molecular properties"
+```
 
-**Materials Science & Chemistry:**
-- **Astropy** - Astronomy and astrophysics (coordinates, cosmology, FITS files)
-- **COBRApy** - Constraint-based metabolic modeling and flux balance analysis
-- **Pymatgen** - Materials structure analysis, phase diagrams, and electronic structure
+### Bioinformatics
+```
+"Analyze this protein sequence using BioPython and predict its secondary structure"
+```
 
-**Data Analysis & Visualization:**
-- **Dask** - Parallel computing for larger-than-memory datasets with distributed DataFrames, Arrays, Bags, and Futures
-- **Matplotlib** - Publication-quality plotting and visualization
-- **Polars** - High-performance DataFrame operations with lazy evaluation
-- **Seaborn** - Statistical data visualization with dataset-oriented interface, automatic confidence intervals, publication-quality themes, colorblind-safe palettes, and comprehensive support for exploratory analysis, distribution comparisons, correlation matrices, regression plots, and multi-panel figures
-- **ReportLab** - Programmatic PDF generation for reports and documents
+### Data Analysis
+```
+"Perform exploratory data analysis on this RNA-seq dataset and create publication-quality plots"
+```
 
-**Phylogenetics & Trees:**
-- **ETE Toolkit** - Phylogenetic tree manipulation, visualization, and analysis
+### Drug Discovery
+```
+"Search ChEMBL for kinase inhibitors with IC50 < 100nM and visualize their structures"
+```
 
-**Genomics Tools:**
-- **deepTools** - NGS data analysis (ChIP-seq, RNA-seq, ATAC-seq) with BAM/bigWig files
-- **FlowIO** - Flow Cytometry Standard (FCS) file reading and manipulation
-- **scikit-bio** - Bioinformatics sequence analysis and diversity metrics
-- **Zarr** - Chunked, compressed N-dimensional array storage
+### Literature Review
+```
+"Search PubMed for recent papers on CRISPR-Cas9 applications in cancer therapy"
+```
 
-**Multi-omics & Integration:**
-- **BIOMNI** - Multi-omics data integration with LLM-powered analysis
+### Protein Structure
+```
+"Retrieve the AlphaFold structure prediction for human p53 and analyze confidence scores"
+```
 
-### Scientific Thinking & Analysis
+---
+
+## 🔬 Use Cases
+
+### Drug Discovery Research
+- Screen compound libraries from PubChem and ZINC
+- Analyze bioactivity data from ChEMBL
+- Predict molecular properties with RDKit and DeepChem
+- Perform molecular docking with DiffDock
+
+### Bioinformatics Analysis
+- Process genomic sequences with BioPython
+- Analyze single-cell RNA-seq data with Scanpy
+- Query gene information from Ensembl and NCBI Gene
+- Identify protein-protein interactions via STRING
+
+### Materials Science
+- Analyze crystal structures with Pymatgen
+- Predict material properties
+- Design novel compounds and materials
+
+### Clinical Research
+- Search clinical trials on ClinicalTrials.gov
+- Analyze genetic variants in ClinVar
+- Review pharmacogenomic data from ClinPGx
+- Access cancer mutations from COSMIC
+
+### Academic Research
+- Literature searches via PubMed
+- Patent landscape analysis using USPTO
+- Data visualization for publications
+- Statistical analysis and hypothesis testing
+
+---
+
+## 📚 Available Skills
+
+### 🗄️ Scientific Databases
+**24 comprehensive databases** including PubMed, PubChem, UniProt, ChEMBL, AlphaFold DB, COSMIC, Ensembl, KEGG, and more.
+
+📖 **[Full Database Documentation →](docs/scientific-databases.md)**
+
+<details>
+<summary><strong>View all databases</strong></summary>
+
+- **AlphaFold DB** - AI-predicted protein structures (200M+ predictions)
+- **ChEMBL** - Bioactive molecules and drug-like properties
+- **ClinPGx** - Clinical pharmacogenomics and gene-drug interactions
+- **ClinVar** - Genomic variants and clinical significance
+- **ClinicalTrials.gov** - Global clinical studies registry
+- **COSMIC** - Somatic cancer mutations database
+- **ENA** - European Nucleotide Archive
+- **Ensembl** - Genome browser and annotations
+- **FDA Databases** - Drug approvals, adverse events, recalls
+- **GEO** - Gene expression and functional genomics
+- **GWAS Catalog** - Genome-wide association studies
+- **HMDB** - Human metabolome database
+- **KEGG** - Biological pathways and molecular interactions
+- **Metabolomics Workbench** - NIH metabolomics data
+- **NCBI Gene** - Gene information and annotations
+- **Open Targets** - Therapeutic target identification
+- **PDB** - Protein structure database
+- **PubChem** - Chemical compound data (110M+ compounds)
+- **PubMed** - Biomedical literature database
+- **Reactome** - Curated biological pathways
+- **STRING** - Protein-protein interaction networks
+- **UniProt** - Protein sequences and annotations
+- **USPTO** - Patent and trademark data
+- **ZINC** - Commercially-available compounds for screening
+
+</details>
+
+---
+
+### 🔬 Scientific Packages
+**40 specialized Python packages** organized by domain.
+
+📖 **[Full Package Documentation →](docs/scientific-packages.md)**
+
+<details>
+<summary><strong>Bioinformatics & Genomics (11 packages)</strong></summary>
+
+- AnnData, Arboreto, BioPython, BioServices, Cellxgene Census
+- deepTools, FlowIO, gget, pysam, PyDESeq2, Scanpy
+
+</details>
+
+<details>
+<summary><strong>Cheminformatics & Drug Discovery (7 packages)</strong></summary>
+
+- Datamol, DeepChem, DiffDock, MedChem, Molfeat, PyTDC, RDKit
+
+</details>
+
+<details>
+<summary><strong>Proteomics & Mass Spectrometry (2 packages)</strong></summary>
+
+- matchms, pyOpenMS
+
+</details>
+
+<details>
+<summary><strong>Machine Learning & Deep Learning (8 packages)</strong></summary>
+
+- PyMC, PyMOO, PyTorch Lightning, scikit-learn, statsmodels
+- Torch Geometric, Transformers, UMAP-learn
+
+</details>
+
+<details>
+<summary><strong>Materials Science & Chemistry (3 packages)</strong></summary>
+
+- Astropy, COBRApy, Pymatgen
+
+</details>
+
+<details>
+<summary><strong>Data Analysis & Visualization (5 packages)</strong></summary>
+
+- Dask, Matplotlib, Polars, ReportLab, Seaborn
+
+</details>
+
+<details>
+<summary><strong>Additional Packages (4 packages)</strong></summary>
+
+- BIOMNI (Multi-omics), ETE Toolkit (Phylogenetics)
+- scikit-bio (Sequence analysis), Zarr (Array storage)
+
+</details>
+
+---
+
+### 🧠 Scientific Thinking & Analysis
+**Comprehensive analysis tools** and document processing capabilities.
+
+📖 **[Full Thinking & Analysis Documentation →](docs/scientific-thinking.md)**
 
 **Analysis & Methodology:**
-- **Exploratory Data Analysis** - Comprehensive EDA toolkit with automated statistics, visualizations, and insights for any tabular dataset
-- **Hypothesis Generation** - Structured frameworks for generating and evaluating scientific hypotheses
-- **Peer Review** - Comprehensive toolkit for conducting high-quality scientific peer review with structured evaluation of methodology, statistics, reproducibility, ethics, and presentation across all scientific disciplines
-- **Scientific Brainstorming** - Conversational brainstorming partner for generating novel research ideas, exploring connections, challenging assumptions, and developing creative approaches through structured ideation workflows
-- **Scientific Critical Thinking** - Tools and approaches for rigorous scientific reasoning and evaluation
-- **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures with matplotlib and seaborn, including statistical plots with automatic confidence intervals, colorblind-safe palettes, multi-panel figures, heatmaps, and journal-specific formatting
-- **Scientific Writing** - Comprehensive toolkit for writing, structuring, and formatting scientific research papers using IMRAD format, multiple citation styles (APA, AMA, Vancouver, Chicago, IEEE), reporting guidelines (CONSORT, STROBE, PRISMA), effective figures and tables, field-specific terminology, venue-specific structure expectations, and core writing principles for clarity, conciseness, and accuracy across all scientific disciplines
-- **Statistical Analysis** - Comprehensive statistical testing, power analysis, and experimental design
+- Exploratory Data Analysis (automated statistics and insights)
+- Hypothesis Generation (structured frameworks)
+- Peer Review (comprehensive evaluation toolkit)
+- Scientific Brainstorming (ideation workflows)
+- Scientific Critical Thinking (rigorous reasoning)
+- Scientific Visualization (publication-quality figures)
+- Scientific Writing (IMRAD format, citation styles)
+- Statistical Analysis (testing and experimental design)
 
 **Document Processing:**
-- **DOCX** - Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction
-- **PDF** - PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms
-- **PPTX** - Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes
-- **XLSX** - Spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization
+- DOCX, PDF, PPTX, XLSX manipulation and analysis
+- Tracked changes, comments, and formatting preservation
+- Text extraction, table parsing, and data analysis
 
-### Scientific Integrations
+---
 
-**Laboratory Information Management Systems (LIMS) & R&D Platforms:**
-- **Benchling Integration** - Toolkit for integrating with Benchling's R&D platform, providing programmatic access to laboratory data management including registry entities (DNA sequences, proteins), inventory systems (samples, containers, locations), electronic lab notebooks (entries, protocols), workflows (tasks, automation), and data exports using Python SDK and REST API
+### 🔌 Scientific Integrations
+**6 platform integrations** for lab automation and workflow management.
 
-**Cloud Platforms for Genomics & Biomedical Data:**
-- **DNAnexus Integration** - Comprehensive toolkit for working with the DNAnexus cloud platform for genomics and biomedical data analysis. Covers building and deploying apps/applets (Python/Bash), managing data objects (files, records, databases), running analyses and workflows, using the dxpy Python SDK, and configuring app metadata and dependencies (dxapp.json setup, system packages, Docker, assets). Enables processing of FASTQ/BAM/VCF files, bioinformatics pipelines, job execution, workflow orchestration, and platform operations including project management and permissions
+📖 **[Full Integration Documentation →](docs/scientific-integrations.md)**
 
-**Laboratory Automation:**
-- **Opentrons Integration** - Toolkit for creating, editing, and debugging Opentrons Python Protocol API v2 protocols for laboratory automation using Flex and OT-2 robots. Enables automated liquid handling, pipetting workflows, hardware module control (thermocycler, temperature, magnetic, heater-shaker, absorbance plate reader), labware management, and complex protocol development for biological and chemical experiments
+- **Benchling** - R&D platform and LIMS integration
+- **DNAnexus** - Cloud genomics and biomedical data analysis
+- **LabArchives** - Electronic Lab Notebook (ELN) integration
+- **LatchBio** - Workflow platform and cloud execution
+- **OMERO** - Microscopy and bio-image data management
+- **Opentrons** - Laboratory automation protocols
 
-**Electronic Lab Notebooks (ELN):**
-- **LabArchives Integration** - Toolkit for interacting with LabArchives Electronic Lab Notebook (ELN) REST API. Provides programmatic access to notebooks (backup, retrieval, management), entries (creation, comments, attachments), user authentication, site reports and analytics, and third-party integrations (Protocols.io, GraphPad Prism, SnapGene, Geneious, Jupyter, REDCap). Includes Python scripts for configuration setup, notebook operations, and entry management. Supports multi-regional API endpoints (US, UK, Australia) and OAuth authentication
+---
 
-**Workflow Platforms & Cloud Execution:**
-- **LatchBio Integration** - Integration with the Latch platform for building, deploying, and executing bioinformatics workflows. Provides comprehensive support for creating serverless bioinformatics pipelines using Python decorators, deploying Nextflow/Snakemake pipelines, managing cloud data (LatchFile, LatchDir) and structured Registry (Projects, Tables, Records), configuring computational resources (CPU, GPU, memory, storage), and using pre-built Latch Verified workflows (RNA-seq, AlphaFold, DESeq2, single-cell analysis, CRISPR editing). Enables automatic containerization, UI generation, workflow versioning, and execution on scalable cloud infrastructure with comprehensive data management
+## 🤝 Contributing
 
-**Microscopy & Bio-image Data:**
-- **OMERO Integration** - Toolkit for interacting with OMERO microscopy data management systems using Python. Provides comprehensive access to microscopy images stored in OMERO servers, including dataset and screening data retrieval, pixel data analysis, annotation and metadata management, regions of interest (ROIs) creation and analysis, batch processing, OMERO.scripts development, and OMERO.tables for structured data storage. Essential for researchers working with high-content screening data, multi-dimensional microscopy datasets, or collaborative image repositories
+We welcome contributions to expand and improve this scientific skills repository!
 
-## TODO: Future Scientific Capabilities
+### Ways to Contribute
 
-### Scientific Integrations
-- **PerkinElmer Signals** - Scientific data management and ELN platform integration
-- **CDD Vault** - Collaborative Drug Discovery platform integration for chemical registration and bioassay data
-- **Geneious** - Molecular biology and NGS analysis software integration
-- **SnapGene** - Molecular cloning and DNA visualization platform integration
-- **Synthego ICE** - CRISPR editing analysis platform integration
-- **TeselaGen** - Synthetic biology design and automation platform integration
-- **Galaxy** - Web-based bioinformatics workflow platform integration
-- **Nextflow/nf-core** - Workflow management system integration for reproducible pipelines
-- **Seven Bridges** - Genomics analysis platform and workspace integration
-- **BaseSpace** - Illumina genomics data analysis and management platform integration
+✨ **Add New Skills**
+- Create skills for additional scientific packages or databases
+- Add integrations for scientific platforms and tools
 
-### Scientific Databases
-- **BioGRID** - Biological General Repository for Interaction Datasets (protein, genetic, and chemical interactions)
-- **dbSNP** - NCBI's database of single nucleotide polymorphisms and short genetic variations
-- **InterPro** - Protein sequence analysis and classification with functional annotations
-- **OMIM** - Online Mendelian Inheritance in Man for genetic disorders and genes
-- **Pfam** - Protein families database with multiple sequence alignments and HMMs
-- **RefSeq** - NCBI's non-redundant reference sequence database
-- **UCSC Genome Browser** - Genomic data visualization and custom track integration
-- **WikiPathways** - Community-curated biological pathway database
-- **MetaboLights** - EMBL-EBI metabolomics database with experimental data and metadata
-
-### Bioinformatics & Genomics
-- **pybedtools** - Wrapper for BEDTools genome arithmetic operations
-- **mygene** - Python client for MyGene.Info gene query service
-- **nglview** - IPython/Jupyter widget for molecular visualization
-- **pyfaidx** - Efficient FASTA file indexing and retrieval
-- **MACS2/3** - Peak calling for ChIP-seq data
-
-### Cheminformatics & Drug Discovery
-- **Open Babel** - Chemical file format conversion and molecular mechanics
-- **Psi4** - Quantum chemistry software for ab initio calculations
-- **ProteinMPNN** - Deep learning for protein sequence design
-- **ESM (Evolutionary Scale Modeling)** - Protein language models for structure and function prediction
-- **OpenMM** - Molecular dynamics simulation toolkit
-
-### Proteomics & Mass Spectrometry
-- **pyteomics** - Mass spectrometry data analysis and peptide/protein identification
-
-### Systems Biology & Networks
-- **NetworkX** - Complex network analysis and graph algorithms
-- **igraph** - Fast network analysis library with efficient algorithms
-
-### Structural Biology
-- **MDAnalysis** - Molecular dynamics trajectory analysis
-- **ProDy** - Protein dynamics and structure analysis
-- **PyMOL** - Molecular visualization scripting
-
-### Machine Learning for Science
-- **DGL-LifeSci** - Deep Graph Library for life sciences
-- **ChemBERTa** - Transformer models for chemistry
-- **TorchDrug** - PyTorch library for drug discovery
-- **SchNet/DimeNet** - Continuous-filter convolutional networks for molecules
-
-### Imaging & Microscopy
-- **scikit-image** - Image processing algorithms
-- **Napari** - Multi-dimensional image viewer
-- **CellProfiler** - Cell image analysis
-- **Cellpose** - Generalist cell segmentation
-- **StarDist** - Cell/nucleus detection with deep learning
-
-### Phylogenetics & Evolution
-- **DendroPy** - Phylogenetic computing library
-
-### Climate & Environmental Science
-- **xarray** - N-dimensional labeled arrays and datasets for scientific computing
-
-### Statistics & Experimental Design
-- **pingouin** - Statistical tests with clear output and effect sizes
-- **scipy.stats** - Statistical functions and distributions
-
-### Data Management & Processing
-- **DuckDB** - Analytical SQL database for in-process analytics
-- **Parquet** - Columnar storage format for big data
-
-### Visualization
-- **Plotly** - Interactive graphing library for web-based visualizations
-- **Altair** - Declarative statistical visualization
-- **PyVista** - 3D plotting and mesh analysis
-
-## Contributing
-
-We welcome contributions to expand and improve this scientific skills repository! There are several ways you can contribute:
-
-### Improving Existing Skills
+📚 **Improve Existing Skills**
 - Enhance documentation with more examples and use cases
 - Add new workflows and reference materials
 - Improve code examples and scripts
 - Fix bugs or update outdated information
 
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch for your contribution
-3. Follow the existing directory structure and documentation patterns
-4. Ensure all new skills include comprehensive `SKILL.md` files
-5. Test your examples and workflows
-6. Submit a pull request with a clear description of your changes
+🐛 **Report Issues**
+- Submit bug reports with detailed reproduction steps
+- Suggest improvements or new features
 
-### Guidelines
-- Maintain consistency with existing skill documentation format
-- Include practical, working examples in all contributions
-- Ensure all code examples are tested and functional
-- Follow scientific best practices in examples and workflows
-- Update relevant sections of this README when adding new capabilities
+### How to Contribute
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-skill`)
+3. **Follow** the existing directory structure and documentation patterns
+4. **Ensure** all new skills include comprehensive `SKILL.md` files
+5. **Test** your examples and workflows thoroughly
+6. **Commit** your changes (`git commit -m 'Add amazing skill'`)
+7. **Push** to your branch (`git push origin feature/amazing-skill`)
+8. **Submit** a pull request with a clear description of your changes
+
+### Contribution Guidelines
+
+✅ Maintain consistency with existing skill documentation format  
+✅ Include practical, working examples in all contributions  
+✅ Ensure all code examples are tested and functional  
+✅ Follow scientific best practices in examples and workflows  
+✅ Update relevant documentation when adding new capabilities  
+✅ Provide clear comments and docstrings in code  
+✅ Include references to official documentation
+
+### Recognition
+
+Contributors are recognized in our community and may be featured in:
+- Repository contributors list
+- Special mentions in release notes
+- K-Dense community highlights
 
 Your contributions help make scientific computing more accessible and enable researchers to leverage AI tools more effectively!
+
+📖 **[Contributing Guidelines →](CONTRIBUTING.md)** *(coming soon)*
+
+---
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Problem: Skills not loading in Claude Code**
+- Solution: Ensure you've installed the latest version of Claude Code
+- Try reinstalling the plugin: `/plugin marketplace add K-Dense-AI/claude-scientific-skills`
+
+**Problem: Missing Python dependencies**
+- Solution: Check the specific `SKILL.md` file for required packages
+- Install dependencies: `pip install package-name`
+
+**Problem: API rate limits**
+- Solution: Many databases have rate limits. Review the specific database documentation
+- Consider implementing caching or batch requests
+
+**Problem: Authentication errors**
+- Solution: Some services require API keys. Check the `SKILL.md` for authentication setup
+- Verify your credentials and permissions
+
+**Problem: Outdated examples**
+- Solution: Report the issue via GitHub Issues
+- Check the official package documentation for updated syntax
+
+---
+
+## ❓ FAQ
+
+**Q: Is this free to use?**  
+A: Yes, for noncommercial use. See the [License](#license) section for details.
+
+**Q: Do I need all the Python packages installed?**  
+A: No, only install the packages you need. Each skill specifies its requirements.
+
+**Q: Can I use this with other AI models?**  
+A: The skills are designed for Claude but can be adapted for other models with MCP support.
+
+**Q: How often is this updated?**  
+A: We regularly update skills to reflect the latest versions of packages and APIs.
+
+**Q: Can I use this for commercial projects?**  
+A: For commercial use, please visit [K-Dense](https://k-dense.ai/) for enterprise licensing.
+
+**Q: What if a skill doesn't work?**  
+A: First check the troubleshooting section, then file an issue on GitHub with details.
+
+**Q: Can I contribute my own skills?**  
+A: Absolutely! See the [Contributing](#contributing) section for guidelines.
+
+**Q: Do the skills work offline?**  
+A: Database skills require internet access. Package skills work offline once dependencies are installed.
+
+---
+
+## 💬 Support
+
+Need help? Here's how to get support:
+
+- 📖 **Documentation**: Check the relevant `SKILL.md` and `references/` folders
+- 🐛 **Bug Reports**: [Open an issue](https://github.com/K-Dense-AI/claude-scientific-skills/issues)
+- 💡 **Feature Requests**: [Submit a feature request](https://github.com/K-Dense-AI/claude-scientific-skills/issues/new)
+- 💼 **Enterprise Support**: Contact [K-Dense](https://k-dense.ai/) for commercial support
+- 🌐 **MCP Support**: Visit the [claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp) repository
+
+---
+
+## 📄 License
+
+This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+
+**Copyright © K-Dense Inc.** ([k-dense.ai](https://k-dense.ai/))
+
+### Key Points:
+- ✅ **Free for noncommercial use** (research, education, personal projects)
+- ✅ **Free for noncommercial organizations** (universities, research institutions)
+- ❌ **Commercial use requires separate license** (contact K-Dense)
+
+See [LICENSE.md](LICENSE.md) for full terms.
