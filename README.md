@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **20 scientific databases**, **44 scientific packages**, and **59 unique workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **20 scientific databases**, **44 scientific packages**, and **94 unique workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
