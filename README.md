@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **20 scientific databases**, **44 scientific packages**, **1 scientific integration**, and **95 unique workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **20 scientific databases**, **44 scientific packages**, **4 scientific integrations**, and **103 unique workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -129,26 +129,27 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 **Laboratory Information Management Systems (LIMS) & R&D Platforms:**
 - **Benchling Integration** - Toolkit for integrating with Benchling's R&D platform, providing programmatic access to laboratory data management including registry entities (DNA sequences, proteins), inventory systems (samples, containers, locations), electronic lab notebooks (entries, protocols), workflows (tasks, automation), and data exports using Python SDK and REST API
 
+**Cloud Platforms for Genomics & Biomedical Data:**
+- **DNAnexus Integration** - Comprehensive toolkit for working with the DNAnexus cloud platform for genomics and biomedical data analysis. Covers building and deploying apps/applets (Python/Bash), managing data objects (files, records, databases), running analyses and workflows, using the dxpy Python SDK, and configuring app metadata and dependencies (dxapp.json setup, system packages, Docker, assets). Enables processing of FASTQ/BAM/VCF files, bioinformatics pipelines, job execution, workflow orchestration, and platform operations including project management and permissions
+
+**Laboratory Automation:**
+- **Opentrons Integration** - Toolkit for creating, editing, and debugging Opentrons Python Protocol API v2 protocols for laboratory automation using Flex and OT-2 robots. Enables automated liquid handling, pipetting workflows, hardware module control (thermocycler, temperature, magnetic, heater-shaker, absorbance plate reader), labware management, and complex protocol development for biological and chemical experiments
+
+**Electronic Lab Notebooks (ELN):**
+- **LabArchives Integration** - Toolkit for interacting with LabArchives Electronic Lab Notebook (ELN) REST API. Provides programmatic access to notebooks (backup, retrieval, management), entries (creation, comments, attachments), user authentication, site reports and analytics, and third-party integrations (Protocols.io, GraphPad Prism, SnapGene, Geneious, Jupyter, REDCap). Includes Python scripts for configuration setup, notebook operations, and entry management. Supports multi-regional API endpoints (US, UK, Australia) and OAuth authentication
+
+**Microscopy & Bio-image Data:**
+- **OMERO Integration** - Toolkit for interacting with OMERO microscopy data management systems using Python. Provides comprehensive access to microscopy images stored in OMERO servers, including dataset and screening data retrieval, pixel data analysis, annotation and metadata management, regions of interest (ROIs) creation and analysis, batch processing, OMERO.scripts development, and OMERO.tables for structured data storage. Essential for researchers working with high-content screening data, multi-dimensional microscopy datasets, or collaborative image repositories
+
 ## TODO: Future Scientific Capabilities
 
 ### Scientific Integrations
-- **LabArchives** - Electronic lab notebook (ELN) integration for research documentation, protocol management, and collaboration
-- **Dotmatics** - Scientific informatics platform integration for data management, inventory, and workflow automation
-- **Thermo Fisher Connect** - Integration with Thermo Fisher cloud platform for instrument data, LIMS, and analytics workflows
 - **PerkinElmer Signals** - Scientific data management and ELN platform integration
 - **CDD Vault** - Collaborative Drug Discovery platform integration for chemical registration and bioassay data
 - **Geneious** - Molecular biology and NGS analysis software integration
 - **SnapGene** - Molecular cloning and DNA visualization platform integration
-- **GraphPad Prism** - Statistics and graphing software integration for publication-quality analysis
 - **Synthego ICE** - CRISPR editing analysis platform integration
-- **OpenTrons** - Laboratory automation platform integration for liquid handling protocols
 - **TeselaGen** - Synthetic biology design and automation platform integration
-- **Strateos** - Cloud laboratory automation platform integration
-- **Jupyter Hub/Lab** - Multi-user scientific computing environment integration
-- **Weights & Biases** - Experiment tracking and ML model monitoring integration
-- **MLflow** - ML lifecycle management platform integration
-- **DVC (Data Version Control)** - Data and ML model versioning integration
-- **Omero** - Bio-image data management platform integration
 - **Galaxy** - Web-based bioinformatics workflow platform integration
 - **Nextflow/nf-core** - Workflow management system integration for reproducible pipelines
 - **Seven Bridges** - Genomics analysis platform and workspace integration
