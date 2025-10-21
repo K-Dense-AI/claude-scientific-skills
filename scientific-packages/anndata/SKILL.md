@@ -1,6 +1,6 @@
 ---
 name: anndata
-description: Comprehensive AnnData (Annotated Data) manipulation for single-cell genomics, multi-omics, and structured scientific datasets. Use this skill for: loading/saving .h5ad files, creating AnnData objects from matrices/DataFrames, managing obs/var metadata, storing embeddings (PCA/UMAP/t-SNE) in obsm/varm, using layers for raw/normalized data, concatenating datasets with batch tracking, memory-efficient backed mode for large files, sparse matrix optimization, subsetting with views/copies, converting between formats (CSV/MTX/Loom/Zarr), single-cell RNA-seq workflows, batch integration, quality control filtering, dimensionality reduction storage, and scientific data management best practices.
+description: "Comprehensive AnnData (Annotated Data) manipulation for single-cell genomics, multi-omics, and structured scientific datasets. Use this skill for: loading/saving .h5ad files, creating AnnData objects from matrices/DataFrames, managing obs/var metadata, storing embeddings (PCA/UMAP/t-SNE) in obsm/varm, using layers for raw/normalized data, concatenating datasets with batch tracking, memory-efficient backed mode for large files, sparse matrix optimization, subsetting with views/copies, converting between formats (CSV/MTX/Loom/Zarr), single-cell RNA-seq workflows, batch integration, quality control filtering, dimensionality reduction storage, and scientific data management best practices."
 ---
 
 # AnnData
