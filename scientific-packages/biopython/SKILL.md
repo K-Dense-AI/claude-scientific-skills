@@ -11,7 +11,7 @@ BioPython is a comprehensive Python library for computational molecular biology 
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Working with biological sequences (DNA, RNA, protein)
 - Reading or writing sequence files (FASTA, GenBank, FASTQ, etc.)
 - Accessing NCBI databases (GenBank, PubMed, Protein, Nucleotide)

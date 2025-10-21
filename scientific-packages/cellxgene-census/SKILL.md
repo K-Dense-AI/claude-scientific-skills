@@ -18,7 +18,7 @@ The Census includes:
 
 ## When to Use This Skill
 
-Use this skill when tasks involve:
+This skill should be used when tasks involve:
 - Querying single-cell expression data by cell type, tissue, or disease
 - Exploring available single-cell datasets and metadata
 - Training machine learning models on single-cell data

@@ -17,7 +17,7 @@ PyTorch Lightning is a deep learning framework that organizes PyTorch code to de
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Building or training deep learning models with PyTorch
 - Converting existing PyTorch code to Lightning structure
 - Setting up distributed training across multiple GPUs or nodes

@@ -13,7 +13,7 @@ scikit-bio is a comprehensive Python library for working with biological data. P
 
 ## When to Use This Skill
 
-Invoke this skill when the user:
+This skill should be used when the user:
 - Works with biological sequences (DNA, RNA, protein)
 - Needs to read/write biological file formats (FASTA, FASTQ, GenBank, Newick, BIOM, etc.)
 - Performs sequence alignments or searches for motifs

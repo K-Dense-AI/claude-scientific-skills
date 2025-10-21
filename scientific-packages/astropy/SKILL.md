@@ -11,7 +11,7 @@ Astropy is the community standard Python library for astronomy, providing core f
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Working with FITS files (reading, writing, inspecting, modifying)
 - Performing coordinate transformations between astronomical reference frames
 - Calculating cosmological distances, ages, or other quantities

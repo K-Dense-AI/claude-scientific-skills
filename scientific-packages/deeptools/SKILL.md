@@ -18,7 +18,7 @@ deepTools is a comprehensive suite of Python command-line tools designed for pro
 
 ## When to Use This Skill
 
-Invoke this skill when users request tasks involving:
+This skill should be used when users request tasks involving:
 
 - **File conversion**: "Convert BAM to bigWig", "generate coverage tracks", "normalize ChIP-seq data"
 - **Quality control**: "check ChIP quality", "compare replicates", "assess sequencing depth", "QC analysis"

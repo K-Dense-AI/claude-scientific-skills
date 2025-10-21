@@ -11,7 +11,7 @@ Scientific writing is a specialized form of communication that requires precisio
 
 ## When to Use This Skill
 
-Invoke this skill when:
+This skill should be used when:
 - Writing or revising any section of a scientific manuscript (abstract, introduction, methods, results, discussion)
 - Structuring a research paper using IMRAD or other standard formats
 - Formatting citations and references in specific styles (APA, AMA, Vancouver, Chicago, IEEE)
@@ -174,8 +174,8 @@ Adapt manuscripts to journal requirements:
 
 Adapt language, terminology, and conventions to match the specific scientific discipline. Each field has established vocabulary, preferred phrasings, and domain-specific conventions that signal expertise and ensure clarity for the target audience.
 
-**Identify Your Field's Linguistic Conventions:**
-- Review terminology used in recent high-impact papers in your target journal
+**Identify Field-Specific Linguistic Conventions:**
+- Review terminology used in recent high-impact papers in the target journal
 - Note field-specific abbreviations, units, and notation systems
 - Identify preferred terms (e.g., "participants" vs. "subjects," "compound" vs. "drug," "specimens" vs. "samples")
 - Observe how methods, organisms, or techniques are typically described
@@ -241,7 +241,7 @@ Adapt language, terminology, and conventions to match the specific scientific di
 **Define Technical Terms Strategically:**
 - Define abbreviations at first use: "messenger RNA (mRNA)"
 - Provide brief explanations for specialized techniques when writing for broader audiences
-- Avoid over-defining terms well-known to your target audience (signals unfamiliarity with field)
+- Avoid over-defining terms well-known to the target audience (signals unfamiliarity with field)
 - Create a glossary if numerous specialized terms are unavoidable
 
 **Maintain Consistency:**
@@ -256,7 +256,7 @@ Adapt language, terminology, and conventions to match the specific scientific di
 
 **Verify Terminology Usage:**
 - Consult field-specific style guides and nomenclature resources
-- Check how terms are used in recent papers from your target journal
+- Check how terms are used in recent papers from the target journal
 - Use domain-specific databases and ontologies (e.g., Gene Ontology, MeSH terms)
 - When uncertain, cite a key reference that establishes terminology
 

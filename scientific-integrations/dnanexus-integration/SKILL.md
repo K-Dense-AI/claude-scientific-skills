@@ -17,7 +17,7 @@ DNAnexus is a cloud-based platform for biomedical data analysis, particularly ge
 
 ## When to Use This Skill
 
-Use this skill when working with:
+This skill should be used when working with:
 
 - **App Development**: Creating, building, or modifying DNAnexus apps/applets
 - **Data Management**: Uploading, downloading, searching, or organizing files and records

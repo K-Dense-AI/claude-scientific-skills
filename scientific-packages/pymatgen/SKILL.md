@@ -19,7 +19,7 @@ Pymatgen is a comprehensive Python library for materials analysis that powers th
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Working with crystal structures or molecular systems in materials science
 - Converting between structure file formats (CIF, POSCAR, XYZ, etc.)
 - Analyzing symmetry, space groups, or coordination environments

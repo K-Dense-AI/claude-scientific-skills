@@ -11,7 +11,7 @@ Facilitate access to and querying of the GWAS Catalog, a comprehensive repositor
 
 ## When to Use This Skill
 
-Use this skill when queries involve:
+This skill should be used when queries involve:
 
 - **Genetic variant associations**: Finding SNPs associated with diseases or traits
 - **SNP lookups**: Retrieving information about specific genetic variants (rs IDs)

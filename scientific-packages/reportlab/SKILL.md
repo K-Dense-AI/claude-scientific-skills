@@ -607,7 +607,7 @@ pip install reportlab[renderPM]
 
 ## When to Use This Skill
 
-Invoke this skill when:
+This skill should be used when:
 - Generating PDF documents programmatically
 - Creating invoices, receipts, or billing documents
 - Building reports with tables and charts

@@ -13,7 +13,7 @@ The API is public (no authentication required) with a rate limit of approximatel
 
 ## When to Use This Skill
 
-Use this skill when working with clinical trial data in scenarios such as:
+This skill should be used when working with clinical trial data in scenarios such as:
 
 - **Patient matching** - Finding recruiting trials for specific conditions or patient populations
 - **Research analysis** - Analyzing clinical trial trends, outcomes, or study designs

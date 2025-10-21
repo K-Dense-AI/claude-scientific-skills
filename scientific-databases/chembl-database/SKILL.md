@@ -11,7 +11,7 @@ Facilitate access to and querying of the ChEMBL database, a manually curated rep
 
 ## When to Use This Skill
 
-Use this skill when queries involve:
+This skill should be used when queries involve:
 
 - **Compound searches**: Finding molecules by name, structure, or properties
 - **Target information**: Retrieving data about proteins, enzymes, or biological targets

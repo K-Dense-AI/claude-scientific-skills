@@ -8,12 +8,12 @@ license: Proprietary. LICENSE.txt has complete terms
 
 ## Overview
 
-A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.
+This skill supports creating, editing, or analyzing the contents of .pptx files. A .pptx file is essentially a ZIP archive containing XML files and other resources. Different tools and workflows are available for different tasks.
 
 ## Reading and analyzing content
 
 ### Text extraction
-If you just need to read the text contents of a presentation, you should convert the document to markdown:
+To read the text contents of a presentation, convert the document to markdown:
 
 ```bash
 # Convert document to markdown
@@ -21,7 +21,7 @@ python -m markitdown path-to-file.pptx
 ```
 
 ### Raw XML access
-You need raw XML access for: comments, speaker notes, slide layouts, animations, design elements, and complex formatting. For any of these features, you'll need to unpack a presentation and read its raw XML contents.
+Raw XML access is required for: comments, speaker notes, slide layouts, animations, design elements, and complex formatting. For any of these features, unpack a presentation and read its raw XML contents.
 
 #### Unpacking a file
 `python ooxml/scripts/unpack.py <office_file> <output_dir>`
@@ -142,7 +142,7 @@ When creating a new PowerPoint presentation from scratch, use the **html2pptx** 
 - Negative space as a design element
 
 ### Layout Tips
-**When creating slides with charts or tables:**
+**For slides with charts or tables:**
 - **Two-column layout (PREFERRED)**: Use a header spanning the full width, then two columns below - text/bullets in one column and the featured content in the other. This provides better balance and makes charts/tables more readable. Use flexbox with unequal column widths (e.g., 40%/60% split) to optimize space for each content type.
 - **Full-slide layout**: Let the featured content (chart/table) take up the entire slide for maximum impact and readability
 - **NEVER vertically stack**: Do not place charts/tables below text in a single column - this causes poor readability and layout issues
@@ -170,7 +170,7 @@ When creating a new PowerPoint presentation from scratch, use the **html2pptx** 
 
 ## Editing an existing PowerPoint presentation
 
-When edit slides in an existing PowerPoint presentation, you need to work with the raw Office Open XML (OOXML) format. This involves unpacking the .pptx file, editing the XML content, and repacking it.
+To edit slides in an existing PowerPoint presentation, work with the raw Office Open XML (OOXML) format. This involves unpacking the .pptx file, editing the XML content, and repacking it.
 
 ### Workflow
 1. **MANDATORY - READ ENTIRE FILE**: Read [`ooxml.md`](ooxml.md) (~500 lines) completely from start to finish.  **NEVER set any range limits when reading this file.**  Read the full file content for detailed guidance on OOXML structure and editing workflows before any presentation editing.
@@ -181,7 +181,7 @@ When edit slides in an existing PowerPoint presentation, you need to work with t
 
 ## Creating a new PowerPoint presentation **using a template**
 
-When you need to create a presentation that follows an existing template's design, you'll need to duplicate and re-arrange template slides before then replacing placeholder context.
+To create a presentation that follows an existing template's design, duplicate and re-arrange template slides before replacing placeholder context.
 
 ### Workflow
 1. **Extract template text AND create visual thumbnail grid**:
@@ -217,14 +217,14 @@ When you need to create a presentation that follows an existing template's desig
    * Choose safe, text-based layouts for the other slides.
    * **CRITICAL: Match layout structure to actual content**:
      - Single-column layouts: Use for unified narrative or single topic
-     - Two-column layouts: Use ONLY when you have exactly 2 distinct items/concepts
-     - Three-column layouts: Use ONLY when you have exactly 3 distinct items/concepts
-     - Image + text layouts: Use ONLY when you have actual images to insert
+     - Two-column layouts: Use ONLY when there are exactly 2 distinct items/concepts
+     - Three-column layouts: Use ONLY when there are exactly 3 distinct items/concepts
+     - Image + text layouts: Use ONLY when actual images are available to insert
      - Quote layouts: Use ONLY for actual quotes from people (with attribution), never for emphasis
-     - Never use layouts with more placeholders than you have content
-     - If you have 2 items, don't force them into a 3-column layout
-     - If you have 4+ items, consider breaking into multiple slides or using a list format
-   * Count your actual content pieces BEFORE selecting the layout
+     - Never use layouts with more placeholders than available content
+     - If there are 2 items, don't force them into a 3-column layout
+     - If there are 4+ items, consider breaking into multiple slides or using a list format
+   * Count actual content pieces BEFORE selecting the layout
    * Verify each placeholder in the chosen layout will be filled with meaningful content
    * Select one option representing the **best** layout for each content section.
    * Save `outline.md` with content AND template mapping that leverages available designs
@@ -305,9 +305,9 @@ When you need to create a presentation that follows an existing template's desig
 6. **Generate replacement text and save the data to a JSON file**
    Based on the text inventory from the previous step:
    - **CRITICAL**: First verify which shapes exist in the inventory - only reference shapes that are actually present
-   - **VALIDATION**: The replace.py script will validate that all shapes in your replacement JSON exist in the inventory
-     - If you reference a non-existent shape, you'll get an error showing available shapes
-     - If you reference a non-existent slide, you'll get an error indicating the slide doesn't exist
+   - **VALIDATION**: The replace.py script will validate that all shapes in the replacement JSON exist in the inventory
+     - If a non-existent shape is referenced, an error will show available shapes
+     - If a non-existent slide is referenced, an error will indicate the slide doesn't exist
      - All validation errors are shown at once before the script exits
    - **IMPORTANT**: The replace.py script uses inventory.py internally to identify ALL text shapes
    - **AUTOMATIC CLEARING**: ALL text shapes from the inventory will be cleared unless you provide "paragraphs" for them
@@ -317,7 +317,7 @@ When you need to create a presentation that follows an existing template's desig
    - Generate appropriate replacement content for placeholder text
    - Use shape size to determine appropriate content length
    - **CRITICAL**: Include paragraph properties from the original inventory - don't just provide text
-   - **IMPORTANT**: When bullet: true, do NOT include bullet symbols (•, -, *) in text - they're added automatically
+   - **IMPORTANT**: When bullet: true, do NOT include bullet symbols (•, -, *) in text - they are added automatically
    - **ESSENTIAL FORMATTING RULES**:
      - Headers/titles should typically have `"bold": true`
      - List items should have `"bullet": true, "level": 0` (level is required when bullet is true)

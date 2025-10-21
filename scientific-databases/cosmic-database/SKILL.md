@@ -11,7 +11,7 @@ COSMIC (Catalogue of Somatic Mutations in Cancer) is the world's largest and mos
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Downloading cancer mutation data from COSMIC
 - Accessing the Cancer Gene Census for curated cancer gene lists
 - Retrieving mutational signature profiles
