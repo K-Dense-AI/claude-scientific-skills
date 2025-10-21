@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.20.0"
+    "version": "1.21.0"
   },
   "plugins": [
     {
@@ -32,6 +32,7 @@
         "./scientific-packages/etetoolkit",
         "./scientific-packages/flowio",
         "./scientific-packages/gget",
+        "./scientific-packages/matchms",
         "./scientific-packages/matplotlib",
         "./scientific-packages/medchem",
         "./scientific-packages/molfeat",
