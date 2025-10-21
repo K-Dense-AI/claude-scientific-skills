@@ -54,6 +54,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **BioServices** - Programmatic access to 40+ biological web services (KEGG, UniProt, ChEBI, ChEMBL)
 - **Cellxgene Census** - Query and analyze large-scale single-cell RNA-seq data
 - **gget** - Efficient genomic database queries (Ensembl, UniProt, NCBI, PDB, COSMIC)
+- **pysam** - Read, write, and manipulate genomic data files (SAM/BAM/CRAM alignments, VCF/BCF variants, FASTA/FASTQ sequences) with pileup analysis, coverage calculations, and bioinformatics workflows
 - **PyDESeq2** - Differential gene expression analysis for bulk RNA-seq data
 - **Scanpy** - Single-cell RNA-seq analysis with clustering, marker genes, and UMAP/t-SNE visualization
 
@@ -137,7 +138,6 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **WikiPathways** - Community-curated biological pathway database
 
 ### Bioinformatics & Genomics
-- **pysam** - Interface to SAM/BAM/CRAM format files
 - **pybedtools** - Wrapper for BEDTools genome arithmetic operations
 - **mygene** - Python client for MyGene.Info gene query service
 - **pyensembl** - Python interface to Ensembl reference genome metadata
