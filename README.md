@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **24 scientific databases**, **40 scientific packages**, **5 scientific integrations**, and **122 documented workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **24 scientific databases**, **40 scientific packages**, **6 scientific integrations**, and **122 documented workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -141,6 +141,9 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 
 **Electronic Lab Notebooks (ELN):**
 - **LabArchives Integration** - Toolkit for interacting with LabArchives Electronic Lab Notebook (ELN) REST API. Provides programmatic access to notebooks (backup, retrieval, management), entries (creation, comments, attachments), user authentication, site reports and analytics, and third-party integrations (Protocols.io, GraphPad Prism, SnapGene, Geneious, Jupyter, REDCap). Includes Python scripts for configuration setup, notebook operations, and entry management. Supports multi-regional API endpoints (US, UK, Australia) and OAuth authentication
+
+**Workflow Platforms & Cloud Execution:**
+- **LatchBio Integration** - Integration with the Latch platform for building, deploying, and executing bioinformatics workflows. Provides comprehensive support for creating serverless bioinformatics pipelines using Python decorators, deploying Nextflow/Snakemake pipelines, managing cloud data (LatchFile, LatchDir) and structured Registry (Projects, Tables, Records), configuring computational resources (CPU, GPU, memory, storage), and using pre-built Latch Verified workflows (RNA-seq, AlphaFold, DESeq2, single-cell analysis, CRISPR editing). Enables automatic containerization, UI generation, workflow versioning, and execution on scalable cloud infrastructure with comprehensive data management
 
 **Microscopy & Bio-image Data:**
 - **OMERO Integration** - Toolkit for interacting with OMERO microscopy data management systems using Python. Provides comprehensive access to microscopy images stored in OMERO servers, including dataset and screening data retrieval, pixel data analysis, annotation and metadata management, regions of interest (ROIs) creation and analysis, batch processing, OMERO.scripts development, and OMERO.tables for structured data storage. Essential for researchers working with high-content screening data, multi-dimensional microscopy datasets, or collaborative image repositories
