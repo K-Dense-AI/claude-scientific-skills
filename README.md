@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **20 scientific databases**, **44 scientific packages**, and **94 unique workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **20 scientific databases**, **44 scientific packages**, **1 scientific integration**, and **95 unique workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -17,7 +17,7 @@ Then, to install a specific set of skills:
 
 1. Select Browse and install plugins
 2. Select claude-scientific-skills
-3. Select scientific-databases, scientific-packages, or scientific-thinking (includes document processing)
+3. Select scientific-databases, scientific-packages, scientific-thinking (includes document processing), or scientific-integrations
 4. Select Install now
 
 After installing the plugin, you can use the skill by just mentioning it. Additionally, in most case, Claude Code will figure out what to use based on the task.
@@ -123,6 +123,11 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **PDF** - PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms
 - **PPTX** - Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes
 - **XLSX** - Spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization
+
+### Scientific Integrations
+
+**Laboratory Information Management Systems (LIMS) & R&D Platforms:**
+- **Benchling Integration** - Toolkit for integrating with Benchling's R&D platform, providing programmatic access to laboratory data management including registry entities (DNA sequences, proteins), inventory systems (samples, containers, locations), electronic lab notebooks (entries, protocols), workflows (tasks, automation), and data exports using Python SDK and REST API
 
 ## TODO: Future Scientific Capabilities
 
