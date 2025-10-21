@@ -1,508 +1,643 @@
-# Distributed and Model Parallel Training
-
-Comprehensive guide for distributed training strategies in PyTorch Lightning.
+# Distributed Training - Comprehensive Guide
 
 ## Overview
 
-PyTorch Lightning provides seamless distributed training across multiple GPUs, machines, and TPUs with minimal code changes. The framework automatically handles the complexity of distributed training while keeping code device-agnostic and readable.
+PyTorch Lightning provides several strategies for training large models efficiently across multiple GPUs, nodes, and machines. Choose the right strategy based on model size and hardware configuration.
 
-## Training Strategies
+## Strategy Selection Guide
 
-### Data Parallel (DDP - DistributedDataParallel)
+### When to Use Each Strategy
 
-**Best for:** Most models (< 500M parameters) where the full model fits in GPU memory.
+**Regular Training (Single Device)**
+- Model size: Any size that fits in single GPU memory
+- Use case: Prototyping, small models, debugging
 
-**How it works:** Each GPU holds a complete copy of the model and trains on a different batch subset. Gradients are synchronized across GPUs during backward pass.
+**DDP (Distributed Data Parallel)**
+- Model size: <500M parameters (e.g., ResNet50 ~80M parameters)
+- When: Weights, activations, optimizer states, and gradients all fit in GPU memory
+- Goal: Scale batch size and speed across multiple GPUs
+- Best for: Most standard deep learning models
+
+**FSDP (Fully Sharded Data Parallel)**
+- Model size: 500M+ parameters (e.g., large transformers like BERT-Large, GPT)
+- When: Model doesn't fit in single GPU memory
+- Recommended for: Users new to model parallelism or migrating from DDP
+- Features: Activation checkpointing, CPU parameter offloading
+
+**DeepSpeed**
+- Model size: 500M+ parameters
+- When: Need cutting-edge features or already familiar with DeepSpeed
+- Features: CPU/disk parameter offloading, distributed checkpoints, fine-grained control
+- Trade-off: More complex configuration
+
+## DDP (Distributed Data Parallel)
+
+### Basic Usage
 
 ```python
-# Single-node, multi-GPU
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,  # Use 4 GPUs
-    strategy='ddp',
-)
+# Single GPU
+trainer = L.Trainer(accelerator="gpu", devices=1)
 
-# Multi-node, multi-GPU
-trainer = Trainer(
-    accelerator='gpu',
+# Multi-GPU on single node (automatic DDP)
+trainer = L.Trainer(accelerator="gpu", devices=4)
+
+# Explicit DDP strategy
+trainer = L.Trainer(strategy="ddp", accelerator="gpu", devices=4)
+```
+
+### Multi-Node DDP
+
+```python
+# On each node, run:
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
     devices=4,  # GPUs per node
-    num_nodes=2,  # Number of nodes
-    strategy='ddp',
+    num_nodes=4  # Total nodes
 )
 ```
 
-**Advantages:**
-- Most widely used and tested
-- Works with most PyTorch code
-- Good scaling efficiency
-- No code changes required in LightningModule
-
-**When to use:** Default choice for most distributed training scenarios.
-
-### FSDP (Fully Sharded Data Parallel)
-
-**Best for:** Large models (500M+ parameters) that don't fit in single GPU memory.
-
-**How it works:** Shards model parameters, gradients, and optimizer states across GPUs. Each GPU only stores a subset of the model.
-
-```python
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,
-    strategy='fsdp',
-)
-
-# With configuration
-from lightning.pytorch.strategies import FSDPStrategy
-
-strategy = FSDPStrategy(
-    sharding_strategy="FULL_SHARD",  # Full sharding
-    cpu_offload=False,  # Offload to CPU
-    mixed_precision=torch.float16,
-)
-
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,
-    strategy=strategy,
-)
-```
-
-**Sharding Strategies:**
-- `FULL_SHARD` - Shard parameters, gradients, and optimizer states
-- `SHARD_GRAD_OP` - Shard only gradients and optimizer states
-- `NO_SHARD` - DDP-like (no sharding)
-- `HYBRID_SHARD` - Shard within node, DDP across nodes
-
-**Advanced FSDP Configuration:**
-```python
-from lightning.pytorch.strategies import FSDPStrategy
-
-strategy = FSDPStrategy(
-    sharding_strategy="FULL_SHARD",
-    activation_checkpointing=True,  # Save memory
-    cpu_offload=True,  # Offload parameters to CPU
-    backward_prefetch="BACKWARD_PRE",  # Prefetch strategy
-    forward_prefetch=True,
-    limit_all_gathers=True,
-)
-```
-
-**When to use:**
-- Models > 500M parameters
-- Limited GPU memory
-- Native PyTorch solution preferred
-- Migrating from standalone PyTorch FSDP
-
-### DeepSpeed
-
-**Best for:** Cutting-edge features, massive models, or existing DeepSpeed users.
-
-**How it works:** Comprehensive optimization library with multiple stages of memory and compute optimization.
-
-```python
-# Basic DeepSpeed
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,
-    strategy='deepspeed',
-    precision='16-mixed',
-)
-
-# With configuration
-from lightning.pytorch.strategies import DeepSpeedStrategy
-
-strategy = DeepSpeedStrategy(
-    stage=2,  # ZeRO Stage (1, 2, or 3)
-    offload_optimizer=True,
-    offload_parameters=True,
-)
-
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,
-    strategy=strategy,
-)
-```
-
-**ZeRO Stages:**
-- **Stage 1:** Shard optimizer states
-- **Stage 2:** Shard optimizer states + gradients
-- **Stage 3:** Shard optimizer states + gradients + parameters (like FSDP)
-
-**With DeepSpeed Config File:**
-```python
-strategy = DeepSpeedStrategy(config="deepspeed_config.json")
-```
-
-Example `deepspeed_config.json`:
-```json
-{
-  "zero_optimization": {
-    "stage": 2,
-    "offload_optimizer": {
-      "device": "cpu",
-      "pin_memory": true
-    },
-    "allgather_bucket_size": 2e8,
-    "reduce_bucket_size": 2e8
-  },
-  "activation_checkpointing": {
-    "partition_activations": true,
-    "cpu_checkpointing": true
-  },
-  "fp16": {
-    "enabled": true
-  },
-  "gradient_clipping": 1.0
-}
-```
-
-**When to use:**
-- Need specific DeepSpeed features
-- Maximum memory efficiency required
-- Already familiar with DeepSpeed
-- Training extremely large models
-
-### DDP Spawn
-
-**Note:** Generally avoid using `ddp_spawn`. Use `ddp` instead.
-
-```python
-trainer = Trainer(strategy='ddp_spawn')  # Not recommended
-```
-
-**Issues with ddp_spawn:**
-- Cannot return values from `.fit()`
-- Pickling issues with unpicklable objects
-- Slower than `ddp`
-- More memory overhead
-
-**When to use:** Only for debugging or if `ddp` doesn't work on your system.
-
-## Multi-Node Training
-
-### Basic Multi-Node Setup
-
-```python
-# On each node, run the same command
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,  # GPUs per node
-    num_nodes=8,  # Total number of nodes
-    strategy='ddp',
-)
-```
-
-### SLURM Cluster
-
-Lightning automatically detects SLURM environment:
-
-```python
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,
-    num_nodes=8,
-    strategy='ddp',
-)
-```
-
-**SLURM Submit Script:**
-```bash
-#!/bin/bash
-#SBATCH --nodes=8
-#SBATCH --gres=gpu:4
-#SBATCH --ntasks-per-node=4
-#SBATCH --job-name=lightning_training
-
-python train.py
-```
-
-### Manual Cluster Setup
+### DDP Configuration
 
 ```python
 from lightning.pytorch.strategies import DDPStrategy
 
-strategy = DDPStrategy(
-    cluster_environment='TorchElastic',  # or 'SLURM', 'LSF', 'Kubeflow'
-)
-
-trainer = Trainer(
-    accelerator='gpu',
-    devices=4,
-    num_nodes=8,
-    strategy=strategy,
+trainer = L.Trainer(
+    strategy=DDPStrategy(
+        process_group_backend="nccl",  # "nccl" for GPU, "gloo" for CPU
+        find_unused_parameters=False,   # Set True if model has unused parameters
+        gradient_as_bucket_view=True    # More memory efficient
+    ),
+    accelerator="gpu",
+    devices=4
 )
 ```
 
-## Memory Optimization Techniques
+### DDP Spawn
 
-### Gradient Accumulation
-
-Simulate larger batch sizes without increasing memory:
+Use when `ddp` causes issues (slower but more compatible):
 
 ```python
-trainer = Trainer(
-    accumulate_grad_batches=4,  # Accumulate 4 batches before optimizer step
-)
+trainer = L.Trainer(strategy="ddp_spawn", accelerator="gpu", devices=4)
+```
 
-# Variable accumulation by epoch
-trainer = Trainer(
-    accumulate_grad_batches={
-        0: 8,  # Epochs 0-4: accumulate 8 batches
-        5: 4,  # Epochs 5+: accumulate 4 batches
-    }
+### Best Practices for DDP
+
+1. **Batch size:** Multiply by number of GPUs
+   ```python
+   # If using 4 GPUs, effective batch size = batch_size * 4
+   dm = MyDataModule(batch_size=32)  # 32 * 4 = 128 effective batch size
+   ```
+
+2. **Learning rate:** Often scaled with batch size
+   ```python
+   # Linear scaling rule
+   base_lr = 0.001
+   num_gpus = 4
+   lr = base_lr * num_gpus
+   ```
+
+3. **Synchronization:** Use `sync_dist=True` for metrics
+   ```python
+   self.log("val_loss", loss, sync_dist=True)
+   ```
+
+4. **Rank-specific operations:** Use decorators for main process only
+   ```python
+   from lightning.pytorch.utilities import rank_zero_only
+
+   @rank_zero_only
+   def save_results(self):
+       # Only runs on main process (rank 0)
+       torch.save(self.results, "results.pt")
+   ```
+
+## FSDP (Fully Sharded Data Parallel)
+
+### Basic Usage
+
+```python
+trainer = L.Trainer(
+    strategy="fsdp",
+    accelerator="gpu",
+    devices=4
 )
 ```
+
+### FSDP Configuration
+
+```python
+from lightning.pytorch.strategies import FSDPStrategy
+import torch.nn as nn
+
+trainer = L.Trainer(
+    strategy=FSDPStrategy(
+        # Sharding strategy
+        sharding_strategy="FULL_SHARD",  # or "SHARD_GRAD_OP", "NO_SHARD", "HYBRID_SHARD"
+
+        # Activation checkpointing (save memory)
+        activation_checkpointing_policy={nn.TransformerEncoderLayer},
+
+        # CPU offloading (save GPU memory, slower)
+        cpu_offload=False,
+
+        # Mixed precision
+        mixed_precision=True,
+
+        # Wrap policy (auto-wrap layers)
+        auto_wrap_policy=None
+    ),
+    accelerator="gpu",
+    devices=8,
+    precision="bf16-mixed"
+)
+```
+
+### Sharding Strategies
+
+**FULL_SHARD (default)**
+- Shards optimizer states, gradients, and parameters
+- Maximum memory savings
+- More communication overhead
+
+**SHARD_GRAD_OP**
+- Shards optimizer states and gradients only
+- Parameters kept on all devices
+- Less memory savings but faster
+
+**NO_SHARD**
+- No sharding (equivalent to DDP)
+- For comparison or when sharding not needed
+
+**HYBRID_SHARD**
+- Combines FULL_SHARD within nodes and NO_SHARD across nodes
+- Good for multi-node setups
 
 ### Activation Checkpointing
 
-Trade computation for memory by recomputing activations during backward pass:
+Trade computation for memory:
 
 ```python
-# FSDP
-from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (
-    checkpoint_wrapper,
-    CheckpointImpl,
-    apply_activation_checkpointing,
+from lightning.pytorch.strategies import FSDPStrategy
+import torch.nn as nn
+
+# Checkpoint specific layer types
+trainer = L.Trainer(
+    strategy=FSDPStrategy(
+        activation_checkpointing_policy={
+            nn.TransformerEncoderLayer,
+            nn.TransformerDecoderLayer
+        }
+    )
 )
-
-class MyModule(L.LightningModule):
-    def configure_model(self):
-        # Wrap specific layers for activation checkpointing
-        self.model = MyTransformer()
-        apply_activation_checkpointing(
-            self.model,
-            checkpoint_wrapper_fn=lambda m: checkpoint_wrapper(m, CheckpointImpl.NO_REENTRANT),
-            check_fn=lambda m: isinstance(m, TransformerBlock),
-        )
-```
-
-### Mixed Precision Training
-
-Reduce memory usage and increase speed with mixed precision:
-
-```python
-# 16-bit mixed precision
-trainer = Trainer(precision='16-mixed')
-
-# BFloat16 mixed precision (more stable, requires newer GPUs)
-trainer = Trainer(precision='bf16-mixed')
 ```
 
 ### CPU Offloading
 
-Offload parameters or optimizer states to CPU:
+Offload parameters to CPU when not in use:
 
 ```python
-# FSDP with CPU offload
-from lightning.pytorch.strategies import FSDPStrategy
+trainer = L.Trainer(
+    strategy=FSDPStrategy(
+        cpu_offload=True  # Slower but saves GPU memory
+    ),
+    accelerator="gpu",
+    devices=4
+)
+```
 
-strategy = FSDPStrategy(
-    cpu_offload=True,  # Offload parameters to CPU
+### FSDP with Large Models
+
+```python
+from lightning.pytorch.strategies import FSDPStrategy
+import torch.nn as nn
+
+class LargeTransformer(L.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.transformer = nn.TransformerEncoder(
+            nn.TransformerEncoderLayer(d_model=4096, nhead=32),
+            num_layers=48
+        )
+
+    def configure_sharded_model(self):
+        # Called by FSDP to wrap model
+        pass
+
+# Train
+trainer = L.Trainer(
+    strategy=FSDPStrategy(
+        activation_checkpointing_policy={nn.TransformerEncoderLayer},
+        cpu_offload=False,
+        sharding_strategy="FULL_SHARD"
+    ),
+    accelerator="gpu",
+    devices=8,
+    precision="bf16-mixed",
+    max_epochs=10
 )
 
-# DeepSpeed with CPU offload
+model = LargeTransformer()
+trainer.fit(model, datamodule=dm)
+```
+
+## DeepSpeed
+
+### Installation
+
+```bash
+pip install deepspeed
+```
+
+### Basic Usage
+
+```python
+trainer = L.Trainer(
+    strategy="deepspeed_stage_2",  # or "deepspeed_stage_3"
+    accelerator="gpu",
+    devices=4,
+    precision="16-mixed"
+)
+```
+
+### DeepSpeed Stages
+
+**Stage 1: Optimizer State Sharding**
+- Shards optimizer states
+- Moderate memory savings
+
+```python
+trainer = L.Trainer(strategy="deepspeed_stage_1")
+```
+
+**Stage 2: Optimizer + Gradient Sharding**
+- Shards optimizer states and gradients
+- Good memory savings
+
+```python
+trainer = L.Trainer(strategy="deepspeed_stage_2")
+```
+
+**Stage 3: Full Model Sharding (ZeRO-3)**
+- Shards optimizer states, gradients, and model parameters
+- Maximum memory savings
+- Can train very large models
+
+```python
+trainer = L.Trainer(strategy="deepspeed_stage_3")
+```
+
+**Stage 2 with Offloading**
+- Offload to CPU or NVMe
+
+```python
+trainer = L.Trainer(strategy="deepspeed_stage_2_offload")
+trainer = L.Trainer(strategy="deepspeed_stage_3_offload")
+```
+
+### DeepSpeed Configuration File
+
+For fine-grained control:
+
+```python
 from lightning.pytorch.strategies import DeepSpeedStrategy
 
-strategy = DeepSpeedStrategy(
-    stage=3,
-    offload_optimizer=True,
-    offload_parameters=True,
+# Create config file: ds_config.json
+config = {
+    "zero_optimization": {
+        "stage": 3,
+        "offload_optimizer": {
+            "device": "cpu",
+            "pin_memory": True
+        },
+        "offload_param": {
+            "device": "cpu",
+            "pin_memory": True
+        },
+        "overlap_comm": True,
+        "contiguous_gradients": True,
+        "sub_group_size": 1e9,
+        "reduce_bucket_size": "auto",
+        "stage3_prefetch_bucket_size": "auto",
+        "stage3_param_persistence_threshold": "auto",
+        "stage3_max_live_parameters": 1e9,
+        "stage3_max_reuse_distance": 1e9
+    },
+    "fp16": {
+        "enabled": True,
+        "loss_scale": 0,
+        "initial_scale_power": 16,
+        "loss_scale_window": 1000,
+        "hysteresis": 2,
+        "min_loss_scale": 1
+    },
+    "gradient_clipping": 1.0,
+    "train_batch_size": "auto",
+    "train_micro_batch_size_per_gpu": "auto"
+}
+
+trainer = L.Trainer(
+    strategy=DeepSpeedStrategy(config=config),
+    accelerator="gpu",
+    devices=8,
+    precision="16-mixed"
 )
 ```
 
-## Performance Optimization
+### DeepSpeed Best Practices
 
-### Synchronize Batch Normalization
+1. **Use Stage 2 for models <10B parameters**
+2. **Use Stage 3 for models >10B parameters**
+3. **Enable offloading if GPU memory is insufficient**
+4. **Tune `reduce_bucket_size` for communication efficiency**
 
-Synchronize batch norm statistics across GPUs:
+## Comparison Table
+
+| Feature | DDP | FSDP | DeepSpeed |
+|---------|-----|------|-----------|
+| Model Size | <500M params | 500M+ params | 500M+ params |
+| Memory Efficiency | Low | High | Very High |
+| Speed | Fastest | Fast | Fast |
+| Setup Complexity | Simple | Medium | Complex |
+| Offloading | No | CPU | CPU + Disk |
+| Best For | Standard models | Large models | Very large models |
+| Configuration | Minimal | Moderate | Extensive |
+
+## Mixed Precision Training
+
+Use mixed precision to speed up training and save memory:
 
 ```python
-trainer = Trainer(
-    accelerator='gpu',
+# FP16 mixed precision
+trainer = L.Trainer(precision="16-mixed")
+
+# BFloat16 mixed precision (A100, H100)
+trainer = L.Trainer(precision="bf16-mixed")
+
+# Full precision (default)
+trainer = L.Trainer(precision="32-true")
+
+# Double precision
+trainer = L.Trainer(precision="64-true")
+```
+
+### Mixed Precision with Different Strategies
+
+```python
+# DDP + FP16
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
     devices=4,
-    strategy='ddp',
-    sync_batchnorm=True,  # Sync batch norm across GPUs
+    precision="16-mixed"
+)
+
+# FSDP + BFloat16
+trainer = L.Trainer(
+    strategy="fsdp",
+    accelerator="gpu",
+    devices=8,
+    precision="bf16-mixed"
+)
+
+# DeepSpeed + FP16
+trainer = L.Trainer(
+    strategy="deepspeed_stage_2",
+    accelerator="gpu",
+    devices=4,
+    precision="16-mixed"
 )
 ```
 
-### Find Optimal Batch Size
+## Multi-Node Training
 
-```python
-from lightning.pytorch.tuner import Tuner
+### SLURM
 
-trainer = Trainer()
-tuner = Tuner(trainer)
+```bash
+#!/bin/bash
+#SBATCH --nodes=4
+#SBATCH --gpus-per-node=4
+#SBATCH --time=24:00:00
 
-# Auto-scale batch size
-tuner.scale_batch_size(model, mode="power")  # or "binsearch"
+srun python train.py
 ```
 
-### Gradient Clipping
-
-Prevent gradient explosion in distributed training:
-
 ```python
-trainer = Trainer(
-    gradient_clip_val=1.0,
-    gradient_clip_algorithm='norm',  # or 'value'
+# train.py
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
+    devices=4,
+    num_nodes=4
 )
 ```
 
-### Benchmark Mode
+### Manual Multi-Node Setup
 
-Enable cudnn.benchmark for consistent input sizes:
+Node 0 (master):
+```bash
+python train.py --num_nodes=2 --node_rank=0 --master_addr=192.168.1.1 --master_port=12345
+```
+
+Node 1:
+```bash
+python train.py --num_nodes=2 --node_rank=1 --master_addr=192.168.1.1 --master_port=12345
+```
 
 ```python
-trainer = Trainer(
-    benchmark=True,  # Optimize for consistent input sizes
+# train.py
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--num_nodes", type=int, default=1)
+parser.add_argument("--node_rank", type=int, default=0)
+parser.add_argument("--master_addr", type=str, default="localhost")
+parser.add_argument("--master_port", type=int, default=12345)
+args = parser.parse_args()
+
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
+    devices=4,
+    num_nodes=args.num_nodes
 )
-```
-
-## Distributed Data Loading
-
-### Automatic Distributed Sampling
-
-Lightning automatically handles distributed sampling:
-
-```python
-# No changes needed - Lightning handles this automatically
-def train_dataloader(self):
-    return DataLoader(
-        self.train_dataset,
-        batch_size=32,
-        shuffle=True,  # Lightning converts to DistributedSampler
-    )
-```
-
-### Manual Control
-
-```python
-# Disable automatic distributed sampler
-trainer = Trainer(
-    use_distributed_sampler=False,
-)
-
-# Manual distributed sampler
-from torch.utils.data.distributed import DistributedSampler
-
-def train_dataloader(self):
-    sampler = DistributedSampler(self.train_dataset)
-    return DataLoader(
-        self.train_dataset,
-        batch_size=32,
-        sampler=sampler,
-    )
-```
-
-### Data Loading Best Practices
-
-```python
-def train_dataloader(self):
-    return DataLoader(
-        self.train_dataset,
-        batch_size=32,
-        num_workers=4,  # Use multiple workers
-        pin_memory=True,  # Faster CPU-GPU transfer
-        persistent_workers=True,  # Keep workers alive between epochs
-    )
 ```
 
 ## Common Patterns
 
-### Logging in Distributed Training
+### Gradient Accumulation with DDP
 
 ```python
-def training_step(self, batch, batch_idx):
-    loss = self.compute_loss(batch)
-
-    # Automatically syncs across processes
-    self.log('train_loss', loss, sync_dist=True)
-
-    return loss
+# Simulate larger batch size
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
+    devices=4,
+    accumulate_grad_batches=4  # Effective batch size = batch_size * devices * 4
+)
 ```
 
-### Rank-Specific Operations
+### Model Checkpoint with Distributed Training
 
 ```python
-def training_step(self, batch, batch_idx):
-    # Run only on rank 0 (main process)
-    if self.trainer.is_global_zero:
-        print("This only prints once across all processes")
+from lightning.pytorch.callbacks import ModelCheckpoint
 
-    # Get current rank
-    rank = self.trainer.global_rank
-    world_size = self.trainer.world_size
+checkpoint_callback = ModelCheckpoint(
+    monitor="val_loss",
+    save_top_k=3,
+    mode="min"
+)
 
-    return loss
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
+    devices=4,
+    callbacks=[checkpoint_callback]
+)
 ```
 
-### Barrier Synchronization
+### Reproducibility in Distributed Training
 
 ```python
-def on_train_epoch_end(self):
-    # Wait for all processes
-    self.trainer.strategy.barrier()
+import lightning as L
 
-    # Now all processes are synchronized
-    if self.trainer.is_global_zero:
-        # Save something only once
-        self.save_artifacts()
+L.seed_everything(42, workers=True)
+
+trainer = L.Trainer(
+    strategy="ddp",
+    accelerator="gpu",
+    devices=4,
+    deterministic=True
+)
 ```
 
 ## Troubleshooting
 
-### Common Issues
+### NCCL Timeout
 
-**1. Out of Memory:**
-- Reduce batch size
-- Enable gradient accumulation
-- Use FSDP or DeepSpeed
-- Enable activation checkpointing
-- Use mixed precision
-
-**2. Slow Training:**
-- Check data loading (use `num_workers > 0`)
-- Enable `pin_memory=True` and `persistent_workers=True`
-- Use `benchmark=True` for consistent input sizes
-- Profile with `profiler='simple'`
-
-**3. Hanging:**
-- Ensure all processes execute same collectives
-- Check for `if` statements that differ across ranks
-- Use barrier synchronization when needed
-
-**4. Inconsistent Results:**
-- Set `deterministic=True`
-- Use `seed_everything()`
-- Ensure proper gradient synchronization
-
-### Debugging Distributed Training
+Increase timeout for slow networks:
 
 ```python
-# Test with single GPU first
-trainer = Trainer(accelerator='gpu', devices=1)
+import os
+os.environ["NCCL_TIMEOUT"] = "3600"  # 1 hour
 
-# Then test with 2 GPUs
-trainer = Trainer(accelerator='gpu', devices=2, strategy='ddp')
+trainer = L.Trainer(strategy="ddp", accelerator="gpu", devices=4)
+```
 
-# Use fast_dev_run for quick testing
-trainer = Trainer(
-    accelerator='gpu',
-    devices=2,
-    strategy='ddp',
-    fast_dev_run=10,  # Run 10 batches only
+### CUDA Out of Memory
+
+Solutions:
+1. Enable gradient checkpointing
+2. Reduce batch size
+3. Use FSDP or DeepSpeed
+4. Enable CPU offloading
+5. Use mixed precision
+
+```python
+# Option 1: Gradient checkpointing
+class MyModel(L.LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.model = MyTransformer()
+        self.model.gradient_checkpointing_enable()
+
+# Option 2: Smaller batch size
+dm = MyDataModule(batch_size=16)  # Reduce from 32
+
+# Option 3: FSDP with offloading
+trainer = L.Trainer(
+    strategy=FSDPStrategy(cpu_offload=True),
+    precision="bf16-mixed"
+)
+
+# Option 4: Gradient accumulation
+trainer = L.Trainer(accumulate_grad_batches=4)
+```
+
+### Distributed Sampler Issues
+
+Lightning handles DistributedSampler automatically:
+
+```python
+# Don't do this
+from torch.utils.data import DistributedSampler
+sampler = DistributedSampler(dataset)  # Lightning does this automatically
+
+# Just use shuffle
+train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+```
+
+### Communication Overhead
+
+Reduce communication with larger `find_unused_parameters`:
+
+```python
+trainer = L.Trainer(
+    strategy=DDPStrategy(find_unused_parameters=False),
+    accelerator="gpu",
+    devices=4
 )
 ```
 
-## Strategy Selection Guide
+## Best Practices
 
-| Model Size | Available Memory | Recommended Strategy |
-|-----------|------------------|---------------------|
-| < 500M params | Fits in 1 GPU | Single GPU |
-| < 500M params | Fits across GPUs | DDP |
-| 500M - 3B params | Limited memory | FSDP or DeepSpeed Stage 2 |
-| 3B+ params | Very limited memory | FSDP or DeepSpeed Stage 3 |
-| Any size | Maximum efficiency | DeepSpeed with offloading |
-| Multiple nodes | Any | DDP (< 500M) or FSDP/DeepSpeed (> 500M) |
+### 1. Start with Single GPU
+Test your code on single GPU before scaling:
+
+```python
+# Debug on single GPU
+trainer = L.Trainer(accelerator="gpu", devices=1, fast_dev_run=True)
+
+# Then scale to multiple GPUs
+trainer = L.Trainer(accelerator="gpu", devices=4, strategy="ddp")
+```
+
+### 2. Use Appropriate Strategy
+- <500M params: Use DDP
+- 500M-10B params: Use FSDP
+- >10B params: Use DeepSpeed Stage 3
+
+### 3. Enable Mixed Precision
+Always use mixed precision for modern GPUs:
+
+```python
+trainer = L.Trainer(precision="bf16-mixed")  # A100, H100
+trainer = L.Trainer(precision="16-mixed")    # V100, T4
+```
+
+### 4. Scale Hyperparameters
+Adjust learning rate and batch size when scaling:
+
+```python
+# Linear scaling rule
+lr = base_lr * num_gpus
+```
+
+### 5. Sync Metrics
+Always sync metrics in distributed training:
+
+```python
+self.log("val_loss", loss, sync_dist=True)
+```
+
+### 6. Use Rank-Zero Operations
+File I/O and expensive operations on main process only:
+
+```python
+from lightning.pytorch.utilities import rank_zero_only
+
+@rank_zero_only
+def save_predictions(self):
+    torch.save(self.predictions, "predictions.pt")
+```
+
+### 7. Checkpoint Regularly
+Save checkpoints to resume from failures:
+
+```python
+checkpoint_callback = ModelCheckpoint(
+    save_top_k=3,
+    save_last=True,  # Always save last for resuming
+    every_n_epochs=5
+)
+```
