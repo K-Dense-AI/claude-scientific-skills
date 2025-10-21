@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **20 scientific databases**, **44 scientific packages**, **4 scientific integrations**, and **103 unique workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **21 scientific databases**, **44 scientific packages**, **4 scientific integrations**, and **103 unique workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -30,6 +30,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **ChEMBL** - Bioactive molecule database with drug-like properties (2M+ compounds, 19M+ activities, 13K+ targets)
 - **ClinPGx** - Clinical pharmacogenomics database (successor to PharmGKB) providing gene-drug interactions, CPIC clinical guidelines, allele functions, drug labels, and pharmacogenomic annotations for precision medicine and personalized pharmacotherapy (consolidates PharmGKB, CPIC, and PharmCAT resources)
 - **ClinVar** - NCBI's public archive of genomic variants and their clinical significance with standardized classifications (pathogenic, benign, VUS), E-utilities API access, and bulk FTP downloads for variant interpretation and precision medicine research
+- **ClinicalTrials.gov** - Comprehensive registry of clinical studies conducted worldwide (maintained by U.S. National Library of Medicine) with API v2 access for searching trials by condition, intervention, location, sponsor, study status, and phase; retrieve detailed trial information including eligibility criteria, outcomes, contacts, and locations; export to CSV/JSON formats for analysis (public API, no authentication required, ~50 req/min rate limit)
 - **COSMIC** - Catalogue of Somatic Mutations in Cancer, the world's largest database of somatic cancer mutations (millions of mutations across thousands of cancer types, Cancer Gene Census, mutational signatures, structural variants, and drug resistance data)
 - **ENA (European Nucleotide Archive)** - Comprehensive public repository for nucleotide sequence data and metadata with REST APIs for accessing sequences, assemblies, samples, studies, and reads; supports advanced search, taxonomy lookups, and bulk downloads via FTP/Aspera (rate limit: 50 req/sec)
 - **Ensembl** - Genome browser and bioinformatics database providing genomic annotations, sequences, variants, and comparative genomics data for 250+ vertebrate species (Release 115, 2025) with comprehensive REST API for gene lookups, sequence retrieval, variant effect prediction (VEP), ortholog finding, assembly mapping (GRCh37/GRCh38), and region analysis
