@@ -1,6 +1,6 @@
 ---
 name: pubmed-database
-description: "Comprehensive PubMed database expertise for searching, retrieving, and analyzing biomedical research literature. Use for literature searches, systematic reviews, meta-analyses, citation discovery, programmatic data access, and biomedical research workflows. Handles advanced search queries with Boolean operators, MeSH terms, field tags, publication type filters, and date ranges. Provides E-utilities API integration for automated workflows, batch processing, and large-scale data extraction. Supports citation management, export formats, search history, and related article discovery. Covers medicine, biology, pharmacology, genetics, clinical trials, epidemiology, drug discovery, disease research, treatment protocols, and all life sciences domains. Essential for researchers, clinicians, students, and anyone conducting biomedical literature analysis or evidence-based research."
+description: "Search PubMed biomedical literature. Advanced queries with Boolean/MeSH/field tags, E-utilities API access, batch processing, citation management, for literature review and systematic analysis."
 ---
 
 # PubMed Database

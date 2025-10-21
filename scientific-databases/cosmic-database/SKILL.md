@@ -1,6 +1,6 @@
 ---
 name: cosmic-database
-description: "Access and analyze COSMIC (Catalogue of Somatic Mutations in Cancer), the world's largest database of somatic cancer mutations. Use this skill for downloading cancer mutation datasets, accessing the Cancer Gene Census, retrieving mutational signatures, analyzing drug resistance mutations, working with structural variants and gene fusions, accessing copy number alterations, and integrating cancer genomics data into bioinformatics pipelines. Essential for cancer research, oncology drug discovery, precision medicine, tumor profiling, biomarker identification, cancer genomics analysis, somatic variant annotation, mutational signature analysis, cancer gene prioritization, drug resistance studies, and cancer cell line research. Supports both academic (free) and commercial (licensed) access with authentication required."
+description: "Access COSMIC cancer mutation database. Query somatic mutations, Cancer Gene Census, mutational signatures, gene fusions, for cancer research and precision oncology. Requires authentication."
 ---
 
 # COSMIC Database

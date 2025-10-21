@@ -1,6 +1,6 @@
 ---
 name: gene-database
-description: "Access and query NCBI Gene database programmatically using E-utilities and Datasets API. Search genes by symbol, name, ID, or biological context across organisms. Retrieve comprehensive gene information including nomenclature, aliases, reference sequences (RefSeqs), chromosomal locations, Gene Ontology annotations, phenotypes, pathways, and cross-references. Perform batch gene lookups, validate gene lists, analyze gene functions, and access gene metadata. Handle gene symbol resolution, organism-specific queries, and gene identifier mapping. Use for gene annotation, functional analysis, pathway enrichment, variant interpretation, and genomic data integration workflows. Supports JSON, XML, GenBank, FASTA, and text output formats with rate limiting and error handling."
+description: "Query NCBI Gene via E-utilities/Datasets API. Search by symbol/ID, retrieve gene info (RefSeqs, GO, locations, phenotypes), batch lookups, for gene annotation and functional analysis."
 ---
 
 # Gene Database

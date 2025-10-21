@@ -1,6 +1,6 @@
 ---
 name: biopython
-description: "Use BioPython for computational molecular biology and bioinformatics tasks. Essential for: sequence manipulation (DNA/RNA/protein transcription, translation, complement, reverse complement), reading/writing biological file formats (FASTA, FASTQ, GenBank, EMBL, Swiss-Prot, PDB, Clustal, PHYLIP, NEXUS), NCBI database access (Entrez searches, downloads from GenBank/PubMed/Protein databases), BLAST sequence similarity searches and result parsing, pairwise and multiple sequence alignments, phylogenetic tree construction and analysis (UPGMA, Neighbor-Joining), protein structure analysis (PDB parsing, secondary structure, structural alignment), sequence property calculations (GC content, melting temperature, molecular weight, isoelectric point), format conversion between biological file types, restriction enzyme analysis, motif discovery, population genetics calculations, and any task requiring Bio.Seq, Bio.SeqIO, Bio.Entrez, Bio.Blast, Bio.Align, Bio.Phylo, Bio.PDB, Bio.SeqUtils, or other BioPython modules."
+description: "Molecular biology toolkit. Sequence manipulation, FASTA/GenBank I/O, NCBI Entrez, BLAST, alignments, phylogenetic trees, PDB structures, for bioinformatics workflows."
 ---
 
 # BioPython

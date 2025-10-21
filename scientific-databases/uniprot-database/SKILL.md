@@ -1,6 +1,6 @@
 ---
 name: uniprot-database
-description: "Access and query the UniProt protein database for comprehensive protein information retrieval. Use this skill when you need to search for proteins by name, gene symbol, accession number, or functional terms; retrieve protein sequences in FASTA format; access detailed protein annotations including function, structure, interactions, and pathways; map protein identifiers between different databases (Ensembl, RefSeq, PDB, KEGG, GO terms); query Swiss-Prot (reviewed) or TrEMBL (unreviewed) protein entries; perform batch operations on multiple proteins; download protein datasets; analyze protein families and domains; investigate protein-protein interactions; explore evolutionary relationships through UniRef clusters; access protein structure predictions from AlphaFoldDB; retrieve Gene Ontology annotations; analyze protein modifications and post-translational sites; or work with protein sequences for bioinformatics analysis. This skill provides programmatic access to UniProtKB, UniRef, UniParc, and related databases through REST API endpoints with support for various output formats (JSON, TSV, FASTA, XML)."
+description: "Query UniProt protein database REST API. Search proteins by name/gene/accession, retrieve sequences (FASTA), annotations, ID mapping, Swiss-Prot/TrEMBL, GO terms, for protein analysis."
 ---
 
 # UniProt Database

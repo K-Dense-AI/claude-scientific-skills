@@ -1,6 +1,6 @@
 ---
 name: ena-database
-description: "Comprehensive toolkit for accessing, searching, and retrieving data from the European Nucleotide Archive (ENA) - the primary European repository for nucleotide sequence data. Provides programmatic API access for DNA/RNA sequences, genome assemblies, raw sequencing reads (FASTQ), samples, studies, experiments, runs, analyses, and taxonomic records. Use this skill for: retrieving genomic/transcriptomic data by accession numbers (ERR, SRR, PRJ, GCA, etc.), searching sequence databases, downloading raw sequencing data, accessing genome assemblies, finding samples and studies, building bioinformatics pipelines, performing sequence similarity searches, accessing taxonomic information, bulk data downloads, metadata extraction, and integrating ENA data into computational biology workflows. Supports multiple data formats (FASTQ, FASTA, BAM, CRAM, XML, JSON, TSV) and download methods (API, FTP, Aspera). Essential for genomics, transcriptomics, metagenomics, phylogenetics, and molecular biology research requiring access to European nucleotide sequence repositories."
+description: "Access European Nucleotide Archive via API/FTP. Retrieve DNA/RNA sequences, raw reads (FASTQ), genome assemblies by accession, for genomics and bioinformatics pipelines. Supports multiple formats."
 ---
 
 # ENA Database

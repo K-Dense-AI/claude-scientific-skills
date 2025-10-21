@@ -1,6 +1,6 @@
 ---
 name: exploratory-data-analysis
-description: "Comprehensive exploratory data analysis (EDA) toolkit for analyzing datasets and generating actionable insights. Use this skill when users provide data files and request analysis, exploration, insights, or understanding of their data. Handles CSV, Excel (.xlsx/.xls), JSON, Parquet, TSV, Feather, HDF5, and Pickle files. Automatically performs statistical analysis including distributions, correlations, outlier detection, missing data patterns, and data quality assessment. Generates professional visualizations (histograms, box plots, correlation heatmaps, scatter matrices) and comprehensive markdown reports with automated insights. Key triggers: \"analyze this data\", \"explore this dataset\", \"what's in this file\", \"data insights\", \"statistical summary\", \"data visualization\", \"EDA\", \"exploratory analysis\", \"data profiling\", \"understand my data\", \"find patterns\", \"data quality\", \"missing data\", \"outliers\", \"correlations\", \"distributions\". Always outputs structured markdown reports with embedded visualizations and actionable recommendations."
+description: "EDA toolkit. Analyze CSV/Excel/JSON/Parquet files, statistical summaries, distributions, correlations, outliers, missing data, visualizations, markdown reports, for data profiling and insights."
 ---
 
 # Exploratory Data Analysis

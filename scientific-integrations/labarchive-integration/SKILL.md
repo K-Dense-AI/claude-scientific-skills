@@ -1,6 +1,6 @@
 ---
 name: labarchive-integration
-description: Toolkit for interacting with LabArchives Electronic Lab Notebook (ELN) API. This skill should be used when working with LabArchives notebooks, including authentication setup, retrieving user and notebook information, backing up notebooks, managing entries and attachments, generating reports, or integrating LabArchives with other scientific tools (Protocols.io, GraphPad Prism, SnapGene, Geneious, Jupyter, REDCap). Use this skill for any task involving programmatic access to LabArchives data or automating LabArchives workflows.
+description: "LabArchives ELN API integration. Access notebooks, manage entries/attachments, backup notebooks, integrate with Protocols.io/Jupyter/REDCap, for programmatic ELN workflows."
 ---
 
 # LabArchives Integration

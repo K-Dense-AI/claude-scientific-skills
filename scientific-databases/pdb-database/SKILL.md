@@ -1,6 +1,6 @@
 ---
 name: pdb-database
-description: "Access and analyze the RCSB Protein Data Bank (PDB) - the global repository for 3D structural data of biological macromolecules including proteins, nucleic acids, complexes, and ligands. This skill enables searching structures by text, attributes, sequence similarity, and structural similarity; retrieving detailed metadata and experimental information; downloading coordinate files in PDB, mmCIF, and BinaryCIF formats; performing batch operations on multiple structures; and integrating PDB data into computational workflows. Use this skill for protein structure analysis, molecular visualization, drug discovery research, protein engineering, structural biology studies, crystallographic data analysis, homology modeling, ligand binding site analysis, structure-function relationship studies, evolutionary analysis, educational content creation, and any task requiring access to experimentally determined or computationally predicted macromolecular structures. Key capabilities include querying by organism, resolution, experimental method, deposition date, biological assembly information, and performing sequence/structure similarity searches across the entire PDB archive."
+description: "Access RCSB PDB for 3D protein/nucleic acid structures. Search by text/sequence/structure, download coordinates (PDB/mmCIF), retrieve metadata, for structural biology and drug discovery."
 ---
 
 # PDB Database

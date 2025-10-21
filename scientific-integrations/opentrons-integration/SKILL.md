@@ -1,6 +1,6 @@
 ---
 name: opentrons-integration
-description: Toolkit for creating, editing, and debugging Opentrons Python Protocol API v2 protocols for laboratory automation. This skill should be used when working with Opentrons Flex or OT-2 robots, writing liquid handling protocols, automating pipetting tasks, controlling hardware modules (heater-shaker, temperature, magnetic, thermocycler, absorbance plate reader), managing labware and deck layouts, or performing any laboratory automation tasks using the Opentrons platform. Use this skill for protocol development, troubleshooting, simulation, and optimizing automated workflows for biological and chemical experiments.
+description: "Opentrons lab automation. Write Protocol API v2 protocols for Flex/OT-2 robots, liquid handling, hardware modules (heater-shaker, thermocycler), labware management, for automated pipetting workflows."
 ---
 
 # Opentrons Integration

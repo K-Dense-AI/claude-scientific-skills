@@ -1,6 +1,6 @@
 ---
 name: dask
-description: "Toolkit for parallel and distributed computing in Python enabling larger-than-memory operations, parallel processing, and distributed computation. Use this skill when: (1) datasets exceed available RAM and need chunked processing, (2) pandas/NumPy operations are slow and need parallelization across cores, (3) processing multiple files (CSV, Parquet, JSON, logs) that collectively exceed memory, (4) building custom parallel workflows with task dependencies, (5) scaling from prototype pandas/NumPy code to production on larger data, (6) need distributed computing across multiple machines, (7) working with scientific datasets (HDF5, Zarr, NetCDF) larger than memory, (8) ETL pipelines processing terabytes of unstructured data, (9) parameter sweeps or embarrassingly parallel computations, (10) when simpler solutions (better algorithms, efficient formats, sampling) aren't sufficient. Supports DataFrames (parallel pandas), Arrays (parallel NumPy), Bags (parallel Python lists), Futures (task-based parallelization), and various schedulers. NOT suitable for: small datasets fitting in memory, single-file processing, simple computations without parallelism needs, when NumPy/Pandas already perform adequately, or when task overhead exceeds computation time."
+description: "Parallel/distributed computing. Scale pandas/NumPy beyond memory, parallel DataFrames/Arrays, multi-file processing, task graphs, for larger-than-RAM datasets and parallel workflows."
 ---
 
 # Dask

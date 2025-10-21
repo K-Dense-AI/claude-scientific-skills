@@ -1,6 +1,6 @@
 ---
 name: benchling-integration
-description: "Toolkit for integrating with Benchling's R&D platform, providing programmatic access to laboratory data management including registry entities (DNA sequences, proteins), inventory systems (samples, containers, locations), electronic lab notebooks (entries, protocols), workflows (tasks, automation), and data exports. Use this skill when working with Benchling APIs, managing biological sequences and samples, automating lab workflows, syncing data between Benchling and external systems, building Benchling Apps, or querying the Benchling Data Warehouse for analytics."
+description: "Benchling R&D platform integration. Access registry (DNA, proteins), inventory, ELN entries, workflows via API, build Benchling Apps, query Data Warehouse, for lab data management automation."
 ---
 
 # Benchling Integration

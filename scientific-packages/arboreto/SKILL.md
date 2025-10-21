@@ -1,6 +1,6 @@
 ---
 name: arboreto
-description: "Python toolkit for gene regulatory network (GRN) inference from gene expression data using machine learning algorithms. Use this skill for inferring transcription factor-target gene relationships, analyzing single-cell RNA-seq data, building regulatory networks, performing GRN inference from expression matrices, working with GRNBoost2 and GENIE3 algorithms, setting up distributed computing with Dask, integrating with pySCENIC workflows, comparing GRN inference methods, troubleshooting arboreto installation issues, handling large-scale genomic data analysis, and performing reproducible regulatory network analysis. Supports both GRNBoost2 (fast gradient boosting) and GENIE3 (Random Forest) algorithms with distributed computing capabilities via Dask for scalable analysis from single machines to multi-node clusters."
+description: "Gene regulatory network inference with GRNBoost2/GENIE3 algorithms. Infer TF-target relationships from expression data, scalable with Dask, for scRNA-seq and GRN analysis."
 ---
 
 # Arboreto - Gene Regulatory Network Inference

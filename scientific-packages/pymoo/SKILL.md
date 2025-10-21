@@ -1,6 +1,6 @@
 ---
 name: pymoo
-description: "Comprehensive Python framework for solving optimization problems including single-objective, multi-objective (2-3 objectives), many-objective (4+ objectives), constrained, and dynamic optimization. Use this skill for evolutionary algorithms (NSGA-II, NSGA-III, MOEA/D, GA, DE, PSO, CMA-ES), Pareto front analysis, trade-off visualization, constraint handling (feasibility-first, penalty methods), multi-criteria decision making (MCDM), genetic operator customization, benchmark problem testing (ZDT, DTLZ, WFG), and optimization algorithm comparison. Essential for engineering design optimization, portfolio allocation, combinatorial problems, parameter tuning, hyperparameter optimization, feature selection, neural architecture search, resource allocation, scheduling problems, and any task requiring finding optimal solutions or analyzing solution trade-offs. Supports continuous, discrete, binary, and mixed-variable optimization with advanced visualization tools for high-dimensional results."
+description: "Multi-objective optimization framework. NSGA-II, NSGA-III, MOEA/D, Pareto fronts, constraint handling, benchmarks (ZDT, DTLZ), for engineering design and optimization problems."
 ---
 
 # Pymoo - Multi-Objective Optimization in Python

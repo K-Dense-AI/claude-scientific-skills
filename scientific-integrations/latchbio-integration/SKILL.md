@@ -1,6 +1,6 @@
 ---
 name: latchbio-integration
-description: Integration with the Latch platform for building, deploying, and executing bioinformatics workflows. This skill should be used when working with the Latch SDK, creating serverless bioinformatics pipelines, deploying workflows to Latch, managing data in Latch's cloud storage (LatchFile, LatchDir) or Registry system, configuring computational resources (CPU, GPU, memory) for tasks, using pre-built Latch Verified workflows (RNA-seq, AlphaFold, DESeq2, etc.), or integrating Nextflow/Snakemake pipelines with the Latch platform. Use this skill for tasks involving "latch register", "latch init", workflow decoration with @workflow and @task decorators, or when users mention deploying to or working with the Latch platform.
+description: "Latch platform for bioinformatics workflows. Build pipelines with Latch SDK, @workflow/@task decorators, deploy serverless workflows, LatchFile/LatchDir, Nextflow/Snakemake integration."
 ---
 
 # LatchBio Integration

@@ -1,6 +1,6 @@
 ---
 name: seaborn
-description: "Use seaborn for statistical data visualization, exploratory data analysis, and publication-quality plots. This skill covers creating scatter plots, line plots, histograms, KDE plots, box plots, violin plots, bar plots, heatmaps, correlation matrices, pair plots, joint plots, regression plots, categorical comparisons, distribution analysis, multi-panel figures, faceted visualizations, statistical estimation with confidence intervals, color palettes, themes, and matplotlib integration. Apply when visualizing relationships between variables, comparing distributions across categories, analyzing correlations, creating heatmaps, performing regression analysis, exploring multivariate data, generating small multiples, designing publication figures, or when matplotlib plots need statistical enhancements. Suitable for data exploration, statistical analysis, scientific visualization, and creating complex multi-panel figures with minimal code."
+description: "Statistical visualization. Scatter, box, violin, heatmaps, pair plots, regression, correlation matrices, KDE, faceted plots, for exploratory analysis and publication figures."
 ---
 
 # Seaborn Statistical Visualization

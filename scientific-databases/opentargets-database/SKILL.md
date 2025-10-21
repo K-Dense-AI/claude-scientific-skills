@@ -1,6 +1,6 @@
 ---
 name: opentargets-database
-description: Access and query the Open Targets Platform, a comprehensive resource for therapeutic target identification and validation. Use this skill when working with drug target discovery, investigating target-disease associations, evaluating target tractability and safety, retrieving evidence from genetics/omics/literature supporting target-disease links, finding known drugs for diseases, assessing druggability of genes, or analyzing gene/disease/drug relationships for drug discovery and development.
+description: "Query Open Targets Platform for target-disease associations, drug target discovery, tractability/safety data, genetics/omics evidence, known drugs, for therapeutic target identification."
 ---
 
 # Open Targets Database
