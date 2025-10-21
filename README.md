@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **22 scientific databases**, **44 scientific packages**, **4 scientific integrations**, and **103 unique workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **22 scientific databases**, **40 scientific packages**, **5 scientific integrations**, and **122 documented workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -155,7 +155,6 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Galaxy** - Web-based bioinformatics workflow platform integration
 - **Nextflow/nf-core** - Workflow management system integration for reproducible pipelines
 - **Seven Bridges** - Genomics analysis platform and workspace integration
-- **DNAnexus** - Cloud-based genome sequencing analysis platform integration
 - **BaseSpace** - Illumina genomics data analysis and management platform integration
 
 ### Scientific Databases
