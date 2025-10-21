@@ -521,3 +521,138 @@ crisis in higher education.
 - Follow STROBE guidelines
 - Careful attention to potential confounders in Methods
 - Discussion addresses causality limitations
+
+## Venue-Specific Structure Expectations
+
+### Journal vs. Conference Formats
+
+| Venue Type | Length | Structure | Methods Placement | Key Focus |
+|-----------|--------|-----------|-------------------|-----------|
+| **Nature/Science** | 2,000-4,500 words | Modified IMRAD | Supplement | Broad significance |
+| **Medical** | 2,700-3,500 words | Strict IMRAD | Main text | Clinical outcomes |
+| **Field journals** | 3,000-6,000 words | Standard IMRAD | Main text | Technical depth |
+| **ML conferences** | 8-9 pages (~6,000 words) | Intro-Method-Experiments-Conclusion | Main text (concise) | Novel contribution |
+
+### ML Conference Structure (NeurIPS/ICML/ICLR)
+
+**Typical 8-page structure:**
+1. **Abstract** (150-200 words): Problem, method, key results
+2. **Introduction** (1 page): Motivation, contribution summary, related work overview
+3. **Method** (2-3 pages): Technical approach, architecture, algorithms
+4. **Experiments** (2-3 pages): Setup, datasets, baselines, results, ablations
+5. **Related Work** (0.5-1 page, often in appendix): Detailed literature comparison
+6. **Conclusion** (0.25-0.5 pages): Summary, limitations, future work
+7. **References** (within page limit or separate depending on conference)
+8. **Appendix/Supplement** (unlimited): Additional experiments, proofs, details
+
+**Key differences from journals:**
+- **Contribution bullets**: Often numbered list in intro (e.g., "Our contributions are: (1)... (2)... (3)...")
+- **No separate Results/Discussion**: Integrated in Experiments section
+- **Ablation studies**: Critical component showing what matters
+- **Computational requirements**: Often required (training time, GPUs, memory)
+- **Code availability**: Increasingly expected
+
+### Section Length Proportions
+
+| Venue | Intro | Methods | Results/Experiments | Discussion/Conclusion |
+|-------|-------|---------|---------------------|----------------------|
+| **Nature/Science** | 10% | 15%* | 40% | 35% |
+| **Medical (NEJM/JAMA)** | 10% | 25% | 30% | 35% |
+| **Field journals** | 20% | 25% | 30% | 25% |
+| **ML conferences** | 12-15% | 30-35% | 40-45% | 5-8% |
+
+*Methods often in supplement for Nature/Science
+
+**Key medical journal features:**
+- NEJM/Lancet/JAMA: Strict IMRAD; clinical focus; structured Discussion; CONSORT/STROBE compliance
+- Clear primary/secondary outcomes; statistical pre-specification
+
+**Key ML conference features:**
+- Numbered contribution list in intro
+- Method details with pseudocode/equations
+- Extensive experiments: main results, ablations, analysis
+- Brief conclusion (limitations noted)
+- Related work often in appendix
+
+### Writing Style by Venue
+
+| Venue | Audience | Intro Focus | Methods Detail | Results/Experiments | Discussion/Conclusion |
+|-------|----------|-------------|----------------|---------------------|----------------------|
+| **Nature/Science** | Non-specialists | Broad significance | Brief, supplement | Story-driven | Broad implications |
+| **Medical** | Clinicians | Clinical problem | Comprehensive | Primary outcome first | Clinical relevance |
+| **Specialized** | Experts | Field context | Full technical | By experiment | Mechanistic depth |
+| **ML conferences** | ML researchers | Novel contribution | Reproducible | Baselines, ablations | Brief, limitations |
+
+**ML conference emphasis:**
+- **Introduction**: Clear problem statement; numbered contributions; positioning vs. prior work
+- **Method**: Mathematical notation; pseudocode; architecture diagrams; complexity analysis
+- **Experiments**: Datasets described; multiple baselines; ablation studies; error analysis
+- **Conclusion**: Summary; acknowledged limitations; broader impact (if required)
+
+### Evaluation Across Venues
+
+**What gets checked:**
+- **Fit**: Appropriate for venue scope and audience
+- **Length**: Within limits (strict for conferences)
+- **Clarity**: Writing quality sufficient; claims supported
+- **Reproducibility**: Methods enable replication
+- **Completeness**: All outcomes reported; limitations acknowledged
+
+**Common rejection reasons:**
+- Insufficient significance for venue
+- Methods lack detail for reproduction
+- Results don't support claims
+- Discussion overstates findings
+- Page/word limits exceeded (conferences strict)
+
+**ML conference specific evaluation:**
+- Clear problem formulation and motivation
+- Novelty and contribution well-articulated
+- Baselines comprehensive and fair
+- Ablation studies demonstrate what works
+- Code/data availability (increasingly required)
+- Reproducibility information (seeds, hyperparameters)
+
+### Quick Adaptation Guide
+
+**Journal → ML conference:**
+- Condense intro; add numbered contributions
+- Methods: keep concise, add pseudocode
+- Combine Results+Discussion → Experiments section
+- Add extensive ablations and baseline comparisons
+- Brief conclusion with limitations
+
+**ML conference → Journal:**
+- Expand introduction with more background
+- Separate Methods section with full details
+- Split Experiments into Results and Discussion
+- Remove contribution numbering
+- Expand limitations discussion
+
+**Specialist → Broad journal:**
+- Simplify intro; emphasize broad significance
+- Move technical methods to supplement
+- Story-driven results organization
+- Lead discussion with implications
+
+**Broad → Specialist:**
+- Add detailed literature review
+- Full methods in main text
+- Organize results by experiment
+- Add mechanistic discussion depth
+
+### Pre-Submission Structure Checklist
+
+**All venues:**
+- [ ] Word/page count within limits
+- [ ] Section proportions appropriate
+- [ ] Writing style matches venue
+- [ ] Methods enable reproducibility
+- [ ] Limitations acknowledged
+
+**ML conferences add:**
+- [ ] Contributions clearly listed
+- [ ] Ablation studies included
+- [ ] Baselines comprehensive
+- [ ] Hyperparameters/seeds reported
+- [ ] Code availability statement

@@ -535,6 +535,160 @@ When converting between citation styles:
 3. **Manually verify** after automatic conversion
 4. **Check journal guidelines** for specific requirements
 
+## Journal-Specific Citation Styles and Requirements
+
+### How to Identify a Journal's Citation Style
+
+**Step 1: Check Author Guidelines**
+- Every journal provides author instructions (usually "Instructions for Authors" or "Author Guidelines")
+- Citation style is typically specified in "References" or "Citations" section
+- Look for example references formatted in the journal's style
+
+**Step 2: Review Recent Publications**
+- Examine 3-5 recent articles from your target journal
+- Note the in-text citation format (numbered vs. author-date)
+- Compare reference list formatting
+- Check for journal-specific variations
+
+**Step 3: Verify Journal-Specific Variations**
+Some journals use modified versions of standard styles:
+- Abbreviated vs. full journal names
+- DOI inclusion requirements
+- Article titles in title case vs. sentence case
+- Maximum number of authors before "et al."
+
+### Common Journals and Their Citation Styles
+
+| Journal | Citation Style | Key Features |
+|---------|---------------|--------------|
+| **JAMA, JAMA Network journals** | AMA | Superscript numbers, abbreviated journal names, no issue numbers |
+| **New England Journal of Medicine** | Modified Vancouver | Numbered brackets, abbreviated journals, limited authors (3 then et al) |
+| **The Lancet** | Vancouver | Numbered brackets, PubMed abbreviations |
+| **BMJ** | Vancouver | Numbered in-text, DOIs required when available |
+| **Nature, Nature journals** | Nature style (numbered) | Numbered superscripts, abbreviated journals, no article titles in some journals |
+| **Science** | Science style (numbered) | Numbered in-text, abbreviated format |
+| **Cell, Cell Press journals** | Cell style (author-year) | Author-date, specific formatting for multiple citations |
+| **PLOS journals** | Vancouver | Numbered brackets, full journal names in some PLOS journals |
+| **Journal of Biological Chemistry** | JBC style (numbered) | Numbered in-text, specific abbreviation rules |
+| **Psychological journals** | APA | Author-date, DOIs required |
+| **IEEE journals** | IEEE | Numbered brackets, specific format for conference papers |
+| **ACS journals** | ACS | Superscript or numbered, semicolons between authors |
+
+### Journal Family Consistency
+
+**Journals from the same publisher often share citation styles:**
+
+**Elsevier journals:**
+- Vary widely; check specific journal
+- Many use numbered Vancouver-style
+- Some allow author-date
+
+**Springer Nature journals:**
+- Nature journals: Nature style (numbered, abbreviated)
+- Springer journals: Often numbered or author-date depending on field
+- BMC journals: Vancouver with full journal names
+
+**Wiley journals:**
+- Varies by field
+- Many biomedical journals use Vancouver
+- Psychology/social science journals often use APA
+
+**American Chemical Society (ACS):**
+- All ACS journals use ACS style
+- Consistent across Journal of American Chemical Society, Analytical Chemistry, etc.
+
+### High-Impact Journal and Conference Preferences
+
+| Venue | Field | Citation Preference | Key Features |
+|-------|-------|-------------------|--------------|
+| **Nature/Science** | Multidisciplinary | Numbered, abbreviated | Space-saving, broad readability |
+| **Cell family** | Life sciences | Author-date or numbered | Attribution visibility |
+| **NEJM/Lancet/JAMA** | Medicine | Vancouver/AMA numbered | Medical standard |
+| **NeurIPS/ICML/ICLR** | Machine Learning | Numbered [1] or (Author, Year) | Varies by conference, check template |
+| **CVPR/ICCV/ECCV** | Computer Vision | Numbered [1], IEEE-like | Compact format |
+| **ACL/EMNLP** | NLP | Author-year (ACL style) | Attribution-focused |
+
+### Adapting Citations for Different Target Journals
+
+**When switching journals after desk rejection or withdrawal:**
+
+**Use reference management software:**
+1. Import references into Zotero, Mendeley, or EndNote
+2. Select target journal's citation style from software library
+3. Regenerate citations and reference list automatically
+4. Manually verify formatting matches journal examples
+
+**Key elements to check when converting:**
+- In-text format (switch numbered ↔ author-date)
+- Journal name abbreviation style
+- Article title capitalization
+- Author name format (initials vs. full names)
+- DOI format and inclusion
+- Issue number inclusion/exclusion
+- Page number format
+
+**Manual verification essential for:**
+- Preprints and non-standard sources
+- Software/datasets citations
+- Conference proceedings
+- Dissertations and theses
+
+### Venue-Specific Evaluation Criteria
+
+**Content expectations:**
+- **High-impact journals**: >50% citations from last 5 years; primary sources preferred
+- **Medical journals**: Recent clinical evidence; systematic reviews valued
+- **ML conferences**: Recent papers (last 2-3 years); preprints (arXiv) acceptable
+- **Self-citation**: Keep <20% across all venues
+
+**Format compliance (often automated):**
+- Match venue citation style exactly
+- All in-text citations have corresponding references
+- Include DOIs when required (journals) or arXiv IDs (ML conferences)
+- Use correct abbreviations (PubMed for medical, standard for ML)
+
+**ML conference specifics:**
+- **NeurIPS/ICML/ICLR**: ArXiv preprints widely cited; recent work heavily valued
+- **Page limits strict**: Citation formatting affects space
+- **Supplementary material**: Can include extended bibliography
+- **Double-blind review**: Avoid obvious self-citation patterns during review
+
+### Citation Density by Venue Type
+
+| Venue Type | Expected Citations | Key Notes |
+|-----------|-------------------|-----------|
+| **Nature/Science research** | 30-50 | Selective, high-impact citations |
+| **Medical journals (RCT)** | 25-40 | Recent clinical evidence |
+| **Field-specific journals** | 30-60 | Comprehensive field coverage |
+| **ML conferences (8-page)** | 20-40 | Space-limited, recent work |
+| **Review articles** | 100-300+ | Comprehensive coverage |
+
+**ML conference citation practices:**
+- **NeurIPS/ICML**: 25-40 references typical for 8-page papers
+- **Workshop papers**: 15-25 references
+- **ArXiv preprints**: Widely accepted and cited
+- **Related work**: Concise but comprehensive; often moved to appendix
+- **Recency critical**: Cite work from last 1-2 years when relevant
+
+### Pre-Submission Citation Checklist
+
+**Content:**
+- [ ] ≥50% citations from last 5-10 years (or 2-3 years for ML conferences)
+- [ ] <20% self-citations; balanced perspectives
+- [ ] Primary sources cited (not citation chains)
+- [ ] All claims supported by appropriate citations
+
+**Format:**
+- [ ] Style matches venue exactly (check template)
+- [ ] All in-text citations in reference list and vice versa
+- [ ] DOIs/arXiv IDs included as required
+- [ ] Abbreviations match venue style
+
+**ML conferences additional:**
+- [ ] ArXiv preprints properly formatted
+- [ ] Self-citations anonymized if double-blind review
+- [ ] References fit within page limits
+
 ## Resources for Citation Styles
 
 ### Official Manuals
@@ -543,6 +697,12 @@ When converting between citation styles:
 - APA: https://apastyle.apa.org/
 - Chicago: https://www.chicagomanualofstyle.org/
 - IEEE: https://ieeeauthorcenter.ieee.org/
+
+### Journal-Specific Style Guides
+- Nature: https://www.nature.com/nature/for-authors/formatting-guide
+- Science: https://www.science.org/content/page/instructions-authors
+- Cell: https://www.cell.com/cell/authors
+- JAMA: https://jamanetwork.com/journals/jama/pages/instructions-for-authors
 
 ### Quick Reference Guides
 - Purdue OWL: https://owl.purdue.edu/
@@ -553,3 +713,8 @@ When converting between citation styles:
 - Zotero: https://www.zotero.org/
 - Mendeley: https://www.mendeley.com/
 - EndNote: https://endnote.com/
+
+### Journal Citation Style Databases
+- Journal Citation Reports (Clarivate): Lists journal citation styles
+- EndNote style repository: >7000 journal-specific styles
+- Zotero Style Repository: https://www.zotero.org/styles

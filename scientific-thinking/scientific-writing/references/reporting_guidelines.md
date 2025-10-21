@@ -657,3 +657,92 @@ checklist is provided as Supplementary File 1."
 - [ ] Prepared checklist as supplementary file if required
 - [ ] Checked journal-specific requirements
 - [ ] Mentioned guideline adherence in cover letter
+
+## Venue-Specific Reporting Requirements
+
+### Reporting Standards by Venue Type
+
+| Venue Type | Guideline Use | Transparency Requirements |
+|-----------|--------------|---------------------------|
+| **Medical journals** | Mandatory (CONSORT, STROBE, etc.) | Checklist required at submission |
+| **PLOS/BMC** | Mandatory for study types | Checklist uploaded as supplement |
+| **Nature/Science** | Recommended | Methods completeness emphasized |
+| **ML conferences** | No formal guidelines | Reproducibility details required |
+
+### ML Conference Reporting Standards
+
+**NeurIPS/ICML/ICLR reproducibility requirements:**
+- **Datasets**: Names, versions, access methods, preprocessing
+- **Code**: Availability statement; GitHub common
+- **Hyperparameters**: All settings reported (learning rate, batch size, etc.)
+- **Seeds**: Random seeds for reproducibility
+- **Computational resources**: GPUs used, training time
+- **Statistical significance**: Error bars, confidence intervals, multiple runs
+- **Broader Impact** statement (NeurIPS): Societal implications
+
+**What to include (typically in appendix):**
+- Complete hyperparameter settings
+- Training details and convergence criteria
+- Hardware specifications
+- Software versions (PyTorch 2.0, etc.)
+- Dataset splits and any preprocessing
+- Evaluation metrics and protocols
+
+### Enforcement and Evaluation
+
+**What gets checked:**
+- **Medical journals**: Checklist uploaded; adherence statement in Methods; systematic completeness
+- **PLOS/BMC**: Mandatory checklists for certain designs; reproducibility emphasized
+- **High-impact**: Methods sufficiency for replication (checklist often not required)
+- **ML conferences**: Reproducibility checklist (NeurIPS); code availability increasingly expected
+
+**Common issues leading to rejection:**
+- Missing required checklists (medical journals)
+- Insufficient methods detail for reproduction
+- Missing key information (randomization, blinding, power calculation)
+- No data/code availability statement when required
+
+**Methods statement examples:**
+
+**Journal (STROBE):**
+```
+This study followed STROBE reporting guidelines. Checklist provided in Supplement 1.
+```
+
+**ML conference (reproducibility):**
+```
+Code available at github.com/user/project. All hyperparameters in Appendix A.
+Training used 4×A100 GPUs (~20 hours). Seeds: {42, 123, 456}.
+```
+
+### Pre-Submission Reporting Checklist
+
+**For clinical trials (medical journals):**
+- [ ] CONSORT checklist complete with page numbers
+- [ ] Trial registration number in abstract and methods
+- [ ] CONSORT flow diagram included
+- [ ] Statistical analysis plan described
+- [ ] Adherence statement in Methods
+
+**For observational studies (medical/epidemiology):**
+- [ ] STROBE checklist complete
+- [ ] Study design clearly stated
+- [ ] Statistical methods detailed
+- [ ] Confounders addressed
+- [ ] Adherence statement in Methods
+
+**For systematic reviews:**
+- [ ] PRISMA checklist complete
+- [ ] PRISMA flow diagram included
+- [ ] Protocol registered (PROSPERO)
+- [ ] Search strategy documented
+- [ ] Risk of bias assessment included
+
+**For ML conference papers:**
+- [ ] All datasets named with versions
+- [ ] Code availability stated (GitHub link if available)
+- [ ] Hyperparameters listed (appendix acceptable)
+- [ ] Random seeds reported
+- [ ] Computational resources specified
+- [ ] Error bars/confidence intervals shown
+- [ ] Broader Impact statement (if required)

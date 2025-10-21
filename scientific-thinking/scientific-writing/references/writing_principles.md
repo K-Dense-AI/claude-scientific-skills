@@ -716,6 +716,99 @@ Most research universities offer:
 - Online resources and handouts
 - Support for non-native English speakers
 
+## Venue-Specific Writing Styles
+
+### Four Major Writing Style Categories
+
+1. **Broad-audience accessible** (Nature, Science, PNAS)
+2. **Clinical-professional** (NEJM, Lancet, JAMA)
+3. **Technical-specialist** (field-specific journals)
+4. **ML conference** (NeurIPS, ICML, ICLR, CVPR)
+
+### Writing Style Comparison
+
+| Aspect | Nature/Science | Medical | Specialized | ML Conference |
+|--------|---------------|---------|-------------|---------------|
+| **Sentence length** | 15-20 words | 12-18 words | 18-25 words | 12-20 words |
+| **Vocabulary** | Minimal jargon | Clinical terms | Field-specific | Technical + math |
+| **Tone** | Engaging, significant | Conservative | Formal | Direct, contribution-focused |
+| **Key phrases** | "Here we show" | "We conducted" | "To elucidate" | "We propose", "Our contributions" |
+
+**ML Conference Style:**
+
+**Characteristics:**
+- Direct, technical language with mathematical notation
+- Contribution-focused (numbered lists common)
+- Assumes ML expertise (CNNs, transformers, SGD, etc.)
+- Emphasizes novelty and performance gains
+- Pseudocode and equations expected
+
+**Example opening (NeurIPS style):**
+```
+Vision transformers have achieved state-of-the-art performance on image classification,
+but their quadratic complexity limits applicability to high-resolution images. We propose
+Efficient-ViT, which reduces complexity to O(n log n) while maintaining accuracy. Our
+contributions are: (1) a novel sparse attention mechanism, (2) theoretical analysis
+showing preserved expressive power, and (3) empirical validation on ImageNet showing
+15% speedup with comparable accuracy.
+```
+- Problem stated with technical context
+- Solution previewed
+- Numbered contributions
+- Quantitative claims
+
+### Key Writing Differences
+
+| Aspect | Nature/Science | Medical | Specialized | ML Conference |
+|--------|---------------|---------|-------------|---------------|
+| **Paragraph length** | 3-5 sentences | 5-7 sentences | 6-10 sentences | 4-6 sentences |
+| **Math/equations** | Minimize | Rare | Moderate | Essential |
+| **Active voice** | Preferred | Mixed | Passive OK | Preferred |
+| **Hedging** | Moderate | Conservative | Detailed | Minimal (claim gains) |
+| **Figure integration** | Tight | Systematic | Detailed | Dense, in-page |
+
+### Evaluation Focus by Venue
+
+| Venue | Key Evaluation Criteria |
+|-------|------------------------|
+| **Nature/Science** | Accessible to non-specialists? Broad significance clear? Compelling story? |
+| **Medical** | Clinical relevance apparent? Professional tone? Methods adequate? |
+| **Specialized** | Technical precision? Field expertise shown? Methods detailed? |
+| **ML conferences** | Clear contributions? Claims supported by experiments? Reproducible? |
+
+**Common rejection reasons:**
+- Poor writing quality/unclear prose
+- Inappropriate style for venue
+- Overstated claims
+- Methods insufficient for reproduction
+- Missing key details (baselines, ablations for ML; statistics for journals)
+
+### Quick Style Adaptation Guide
+
+| From → To | Key Changes |
+|-----------|-------------|
+| **Journal → ML conference** | Add numbered contributions; include equations/pseudocode; emphasize quantitative gains; condense prose |
+| **ML conference → Journal** | Remove contribution numbering; expand motivation; separate Results/Discussion; reduce equations in main text |
+| **Specialist → Broad** | Simplify language; emphasize broad implications; explain technical concepts; add context for non-experts |
+| **Broad → Specialist** | Add technical detail; use field terminology freely; expand mechanistic discussion; cite field literature |
+| **Basic science → Clinical** | Add patient/clinical context; use clinical language; emphasize outcomes/implications; cite clinical evidence |
+
+### Pre-Submission Style Checklist
+
+**All venues:**
+- [ ] Writing style matches 3-5 recent papers from venue
+- [ ] Sentence length appropriate
+- [ ] Technical vocabulary level correct
+- [ ] Tone consistent with venue
+- [ ] No overstated claims
+
+**ML conferences add:**
+- [ ] Contributions clearly numbered in intro
+- [ ] Mathematical notation correct and consistent
+- [ ] Pseudocode/algorithms included where appropriate
+- [ ] Claims quantified (e.g., "15% faster", "2.3% accuracy gain")
+- [ ] Limitations acknowledged
+
 ## Final Thoughts
 
 Effective scientific writing is a skill developed through practice. Key principles:
@@ -726,5 +819,6 @@ Effective scientific writing is a skill developed through practice. Key principl
 4. **Objectivity** maintains scientific integrity
 5. **Consistency** aids comprehension
 6. **Logical organization** guides readers
+7. **Journal-specific adaptation** maximizes publication success
 
-**Remember:** The goal is not to impress readers with vocabulary or complexity, but to communicate your science clearly and precisely so readers can understand, evaluate, and build upon your work.
+**Remember:** The goal is not to impress readers with vocabulary or complexity, but to communicate your science clearly and precisely so readers can understand, evaluate, and build upon your work. Adapt your writing style to match your target journal's expectations and audience.
