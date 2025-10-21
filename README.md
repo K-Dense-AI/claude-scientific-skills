@@ -67,6 +67,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **RDKit** - Cheminformatics toolkit for molecular I/O, descriptors, fingerprints, and SMARTS
 
 **Proteomics & Mass Spectrometry:**
+- **matchms** - Processing and similarity matching of mass spectrometry data with 40+ filters, spectral library matching (Cosine, Modified Cosine, Neutral Losses), metadata harmonization, molecular fingerprint comparison, and support for multiple file formats (MGF, MSP, mzML, JSON)
 - **pyOpenMS** - Comprehensive mass spectrometry data analysis for proteomics and metabolomics (LC-MS/MS processing, peptide identification, feature detection, quantification, chemical calculations, and integration with search engines like Comet, Mascot, MSGF+)
 
 **Machine Learning & Deep Learning:**
@@ -161,7 +162,6 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 
 ### Proteomics & Mass Spectrometry
 - **pyteomics** - Mass spectrometry data analysis
-- **matchms** - Processing and similarity matching of mass spectrometry data
 - **MSstats** - Statistical analysis of quantitative proteomics
 
 ### Systems Biology & Networks
