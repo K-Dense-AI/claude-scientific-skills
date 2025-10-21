@@ -66,6 +66,9 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **PyTDC** - Therapeutics Data Commons for drug discovery datasets and benchmarks
 - **RDKit** - Cheminformatics toolkit for molecular I/O, descriptors, fingerprints, and SMARTS
 
+**Proteomics & Mass Spectrometry:**
+- **pyOpenMS** - Comprehensive mass spectrometry data analysis for proteomics and metabolomics (LC-MS/MS processing, peptide identification, feature detection, quantification, chemical calculations, and integration with search engines like Comet, Mascot, MSGF+)
+
 **Machine Learning & Deep Learning:**
 - **PyMC** - Bayesian statistical modeling and probabilistic programming
 - **PyMOO** - Multi-objective optimization with evolutionary algorithms
@@ -157,7 +160,6 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 
 ### Proteomics & Mass Spectrometry
 - **pyteomics** - Mass spectrometry data analysis
-- **pyOpenMS** - OpenMS Python bindings for proteomics
 - **matchms** - Processing and similarity matching of mass spectrometry data
 - **MSstats** - Statistical analysis of quantitative proteomics
 
