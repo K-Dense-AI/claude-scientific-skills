@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.22.0"
+    "version": "1.23.0"
   },
   "plugins": [
     {
@@ -51,6 +51,7 @@
         "./scientific-packages/scikit-bio",
         "./scientific-packages/scikit-learn",
         "./scientific-packages/seaborn",
+        "./scientific-packages/statsmodels",
         "./scientific-packages/torch_geometric",
         "./scientific-packages/transformers",
         "./scientific-packages/umap-learn",
