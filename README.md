@@ -2,6 +2,8 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
+This repository provides access to **20 scientific databases**, **44 scientific packages**, and **59 unique workflows** covering a wide range of scientific computing tasks.
+
 ## Getting Started
 
 ### Claude Code
@@ -230,3 +232,30 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Bokeh** - Interactive visualization for web browsers
 - **Altair** - Declarative statistical visualization
 - **PyVista** - 3D plotting and mesh analysis
+
+## Contributing
+
+We welcome contributions to expand and improve this scientific skills repository! There are several ways you can contribute:
+
+### Improving Existing Skills
+- Enhance documentation with more examples and use cases
+- Add new workflows and reference materials
+- Improve code examples and scripts
+- Fix bugs or update outdated information
+
+### How to Contribute
+1. Fork the repository
+2. Create a feature branch for your contribution
+3. Follow the existing directory structure and documentation patterns
+4. Ensure all new skills include comprehensive `SKILL.md` files
+5. Test your examples and workflows
+6. Submit a pull request with a clear description of your changes
+
+### Guidelines
+- Maintain consistency with existing skill documentation format
+- Include practical, working examples in all contributions
+- Ensure all code examples are tested and functional
+- Follow scientific best practices in examples and workflows
+- Update relevant sections of this README when adding new capabilities
+
+Your contributions help make scientific computing more accessible and enable researchers to leverage AI tools more effectively!
