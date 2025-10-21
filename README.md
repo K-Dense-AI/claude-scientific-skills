@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-70%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-71%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 24 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, and more |
-| 🔬 **Scientific Packages** | 40 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
+| 🔬 **Scientific Packages** | 41 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
 
@@ -222,9 +222,9 @@ Once you've installed the skills, you can ask Claude:
 </details>
 
 <details>
-<summary><strong>Cheminformatics & Drug Discovery (7 packages)</strong></summary>
+<summary><strong>Cheminformatics & Drug Discovery (8 packages)</strong></summary>
 
-- Datamol, DeepChem, DiffDock, MedChem, Molfeat, PyTDC, RDKit
+- Datamol, DeepChem, DiffDock, MedChem, Molfeat, PyTDC, RDKit, TorchDrug
 
 </details>
 
