@@ -22,6 +22,9 @@ Then, to install a specific set of skills:
 
 After installing the plugin, you can use the skill by just mentioning it. Additionally, in most case, Claude Code will figure out what to use based on the task.
 
+### Any MCP client including ChatGPT, Cursor, Google ADK, OpenAI Agent SDK...etc
+Use our newly recleased MPC server that allows you to use any Claude Skill out there in any client! https://github.com/K-Dense-AI/claude-skills-mcp
+
 ## Available Skills
 
 ### Scientific Databases
