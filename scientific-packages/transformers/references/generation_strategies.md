@@ -1,22 +1,8 @@
 # Text Generation Strategies
 
-Comprehensive guide to text generation methods in Transformers for controlling output quality, creativity, and diversity.
+Transformers provides flexible text generation capabilities through the `generate()` method, supporting multiple decoding strategies and configuration options.
 
-## Overview
-
-Text generation is the process of predicting tokens sequentially using a language model. The choice of generation strategy significantly impacts output quality, diversity, and computational cost.
-
-**When to use each strategy:**
-- **Greedy**: Fast, deterministic, good for short outputs or when consistency is critical
-- **Beam Search**: Better quality for tasks with clear "correct" answers (translation, summarization)
-- **Sampling**: Creative, diverse outputs for open-ended generation (stories, dialogue)
-- **Top-k/Top-p**: Balanced creativity and coherence
-
-## Basic Generation Methods
-
-### Greedy Decoding
-
-Selects the highest probability token at each step. Fast but prone to repetition and suboptimal sequences.
+## Basic Generation
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -24,507 +10,364 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 model = AutoModelForCausalLM.from_pretrained("gpt2")
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
-inputs = tokenizer("The future of AI", return_tensors="pt")
-
-# Greedy decoding (default)
+inputs = tokenizer("Once upon a time", return_tensors="pt")
 outputs = model.generate(**inputs, max_new_tokens=50)
-print(tokenizer.decode(outputs[0]))
+generated_text = tokenizer.decode(outputs[0])
 ```
 
-**Characteristics:**
-- Deterministic (always same output for same input)
-- Fast (single forward pass per token)
-- Prone to repetition in longer sequences
-- Best for: Short generations, deterministic applications
+## Decoding Strategies
 
-**Parameters:**
-```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=50,              # Number of tokens to generate
-    min_length=10,                  # Minimum total length
-    pad_token_id=tokenizer.pad_token_id,
-)
-```
+### 1. Greedy Decoding
 
-### Beam Search
-
-Maintains multiple hypotheses (beams) and selects the sequence with highest overall probability.
+Selects the token with highest probability at each step. Deterministic but can be repetitive.
 
 ```python
 outputs = model.generate(
     **inputs,
     max_new_tokens=50,
-    num_beams=5,                    # Number of beams
-    early_stopping=True,            # Stop when all beams finish
-    no_repeat_ngram_size=2,         # Prevent 2-gram repetition
+    do_sample=False,
+    num_beams=1  # Greedy is default when num_beams=1 and do_sample=False
 )
 ```
 
-**Characteristics:**
-- Higher quality than greedy for tasks with "correct" answers
-- Slower than greedy (num_beams forward passes per step)
-- Still can suffer from repetition
-- Best for: Translation, summarization, QA generation
+### 2. Beam Search
 
-**Advanced Parameters:**
+Explores multiple hypotheses simultaneously, keeping top-k candidates at each step.
+
 ```python
 outputs = model.generate(
     **inputs,
+    max_new_tokens=50,
+    num_beams=5,  # Number of beams
+    early_stopping=True,  # Stop when all beams reach EOS
+    no_repeat_ngram_size=2,  # Prevent repeating n-grams
+)
+```
+
+**Key parameters:**
+- `num_beams`: Number of beams (higher = more thorough but slower)
+- `early_stopping`: Stop when all beams finish (True/False)
+- `length_penalty`: Exponential penalty for length (>1.0 favors longer sequences)
+- `no_repeat_ngram_size`: Prevent repeating n-grams
+
+### 3. Sampling (Multinomial)
+
+Samples from probability distribution, introducing randomness and diversity.
+
+```python
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=50,
+    do_sample=True,
+    temperature=0.7,  # Controls randomness (lower = more focused)
+    top_k=50,  # Consider only top-k tokens
+    top_p=0.9,  # Nucleus sampling (cumulative probability threshold)
+)
+```
+
+**Key parameters:**
+- `temperature`: Scales logits before softmax (0.1-2.0 typical range)
+  - Lower (0.1-0.7): More focused, deterministic
+  - Higher (0.8-1.5): More creative, random
+- `top_k`: Sample from top-k tokens only
+- `top_p`: Nucleus sampling - sample from smallest set with cumulative probability > p
+
+### 4. Beam Search with Sampling
+
+Combines beam search with sampling for diverse but coherent outputs.
+
+```python
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=50,
     num_beams=5,
-    num_beam_groups=1,              # Diverse beam search groups
-    diversity_penalty=0.0,          # Penalty for similar beams
-    length_penalty=1.0,             # >1: longer sequences, <1: shorter
-    early_stopping=True,            # Stop when num_beams sequences finish
-    no_repeat_ngram_size=2,         # Block repeating n-grams
-    num_return_sequences=1,         # Return top-k sequences (≤ num_beams)
-)
-```
-
-**Length Penalty:**
-- `length_penalty > 1.0`: Favor longer sequences
-- `length_penalty = 1.0`: No penalty
-- `length_penalty < 1.0`: Favor shorter sequences
-
-### Sampling (Multinomial)
-
-Randomly sample tokens according to the probability distribution.
-
-```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=50,
-    do_sample=True,                 # Enable sampling
-    temperature=1.0,                # Sampling temperature
-    num_beams=1,                    # Must be 1 for sampling
-)
-```
-
-**Characteristics:**
-- Non-deterministic (different output each time)
-- More diverse and creative than greedy/beam search
-- Can produce incoherent output if not controlled
-- Best for: Creative writing, dialogue, open-ended generation
-
-**Temperature Parameter:**
-```python
-# Low temperature (0.1-0.7): More focused, less random
-outputs = model.generate(**inputs, do_sample=True, temperature=0.5)
-
-# Medium temperature (0.7-1.0): Balanced
-outputs = model.generate(**inputs, do_sample=True, temperature=0.8)
-
-# High temperature (1.0-2.0): More random, more creative
-outputs = model.generate(**inputs, do_sample=True, temperature=1.5)
-```
-
-- `temperature → 0`: Approaches greedy decoding
-- `temperature = 1.0`: Sample from original distribution
-- `temperature > 1.0`: Flatter distribution, more random
-- `temperature < 1.0`: Sharper distribution, more confident
-
-## Advanced Sampling Methods
-
-### Top-k Sampling
-
-Sample from only the k most likely tokens.
-
-```python
-outputs = model.generate(
-    **inputs,
     do_sample=True,
-    max_new_tokens=50,
-    top_k=50,                       # Consider top 50 tokens
     temperature=0.8,
+    top_k=50,
 )
 ```
 
-**How it works:**
-1. Filter to top-k most probable tokens
-2. Renormalize probabilities
-3. Sample from filtered distribution
+### 5. Contrastive Search
 
-**Choosing k:**
-- `k=1`: Equivalent to greedy decoding
-- `k=10-50`: More focused, coherent output
-- `k=100-500`: More diverse output
-- Too high k: Includes low-probability tokens (noise)
-- Too low k: Less diverse, may miss good alternatives
-
-### Top-p (Nucleus) Sampling
-
-Sample from the smallest set of tokens whose cumulative probability ≥ p.
+Balances coherence and diversity using contrastive objective.
 
 ```python
 outputs = model.generate(
     **inputs,
-    do_sample=True,
     max_new_tokens=50,
-    top_p=0.95,                     # Nucleus probability
-    temperature=0.8,
+    penalty_alpha=0.6,  # Contrastive penalty
+    top_k=4,  # Consider top-k candidates
 )
 ```
 
-**How it works:**
-1. Sort tokens by probability
-2. Find smallest set with cumulative probability ≥ p
-3. Sample from this set
+### 6. Assisted Decoding
 
-**Choosing p:**
-- `p=0.9-0.95`: Good balance (recommended)
-- `p=1.0`: Sample from full distribution
-- Higher p: More diverse, might include unlikely tokens
-- Lower p: More focused, like top-k with adaptive k
-
-**Top-p vs Top-k:**
-- Top-p adapts to probability distribution shape
-- Top-k is fixed regardless of distribution
-- Top-p generally better for variable-quality contexts
-- Can combine: `top_k=50, top_p=0.95` (apply both filters)
-
-### Combining Strategies
+Uses a smaller "assistant" model to speed up generation of larger model.
 
 ```python
-# Recommended for high-quality open-ended generation
+from transformers import AutoModelForCausalLM
+
+model = AutoModelForCausalLM.from_pretrained("gpt2-large")
+assistant_model = AutoModelForCausalLM.from_pretrained("gpt2")
+
 outputs = model.generate(
     **inputs,
-    do_sample=True,
+    assistant_model=assistant_model,
+    max_new_tokens=50,
+)
+```
+
+## GenerationConfig
+
+Configure generation parameters with `GenerationConfig` for reusability.
+
+```python
+from transformers import GenerationConfig
+
+generation_config = GenerationConfig(
     max_new_tokens=100,
-    temperature=0.8,                # Moderate temperature
-    top_k=50,                       # Limit to top 50 tokens
-    top_p=0.95,                     # Nucleus sampling
-    repetition_penalty=1.2,         # Discourage repetition
-    no_repeat_ngram_size=3,         # Block 3-gram repetition
+    do_sample=True,
+    temperature=0.7,
+    top_p=0.9,
+    top_k=50,
+    repetition_penalty=1.2,
+    no_repeat_ngram_size=3,
 )
+
+# Use with model
+outputs = model.generate(**inputs, generation_config=generation_config)
+
+# Save and load
+generation_config.save_pretrained("./config")
+loaded_config = GenerationConfig.from_pretrained("./config")
 ```
 
-## Controlling Generation Quality
+## Key Parameters Reference
+
+### Output Length Control
+
+- `max_length`: Maximum total tokens (input + output)
+- `max_new_tokens`: Maximum new tokens to generate (recommended over max_length)
+- `min_length`: Minimum total tokens
+- `min_new_tokens`: Minimum new tokens to generate
+
+### Sampling Parameters
+
+- `temperature`: Sampling temperature (0.1-2.0, default 1.0)
+- `top_k`: Top-k sampling (1-100, typically 50)
+- `top_p`: Nucleus sampling (0.0-1.0, typically 0.9)
+- `do_sample`: Enable sampling (True/False)
+
+### Beam Search Parameters
+
+- `num_beams`: Number of beams (1-20, typically 5)
+- `early_stopping`: Stop when beams finish (True/False)
+- `length_penalty`: Length penalty (>1.0 favors longer, <1.0 favors shorter)
+- `num_beam_groups`: Diverse beam search groups
+- `diversity_penalty`: Penalty for similar beams
 
 ### Repetition Control
 
-Prevent models from repeating themselves:
+- `repetition_penalty`: Penalty for repeating tokens (1.0-2.0, default 1.0)
+- `no_repeat_ngram_size`: Prevent repeating n-grams (2-5 typical)
+- `encoder_repetition_penalty`: Penalty for repeating encoder tokens
 
-```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=100,
+### Special Tokens
 
-    # Method 1: Repetition penalty
-    repetition_penalty=1.2,         # Penalize repeated tokens (>1.0)
+- `bos_token_id`: Beginning of sequence token
+- `eos_token_id`: End of sequence token (or list of tokens)
+- `pad_token_id`: Padding token
+- `forced_bos_token_id`: Force specific token at beginning
+- `forced_eos_token_id`: Force specific token at end
 
-    # Method 2: Block n-gram repetition
-    no_repeat_ngram_size=3,         # Never repeat 3-grams
+### Multiple Sequences
 
-    # Method 3: Encoder repetition penalty (for seq2seq)
-    encoder_repetition_penalty=1.0, # Penalize input tokens
-)
-```
+- `num_return_sequences`: Number of sequences to return
+- `num_beam_groups`: Number of diverse beam groups
 
-**Repetition Penalty Values:**
-- `1.0`: No penalty
-- `1.0-1.5`: Mild penalty (recommended: 1.1-1.3)
-- `>1.5`: Strong penalty (may harm coherence)
+## Advanced Generation Techniques
 
-### Length Control
+### Constrained Generation
 
-```python
-outputs = model.generate(
-    **inputs,
-
-    # Hard constraints
-    min_length=20,                  # Minimum total length
-    max_length=100,                 # Maximum total length
-    max_new_tokens=50,              # Maximum new tokens (excluding input)
-
-    # Soft constraints (with beam search)
-    length_penalty=1.0,             # Encourage longer/shorter outputs
-
-    # Early stopping
-    early_stopping=True,            # Stop when condition met
-)
-```
-
-### Bad Words and Forced Tokens
-
-```python
-# Prevent specific tokens
-bad_words_ids = [
-    tokenizer.encode("badword1", add_special_tokens=False),
-    tokenizer.encode("badword2", add_special_tokens=False),
-]
-
-outputs = model.generate(
-    **inputs,
-    bad_words_ids=bad_words_ids,
-)
-
-# Force specific tokens
-force_words_ids = [
-    tokenizer.encode("important", add_special_tokens=False),
-]
-
-outputs = model.generate(
-    **inputs,
-    force_words_ids=force_words_ids,
-)
-```
-
-## Streaming Generation
-
-Generate and process tokens as they're produced:
-
-```python
-from transformers import TextStreamer, TextIteratorStreamer
-from threading import Thread
-
-# Simple streaming (prints to stdout)
-streamer = TextStreamer(tokenizer, skip_prompt=True)
-outputs = model.generate(**inputs, streamer=streamer, max_new_tokens=100)
-
-# Iterator streaming (for custom processing)
-streamer = TextIteratorStreamer(tokenizer, skip_prompt=True)
-
-generation_kwargs = dict(**inputs, streamer=streamer, max_new_tokens=100)
-thread = Thread(target=model.generate, kwargs=generation_kwargs)
-thread.start()
-
-for text in streamer:
-    print(text, end="", flush=True)
-
-thread.join()
-```
-
-## Advanced Techniques
-
-### Contrastive Search
-
-Balance coherence and diversity using contrastive objective:
-
-```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=50,
-    penalty_alpha=0.6,              # Contrastive penalty
-    top_k=4,                        # Consider top-4 tokens
-)
-```
-
-**When to use:**
-- Open-ended text generation
-- Reduces repetition without sacrificing coherence
-- Good alternative to sampling
-
-### Diverse Beam Search
-
-Generate multiple diverse outputs:
-
-```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=50,
-    num_beams=10,
-    num_beam_groups=5,              # 5 groups of 2 beams each
-    diversity_penalty=1.0,          # Penalty for similar beams
-    num_return_sequences=5,         # Return 5 diverse outputs
-)
-```
-
-### Constrained Beam Search
-
-Force output to include specific phrases:
+Force generation to include specific tokens or follow patterns.
 
 ```python
 from transformers import PhrasalConstraint
 
 constraints = [
-    PhrasalConstraint(
-        tokenizer("machine learning", add_special_tokens=False).input_ids
-    ),
+    PhrasalConstraint(tokenizer("New York", add_special_tokens=False).input_ids)
 ]
 
 outputs = model.generate(
     **inputs,
     constraints=constraints,
-    num_beams=10,                   # Requires beam search
+    num_beams=5,
 )
 ```
 
-## Speculative Decoding
+### Streaming Generation
 
-Accelerate generation using a smaller draft model:
+Generate tokens one at a time for real-time display.
 
 ```python
-from transformers import AutoModelForCausalLM
+from transformers import TextIteratorStreamer
+from threading import Thread
 
-# Load main and assistant models
-model = AutoModelForCausalLM.from_pretrained("large-model")
-assistant_model = AutoModelForCausalLM.from_pretrained("small-model")
+streamer = TextIteratorStreamer(tokenizer, skip_special_tokens=True)
 
-# Generate with speculative decoding
+generation_kwargs = dict(
+    **inputs,
+    max_new_tokens=100,
+    streamer=streamer,
+)
+
+thread = Thread(target=model.generate, kwargs=generation_kwargs)
+thread.start()
+
+for new_text in streamer:
+    print(new_text, end="", flush=True)
+
+thread.join()
+```
+
+### Logit Processors
+
+Customize token selection with custom logit processors.
+
+```python
+from transformers import LogitsProcessor, LogitsProcessorList
+
+class CustomLogitsProcessor(LogitsProcessor):
+    def __call__(self, input_ids, scores):
+        # Modify scores here
+        return scores
+
+logits_processor = LogitsProcessorList([CustomLogitsProcessor()])
+
 outputs = model.generate(
     **inputs,
-    assistant_model=assistant_model,
+    logits_processor=logits_processor,
+)
+```
+
+### Stopping Criteria
+
+Define custom stopping conditions.
+
+```python
+from transformers import StoppingCriteria, StoppingCriteriaList
+
+class CustomStoppingCriteria(StoppingCriteria):
+    def __call__(self, input_ids, scores, **kwargs):
+        # Return True to stop generation
+        return False
+
+stopping_criteria = StoppingCriteriaList([CustomStoppingCriteria()])
+
+outputs = model.generate(
+    **inputs,
+    stopping_criteria=stopping_criteria,
+)
+```
+
+## Best Practices
+
+### For Creative Tasks (Stories, Dialogue)
+```python
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=200,
     do_sample=True,
     temperature=0.8,
-)
-```
-
-**Benefits:**
-- 2-3x faster generation
-- Identical output distribution to regular generation
-- Works with sampling and greedy decoding
-
-## Recipe: Recommended Settings by Task
-
-### Creative Writing / Dialogue
-
-```python
-outputs = model.generate(
-    **inputs,
-    do_sample=True,
-    max_new_tokens=200,
-    temperature=0.9,
     top_p=0.95,
-    top_k=50,
     repetition_penalty=1.2,
     no_repeat_ngram_size=3,
 )
 ```
 
-### Translation / Summarization
-
+### For Factual Tasks (Summaries, QA)
 ```python
 outputs = model.generate(
     **inputs,
-    num_beams=5,
-    max_new_tokens=150,
+    max_new_tokens=100,
+    num_beams=4,
     early_stopping=True,
-    length_penalty=1.0,
     no_repeat_ngram_size=2,
+    length_penalty=1.0,
 )
 ```
 
-### Code Generation
-
+### For Chat/Instruction Following
 ```python
 outputs = model.generate(
     **inputs,
-    max_new_tokens=300,
-    temperature=0.2,                # Low temperature for correctness
-    top_p=0.95,
+    max_new_tokens=512,
     do_sample=True,
-)
-```
-
-### Chatbot / Instruction Following
-
-```python
-outputs = model.generate(
-    **inputs,
-    do_sample=True,
-    max_new_tokens=256,
     temperature=0.7,
     top_p=0.9,
-    repetition_penalty=1.15,
+    repetition_penalty=1.1,
 )
 ```
 
-### Factual QA / Information Extraction
+## Vision-Language Model Generation
+
+For models like LLaVA, BLIP-2, etc.:
 
 ```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=50,
-    num_beams=3,
-    early_stopping=True,
-    # Or greedy for very short answers:
-    # (no special parameters needed)
-)
-```
+from transformers import AutoProcessor, AutoModelForVision2Seq
+from PIL import Image
 
-## Debugging Generation
+model = AutoModelForVision2Seq.from_pretrained("llava-hf/llava-1.5-7b-hf")
+processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
 
-### Check Token Probabilities
-
-```python
-outputs = model.generate(
-    **inputs,
-    max_new_tokens=20,
-    output_scores=True,             # Return generation scores
-    return_dict_in_generate=True,   # Return as dict
-)
-
-# Access generation scores
-scores = outputs.scores  # Tuple of tensors (seq_len, vocab_size)
-
-# Get token probabilities
-import torch
-probs = torch.softmax(scores[0], dim=-1)
-```
-
-### Monitor Generation Process
-
-```python
-from transformers import LogitsProcessor, LogitsProcessorList
-
-class DebugLogitsProcessor(LogitsProcessor):
-    def __call__(self, input_ids, scores):
-        # Print top 5 tokens at each step
-        top_tokens = scores[0].topk(5)
-        print(f"Top 5 tokens: {top_tokens}")
-        return scores
+image = Image.open("image.jpg")
+inputs = processor(text="Describe this image", images=image, return_tensors="pt")
 
 outputs = model.generate(
     **inputs,
-    max_new_tokens=10,
-    logits_processor=LogitsProcessorList([DebugLogitsProcessor()]),
+    max_new_tokens=100,
+    do_sample=True,
+    temperature=0.7,
 )
+
+generated_text = processor.decode(outputs[0], skip_special_tokens=True)
 ```
-
-## Common Issues and Solutions
-
-**Issue: Repetitive output**
-- Solution: Increase `repetition_penalty` (1.2-1.5), set `no_repeat_ngram_size=3`
-- For sampling: Increase `temperature`, enable `top_p`
-
-**Issue: Incoherent output**
-- Solution: Lower `temperature` (0.5-0.8), use beam search
-- Set `top_k=50` or `top_p=0.9` to filter unlikely tokens
-
-**Issue: Too short output**
-- Solution: Increase `min_length`, set `length_penalty > 1.0` (beam search)
-- Check if EOS token is being generated early
-
-**Issue: Too slow generation**
-- Solution: Use greedy instead of beam search
-- Reduce `num_beams`
-- Try speculative decoding with assistant model
-- Use smaller model variant
-
-**Issue: Output doesn't follow format**
-- Solution: Use constrained beam search
-- Add format examples to prompt
-- Use `bad_words_ids` to prevent format-breaking tokens
 
 ## Performance Optimization
 
+### Use KV Cache
 ```python
-# Use half precision
-model = AutoModelForCausalLM.from_pretrained(
-    "model-name",
-    torch_dtype=torch.float16,
-    device_map="auto"
-)
-
-# Use KV cache optimization (default, but can be disabled)
+# KV cache is enabled by default
 outputs = model.generate(**inputs, use_cache=True)
-
-# Batch generation
-inputs = tokenizer(["Prompt 1", "Prompt 2"], return_tensors="pt", padding=True)
-outputs = model.generate(**inputs, max_new_tokens=50)
-
-# Static cache for longer sequences (if supported)
-outputs = model.generate(**inputs, cache_implementation="static")
 ```
 
-This guide covers the main generation strategies. For task-specific examples, see `task_patterns.md`.
+### Mixed Precision
+```python
+import torch
+
+with torch.cuda.amp.autocast():
+    outputs = model.generate(**inputs, max_new_tokens=100)
+```
+
+### Batch Generation
+```python
+texts = ["Prompt 1", "Prompt 2", "Prompt 3"]
+inputs = tokenizer(texts, return_tensors="pt", padding=True)
+outputs = model.generate(**inputs, max_new_tokens=50)
+```
+
+### Quantization
+```python
+from transformers import BitsAndBytesConfig
+
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.float16
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-2-7b-hf",
+    quantization_config=quantization_config,
+    device_map="auto"
+)
+```

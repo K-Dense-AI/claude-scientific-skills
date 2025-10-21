@@ -1,19 +1,12 @@
 #!/usr/bin/env python3
 """
-Complete example for fine-tuning a text classification model.
+Fine-tune a transformer model for text classification.
 
-This script demonstrates the full workflow:
-1. Load dataset
-2. Preprocess with tokenizer
-3. Configure model
-4. Train with Trainer
-5. Evaluate and save
-
-Usage:
-    python fine_tune_classifier.py --model bert-base-uncased --dataset imdb --epochs 3
+This script demonstrates the complete workflow for fine-tuning a pre-trained
+model on a classification task using the Trainer API.
 """
 
-import argparse
+import numpy as np
 from datasets import load_dataset
 from transformers import (
     AutoTokenizer,
@@ -23,189 +16,225 @@ from transformers import (
     DataCollatorWithPadding,
 )
 import evaluate
-import numpy as np
 
 
-def compute_metrics(eval_pred):
-    """Compute accuracy and F1 score."""
-    metric_accuracy = evaluate.load("accuracy")
-    metric_f1 = evaluate.load("f1")
+def load_and_prepare_data(dataset_name="imdb", model_name="distilbert-base-uncased", max_samples=None):
+    """
+    Load dataset and tokenize.
 
-    logits, labels = eval_pred
-    predictions = np.argmax(logits, axis=-1)
+    Args:
+        dataset_name: Name of the dataset to load
+        model_name: Name of the model/tokenizer to use
+        max_samples: Limit number of samples (for quick testing)
 
-    accuracy = metric_accuracy.compute(predictions=predictions, references=labels)
-    f1 = metric_f1.compute(predictions=predictions, references=labels)
+    Returns:
+        tokenized_datasets, tokenizer
+    """
+    print(f"Loading dataset: {dataset_name}")
+    dataset = load_dataset(dataset_name)
 
-    return {"accuracy": accuracy["accuracy"], "f1": f1["f1"]}
+    # Optionally limit samples for quick testing
+    if max_samples:
+        dataset["train"] = dataset["train"].select(range(max_samples))
+        dataset["test"] = dataset["test"].select(range(min(max_samples, len(dataset["test"]))))
+
+    print(f"Loading tokenizer: {model_name}")
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    def tokenize_function(examples):
+        return tokenizer(
+            examples["text"],
+            padding="max_length",
+            truncation=True,
+            max_length=512
+        )
+
+    print("Tokenizing dataset...")
+    tokenized_datasets = dataset.map(tokenize_function, batched=True)
+
+    return tokenized_datasets, tokenizer
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Fine-tune a text classification model")
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="bert-base-uncased",
-        help="Pretrained model name or path",
-    )
-    parser.add_argument(
-        "--dataset",
-        type=str,
-        default="imdb",
-        help="Dataset name from Hugging Face Hub",
-    )
-    parser.add_argument(
-        "--max-samples",
-        type=int,
-        default=None,
-        help="Maximum samples to use (for quick testing)",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=str,
-        default="./results",
-        help="Output directory for checkpoints",
-    )
-    parser.add_argument(
-        "--epochs",
-        type=int,
-        default=3,
-        help="Number of training epochs",
-    )
-    parser.add_argument(
-        "--batch-size",
-        type=int,
-        default=16,
-        help="Batch size per device",
-    )
-    parser.add_argument(
-        "--learning-rate",
-        type=float,
-        default=2e-5,
-        help="Learning rate",
-    )
-    parser.add_argument(
-        "--push-to-hub",
-        action="store_true",
-        help="Push model to Hugging Face Hub after training",
-    )
+def create_model(model_name, num_labels, id2label, label2id):
+    """
+    Create classification model.
 
-    args = parser.parse_args()
+    Args:
+        model_name: Name of the pre-trained model
+        num_labels: Number of classification labels
+        id2label: Dictionary mapping label IDs to names
+        label2id: Dictionary mapping label names to IDs
 
-    print("=" * 60)
-    print("Text Classification Fine-Tuning")
-    print("=" * 60)
-    print(f"Model: {args.model}")
-    print(f"Dataset: {args.dataset}")
-    print(f"Epochs: {args.epochs}")
-    print(f"Batch size: {args.batch_size}")
-    print(f"Learning rate: {args.learning_rate}")
-    print("=" * 60)
-
-    # 1. Load dataset
-    print("\n[1/5] Loading dataset...")
-    dataset = load_dataset(args.dataset)
-
-    if args.max_samples:
-        dataset["train"] = dataset["train"].select(range(args.max_samples))
-        dataset["test"] = dataset["test"].select(range(args.max_samples // 5))
-
-    print(f"Train samples: {len(dataset['train'])}")
-    print(f"Test samples: {len(dataset['test'])}")
-
-    # 2. Preprocess
-    print("\n[2/5] Preprocessing data...")
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
-
-    def preprocess_function(examples):
-        return tokenizer(examples["text"], truncation=True, max_length=512)
-
-    tokenized_dataset = dataset.map(preprocess_function, batched=True)
-    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
-
-    # 3. Load model
-    print("\n[3/5] Loading model...")
-
-    # Determine number of labels
-    num_labels = len(set(dataset["train"]["label"]))
-
+    Returns:
+        model
+    """
+    print(f"Loading model: {model_name}")
     model = AutoModelForSequenceClassification.from_pretrained(
-        args.model,
+        model_name,
         num_labels=num_labels,
+        id2label=id2label,
+        label2id=label2id
     )
+    return model
 
-    print(f"Number of labels: {num_labels}")
-    print(f"Model parameters: {model.num_parameters():,}")
 
-    # 4. Configure training
-    print("\n[4/5] Configuring training...")
+def define_compute_metrics(metric_name="accuracy"):
+    """
+    Define function to compute metrics during evaluation.
+
+    Args:
+        metric_name: Name of the metric to use
+
+    Returns:
+        compute_metrics function
+    """
+    metric = evaluate.load(metric_name)
+
+    def compute_metrics(eval_pred):
+        logits, labels = eval_pred
+        predictions = np.argmax(logits, axis=-1)
+        return metric.compute(predictions=predictions, references=labels)
+
+    return compute_metrics
+
+
+def train_model(model, tokenizer, train_dataset, eval_dataset, output_dir="./results"):
+    """
+    Train the model.
+
+    Args:
+        model: The model to train
+        tokenizer: The tokenizer
+        train_dataset: Training dataset
+        eval_dataset: Evaluation dataset
+        output_dir: Directory for checkpoints and logs
+
+    Returns:
+        trained model, trainer
+    """
+    # Define training arguments
     training_args = TrainingArguments(
-        output_dir=args.output_dir,
-        learning_rate=args.learning_rate,
-        per_device_train_batch_size=args.batch_size,
-        per_device_eval_batch_size=args.batch_size,
-        num_train_epochs=args.epochs,
+        output_dir=output_dir,
+        num_train_epochs=3,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=64,
+        learning_rate=2e-5,
         weight_decay=0.01,
         eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
-        push_to_hub=args.push_to_hub,
+        metric_for_best_model="accuracy",
+        logging_dir=f"{output_dir}/logs",
         logging_steps=100,
+        save_total_limit=2,
+        fp16=False,  # Set to True if using GPU with fp16 support
     )
 
+    # Create data collator
+    data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
+
+    # Create trainer
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=tokenized_dataset["train"],
-        eval_dataset=tokenized_dataset["test"],
-        tokenizer=tokenizer,
+        train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
         data_collator=data_collator,
-        compute_metrics=compute_metrics,
+        compute_metrics=define_compute_metrics("accuracy"),
     )
 
-    # 5. Train
-    print("\n[5/5] Training...")
-    print("-" * 60)
+    # Train
+    print("\nStarting training...")
     trainer.train()
 
     # Evaluate
-    print("\n" + "=" * 60)
-    print("Final Evaluation")
+    print("\nEvaluating model...")
+    eval_results = trainer.evaluate()
+    print(f"Evaluation results: {eval_results}")
+
+    return model, trainer
+
+
+def test_inference(model, tokenizer, id2label):
+    """
+    Test the trained model with sample texts.
+
+    Args:
+        model: Trained model
+        tokenizer: Tokenizer
+        id2label: Dictionary mapping label IDs to names
+    """
+    print("\n=== Testing Inference ===")
+
+    test_texts = [
+        "This movie was absolutely fantastic! I loved every minute of it.",
+        "Terrible film. Waste of time and money.",
+        "It was okay, nothing special but not bad either."
+    ]
+
+    for text in test_texts:
+        inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+        outputs = model(**inputs)
+        predictions = outputs.logits.argmax(-1)
+        predicted_label = id2label[predictions.item()]
+        confidence = outputs.logits.softmax(-1).max().item()
+
+        print(f"\nText: {text}")
+        print(f"Prediction: {predicted_label} (confidence: {confidence:.3f})")
+
+
+def main():
+    """Main training pipeline."""
+    # Configuration
+    DATASET_NAME = "imdb"
+    MODEL_NAME = "distilbert-base-uncased"
+    OUTPUT_DIR = "./results"
+    MAX_SAMPLES = None  # Set to a small number (e.g., 1000) for quick testing
+
+    # Label mapping
+    id2label = {0: "negative", 1: "positive"}
+    label2id = {"negative": 0, "positive": 1}
+    num_labels = len(id2label)
+
     print("=" * 60)
-    metrics = trainer.evaluate()
-
-    print(f"Accuracy: {metrics['eval_accuracy']:.4f}")
-    print(f"F1 Score: {metrics['eval_f1']:.4f}")
-    print(f"Loss: {metrics['eval_loss']:.4f}")
-
-    # Save
-    print("\n" + "=" * 60)
-    print(f"Saving model to {args.output_dir}")
-    trainer.save_model(args.output_dir)
-    tokenizer.save_pretrained(args.output_dir)
-
-    if args.push_to_hub:
-        print("Pushing to Hugging Face Hub...")
-        trainer.push_to_hub()
-
-    print("=" * 60)
-    print("Training complete!")
+    print("Fine-Tuning Text Classification Model")
     print("=" * 60)
 
-    # Quick inference example
-    print("\nQuick inference example:")
-    from transformers import pipeline
-
-    classifier = pipeline(
-        "text-classification",
-        model=args.output_dir,
-        tokenizer=args.output_dir,
+    # Load and prepare data
+    tokenized_datasets, tokenizer = load_and_prepare_data(
+        dataset_name=DATASET_NAME,
+        model_name=MODEL_NAME,
+        max_samples=MAX_SAMPLES
     )
 
-    example_text = "This is a great example of how to use transformers!"
-    result = classifier(example_text)
-    print(f"Text: {example_text}")
-    print(f"Prediction: {result[0]['label']} (score: {result[0]['score']:.4f})")
+    # Create model
+    model = create_model(
+        model_name=MODEL_NAME,
+        num_labels=num_labels,
+        id2label=id2label,
+        label2id=label2id
+    )
+
+    # Train model
+    model, trainer = train_model(
+        model=model,
+        tokenizer=tokenizer,
+        train_dataset=tokenized_datasets["train"],
+        eval_dataset=tokenized_datasets["test"],
+        output_dir=OUTPUT_DIR
+    )
+
+    # Save final model
+    print(f"\nSaving model to {OUTPUT_DIR}/final_model")
+    trainer.save_model(f"{OUTPUT_DIR}/final_model")
+    tokenizer.save_pretrained(f"{OUTPUT_DIR}/final_model")
+
+    # Test inference
+    test_inference(model, tokenizer, id2label)
+
+    print("\n" + "=" * 60)
+    print("Training completed successfully!")
+    print("=" * 60)
 
 
 if __name__ == "__main__":

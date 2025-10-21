@@ -1,860 +1,351 @@
 ---
 name: transformers
-description: "Hugging Face Transformers. Load BERT, GPT, T5, ViT, CLIP, Llama models, fine-tune, text generation, classification, NER, pipelines, LoRA, for NLP/vision/audio tasks."
+description: Work with state-of-the-art machine learning models for NLP, computer vision, audio, and multimodal tasks using HuggingFace Transformers. This skill should be used when fine-tuning pre-trained models, performing inference with pipelines, generating text, training sequence models, or working with BERT, GPT, T5, ViT, and other transformer architectures. Covers model loading, tokenization, training with Trainer API, text generation strategies, and task-specific patterns for classification, NER, QA, summarization, translation, and image tasks. (plugin:scientific-packages@claude-scientific-skills)
 ---
 
 # Transformers
 
 ## Overview
 
-Transformers is Hugging Face's flagship library providing unified access to over 1 million pretrained models for machine learning across text, vision, audio, and multimodal domains. The library serves as a standardized model-definition framework compatible with PyTorch, TensorFlow, and JAX, emphasizing ease of use through three core components:
+The Transformers library provides state-of-the-art machine learning models for natural language processing (NLP), computer vision, audio processing, and multimodal tasks. It offers over 1 million pre-trained model checkpoints and supports quick inference through pipelines, comprehensive training via the Trainer API, and flexible text generation with various decoding strategies.
 
-- **Pipeline**: Simple, optimized inference API for common tasks
-- **AutoClasses**: Automatic model/tokenizer selection from pretrained checkpoints
-- **Trainer**: Full-featured training loop with distributed training, mixed precision, and optimization
+This skill provides comprehensive guidance on working with Transformers across all major task types and modalities.
 
-The library prioritizes accessibility with pretrained models that reduce computational costs and carbon footprint while providing compatibility across major training frameworks (PyTorch-Lightning, DeepSpeed, vLLM, etc.).
+## Core Capabilities
 
-## Quick Start with Pipelines
+### 1. Quick Inference with Pipelines
 
-Use pipelines for simple, efficient inference without managing models, tokenizers, or preprocessing manually. Pipelines abstract complexity into a single function call.
-
-### Basic Pipeline Usage
+For rapid inference without complex setup, use the `pipeline()` API. Pipelines abstract away tokenization, model invocation, and post-processing.
 
 ```python
 from transformers import pipeline
 
 # Text classification
 classifier = pipeline("text-classification")
-result = classifier("This restaurant is awesome")
-# [{'label': 'POSITIVE', 'score': 0.9998}]
+result = classifier("This product is amazing!")
 
-# Text generation
-generator = pipeline("text-generation", model="meta-llama/Llama-2-7b-hf")
-generator("The secret to baking a good cake is", max_length=50)
+# Named entity recognition
+ner = pipeline("token-classification")
+entities = ner("Sarah works at Microsoft in Seattle")
 
 # Question answering
 qa = pipeline("question-answering")
-qa(question="What is extractive QA?", context="Extractive QA is...")
+answer = qa(question="What is the capital?", context="Paris is the capital of France.")
+
+# Text generation
+generator = pipeline("text-generation", model="gpt2")
+text = generator("Once upon a time", max_length=50)
 
 # Image classification
-img_classifier = pipeline("image-classification")
-img_classifier("path/to/image.jpg")
-
-# Automatic speech recognition
-transcriber = pipeline("automatic-speech-recognition")
-transcriber("audio_file.mp3")
+image_classifier = pipeline("image-classification")
+predictions = image_classifier("image.jpg")
 ```
 
-### Available Pipeline Tasks
+**When to use pipelines:**
+- Quick prototyping and testing
+- Simple inference tasks without custom logic
+- Demonstrations and examples
+- Production inference for standard tasks
 
-**NLP Tasks:**
-- `text-classification`, `token-classification`, `question-answering`
-- `fill-mask`, `summarization`, `translation`
-- `text-generation`, `conversational`
-- `zero-shot-classification`, `sentiment-analysis`
+**Available pipeline tasks:**
+- **NLP**: text-classification, token-classification, question-answering, summarization, translation, text-generation, fill-mask, zero-shot-classification
+- **Vision**: image-classification, object-detection, image-segmentation, depth-estimation, zero-shot-image-classification
+- **Audio**: automatic-speech-recognition, audio-classification, text-to-audio
+- **Multimodal**: image-to-text, visual-question-answering, image-text-to-text
 
-**Vision Tasks:**
-- `image-classification`, `image-segmentation`, `object-detection`
-- `depth-estimation`, `image-to-image`, `zero-shot-image-classification`
+For comprehensive pipeline documentation, see `references/pipelines.md`.
 
-**Audio Tasks:**
-- `automatic-speech-recognition`, `audio-classification`
-- `text-to-audio`, `zero-shot-audio-classification`
+### 2. Model Training and Fine-Tuning
 
-**Multimodal Tasks:**
-- `visual-question-answering`, `document-question-answering`
-- `image-to-text`, `zero-shot-object-detection`
+Use the Trainer API for comprehensive model training with support for distributed training, mixed precision, and advanced optimization.
 
-### Pipeline Best Practices
-
-**Device Management:**
-```python
-from transformers import pipeline, infer_device
-
-device = infer_device()  # Auto-detect best device
-pipe = pipeline("text-generation", model="...", device=device)
-```
-
-**Batch Processing:**
-```python
-# Process multiple inputs efficiently
-results = classifier(["Text 1", "Text 2", "Text 3"])
-
-# Use KeyDataset for large datasets
-from transformers.pipelines.pt_utils import KeyDataset
-from datasets import load_dataset
-
-dataset = load_dataset("imdb", split="test")
-for result in pipe(KeyDataset(dataset, "text")):
-    print(result)
-```
-
-**Memory Optimization:**
-```python
-# Use half-precision for faster inference
-pipe = pipeline("text-generation", model="...",
-                torch_dtype=torch.float16, device="cuda")
-```
-
-## Core Components
-
-### AutoClasses for Model Loading
-
-AutoClasses automatically select the correct architecture based on pretrained checkpoints.
+**Basic training workflow:**
 
 ```python
 from transformers import (
-    AutoModel, AutoTokenizer, AutoConfig,
-    AutoModelForCausalLM, AutoModelForSequenceClassification
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    TrainingArguments,
+    Trainer
 )
+from datasets import load_dataset
 
-# Load any model by checkpoint name
+# 1. Load and tokenize data
+dataset = load_dataset("imdb")
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-model = AutoModel.from_pretrained("bert-base-uncased")
 
-# Task-specific model classes
-causal_lm = AutoModelForCausalLM.from_pretrained("gpt2")
-classifier = AutoModelForSequenceClassification.from_pretrained(
+def tokenize_function(examples):
+    return tokenizer(examples["text"], padding="max_length", truncation=True)
+
+tokenized_datasets = dataset.map(tokenize_function, batched=True)
+
+# 2. Load model
+model = AutoModelForSequenceClassification.from_pretrained(
     "bert-base-uncased",
-    num_labels=3
+    num_labels=2
 )
 
-# Load with device and dtype optimization
-model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Llama-2-7b-hf",
-    device_map="auto",      # Automatically distribute across devices
-    torch_dtype="auto"      # Use optimal dtype
-)
-```
-
-**Key Parameters:**
-- `device_map="auto"`: Optimal device allocation (CPU/GPU/multi-GPU)
-- `torch_dtype`: Control precision (torch.float16, torch.bfloat16, "auto")
-- `trust_remote_code`: Enable custom model code (use cautiously)
-- `use_fast`: Enable Rust-backed fast tokenizers (default True)
-
-### Tokenization
-
-Tokenizers convert text to model-compatible tensor inputs.
-
-```python
-from transformers import AutoTokenizer
-
-tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-
-# Basic tokenization
-tokens = tokenizer.tokenize("Hello, how are you?")
-# ['hello', ',', 'how', 'are', 'you', '?']
-
-# Encoding (text → token IDs)
-encoded = tokenizer("Hello, how are you?", return_tensors="pt")
-# {'input_ids': tensor([[...]], 'attention_mask': tensor([[...]])}
-
-# Batch encoding with padding and truncation
-batch = tokenizer(
-    ["Short text", "This is a much longer text..."],
-    padding=True,           # Pad to longest in batch
-    truncation=True,        # Truncate to model's max length
-    max_length=512,
-    return_tensors="pt"
+# 3. Configure training
+training_args = TrainingArguments(
+    output_dir="./results",
+    num_train_epochs=3,
+    per_device_train_batch_size=16,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    load_best_model_at_end=True,
 )
 
-# Decoding (token IDs → text)
-text = tokenizer.decode(encoded['input_ids'][0])
-```
-
-**Special Tokens:**
-```python
-# Access special tokens
-tokenizer.pad_token      # Padding token
-tokenizer.cls_token      # Classification token
-tokenizer.sep_token      # Separator token
-tokenizer.mask_token     # Mask token (for MLM)
-
-# Add custom tokens
-tokenizer.add_tokens(["[CUSTOM]"])
-tokenizer.add_special_tokens({'additional_special_tokens': ['[NEW]']})
-
-# Resize model embeddings to match new vocabulary
-model.resize_token_embeddings(len(tokenizer))
-```
-
-### Image Processors
-
-For vision tasks, use image processors instead of tokenizers.
-
-```python
-from transformers import AutoImageProcessor
-
-processor = AutoImageProcessor.from_pretrained("google/vit-base-patch16-224")
-
-# Process single image
-from PIL import Image
-image = Image.open("path/to/image.jpg")
-inputs = processor(image, return_tensors="pt")
-# Returns: {'pixel_values': tensor([[...]])}
-
-# Batch processing
-images = [Image.open(f"img{i}.jpg") for i in range(3)]
-inputs = processor(images, return_tensors="pt")
-```
-
-### Processors for Multimodal Models
-
-Multimodal models use processors that combine image and text processing.
-
-```python
-from transformers import AutoProcessor
-
-processor = AutoProcessor.from_pretrained("microsoft/git-base")
-
-# Process image + text caption
-inputs = processor(
-    images=image,
-    text="A description of the image",
-    return_tensors="pt",
-    padding=True
+# 4. Create trainer and train
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_datasets["train"],
+    eval_dataset=tokenized_datasets["test"],
 )
+
+trainer.train()
 ```
 
-## Model Inference
+**Key training features:**
+- Mixed precision training (fp16/bf16)
+- Distributed training (multi-GPU, multi-node)
+- Gradient accumulation
+- Learning rate scheduling with warmup
+- Checkpoint management
+- Hyperparameter search
+- Push to Hugging Face Hub
 
-### Basic Inference Pattern
+For detailed training documentation, see `references/training.md`.
+
+### 3. Text Generation
+
+Generate text using various decoding strategies including greedy decoding, beam search, sampling, and more.
+
+**Generation strategies:**
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# Load model and tokenizer
 model = AutoModelForCausalLM.from_pretrained("gpt2")
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
+inputs = tokenizer("Once upon a time", return_tensors="pt")
 
-# Tokenize input
-inputs = tokenizer("The future of AI is", return_tensors="pt")
+# Greedy decoding (deterministic)
+outputs = model.generate(**inputs, max_new_tokens=50)
 
-# Generate (for causal LM)
-outputs = model.generate(**inputs, max_length=50)
-text = tokenizer.decode(outputs[0])
-
-# Or get model outputs directly
-outputs = model(**inputs)
-logits = outputs.logits  # Shape: (batch_size, seq_len, vocab_size)
-```
-
-### Text Generation Strategies
-
-For generative models, control generation behavior with parameters:
-
-```python
-# Greedy decoding (default)
-output = model.generate(inputs, max_length=50)
-
-# Beam search (multiple hypothesis)
-output = model.generate(
-    inputs,
-    max_length=50,
-    num_beams=5,           # Keep top 5 beams
+# Beam search (explores multiple hypotheses)
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=50,
+    num_beams=5,
     early_stopping=True
 )
 
-# Sampling with temperature
-output = model.generate(
-    inputs,
-    max_length=50,
+# Sampling (creative, diverse)
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=50,
     do_sample=True,
-    temperature=0.7,       # Lower = more focused, higher = more random
-    top_k=50,              # Sample from top 50 tokens
-    top_p=0.95             # Nucleus sampling
+    temperature=0.7,
+    top_p=0.9,
+    top_k=50
 )
-
-# Streaming generation
-from transformers import TextStreamer
-
-streamer = TextStreamer(tokenizer)
-model.generate(**inputs, streamer=streamer, max_length=100)
 ```
 
-**Generation Parameters:**
-- `max_length` / `max_new_tokens`: Control output length
-- `num_beams`: Beam search width (1 = greedy)
-- `temperature`: Randomness (0.7-1.0 typical)
-- `top_k`: Sample from top k tokens
+**Generation parameters:**
+- `temperature`: Controls randomness (0.1-2.0)
+- `top_k`: Sample from top-k tokens
 - `top_p`: Nucleus sampling threshold
-- `repetition_penalty`: Discourage repetition (>1.0)
+- `num_beams`: Number of beams for beam search
+- `repetition_penalty`: Discourage repetition
+- `no_repeat_ngram_size`: Prevent repeating n-grams
 
-Refer to `references/generation_strategies.md` for detailed information on choosing appropriate strategies.
+For comprehensive generation documentation, see `references/generation_strategies.md`.
 
-## Training and Fine-Tuning
+### 4. Task-Specific Patterns
 
-### Training Workflow Overview
+Common task patterns with appropriate model classes:
 
-1. **Load dataset** → 2. **Preprocess** → 3. **Configure training** → 4. **Train** → 5. **Evaluate** → 6. **Save/Share**
-
-### Text Classification Example
-
+**Text Classification:**
 ```python
-from transformers import (
-    AutoTokenizer, AutoModelForSequenceClassification,
-    TrainingArguments, Trainer, DataCollatorWithPadding
-)
-from datasets import load_dataset
+from transformers import AutoModelForSequenceClassification
 
-# 1. Load dataset
-dataset = load_dataset("imdb")
-
-# 2. Preprocess
-tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-
-def preprocess(examples):
-    return tokenizer(examples["text"], truncation=True)
-
-tokenized = dataset.map(preprocess, batched=True)
-data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
-
-# 3. Load model
 model = AutoModelForSequenceClassification.from_pretrained(
     "bert-base-uncased",
-    num_labels=2,
-    id2label={0: "negative", 1: "positive"},
-    label2id={"negative": 0, "positive": 1}
+    num_labels=3,
+    id2label={0: "negative", 1: "neutral", 2: "positive"}
 )
-
-# 4. Configure training
-training_args = TrainingArguments(
-    output_dir="./results",
-    learning_rate=2e-5,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    num_train_epochs=3,
-    weight_decay=0.01,
-    eval_strategy="epoch",
-    save_strategy="epoch",
-    load_best_model_at_end=True,
-    push_to_hub=False,
-)
-
-# 5. Train
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized["train"],
-    eval_dataset=tokenized["test"],
-    tokenizer=tokenizer,
-    data_collator=data_collator,
-)
-
-trainer.train()
-
-# 6. Evaluate and save
-metrics = trainer.evaluate()
-trainer.save_model("./my-finetuned-model")
-trainer.push_to_hub()  # Share to Hugging Face Hub
 ```
 
-### Vision Task Fine-Tuning
-
+**Named Entity Recognition (Token Classification):**
 ```python
-from transformers import (
-    AutoImageProcessor, AutoModelForImageClassification,
-    TrainingArguments, Trainer
+from transformers import AutoModelForTokenClassification
+
+model = AutoModelForTokenClassification.from_pretrained(
+    "bert-base-uncased",
+    num_labels=9  # Number of entity types
 )
-from datasets import load_dataset
+```
 
-# Load dataset
-dataset = load_dataset("food101", split="train[:5000]")
+**Question Answering:**
+```python
+from transformers import AutoModelForQuestionAnswering
 
-# Image preprocessing
-processor = AutoImageProcessor.from_pretrained("google/vit-base-patch16-224")
+model = AutoModelForQuestionAnswering.from_pretrained("bert-base-uncased")
+```
 
-def transform(examples):
-    examples["pixel_values"] = [
-        processor(img.convert("RGB"), return_tensors="pt")["pixel_values"][0]
-        for img in examples["image"]
-    ]
-    return examples
+**Summarization and Translation (Seq2Seq):**
+```python
+from transformers import AutoModelForSeq2SeqLM
 
-dataset = dataset.with_transform(transform)
+model = AutoModelForSeq2SeqLM.from_pretrained("t5-base")
+```
 
-# Load model
+**Image Classification:**
+```python
+from transformers import AutoModelForImageClassification
+
 model = AutoModelForImageClassification.from_pretrained(
     "google/vit-base-patch16-224",
-    num_labels=101,  # 101 food categories
-    ignore_mismatched_sizes=True
+    num_labels=num_classes
 )
-
-# Training (similar pattern to text)
-training_args = TrainingArguments(
-    output_dir="./vit-food101",
-    remove_unused_columns=False,  # Keep image data
-    eval_strategy="epoch",
-    save_strategy="epoch",
-    learning_rate=5e-5,
-    per_device_train_batch_size=32,
-    num_train_epochs=3,
-)
-
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=dataset,
-    tokenizer=processor,
-)
-
-trainer.train()
 ```
 
-### Sequence-to-Sequence Tasks
+For detailed task-specific workflows including data preprocessing, training, and evaluation, see `references/task_patterns.md`.
 
-For tasks like summarization, translation, use Seq2SeqTrainer:
+## Auto Classes
+
+Use Auto classes for automatic architecture selection based on model checkpoints:
 
 ```python
 from transformers import (
-    AutoTokenizer, AutoModelForSeq2SeqLM,
-    Seq2SeqTrainingArguments, Seq2SeqTrainer,
-    DataCollatorForSeq2Seq
+    AutoTokenizer,           # Tokenization
+    AutoModel,               # Base model (hidden states)
+    AutoModelForSequenceClassification,
+    AutoModelForTokenClassification,
+    AutoModelForQuestionAnswering,
+    AutoModelForCausalLM,    # GPT-style
+    AutoModelForMaskedLM,    # BERT-style
+    AutoModelForSeq2SeqLM,   # T5, BART
+    AutoProcessor,           # For multimodal models
+    AutoImageProcessor,      # For vision models
 )
 
-tokenizer = AutoTokenizer.from_pretrained("t5-small")
-model = AutoModelForSeq2SeqLM.from_pretrained("t5-small")
-
-def preprocess(examples):
-    # Prefix input for T5
-    inputs = ["summarize: " + doc for doc in examples["text"]]
-    model_inputs = tokenizer(inputs, max_length=1024, truncation=True)
-
-    # Tokenize targets
-    labels = tokenizer(
-        examples["summary"],
-        max_length=128,
-        truncation=True
-    )
-    model_inputs["labels"] = labels["input_ids"]
-    return model_inputs
-
-tokenized_dataset = dataset.map(preprocess, batched=True)
-
-training_args = Seq2SeqTrainingArguments(
-    output_dir="./t5-summarization",
-    eval_strategy="epoch",
-    learning_rate=2e-5,
-    per_device_train_batch_size=8,
-    num_train_epochs=3,
-    predict_with_generate=True,  # Important for seq2seq
-)
-
-trainer = Seq2SeqTrainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized_dataset["train"],
-    eval_dataset=tokenized_dataset["test"],
-    tokenizer=tokenizer,
-    data_collator=DataCollatorForSeq2Seq(tokenizer=tokenizer),
-)
-
-trainer.train()
+# Load any model by name
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
 ```
 
-### Important TrainingArguments
+For comprehensive API documentation, see `references/api_reference.md`.
 
+## Model Loading and Optimization
+
+**Device placement:**
 ```python
-TrainingArguments(
-    # Essential
-    output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=8,
-    learning_rate=2e-5,
+model = AutoModel.from_pretrained("bert-base-uncased", device_map="auto")
+```
 
-    # Evaluation
-    eval_strategy="epoch",        # or "steps"
-    eval_steps=500,               # if eval_strategy="steps"
-
-    # Checkpointing
-    save_strategy="epoch",
-    save_steps=500,
-    save_total_limit=2,           # Keep only 2 best checkpoints
-    load_best_model_at_end=True,
-    metric_for_best_model="accuracy",
-
-    # Optimization
-    gradient_accumulation_steps=4,
-    warmup_steps=500,
-    weight_decay=0.01,
-    max_grad_norm=1.0,
-
-    # Mixed Precision
-    fp16=True,                    # For Nvidia GPUs
-    bf16=True,                    # For Ampere+ GPUs (better)
-
-    # Logging
-    logging_steps=100,
-    report_to="tensorboard",      # or "wandb", "mlflow"
-
-    # Memory Optimization
-    gradient_checkpointing=True,
-    optim="adamw_torch",          # or "adafactor" for memory
-
-    # Distributed Training
-    ddp_find_unused_parameters=False,
+**Mixed precision:**
+```python
+model = AutoModel.from_pretrained(
+    "model-name",
+    torch_dtype=torch.float16  # or torch.bfloat16
 )
 ```
 
-Refer to `references/training_guide.md` for comprehensive training patterns and optimization strategies.
-
-## Performance Optimization
-
-### Model Quantization
-
-Reduce memory footprint while maintaining accuracy:
-
+**Quantization:**
 ```python
-from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+from transformers import BitsAndBytesConfig
 
-# 8-bit quantization
-model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Llama-2-7b-hf",
-    load_in_8bit=True,
-    device_map="auto"
-)
-
-# 4-bit quantization (even smaller)
-bnb_config = BitsAndBytesConfig(
+quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
+    bnb_4bit_compute_dtype=torch.float16
 )
 
 model = AutoModelForCausalLM.from_pretrained(
     "meta-llama/Llama-2-7b-hf",
-    quantization_config=bnb_config,
+    quantization_config=quantization_config,
     device_map="auto"
 )
 ```
 
-**Quantization Methods:**
-- **Bitsandbytes**: 4/8-bit on-the-fly quantization, supports PEFT fine-tuning
-- **GPTQ**: 2/3/4/8-bit, requires calibration, very fast inference
-- **AWQ**: 4-bit activation-aware, balanced speed/accuracy
-
-Refer to `references/quantization.md` for detailed comparison and usage patterns.
-
-### Training Optimization
-
-```python
-# Gradient accumulation (simulate larger batch)
-training_args = TrainingArguments(
-    per_device_train_batch_size=4,
-    gradient_accumulation_steps=8,  # Effective batch = 4 * 8 = 32
-)
-
-# Gradient checkpointing (reduce memory, slower)
-training_args = TrainingArguments(
-    gradient_checkpointing=True,
-)
-
-# Mixed precision training
-training_args = TrainingArguments(
-    bf16=True,  # or fp16=True
-)
-
-# Efficient optimizer
-training_args = TrainingArguments(
-    optim="adafactor",  # Lower memory than AdamW
-)
-```
-
-**Key Strategies:**
-- **Batch sizes**: Use powers of 2 (8, 16, 32, 64, 128)
-- **Gradient accumulation**: Enables larger effective batch sizes
-- **Gradient checkpointing**: Reduces memory ~60%, increases time ~20%
-- **Mixed precision**: bf16 for Ampere+ GPUs, fp16 for older
-- **torch.compile**: Optimize model graph (PyTorch 2.0+)
-
-## Advanced Features
-
-### Custom Training Loop
-
-For maximum control, bypass Trainer:
-
-```python
-from torch.utils.data import DataLoader
-from transformers import AdamW, get_scheduler
-
-# Prepare data
-train_dataloader = DataLoader(tokenized_dataset, batch_size=8, shuffle=True)
-
-# Setup optimizer and scheduler
-optimizer = AdamW(model.parameters(), lr=5e-5)
-scheduler = get_scheduler(
-    "linear",
-    optimizer=optimizer,
-    num_warmup_steps=0,
-    num_training_steps=len(train_dataloader) * num_epochs
-)
-
-# Training loop
-model.train()
-for epoch in range(num_epochs):
-    for batch in train_dataloader:
-        batch = {k: v.to(device) for k, v in batch.items()}
-
-        outputs = model(**batch)
-        loss = outputs.loss
-        loss.backward()
-
-        optimizer.step()
-        scheduler.step()
-        optimizer.zero_grad()
-```
-
-### Parameter-Efficient Fine-Tuning (PEFT)
-
-Use PEFT library with transformers for efficient fine-tuning:
-
-```python
-from peft import LoraConfig, get_peft_model
-
-# Configure LoRA
-lora_config = LoraConfig(
-    r=16,                   # Low-rank dimension
-    lora_alpha=32,
-    target_modules=["q_proj", "v_proj"],  # Which layers to adapt
-    lora_dropout=0.05,
-    bias="none",
-    task_type="CAUSAL_LM"
-)
-
-# Apply to model
-model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf")
-model = get_peft_model(model, lora_config)
-
-# Now train as usual - only LoRA parameters train
-trainer = Trainer(model=model, ...)
-trainer.train()
-```
-
-### Chat Templates
-
-Apply chat templates for instruction-tuned models:
-
-```python
-tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-chat-hf")
-
-messages = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "What is machine learning?"},
-]
-
-# Format according to model's chat template
-formatted = tokenizer.apply_chat_template(
-    messages,
-    tokenize=False,
-    add_generation_prompt=True
-)
-
-# Tokenize and generate
-inputs = tokenizer(formatted, return_tensors="pt")
-outputs = model.generate(**inputs, max_length=200)
-response = tokenizer.decode(outputs[0])
-```
-
-### Multi-GPU Training
-
-```python
-# Automatic with Trainer - no code changes needed
-# Just run with: accelerate launch train.py
-
-# Or use PyTorch DDP explicitly
-training_args = TrainingArguments(
-    output_dir="./results",
-    ddp_find_unused_parameters=False,
-    # ... other args
-)
-
-# For larger models, use FSDP
-training_args = TrainingArguments(
-    output_dir="./results",
-    fsdp="full_shard auto_wrap",
-    fsdp_config={
-        "fsdp_transformer_layer_cls_to_wrap": ["BertLayer"],
-    },
-)
-```
-
-## Task-Specific Patterns
-
-### Question Answering (Extractive)
-
-```python
-from transformers import pipeline
-
-qa = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
-
-result = qa(
-    question="What is extractive QA?",
-    context="Extractive QA extracts the answer from the given context..."
-)
-# {'answer': 'extracts the answer from the given context', 'score': 0.97, ...}
-```
-
-### Named Entity Recognition
-
-```python
-ner = pipeline("token-classification", model="dslim/bert-base-NER")
-
-result = ner("My name is John and I live in New York")
-# [{'entity': 'B-PER', 'word': 'John', ...}, {'entity': 'B-LOC', 'word': 'New York', ...}]
-```
-
-### Image Captioning
-
-```python
-from transformers import AutoProcessor, AutoModelForCausalLM
-
-processor = AutoProcessor.from_pretrained("microsoft/git-base")
-model = AutoModelForCausalLM.from_pretrained("microsoft/git-base")
-
-from PIL import Image
-image = Image.open("image.jpg")
-
-inputs = processor(images=image, return_tensors="pt")
-outputs = model.generate(**inputs, max_length=50)
-caption = processor.batch_decode(outputs, skip_special_tokens=True)[0]
-```
-
-### Speech Recognition
-
-```python
-transcriber = pipeline(
-    "automatic-speech-recognition",
-    model="openai/whisper-base"
-)
-
-result = transcriber("audio.mp3")
-# {'text': 'This is the transcribed text...'}
-
-# With timestamps
-result = transcriber("audio.mp3", return_timestamps=True)
-```
-
-## Common Patterns and Best Practices
-
-### Saving and Loading Models
-
-```python
-# Save entire model
-model.save_pretrained("./my-model")
-tokenizer.save_pretrained("./my-model")
-
-# Load later
-model = AutoModel.from_pretrained("./my-model")
-tokenizer = AutoTokenizer.from_pretrained("./my-model")
-
-# Push to Hugging Face Hub
-model.push_to_hub("username/my-model")
-tokenizer.push_to_hub("username/my-model")
-
-# Load from Hub
-model = AutoModel.from_pretrained("username/my-model")
-```
-
-### Error Handling
-
-```python
-from transformers import AutoModel
-import torch
-
-try:
-    model = AutoModel.from_pretrained("model-name")
-except OSError:
-    print("Model not found - check internet connection or model name")
-except torch.cuda.OutOfMemoryError:
-    print("GPU memory exceeded - try quantization or smaller batch size")
-```
-
-### Device Management
-
-```python
-import torch
-
-# Check device availability
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-# Move model to device
-model = model.to(device)
-
-# Or use device_map for automatic distribution
-model = AutoModel.from_pretrained("model-name", device_map="auto")
-
-# For inputs
-inputs = tokenizer(text, return_tensors="pt").to(device)
-```
-
-### Memory Management
-
-```python
-import torch
-
-# Clear CUDA cache
-torch.cuda.empty_cache()
-
-# Use context manager for inference
-with torch.no_grad():
-    outputs = model(**inputs)
-
-# Delete unused models
-del model
-torch.cuda.empty_cache()
-```
+## Common Workflows
+
+### Quick Inference Workflow
+1. Choose appropriate pipeline for task
+2. Load pipeline with optional model specification
+3. Pass inputs and get results
+4. For batch processing, pass list of inputs
+
+**See:** `scripts/quick_inference.py` for comprehensive pipeline examples
+
+### Training Workflow
+1. Load and preprocess dataset using 🤗 Datasets
+2. Tokenize data with appropriate tokenizer
+3. Load pre-trained model for specific task
+4. Configure TrainingArguments
+5. Create Trainer with model, data, and compute_metrics
+6. Train with `trainer.train()`
+7. Evaluate with `trainer.evaluate()`
+8. Save model and optionally push to Hub
+
+**See:** `scripts/fine_tune_classifier.py` for complete training example
+
+### Text Generation Workflow
+1. Load causal or seq2seq language model
+2. Load tokenizer and tokenize prompt
+3. Choose generation strategy (greedy, beam search, sampling)
+4. Configure generation parameters
+5. Generate with `model.generate()`
+6. Decode output tokens to text
+
+**See:** `scripts/generate_text.py` for generation strategy examples
+
+## Best Practices
+
+1. **Use Auto classes** for flexibility across different model architectures
+2. **Batch processing** for efficiency - process multiple inputs at once
+3. **Device management** - use `device_map="auto"` for automatic placement
+4. **Memory optimization** - enable fp16/bf16 or quantization for large models
+5. **Checkpoint management** - save checkpoints regularly and load best model
+6. **Pipeline for quick tasks** - use pipelines for standard inference tasks
+7. **Custom metrics** - define compute_metrics for task-specific evaluation
+8. **Gradient accumulation** - use for large effective batch sizes on limited memory
+9. **Learning rate warmup** - typically 5-10% of total training steps
+10. **Hub integration** - push trained models to Hub for sharing and versioning
 
 ## Resources
 
-This skill includes comprehensive reference documentation and example scripts:
-
 ### scripts/
+Executable Python scripts demonstrating common Transformers workflows:
 
-- `quick_inference.py`: Ready-to-use script for running inference with pipelines
-- `fine_tune_classifier.py`: Complete example for fine-tuning a text classifier
-- `generate_text.py`: Text generation with various strategies
+- `quick_inference.py` - Pipeline examples for NLP, vision, audio, and multimodal tasks
+- `fine_tune_classifier.py` - Complete fine-tuning workflow with Trainer API
+- `generate_text.py` - Text generation with various decoding strategies
 
-Execute scripts directly or read them as implementation templates.
-
-### references/
-
-- `api_reference.md`: Comprehensive API documentation for key classes
-- `training_guide.md`: Detailed training patterns, optimization, and troubleshooting
-- `generation_strategies.md`: In-depth guide to text generation methods
-- `quantization.md`: Model quantization techniques comparison and usage
-- `task_patterns.md`: Quick reference for common task implementations
-
-Load reference files when you need detailed information on specific topics. References contain extensive examples, parameter explanations, and best practices.
-
-## Troubleshooting
-
-**Import errors:**
+Run scripts directly to see examples in action:
 ```bash
-pip install transformers
-pip install accelerate  # For device_map="auto"
-pip install bitsandbytes  # For quantization
+python scripts/quick_inference.py
+python scripts/fine_tune_classifier.py
+python scripts/generate_text.py
 ```
 
-**CUDA out of memory:**
-- Reduce batch size
-- Enable gradient checkpointing
-- Use gradient accumulation
-- Try quantization (8-bit or 4-bit)
-- Use smaller model variant
+### references/
+Comprehensive reference documentation loaded into context as needed:
 
-**Slow training:**
-- Enable mixed precision (fp16/bf16)
-- Increase batch size (if memory allows)
-- Use torch.compile (PyTorch 2.0+)
-- Check data loading isn't bottleneck
+- `api_reference.md` - Core classes and APIs (Auto classes, Trainer, GenerationConfig, etc.)
+- `pipelines.md` - All available pipelines organized by modality with examples
+- `training.md` - Training patterns, TrainingArguments, distributed training, callbacks
+- `generation_strategies.md` - Text generation methods, decoding strategies, parameters
+- `task_patterns.md` - Complete workflows for common tasks (classification, NER, QA, summarization, etc.)
 
-**Poor generation quality:**
-- Adjust temperature (lower = more focused)
-- Try different decoding strategies (beam search vs sampling)
-- Increase max_length if outputs cut off
-- Use repetition_penalty to reduce repetition
+When working on specific tasks or features, load the relevant reference file for detailed guidance.
 
-For task-specific guidance, consult the appropriate reference file in the `references/` directory.
+## Additional Information
+
+- **Official Documentation**: https://huggingface.co/docs/transformers/index
+- **Model Hub**: https://huggingface.co/models (1M+ pre-trained models)
+- **Datasets Hub**: https://huggingface.co/datasets
+- **Installation**: `pip install transformers datasets evaluate accelerate`
+- **GPU Support**: Requires PyTorch or TensorFlow with CUDA
+- **Framework Support**: PyTorch (primary), TensorFlow, JAX/Flax
