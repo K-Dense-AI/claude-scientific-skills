@@ -7,11 +7,11 @@ description: "Multi-objective optimization framework. NSGA-II, NSGA-III, MOEA/D,
 
 ## Overview
 
-Pymoo is a comprehensive Python framework for solving optimization problems with emphasis on multi-objective optimization. The library provides state-of-the-art single-objective and multi-objective algorithms, extensive benchmark problems, customizable genetic operators, advanced visualization tools, and multi-criteria decision making methods. Pymoo excels at finding trade-off solutions (Pareto fronts) for problems with conflicting objectives.
+Pymoo is a comprehensive Python framework for optimization with emphasis on multi-objective problems. Solve single and multi-objective optimization using state-of-the-art algorithms (NSGA-II/III, MOEA/D), benchmark problems (ZDT, DTLZ), customizable genetic operators, and multi-criteria decision making methods. Excels at finding trade-off solutions (Pareto fronts) for problems with conflicting objectives.
 
 ## When to Use This Skill
 
-Apply this skill when:
+This skill should be used when:
 - Solving optimization problems with one or multiple objectives
 - Finding Pareto-optimal solutions and analyzing trade-offs
 - Implementing evolutionary algorithms (GA, DE, PSO, NSGA-II/III)

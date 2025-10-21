@@ -7,7 +7,11 @@ description: "Access Human Metabolome Database (220K+ metabolites). Search by na
 
 ## Overview
 
-The Human Metabolome Database (HMDB) is a comprehensive, freely available resource containing detailed information about small molecule metabolites found in the human body. It supports metabolomics research, clinical chemistry, biomarker discovery, and metabolite identification tasks.
+The Human Metabolome Database (HMDB) is a comprehensive, freely available resource containing detailed information about small molecule metabolites found in the human body.
+
+## When to Use This Skill
+
+This skill should be used when performing metabolomics research, clinical chemistry, biomarker discovery, or metabolite identification tasks.
 
 ## Database Contents
 

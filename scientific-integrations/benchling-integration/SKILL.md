@@ -7,7 +7,7 @@ description: "Benchling R&D platform integration. Access registry (DNA, proteins
 
 ## Overview
 
-Integrate with Benchling's cloud platform for life sciences R&D, enabling programmatic access to registry entities, inventory management, electronic lab notebooks, and workflow automation. This skill provides comprehensive guidance for using both the Python SDK and REST API to interact with Benchling data.
+Benchling is a cloud platform for life sciences R&D. Access registry entities (DNA, proteins), inventory, electronic lab notebooks, and workflows programmatically via Python SDK and REST API.
 
 ## When to Use This Skill
 

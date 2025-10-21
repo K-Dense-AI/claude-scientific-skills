@@ -7,15 +7,7 @@ description: "Materials science toolkit. Crystal structures (CIF, POSCAR), phase
 
 ## Overview
 
-Pymatgen is a comprehensive Python library for materials analysis that powers the Materials Project. This skill provides guidance for using pymatgen's extensive capabilities in computational materials science, including:
-
-- **Structure manipulation**: Creating, reading, writing, and transforming crystal structures and molecules
-- **Materials analysis**: Symmetry, coordination environments, bonding, and structure comparison
-- **Thermodynamics**: Phase diagrams, Pourbaix diagrams, reaction energies, and stability analysis
-- **Electronic structure**: Band structures, density of states, and Fermi surfaces
-- **Surfaces and interfaces**: Slab generation, Wulff shapes, adsorption sites, and interface construction
-- **Materials Project integration**: Programmatic access to hundreds of thousands of computed materials
-- **File I/O**: Support for 100+ file formats from various computational codes
+Pymatgen is a comprehensive Python library for materials analysis that powers the Materials Project. Create, analyze, and manipulate crystal structures and molecules, compute phase diagrams and thermodynamic properties, analyze electronic structure (band structures, DOS), generate surfaces and interfaces, and access Materials Project's database of computed materials. Supports 100+ file formats from various computational codes.
 
 ## When to Use This Skill
 

@@ -9,7 +9,10 @@ description: "Query NCBI ClinVar for variant clinical significance. Search by ge
 
 ClinVar is NCBI's freely accessible archive of reports on relationships between human genetic variants and phenotypes, with supporting evidence. The database aggregates information about genomic variation and its relationship to human health, providing standardized variant classifications used in clinical genetics and research.
 
-Use this skill for tasks involving:
+## When to Use This Skill
+
+This skill should be used when:
+
 - Searching for variants by gene, condition, or clinical significance
 - Interpreting clinical significance classifications (pathogenic, benign, VUS)
 - Accessing ClinVar data programmatically via E-utilities API

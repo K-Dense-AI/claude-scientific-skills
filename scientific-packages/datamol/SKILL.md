@@ -7,7 +7,7 @@ description: "Pythonic RDKit wrapper for cheminformatics. SMILES parsing, standa
 
 ## Overview
 
-Datamol is a Python library that provides a lightweight, Pythonic abstraction layer over RDKit for molecular cheminformatics. It simplifies complex molecular operations with sensible defaults, efficient parallelization, and modern I/O capabilities. All molecular objects are native `rdkit.Chem.Mol` instances, ensuring full compatibility with the RDKit ecosystem.
+Datamol is a Python library that provides a lightweight, Pythonic abstraction layer over RDKit for molecular cheminformatics. Simplify complex molecular operations with sensible defaults, efficient parallelization, and modern I/O capabilities. All molecular objects are native `rdkit.Chem.Mol` instances, ensuring full compatibility with the RDKit ecosystem.
 
 **Key capabilities**:
 - Molecular format conversion (SMILES, SELFIES, InChI)

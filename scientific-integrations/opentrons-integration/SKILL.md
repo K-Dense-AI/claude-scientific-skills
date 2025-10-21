@@ -1,13 +1,25 @@
 ---
 name: opentrons-integration
-description: "Opentrons lab automation. Write Protocol API v2 protocols for Flex/OT-2 robots, liquid handling, hardware modules (heater-shaker, thermocycler), labware management, for automated pipetting workflows."
+description: "Lab automation platform for Flex/OT-2 robots. Write Protocol API v2 protocols, liquid handling, hardware modules (heater-shaker, thermocycler), labware management, for automated pipetting workflows."
 ---
 
 # Opentrons Integration
 
 ## Overview
 
-Opentrons provides a Python-based automation platform for laboratory protocols using Flex and OT-2 robots. This skill enables creation and management of Python Protocol API v2 protocols for automated liquid handling, hardware module control, and complex laboratory workflows.
+Opentrons is a Python-based lab automation platform for Flex and OT-2 robots. Write Protocol API v2 protocols for liquid handling, control hardware modules (heater-shaker, thermocycler), manage labware, for automated pipetting workflows.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Writing Opentrons Protocol API v2 protocols in Python
+- Automating liquid handling workflows on Flex or OT-2 robots
+- Controlling hardware modules (temperature, magnetic, heater-shaker, thermocycler)
+- Setting up labware configurations and deck layouts
+- Implementing complex pipetting operations (serial dilutions, plate replication, PCR setup)
+- Managing tip usage and optimizing protocol efficiency
+- Working with multi-channel pipettes for 96-well plate operations
+- Simulating and testing protocols before robot execution
 
 ## Core Capabilities
 

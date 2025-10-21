@@ -9,6 +9,19 @@ description: "Query Ensembl genome database REST API for 250+ species. Gene look
 
 Access and query the Ensembl genome database, a comprehensive resource for vertebrate genomic data maintained by EMBL-EBI. The database provides gene annotations, sequences, variants, regulatory information, and comparative genomics data for over 250 species. Current release is 115 (September 2025).
 
+## When to Use This Skill
+
+This skill should be used when:
+
+- Querying gene information by symbol or Ensembl ID
+- Retrieving DNA, transcript, or protein sequences
+- Analyzing genetic variants using the Variant Effect Predictor (VEP)
+- Finding orthologs and paralogs across species
+- Accessing regulatory features and genomic annotations
+- Converting coordinates between genome assemblies (e.g., GRCh37 to GRCh38)
+- Performing comparative genomics analyses
+- Integrating Ensembl data into genomic research pipelines
+
 ## Core Capabilities
 
 ### 1. Gene Information Retrieval

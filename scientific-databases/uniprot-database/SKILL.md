@@ -7,13 +7,19 @@ description: "Query UniProt protein database REST API. Search proteins by name/g
 
 ## Overview
 
-Interact with UniProt (Universal Protein Resource), the world's leading comprehensive and freely accessible resource for protein sequence and functional information. This skill enables programmatic access to UniProtKB (Swiss-Prot and TrEMBL), UniRef, UniParc, and other UniProt databases through the REST API.
+UniProt is the world's leading comprehensive protein sequence and functional information resource. Search proteins by name, gene, or accession, retrieve sequences in FASTA format, perform ID mapping across databases, access Swiss-Prot/TrEMBL annotations via REST API for protein analysis.
 
-**Key databases:**
-- **UniProtKB/Swiss-Prot**: Manually annotated, reviewed, high-quality protein entries
-- **UniProtKB/TrEMBL**: Automatically annotated, unreviewed protein entries
-- **UniRef**: Clustered sets of sequences for similarity searches
-- **UniParc**: Comprehensive archive of all protein sequences
+## When to Use This Skill
+
+This skill should be used when:
+- Searching for protein entries by name, gene symbol, accession, or organism
+- Retrieving protein sequences in FASTA or other formats
+- Mapping identifiers between UniProt and external databases (Ensembl, RefSeq, PDB, etc.)
+- Accessing protein annotations including GO terms, domains, and functional descriptions
+- Batch retrieving multiple protein entries efficiently
+- Querying reviewed (Swiss-Prot) vs. unreviewed (TrEMBL) protein data
+- Streaming large protein datasets
+- Building custom queries with field-specific search syntax
 
 ## Core Capabilities
 

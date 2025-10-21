@@ -7,7 +7,11 @@ description: "Access NCBI GEO for gene expression/genomics data. Search/download
 
 ## Overview
 
-This skill provides tools and guidance for working with the Gene Expression Omnibus (GEO), NCBI's public repository for high-throughput gene expression and functional genomics data. GEO contains over 264,000 studies with more than 8 million samples from both array-based and sequence-based experiments. Use this skill to search for gene expression datasets, retrieve experimental data, download raw and processed files, query expression profiles, and integrate GEO data into computational analysis workflows.
+The Gene Expression Omnibus (GEO) is NCBI's public repository for high-throughput gene expression and functional genomics data. GEO contains over 264,000 studies with more than 8 million samples from both array-based and sequence-based experiments.
+
+## When to Use This Skill
+
+This skill should be used when searching for gene expression datasets, retrieving experimental data, downloading raw and processed files, querying expression profiles, or integrating GEO data into computational analysis workflows.
 
 ## Core Capabilities
 

@@ -7,7 +7,17 @@ description: "Generate testable hypotheses. Formulate from observations, design 
 
 ## Overview
 
-Generate rigorous, evidence-based scientific hypotheses that are testable, falsifiable, and grounded in existing literature. This skill provides a systematic workflow for transforming observations into well-structured hypotheses with experimental designs and testable predictions.
+Hypothesis generation is a systematic process for developing testable explanations. Formulate evidence-based hypotheses from observations, design experiments, explore competing explanations, and develop predictions. Apply this skill for scientific inquiry across domains.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Developing hypotheses from observations or preliminary data
+- Designing experiments to test scientific questions
+- Exploring competing explanations for phenomena
+- Formulating testable predictions for research
+- Conducting literature-based hypothesis generation
+- Planning mechanistic studies across scientific domains
 
 ## Workflow
 

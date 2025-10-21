@@ -7,7 +7,7 @@ description: "Latch platform for bioinformatics workflows. Build pipelines with 
 
 ## Overview
 
-The Latch SDK is a Python framework for building and deploying bioinformatics workflows as serverless pipelines with automatic UI generation. Built on Flyte, Latch provides containerization, type safety, scalable cloud infrastructure, and a comprehensive data management system. This skill provides guidance for creating workflows, managing data, configuring resources, and using verified pre-built pipelines.
+Latch is a Python framework for building and deploying bioinformatics workflows as serverless pipelines. Built on Flyte, create workflows with @workflow/@task decorators, manage cloud data with LatchFile/LatchDir, configure resources, and integrate Nextflow/Snakemake pipelines.
 
 ## Core Capabilities
 

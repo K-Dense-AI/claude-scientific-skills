@@ -7,7 +7,7 @@ description: "Query Open Targets Platform for target-disease associations, drug 
 
 ## Overview
 
-The Open Targets Platform is a comprehensive resource that supports systematic identification and prioritization of potential therapeutic drug targets. It integrates publicly available datasets including human genetics, omics, literature, and chemical data to build and score target-disease associations.
+The Open Targets Platform is a comprehensive resource for systematic identification and prioritization of potential therapeutic drug targets. It integrates publicly available datasets including human genetics, omics, literature, and chemical data to build and score target-disease associations.
 
 **Key capabilities:**
 - Query target (gene) annotations including tractability, safety, expression

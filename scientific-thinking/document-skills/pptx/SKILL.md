@@ -8,7 +8,7 @@ license: Proprietary. LICENSE.txt has complete terms
 
 ## Overview
 
-This skill supports creating, editing, or analyzing the contents of .pptx files. A .pptx file is essentially a ZIP archive containing XML files and other resources. Different tools and workflows are available for different tasks.
+A .pptx file is a ZIP archive containing XML files and resources. Create, edit, or analyze PowerPoint presentations using text extraction, raw XML access, or html2pptx workflows. Apply this skill for programmatic presentation creation and modification.
 
 ## Reading and analyzing content
 

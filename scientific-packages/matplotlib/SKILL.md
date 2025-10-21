@@ -11,7 +11,7 @@ Matplotlib is Python's foundational visualization library for creating static, a
 
 ## When to Use This Skill
 
-Apply this skill when:
+This skill should be used when:
 - Creating any type of plot or chart (line, scatter, bar, histogram, heatmap, contour, etc.)
 - Generating scientific or statistical visualizations
 - Customizing plot appearance (colors, styles, labels, legends)

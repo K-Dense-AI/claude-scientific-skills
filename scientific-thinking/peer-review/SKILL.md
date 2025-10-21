@@ -7,7 +7,18 @@ description: "Systematic peer review toolkit. Evaluate methodology, statistics, 
 
 ## Overview
 
-This skill enables comprehensive, high-quality peer review of scientific manuscripts across all disciplines. The approach emphasizes constructive criticism, methodological rigor, reproducibility, and clarity, following best practices from leading journals and peer review guidelines.
+Peer review is a systematic process for evaluating scientific manuscripts. Assess methodology, statistics, design, reproducibility, ethics, and reporting standards. Apply this skill for manuscript and grant review across disciplines with constructive, rigorous evaluation.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Conducting peer review of scientific manuscripts for journals
+- Evaluating grant proposals and research applications
+- Assessing methodology and experimental design rigor
+- Reviewing statistical analyses and reporting standards
+- Evaluating reproducibility and data availability
+- Checking compliance with reporting guidelines (CONSORT, STROBE, PRISMA)
+- Providing constructive feedback on scientific writing
 
 ## Peer Review Workflow
 

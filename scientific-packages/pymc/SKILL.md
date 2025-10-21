@@ -7,7 +7,7 @@ description: "Bayesian modeling with PyMC. Build hierarchical models, MCMC (NUTS
 
 ## Overview
 
-PyMC is a Python library for Bayesian modeling and probabilistic programming. This skill provides comprehensive guidance for building, fitting, validating, and comparing Bayesian models using PyMC's modern API (version 5.x+). It includes workflows for common model types, diagnostic procedures, and best practices for Bayesian inference.
+PyMC is a Python library for Bayesian modeling and probabilistic programming. Build, fit, validate, and compare Bayesian models using PyMC's modern API (version 5.x+), including hierarchical models, MCMC sampling (NUTS), variational inference, and model comparison (LOO, WAIC).
 
 ## When to Use This Skill
 

@@ -18,9 +18,9 @@ DiffDock is a diffusion-based deep learning tool for molecular docking that pred
 
 **Key Distinction:** DiffDock predicts **binding poses** (3D structure) and **confidence** (prediction certainty), NOT binding affinity (ΔG, Kd). Always combine with scoring functions (GNINA, MM/GBSA) for affinity assessment.
 
-## When to Use DiffDock
+## When to Use This Skill
 
-Invoke this skill when users request:
+This skill should be used when:
 
 - "Dock this ligand to a protein" or "predict binding pose"
 - "Run molecular docking" or "perform protein-ligand docking"

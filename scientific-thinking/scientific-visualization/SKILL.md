@@ -7,17 +7,11 @@ description: "Create publication figures with matplotlib/seaborn/plotly. Multi-p
 
 ## Overview
 
-This skill provides comprehensive guidance, tools, and best practices for creating publication-ready scientific figures. It covers proper figure composition, colorblind-friendly design, journal-specific requirements, and practical implementation using matplotlib, seaborn, and plotly.
-
-Publication-ready figures must be:
-- **Clear**: Immediately understandable with proper labeling
-- **Accurate**: Truthful data representation without distortion
-- **Accessible**: Interpretable by readers with color vision deficiencies
-- **Professional**: Polished appearance meeting journal standards
+Scientific visualization transforms data into clear, accurate figures for publication. Create journal-ready plots with multi-panel layouts, error bars, significance markers, and colorblind-safe palettes. Export as PDF/EPS/TIFF using matplotlib, seaborn, and plotly for manuscripts.
 
 ## When to Use This Skill
 
-Activate this skill when:
+This skill should be used when:
 - Creating plots or visualizations for scientific manuscripts
 - Preparing figures for journal submission (Nature, Science, Cell, PLOS, etc.)
 - Ensuring figures are colorblind-friendly and accessible

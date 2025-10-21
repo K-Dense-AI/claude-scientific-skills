@@ -7,7 +7,7 @@ description: "Fast DataFrame library (Apache Arrow). Select, filter, group_by, j
 
 ## Overview
 
-Polars is a lightning-fast DataFrame library for Python (and Rust) built on Apache Arrow. This skill provides guidance for working with Polars, including its expression-based API, lazy evaluation framework, and high-performance data manipulation capabilities. Use this skill when helping users write efficient data processing code, migrate from pandas, or optimize data pipelines.
+Polars is a lightning-fast DataFrame library for Python and Rust built on Apache Arrow. Work with Polars' expression-based API, lazy evaluation framework, and high-performance data manipulation capabilities for efficient data processing, pandas migration, and data pipeline optimization.
 
 ## Quick Start
 

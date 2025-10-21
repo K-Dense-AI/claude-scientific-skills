@@ -11,7 +11,7 @@ DeepChem is a comprehensive Python library for applying machine learning to chem
 
 ## When to Use This Skill
 
-Apply this skill when:
+This skill should be used when:
 - Loading and processing molecular data (SMILES strings, SDF files, protein sequences)
 - Predicting molecular properties (solubility, toxicity, binding affinity, ADMET properties)
 - Training models on chemical/biological datasets

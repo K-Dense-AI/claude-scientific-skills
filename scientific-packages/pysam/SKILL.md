@@ -7,18 +7,11 @@ description: "Genomic file toolkit. Read/write SAM/BAM/CRAM alignments, VCF/BCF 
 
 ## Overview
 
-Pysam is a Python module for reading, manipulating, and writing genomic datasets. It provides a Pythonic interface to the htslib C-API, supporting multiple genomic file formats commonly used in bioinformatics and computational biology.
+Pysam is a Python module for reading, manipulating, and writing genomic datasets. Read/write SAM/BAM/CRAM alignment files, VCF/BCF variant files, and FASTA/FASTQ sequences with a Pythonic interface to htslib. Query tabix-indexed files, perform pileup analysis for coverage, and execute samtools/bcftools commands.
 
-**Key capabilities:**
-- Read/write SAM/BAM/CRAM alignment files (aligned sequencing reads)
-- Read/write VCF/BCF variant call files (genetic variants)
-- Access FASTA reference sequences with random access
-- Read FASTQ files (raw sequencing reads with quality scores)
-- Query tabix-indexed files (BED, GTF, GFF)
-- Perform pileup analysis for coverage calculations
-- Execute samtools and bcftools commands from Python
+## When to Use This Skill
 
-**When to use this skill:**
+This skill should be used when:
 - Working with sequencing alignment files (BAM/CRAM)
 - Analyzing genetic variants (VCF/BCF)
 - Extracting reference sequences or gene regions

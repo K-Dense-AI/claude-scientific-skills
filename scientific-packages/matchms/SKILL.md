@@ -7,7 +7,7 @@ description: "Mass spectrometry analysis. Process mzML/MGF/MSP, spectral similar
 
 ## Overview
 
-Matchms is an open-source Python library for mass spectrometry data processing and analysis. It provides tools for importing spectra from various formats, standardizing metadata, filtering peaks, calculating spectral similarities, and building reproducible analytical workflows. The library democratizes mass spectrometry informatics through accessible, standardized Python tools.
+Matchms is an open-source Python library for mass spectrometry data processing and analysis. Import spectra from various formats, standardize metadata, filter peaks, calculate spectral similarities, and build reproducible analytical workflows.
 
 ## Core Capabilities
 

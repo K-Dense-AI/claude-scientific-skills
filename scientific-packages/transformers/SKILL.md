@@ -7,9 +7,7 @@ description: Work with state-of-the-art machine learning models for NLP, compute
 
 ## Overview
 
-The Transformers library provides state-of-the-art machine learning models for natural language processing (NLP), computer vision, audio processing, and multimodal tasks. It offers over 1 million pre-trained model checkpoints and supports quick inference through pipelines, comprehensive training via the Trainer API, and flexible text generation with various decoding strategies.
-
-This skill provides comprehensive guidance on working with Transformers across all major task types and modalities.
+The Transformers library provides state-of-the-art machine learning models for NLP, computer vision, audio, and multimodal tasks. Apply this skill for quick inference through pipelines, comprehensive training via the Trainer API, and flexible text generation with various decoding strategies.
 
 ## Core Capabilities
 

@@ -7,15 +7,19 @@ description: "Query STRING API for protein-protein interactions (59M proteins, 2
 
 ## Overview
 
-STRING (Search Tool for the Retrieval of Interacting Genes/Proteins) is a comprehensive database of known and predicted protein-protein interactions. This skill enables interaction with STRING's REST API to query protein networks, analyze functional enrichments, and discover interaction partners across 5000+ organisms.
+STRING is a comprehensive database of known and predicted protein-protein interactions covering 59M proteins and 20B+ interactions across 5000+ organisms. Query interaction networks, perform functional enrichment, discover partners via REST API for systems biology and pathway analysis.
 
-**Database Statistics:**
-- Coverage: 5000+ genomes
-- Proteins: ~59.3 million
-- Interactions: 20+ billion
-- Evidence types: Experimental data, computational prediction, text-mining, pathway databases
+## When to Use This Skill
 
-**Data Sources:** Integrates over 40 sources including experimental repositories, pathway databases, automated text-mining, and computational predictions.
+This skill should be used when:
+- Retrieving protein-protein interaction networks for single or multiple proteins
+- Performing functional enrichment analysis (GO, KEGG, Pfam) on protein lists
+- Discovering interaction partners and expanding protein networks
+- Testing if proteins form significantly enriched functional modules
+- Generating network visualizations with evidence-based coloring
+- Analyzing homology and protein family relationships
+- Conducting cross-species protein interaction comparisons
+- Identifying hub proteins and network connectivity patterns
 
 ## Quick Start
 

@@ -7,7 +7,7 @@ description: "Write scientific manuscripts. IMRAD structure, citations (APA/AMA/
 
 ## Overview
 
-Scientific writing is a specialized form of communication that requires precision, clarity, and adherence to established conventions. This skill provides comprehensive guidance for creating high-quality scientific manuscripts, from initial structure to final submission. Whether drafting a research article, review paper, case report, or thesis, this skill ensures writing meets the rigorous standards of academic and scientific publishing.
+Scientific writing is a process for communicating research with precision and clarity. Write manuscripts using IMRAD structure, citations (APA/AMA/Vancouver), figures/tables, and reporting guidelines (CONSORT/STROBE/PRISMA). Apply this skill for research papers and journal submissions.
 
 ## When to Use This Skill
 

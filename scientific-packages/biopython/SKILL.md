@@ -1,6 +1,6 @@
 ---
 name: biopython
-description: Work with Biopython for computational molecular biology tasks including sequence manipulation, file I/O, alignment analysis, BLAST searches, database access (NCBI/Entrez), protein structure analysis (PDB), phylogenetic tree operations, motif finding, population genetics, and other bioinformatics workflows. This skill should be used when working with biological sequences (DNA, RNA, protein), parsing biological file formats (FASTA, GenBank, FASTQ, PDB, etc.), accessing biological databases, running sequence analyses, or performing structural bioinformatics tasks.
+description: "Toolkit for computational molecular biology. Manipulate sequences, parse biological file formats (FASTA, GenBank, FASTQ, PDB), access NCBI databases, run BLAST, analyze structures, build phylogenetic trees, for bioinformatics workflows."
 ---
 
 # Biopython: Computational Molecular Biology in Python

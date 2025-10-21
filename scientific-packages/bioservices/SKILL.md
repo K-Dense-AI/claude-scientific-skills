@@ -7,11 +7,11 @@ description: "Access 40+ bio web services (UniProt, KEGG, ChEMBL, PubChem, BLAST
 
 ## Overview
 
-BioServices is a Python package providing programmatic access to approximately 40 bioinformatics web services and databases. Use this skill to retrieve biological data, perform cross-database queries, map identifiers, analyze sequences, and integrate multiple biological resources in Python workflows. The package handles both REST and SOAP/WSDL protocols transparently.
+BioServices is a Python package providing programmatic access to approximately 40 bioinformatics web services and databases. Retrieve biological data, perform cross-database queries, map identifiers, analyze sequences, and integrate multiple biological resources in Python workflows. The package handles both REST and SOAP/WSDL protocols transparently.
 
 ## When to Use This Skill
 
-Apply this skill when tasks involve:
+This skill should be used when:
 - Retrieving protein sequences, annotations, or structures from UniProt, PDB, Pfam
 - Analyzing metabolic pathways and gene functions via KEGG or Reactome
 - Searching compound databases (ChEBI, ChEMBL, PubChem) for chemical information

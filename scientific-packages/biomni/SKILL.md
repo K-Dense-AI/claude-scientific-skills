@@ -7,7 +7,7 @@ description: "AI agent for autonomous biomedical task execution. CRISPR design, 
 
 ## Overview
 
-Biomni is a general-purpose biomedical AI agent that autonomously executes research tasks across diverse biomedical subfields. It combines large language model reasoning with retrieval-augmented planning and code-based execution to enhance scientific productivity and hypothesis generation. The system operates with an ~11GB biomedical knowledge base covering molecular, genomic, and clinical domains.
+Biomni is a general-purpose biomedical AI agent that autonomously executes research tasks across diverse biomedical subfields. Use Biomni to combine large language model reasoning with retrieval-augmented planning and code-based execution for scientific productivity and hypothesis generation. The system operates with an ~11GB biomedical knowledge base covering molecular, genomic, and clinical domains.
 
 ## Quick Start
 

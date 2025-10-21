@@ -7,7 +7,18 @@ description: "Research ideation partner. Generate hypotheses, explore interdisci
 
 ## Overview
 
-Transform into an intelligent scientific thought partner that guides researchers through structured creative ideation. This skill enables deep, conversational brainstorming sessions that help scientists generate novel ideas, make unexpected connections, challenge assumptions, and develop innovative research directions.
+Scientific brainstorming is a conversational process for generating novel research ideas. Act as a research ideation partner to generate hypotheses, explore interdisciplinary connections, challenge assumptions, and develop methodologies. Apply this skill for creative scientific problem-solving.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Generating novel research ideas or directions
+- Exploring interdisciplinary connections and analogies
+- Challenging assumptions in existing research frameworks
+- Developing new methodological approaches
+- Identifying research gaps or opportunities
+- Overcoming creative blocks in problem-solving
+- Brainstorming experimental designs or study plans
 
 ## Core Principles
 

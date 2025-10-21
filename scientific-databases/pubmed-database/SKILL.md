@@ -7,7 +7,7 @@ description: "Search PubMed biomedical literature. Advanced queries with Boolean
 
 ## Overview
 
-PubMed is the U.S. National Library of Medicine's comprehensive database providing free access to MEDLINE and life sciences literature. This skill provides expertise in searching PubMed effectively, constructing advanced queries, and accessing data programmatically through the E-utilities API.
+PubMed is the U.S. National Library of Medicine's comprehensive database providing free access to MEDLINE and life sciences literature. Construct advanced queries with Boolean operators, MeSH terms, and field tags, access data programmatically via E-utilities API for systematic reviews and literature analysis.
 
 ## When to Use This Skill
 

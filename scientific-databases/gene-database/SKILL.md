@@ -7,9 +7,11 @@ description: "Query NCBI Gene via E-utilities/Datasets API. Search by symbol/ID,
 
 ## Overview
 
-This skill enables programmatic access to NCBI Gene, a comprehensive database integrating gene information from diverse species. NCBI Gene provides nomenclature, reference sequences (RefSeqs), chromosomal maps, biological pathways, genetic variations, phenotypes, and cross-references to global genomic resources.
+NCBI Gene is a comprehensive database integrating gene information from diverse species. It provides nomenclature, reference sequences (RefSeqs), chromosomal maps, biological pathways, genetic variations, phenotypes, and cross-references to global genomic resources.
 
-Use this skill when working with gene data including searching by gene symbol or ID, retrieving gene sequences and metadata, analyzing gene functions and pathways, or performing batch gene lookups.
+## When to Use This Skill
+
+This skill should be used when working with gene data including searching by gene symbol or ID, retrieving gene sequences and metadata, analyzing gene functions and pathways, or performing batch gene lookups.
 
 ## Quick Start
 

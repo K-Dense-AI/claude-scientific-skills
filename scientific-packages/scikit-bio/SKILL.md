@@ -7,9 +7,7 @@ description: "Biological data toolkit. Sequence analysis, alignments, phylogenet
 
 ## Overview
 
-scikit-bio is a comprehensive Python library for working with biological data. Provide assistance with bioinformatics analyses spanning sequence manipulation, alignment, phylogenetics, microbial ecology, and multivariate statistics. This skill enables efficient work with common biological file formats and computational workflows in genomics, metagenomics, and ecological research.
-
-**Key applications:** Sequence analysis, phylogenetic tree construction, microbiome diversity analysis, ecological statistics, biological data manipulation, and format conversion.
+scikit-bio is a comprehensive Python library for working with biological data. Apply this skill for bioinformatics analyses spanning sequence manipulation, alignment, phylogenetics, microbial ecology, and multivariate statistics.
 
 ## When to Use This Skill
 

@@ -7,7 +7,7 @@ description: "Manipulate AnnData objects for single-cell genomics. Load/save .h5
 
 ## Overview
 
-AnnData (Annotated Data) is Python's standard for storing and manipulating annotated data matrices, particularly in single-cell genomics. This skill provides comprehensive guidance for working with AnnData objects, including data creation, manipulation, file I/O, concatenation, and best practices for memory-efficient workflows.
+AnnData (Annotated Data) is Python's standard for storing and manipulating annotated data matrices, particularly in single-cell genomics. Work with AnnData objects for data creation, manipulation, file I/O, concatenation, and memory-efficient workflows.
 
 ## Core Capabilities
 

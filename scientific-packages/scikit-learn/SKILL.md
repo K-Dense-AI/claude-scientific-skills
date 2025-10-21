@@ -7,11 +7,11 @@ description: "ML toolkit. Classification, regression, clustering, PCA, preproces
 
 ## Overview
 
-This skill provides comprehensive guidance for using scikit-learn, Python's premier machine learning library. Scikit-learn offers simple, efficient tools for predictive data analysis, including classification, regression, clustering, dimensionality reduction, model selection, and preprocessing. This skill should be used when implementing machine learning workflows, building predictive models, analyzing datasets using supervised or unsupervised learning, preprocessing data for ML tasks, evaluating model performance, or optimizing hyperparameters.
+Scikit-learn is Python's premier machine learning library, offering simple and efficient tools for predictive data analysis. Apply this skill for classification, regression, clustering, dimensionality reduction, model selection, preprocessing, and hyperparameter optimization.
 
 ## When to Use This Skill
 
-Activate this skill when:
+This skill should be used when:
 - Building classification models (spam detection, image recognition, medical diagnosis)
 - Creating regression models (price prediction, forecasting, trend analysis)
 - Performing clustering analysis (customer segmentation, pattern discovery)

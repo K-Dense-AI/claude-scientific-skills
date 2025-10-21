@@ -7,7 +7,7 @@ description: "Bioinformatics query toolkit. Gene info (Ensembl/UniProt), BLAST, 
 
 ## Overview
 
-gget is a command-line bioinformatics tool and Python package providing unified access to 20+ genomic databases and analysis methods. Execute queries for gene information, sequence analysis, protein structures, expression data, and disease associations through a consistent interface. All gget modules work both as command-line tools and as Python functions.
+gget is a command-line bioinformatics tool and Python package providing unified access to 20+ genomic databases and analysis methods. Query gene information, sequence analysis, protein structures, expression data, and disease associations through a consistent interface. All gget modules work both as command-line tools and as Python functions.
 
 **Important**: The databases queried by gget are continuously updated, which sometimes changes their structure. gget modules are tested automatically on a biweekly basis and updated to match new database structures when necessary.
 

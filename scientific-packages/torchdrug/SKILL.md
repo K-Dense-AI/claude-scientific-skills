@@ -1,26 +1,17 @@
 ---
 name: torchdrug
-description: Toolkit for graph-based drug discovery and molecular machine learning using TorchDrug. This skill should be used when working with molecular property prediction, protein modeling, knowledge graph reasoning, molecular generation, retrosynthesis prediction, or implementing graph neural networks for drug discovery and chemical/biological data. Use when tasks involve SMILES strings, molecular graphs, protein structures, drug datasets, binding prediction, or any PyTorch-based graph ML for life sciences.
+description: "Graph-based drug discovery toolkit. Molecular property prediction (ADMET), protein modeling, knowledge graph reasoning, molecular generation, retrosynthesis, GNNs (GIN, GAT, SchNet), 40+ datasets, for PyTorch-based ML on molecules, proteins, and biomedical graphs."
 ---
 
 # TorchDrug
 
 ## Overview
 
-TorchDrug is a comprehensive PyTorch-based machine learning toolbox for drug discovery and molecular science. It provides graph neural networks, pre-trained models, datasets, and task definitions for working with molecules, proteins, and biological knowledge graphs.
-
-**Core Capabilities:**
-- Molecular property prediction (drug-likeness, toxicity, quantum properties)
-- Protein modeling (function, structure, interactions)
-- Knowledge graph reasoning (drug-disease associations, biomedical knowledge)
-- Molecular generation (de novo drug design)
-- Retrosynthesis planning (synthetic route prediction)
-- 40+ curated datasets for chemistry and biology
-- 20+ state-of-the-art model architectures
+TorchDrug is a comprehensive PyTorch-based machine learning toolbox for drug discovery and molecular science. Apply graph neural networks, pre-trained models, and task definitions to molecules, proteins, and biological knowledge graphs, including molecular property prediction, protein modeling, knowledge graph reasoning, molecular generation, retrosynthesis planning, with 40+ curated datasets and 20+ model architectures.
 
 ## When to Use This Skill
 
-Use this skill when working with:
+This skill should be used when working with:
 
 **Data Types:**
 - SMILES strings or molecular structures

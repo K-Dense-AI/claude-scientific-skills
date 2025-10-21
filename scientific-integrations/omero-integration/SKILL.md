@@ -1,13 +1,25 @@
 ---
 name: omero-integration
-description: "OMERO microscopy data management. Access images via Python, retrieve datasets, analyze pixels, manage ROIs/annotations, batch processing, for high-content screening and microscopy workflows."
+description: "Microscopy data management platform. Access images via Python, retrieve datasets, analyze pixels, manage ROIs/annotations, batch processing, for high-content screening and microscopy workflows."
 ---
 
 # OMERO Integration
 
 ## Overview
 
-OMERO is an open-source client-server platform for managing, visualizing, and analyzing microscopy images and associated metadata. This skill provides comprehensive guidance for using OMERO's Python API (omero-py) to programmatically interact with OMERO servers for data retrieval, analysis, and management.
+OMERO is an open-source platform for managing, visualizing, and analyzing microscopy images and metadata. Access images via Python API, retrieve datasets, analyze pixels, manage ROIs and annotations, for high-content screening and microscopy workflows.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Working with OMERO Python API (omero-py) to access microscopy data
+- Retrieving images, datasets, projects, or screening data programmatically
+- Analyzing pixel data and creating derived images
+- Creating or managing ROIs (regions of interest) on microscopy images
+- Adding annotations, tags, or metadata to OMERO objects
+- Storing measurement results in OMERO tables
+- Creating server-side scripts for batch processing
+- Performing high-content screening analysis
 
 ## Core Capabilities
 

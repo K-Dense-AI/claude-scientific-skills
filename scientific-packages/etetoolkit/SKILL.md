@@ -7,7 +7,7 @@ description: "Phylogenetic tree toolkit (ETE). Tree manipulation (Newick/NHX), e
 
 ## Overview
 
-Provide comprehensive support for phylogenetic and hierarchical tree analysis using the ETE (Environment for Tree Exploration) toolkit. Enable tree manipulation, evolutionary analysis, visualization, and integration with biological databases for phylogenomic research and clustering analysis.
+ETE (Environment for Tree Exploration) is a toolkit for phylogenetic and hierarchical tree analysis. Manipulate trees, analyze evolutionary events, visualize results, and integrate with biological databases for phylogenomic research and clustering analysis.
 
 ## Core Capabilities
 

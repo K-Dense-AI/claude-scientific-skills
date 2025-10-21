@@ -11,7 +11,7 @@ Arboreto is a Python library for inferring gene regulatory networks (GRNs) from 
 
 ## When to Use This Skill
 
-Apply this skill when:
+This skill should be used when:
 - Inferring regulatory relationships between genes from expression data
 - Analyzing single-cell or bulk RNA-seq data to identify transcription factor targets
 - Building the GRN inference component of a pySCENIC pipeline

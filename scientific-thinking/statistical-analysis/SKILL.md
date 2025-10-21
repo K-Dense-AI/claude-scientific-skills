@@ -7,7 +7,18 @@ description: "Statistical analysis toolkit. Hypothesis tests (t-test, ANOVA, chi
 
 ## Overview
 
-Conduct rigorous, publication-quality statistical analyses with comprehensive assumption checking, effect size calculations, and proper reporting. This skill provides systematic workflows for selecting appropriate statistical tests, validating assumptions, interpreting results, and reporting findings according to academic standards (APA style).
+Statistical analysis is a systematic process for testing hypotheses and quantifying relationships. Conduct hypothesis tests (t-test, ANOVA, chi-square), regression, correlation, and Bayesian analyses with assumption checks and APA reporting. Apply this skill for academic research.
+
+## When to Use This Skill
+
+This skill should be used when:
+- Conducting statistical hypothesis tests (t-tests, ANOVA, chi-square)
+- Performing regression or correlation analyses
+- Running Bayesian statistical analyses
+- Checking statistical assumptions and diagnostics
+- Calculating effect sizes and conducting power analyses
+- Reporting statistical results in APA format
+- Analyzing experimental or observational data for research
 
 ---
 

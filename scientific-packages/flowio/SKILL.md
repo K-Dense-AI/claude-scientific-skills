@@ -7,11 +7,11 @@ description: "Parse FCS (Flow Cytometry Standard) files v2.0-3.1. Extract events
 
 ## Overview
 
-FlowIO is a lightweight Python library for reading and writing Flow Cytometry Standard (FCS) files. It excels at parsing FCS metadata, extracting event data, and creating new FCS files with minimal dependencies. The library supports FCS versions 2.0, 3.0, and 3.1, making it ideal for backend services, data pipelines, and basic cytometry file operations.
+FlowIO is a lightweight Python library for reading and writing Flow Cytometry Standard (FCS) files. Parse FCS metadata, extract event data, and create new FCS files with minimal dependencies. The library supports FCS versions 2.0, 3.0, and 3.1, making it ideal for backend services, data pipelines, and basic cytometry file operations.
 
 ## When to Use This Skill
 
-Apply this skill when working with:
+This skill should be used when:
 
 - FCS files requiring parsing or metadata extraction
 - Flow cytometry data needing conversion to NumPy arrays

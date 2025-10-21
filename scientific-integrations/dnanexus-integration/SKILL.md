@@ -7,25 +7,18 @@ description: "DNAnexus cloud genomics platform. Build apps/applets, manage data 
 
 ## Overview
 
-DNAnexus is a cloud-based platform for biomedical data analysis, particularly genomics. This skill provides comprehensive guidance for interacting with DNAnexus through:
-
-- Building and deploying apps and applets (Python/Bash)
-- Managing data objects (files, records, databases)
-- Running analyses and workflows
-- Using the dxpy Python SDK
-- Configuring app metadata and dependencies
+DNAnexus is a cloud platform for biomedical data analysis and genomics. Build and deploy apps/applets, manage data objects, run workflows, and use the dxpy Python SDK for genomics pipeline development and execution.
 
 ## When to Use This Skill
 
-This skill should be used when working with:
-
-- **App Development**: Creating, building, or modifying DNAnexus apps/applets
-- **Data Management**: Uploading, downloading, searching, or organizing files and records
-- **Job Execution**: Running analyses, monitoring jobs, creating workflows
-- **Python SDK**: Writing scripts using dxpy to interact with the platform
-- **Configuration**: Setting up dxapp.json, managing dependencies, using Docker
-- **Genomics Workflows**: Processing FASTQ, BAM, VCF, or other bioinformatics files
-- **Platform Operations**: Managing projects, permissions, or platform resources
+This skill should be used when:
+- Creating, building, or modifying DNAnexus apps/applets
+- Uploading, downloading, searching, or organizing files and records
+- Running analyses, monitoring jobs, creating workflows
+- Writing scripts using dxpy to interact with the platform
+- Setting up dxapp.json, managing dependencies, using Docker
+- Processing FASTQ, BAM, VCF, or other bioinformatics files
+- Managing projects, permissions, or platform resources
 
 ## Core Capabilities
 
