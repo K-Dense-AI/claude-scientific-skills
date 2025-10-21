@@ -2,7 +2,7 @@
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team. These skills enable Claude to work with specialized scientific libraries and databases across bioinformatics, cheminformatics, machine learning, materials science, and data analysis. Using these set of skills with Claude Code allows you to create an 'AI Scientist' on your desktop! If you want substantially more advanced capabilties, compute infrastructure and enterprise ready offering check out https://k-dense.ai/.
 
-This repository provides access to **22 scientific databases**, **40 scientific packages**, **5 scientific integrations**, and **122 documented workflows** covering a wide range of scientific computing tasks.
+This repository provides access to **24 scientific databases**, **40 scientific packages**, **5 scientific integrations**, and **122 documented workflows** covering a wide range of scientific computing tasks.
 
 ## Getting Started
 
@@ -40,6 +40,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **HMDB (Human Metabolome Database)** - Comprehensive metabolomics resource with 220K+ metabolite entries, detailed chemical/biological data, concentration ranges, disease associations, pathways, and spectral data for metabolite identification and biomarker discovery
 - **KEGG** - Kyoto Encyclopedia of Genes and Genomes for biological pathway analysis, gene-to-pathway mapping, compound searches, and molecular interaction networks (pathway enrichment, metabolic pathways, gene annotations, drug-drug interactions, ID conversion)
 - **Metabolomics Workbench** - NIH Common Fund metabolomics data repository with 4,200+ processed studies, standardized nomenclature (RefMet), mass spectrometry searches, and comprehensive REST API for accessing metabolite structures, study metadata, experimental results, and gene/protein-metabolite associations
+- **Open Targets** - Comprehensive therapeutic target identification and validation platform integrating genetics, omics, and chemical data (200M+ evidence strings, target-disease associations with scoring, tractability assessments, safety liabilities, known drugs from ChEMBL, GraphQL API) for drug target discovery, prioritization, evidence evaluation, drug repurposing, competitive intelligence, and mechanism research
 - **NCBI Gene** - Work with NCBI Gene database to search, retrieve, and analyze gene information including nomenclature, sequences, variations, phenotypes, and pathways using E-utilities and Datasets API
 - **Protein Data Bank (PDB)** - Access 3D structural data of proteins, nucleic acids, and biological macromolecules (200K+ structures) with search, retrieval, and analysis capabilities
 - **PubChem** - Access chemical compound data from the world's largest free chemical database (110M+ compounds, 270M+ bioactivities)
@@ -47,6 +48,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Reactome** - Curated pathway database for biological processes and molecular interactions (2,825+ human pathways, 16K+ reactions, 11K+ proteins) with pathway enrichment analysis, expression data analysis, and species comparison using Content Service and Analysis Service APIs
 - **STRING** - Protein-protein interaction network database (5000+ genomes, 59.3M proteins, 20B+ interactions) with functional enrichment analysis, interaction partner discovery, and network visualization from experimental data, computational prediction, and text-mining
 - **UniProt** - Universal Protein Resource for protein sequences, annotations, and functional information (UniProtKB/Swiss-Prot reviewed entries, TrEMBL unreviewed entries) with REST API access for search, retrieval, ID mapping, and batch operations across 200+ databases
+- **USPTO** - United States Patent and Trademark Office data access including patent searches, trademark lookups, patent examination history (PEDS), office actions, assignments, citations, and litigation records; supports PatentSearch API (ElasticSearch-based patent search), TSDR (Trademark Status & Document Retrieval), Patent/Trademark Assignment APIs, and additional specialized APIs for comprehensive IP analysis
 - **ZINC** - Free database of commercially-available compounds for virtual screening and drug discovery (230M+ purchasable compounds in ready-to-dock 3D formats)
 
 ### Scientific Packages
