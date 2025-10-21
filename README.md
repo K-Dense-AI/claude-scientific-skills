@@ -84,6 +84,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Pymatgen** - Materials structure analysis, phase diagrams, and electronic structure
 
 **Data Analysis & Visualization:**
+- **Dask** - Parallel computing for larger-than-memory datasets with distributed DataFrames, Arrays, Bags, and Futures
 - **Matplotlib** - Publication-quality plotting and visualization
 - **Polars** - High-performance DataFrame operations with lazy evaluation
 - **Seaborn** - Statistical data visualization
@@ -219,7 +220,6 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **scipy.stats** - Statistical functions and distributions
 
 ### Data Management & Processing
-- **Dask** - Parallel computing for analytics
 - **Parquet** - Columnar storage format for big data
 - **DuckDB** - Analytical SQL database
 - **SQLAlchemy** - SQL toolkit and ORM
