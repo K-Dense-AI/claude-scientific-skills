@@ -11,7 +11,7 @@ PyTorch Geometric is a library built on PyTorch that enables development and tra
 
 ## When to Use This Skill
 
-Use this skill when working with:
+This skill should be used when working with:
 - **Graph-based machine learning**: Node classification, graph classification, link prediction
 - **Molecular property prediction**: Drug discovery, chemical property prediction
 - **Social network analysis**: Community detection, influence prediction

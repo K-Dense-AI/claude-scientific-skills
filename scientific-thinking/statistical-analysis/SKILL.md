@@ -48,11 +48,11 @@ Use this decision tree to determine your analysis path:
 ```
 START
 │
-├─ Do you need to SELECT a statistical test?
+├─ Need to SELECT a statistical test?
 │  └─ YES → See "Test Selection Guide"
 │  └─ NO → Continue
 │
-├─ Are you ready to check ASSUMPTIONS?
+├─ Ready to check ASSUMPTIONS?
 │  └─ YES → See "Assumption Checking"
 │  └─ NO → Continue
 │

@@ -19,7 +19,7 @@ PyDESeq2 is a Python implementation of the DESeq2 method for differential expres
 
 ## When to Use This Skill
 
-Invoke this skill when:
+This skill should be used when:
 - Analyzing bulk RNA-seq count data for differential expression
 - Comparing gene expression between experimental conditions (e.g., treated vs control)
 - Performing multi-factor designs accounting for batch effects or covariates

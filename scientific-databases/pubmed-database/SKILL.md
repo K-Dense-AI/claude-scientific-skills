@@ -11,7 +11,7 @@ PubMed is the U.S. National Library of Medicine's comprehensive database providi
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Searching for biomedical or life sciences research articles
 - Constructing complex search queries with Boolean operators, field tags, or MeSH terms
 - Conducting systematic literature reviews or meta-analyses

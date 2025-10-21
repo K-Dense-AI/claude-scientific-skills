@@ -11,7 +11,7 @@ Integrate with Benchling's cloud platform for life sciences R&D, enabling progra
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Working with Benchling's Python SDK or REST API
 - Managing biological sequences (DNA, RNA, proteins) and registry entities
 - Automating inventory operations (samples, containers, locations, transfers)

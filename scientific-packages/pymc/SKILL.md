@@ -11,7 +11,7 @@ PyMC is a Python library for Bayesian modeling and probabilistic programming. Th
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 - Building Bayesian models (linear/logistic regression, hierarchical models, time series, etc.)
 - Performing MCMC sampling or variational inference
 - Conducting prior/posterior predictive checks

@@ -21,7 +21,7 @@ The Open Targets Platform is a comprehensive resource that supports systematic i
 
 ## When to Use This Skill
 
-Use this skill when:
+This skill should be used when:
 
 - **Target discovery:** Finding potential therapeutic targets for a disease
 - **Target assessment:** Evaluating tractability, safety, and druggability of genes

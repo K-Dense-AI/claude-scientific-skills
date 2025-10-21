@@ -20,7 +20,7 @@ Access comprehensive FDA regulatory data through openFDA, the FDA's initiative t
 
 ## When to Use This Skill
 
-Use this skill when working with:
+This skill should be used when working with:
 - **Drug research**: Safety profiles, adverse events, labeling, approvals, shortages
 - **Medical device surveillance**: Adverse events, recalls, 510(k) clearances, PMA approvals
 - **Food safety**: Recalls, allergen tracking, adverse events, dietary supplements

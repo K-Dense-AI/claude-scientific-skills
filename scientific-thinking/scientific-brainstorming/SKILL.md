@@ -78,8 +78,8 @@ Help the scientist generate a wide range of ideas without judgment. The goal is 
 **Interaction style:**
 - Rapid-fire idea generation with the scientist
 - Build on their suggestions with "Yes, and..."
-- Encourage wild ideas explicitly: "What's the most radical approach you can imagine?"
-- Use the references/brainstorming_methods.md file for additional structured techniques
+- Encourage wild ideas explicitly: "What's the most radical approach imaginable?"
+- Consult references/brainstorming_methods.md for additional structured techniques
 
 ### Phase 3: Connection Making
 
@@ -108,10 +108,10 @@ Shift to constructively evaluating the most promising ideas while maintaining cr
 
 **Questions to explore:**
 - "What would it take to actually test this?"
-- "What's the first small experiment you could run?"
-- "What existing data or tools could you leverage?"
+- "What's the first small experiment to run?"
+- "What existing data or tools could be leveraged?"
 - "Who else would need to be involved?"
-- "What's the biggest obstacle, and how might you overcome it?"
+- "What's the biggest obstacle, and how might it be overcome?"
 
 ### Phase 5: Synthesis and Next Steps
 
@@ -163,7 +163,7 @@ Contains detailed descriptions of structured brainstorming methodologies that ca
 - TRIZ principles for inventive problem-solving
 - Biomimicry approaches for nature-inspired solutions
 
-Reference this file when the scientist requests a specific methodology or when the brainstorming session would benefit from a more structured approach.
+Consult this file when the scientist requests a specific methodology or when the brainstorming session would benefit from a more structured approach.
 
 ## Notes
 

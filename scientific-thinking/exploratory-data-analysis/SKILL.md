@@ -11,7 +11,7 @@ Perform comprehensive exploratory data analysis on datasets of any format. This 
 
 ## When to Use This Skill
 
-Invoke this skill when:
+This skill should be used when:
 - User provides a data file and requests analysis or exploration
 - User asks to "explore this dataset", "analyze this data", or "what's in this file?"
 - User needs statistical summaries, distributions, or correlations

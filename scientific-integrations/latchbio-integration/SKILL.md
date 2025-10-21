@@ -89,7 +89,7 @@ def my_workflow(input_file: LatchFile) -> LatchFile:
 
 ## When to Use This Skill
 
-Use this skill when encountering any of the following scenarios:
+This skill should be used when encountering any of the following scenarios:
 
 **Workflow Development:**
 - "Create a Latch workflow for RNA-seq analysis"

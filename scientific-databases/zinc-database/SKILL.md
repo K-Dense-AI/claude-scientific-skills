@@ -11,7 +11,7 @@ Facilitate access to and querying of the ZINC database, a freely accessible repo
 
 ## When to Use This Skill
 
-Use this skill when queries involve:
+This skill should be used when queries involve:
 
 - **Virtual screening**: Finding compounds for molecular docking studies
 - **Lead discovery**: Identifying commercially-available compounds for drug development
