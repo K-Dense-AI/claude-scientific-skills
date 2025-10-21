@@ -76,6 +76,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **PyMOO** - Multi-objective optimization with evolutionary algorithms
 - **PyTorch Lightning** - Structured PyTorch training with automatic optimization
 - **scikit-learn** - Machine learning algorithms, preprocessing, and model selection
+- **statsmodels** - Statistical modeling and econometrics (OLS, GLM, logit/probit, ARIMA, time series forecasting, hypothesis testing, diagnostics)
 - **Torch Geometric** - Graph Neural Networks for molecular and geometric data
 - **Transformers** - Hugging Face transformers for NLU, image classification, and generation
 - **UMAP-learn** - Dimensionality reduction and manifold learning
