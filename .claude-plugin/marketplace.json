@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.33.0"
+    "version": "1.34.0"
   },
   "plugins": [
     {
@@ -101,6 +101,7 @@
         "./scientific-thinking/peer-review",
         "./scientific-thinking/scientific-brainstorming",
         "./scientific-thinking/scientific-critical-thinking",
+        "./scientific-thinking/scientific-writing",
         "./scientific-thinking/statistical-analysis",
         "./scientific-thinking/scientific-visualization",
         "./scientific-thinking/document-skills/docx",

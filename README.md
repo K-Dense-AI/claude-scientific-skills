@@ -120,6 +120,7 @@ After installing the plugin, you can use the skill by just mentioning it. Additi
 - **Scientific Brainstorming** - Conversational brainstorming partner for generating novel research ideas, exploring connections, challenging assumptions, and developing creative approaches through structured ideation workflows
 - **Scientific Critical Thinking** - Tools and approaches for rigorous scientific reasoning and evaluation
 - **Scientific Visualization** - Best practices and templates for creating publication-quality scientific figures
+- **Scientific Writing** - Comprehensive toolkit for writing, structuring, and formatting scientific research papers using IMRAD format, multiple citation styles (APA, AMA, Vancouver, Chicago, IEEE), reporting guidelines (CONSORT, STROBE, PRISMA), effective figures and tables, and core writing principles for clarity, conciseness, and accuracy across all scientific disciplines
 - **Statistical Analysis** - Comprehensive statistical testing, power analysis, and experimental design
 
 **Document Processing:**
