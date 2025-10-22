@@ -57,14 +57,11 @@ jobs:
         id: release_notes
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          VERSION="${{ steps.get_version.outputs.version }}"
           PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
           
           # Start release notes
           cat > release_notes.md << 'EOF'
-          ## Claude Scientific Skills v$VERSION
-          
-          ### What's Changed
+          ## What's Changed
           
           EOF
           
@@ -82,9 +79,6 @@ jobs:
             git log --pretty=format:"* %s (%h)" --no-merges --max-count=20 >> release_notes.md
           fi
           
-          # Replace $VERSION in the file
-          sed -i "s/\$VERSION/$VERSION/g" release_notes.md
-          
           cat release_notes.md
       
       - name: Create Release
@@ -92,7 +86,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.tag }}
-          name: Claude Scientific Skills v${{ steps.get_version.outputs.version }}
+          name: v${{ steps.get_version.outputs.version }}
           body_path: release_notes.md
           draft: false
           prerelease: false
