@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "plugins": [
     {
@@ -36,6 +36,7 @@
         "./scientific-packages/matplotlib",
         "./scientific-packages/medchem",
         "./scientific-packages/molfeat",
+        "./scientific-packages/paper-2-web",
         "./scientific-packages/polars",
         "./scientific-packages/pydeseq2",
         "./scientific-packages/pymatgen",

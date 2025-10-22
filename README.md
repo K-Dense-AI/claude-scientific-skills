@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 24 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, and more |
-| 🔬 **Scientific Packages** | 41 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
+| 🔬 **Scientific Packages** | 42 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🎯 **Context Initialization** | 1 | Auto-invoked skill to ensure Claude uses existing skills effectively |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -247,7 +247,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ---
 
 ### 🔬 Scientific Packages
-**41 specialized Python packages** organized by domain.
+**42 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
@@ -296,9 +296,10 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 </details>
 
 <details>
-<summary><strong>Additional Packages (4 packages)</strong></summary>
+<summary><strong>Additional Packages (5 packages)</strong></summary>
 
 - BIOMNI (Multi-omics), ETE Toolkit (Phylogenetics)
+- Paper-2-Web (Academic paper dissemination and presentation)
 - scikit-bio (Sequence analysis), Zarr (Array storage)
 
 </details>
