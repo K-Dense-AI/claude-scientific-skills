@@ -1,0 +1,107 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.claude-plugin/marketplace.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for release notes
+      
+      - name: Extract version from marketplace.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.metadata.version' .claude-plugin/marketplace.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+      
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} does not exist"
+          fi
+      
+      - name: Get previous tag
+        id: previous_tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "previous_tag=" >> $GITHUB_OUTPUT
+            echo "No previous tag found"
+          else
+            echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+            echo "Previous tag: $PREVIOUS_TAG"
+          fi
+      
+      - name: Generate release notes
+        id: release_notes
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
+          
+          # Start release notes
+          cat > release_notes.md << 'EOF'
+          ## Claude Scientific Skills v$VERSION
+          
+          ### What's Changed
+          
+          EOF
+          
+          # Generate changelog from commits
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "Changes since $PREVIOUS_TAG:" >> release_notes.md
+            echo "" >> release_notes.md
+            
+            # Get commits with nice formatting
+            git log ${PREVIOUS_TAG}..HEAD --pretty=format:"* %s (%h)" --no-merges >> release_notes.md
+          else
+            echo "Initial release of Claude Scientific Skills" >> release_notes.md
+            echo "" >> release_notes.md
+            echo "This release includes:" >> release_notes.md
+            git log --pretty=format:"* %s (%h)" --no-merges --max-count=20 >> release_notes.md
+          fi
+          
+          # Replace $VERSION in the file
+          sed -i "s/\$VERSION/$VERSION/g" release_notes.md
+          
+          cat release_notes.md
+      
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          name: Claude Scientific Skills v${{ steps.get_version.outputs.version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Skip release creation
+        if: steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "Release v${{ steps.get_version.outputs.version }} already exists. Skipping release creation."
+
