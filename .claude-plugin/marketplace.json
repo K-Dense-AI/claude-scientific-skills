@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.40.0"
+    "version": "1.50.0"
   },
   "plugins": [
     {
@@ -124,6 +124,12 @@
         "./scientific-integrations/omero-integration",
         "./scientific-integrations/opentrons-integration"
       ]
+    },
+    {
+      "name": "scientific-context-initialization",
+      "description": "Always Auto-invoked skill that creates/updates workspace AGENT.md to instruct the agent to always search for existing skills before attempting any scientific task",
+      "source": "./scientific-helpers/scientific-context-initialization",
+      "strict": false
     }
   ]
 }
