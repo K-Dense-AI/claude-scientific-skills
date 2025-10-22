@@ -106,36 +106,70 @@ Use our newly released MCP server that allows you to use any Claude Skill in any
 
 ## 💡 Quick Examples
 
-Once you've installed the skills, you can ask Claude:
+Once you've installed the skills, you can ask Claude to execute complex multi-step scientific workflows:
 
-### Cheminformatics
+### End-to-End Drug Discovery Pipeline
 ```
-"Use PubChem to find information about aspirin and calculate its molecular properties"
-```
-
-### Bioinformatics
-```
-"Analyze this protein sequence using BioPython and predict its secondary structure"
-```
-
-### Data Analysis
-```
-"Perform exploratory data analysis on this RNA-seq dataset and create publication-quality plots"
+"I need to find novel EGFR inhibitors for lung cancer treatment. Query ChEMBL for existing 
+EGFR inhibitors with IC50 < 50nM, analyze their structure-activity relationships using RDKit, 
+generate similar molecules with improved properties using datamol, perform virtual screening 
+with DiffDock against the AlphaFold-predicted EGFR structure, and search PubMed for recent 
+papers on resistance mechanisms to prioritize scaffolds. Finally, check COSMIC for common 
+EGFR mutations and assess how our candidates might interact with mutant forms."
 ```
 
-### Drug Discovery
+### Comprehensive Single-Cell Analysis Workflow
 ```
-"Search ChEMBL for kinase inhibitors with IC50 < 100nM and visualize their structures"
+"Load this 10X Genomics dataset using Scanpy, perform quality control and doublet removal, 
+integrate with public data from Cellxgene Census for the same tissue type, identify cell 
+populations using known markers from NCBI Gene, perform differential expression analysis 
+with PyDESeq2, run gene regulatory network inference with Arboreto, query Reactome and 
+KEGG for pathway enrichment, and create publication-quality visualizations with matplotlib. 
+Then cross-reference top dysregulated genes with Open Targets to identify potential 
+therapeutic targets."
 ```
 
-### Literature Review
+### Multi-Omics Integration for Biomarker Discovery
 ```
-"Search PubMed for recent papers on CRISPR-Cas9 applications in cancer therapy"
+"I have RNA-seq, proteomics, and metabolomics data from cancer patients. Use PyDESeq2 for 
+differential expression, pyOpenMS to analyze mass spec data, and integrate metabolite 
+information from HMDB and Metabolomics Workbench. Map proteins to pathways using UniProt 
+and KEGG, identify protein-protein interactions via STRING, correlate multi-omics layers 
+using statsmodels, and build a machine learning model with scikit-learn to predict patient 
+outcomes. Search ClinicalTrials.gov for ongoing trials targeting the top candidates."
 ```
 
-### Protein Structure
+### Structure-Based Virtual Screening Campaign
 ```
-"Retrieve the AlphaFold structure prediction for human p53 and analyze confidence scores"
+"I want to discover allosteric modulators for a protein-protein interaction. Retrieve the 
+AlphaFold structure for both proteins, identify the interaction interface using BioPython, 
+search ZINC15 for molecules with suitable properties for allosteric binding (MW 300-500, 
+logP 2-4), filter for drug-likeness using RDKit, perform molecular docking with DiffDock 
+to identify potential allosteric sites, rank candidates using DeepChem's property prediction 
+models, check PubChem for suppliers, and search USPTO patents to assess freedom to operate. 
+Finally, generate analogs with MedChem and molfeat for lead optimization."
+```
+
+### Clinical Genomics Variant Interpretation Pipeline
+```
+"Analyze this VCF file from a patient with suspected hereditary cancer. Use pysam to parse 
+variants, annotate with Ensembl for functional consequences, query ClinVar for known 
+pathogenic variants, check COSMIC for somatic mutations in cancer, retrieve gene information 
+from NCBI Gene, analyze protein impact using UniProt, search PubMed for case reports of 
+similar variants, query ClinPGx for pharmacogenomic implications, and generate a clinical 
+report with ReportLab. Then search ClinicalTrials.gov for precision medicine trials matching 
+the patient's profile."
+```
+
+### Systems Biology Network Analysis
+```
+"Starting with a list of differentially expressed genes from my RNA-seq experiment, query 
+NCBI Gene for detailed annotations, retrieve protein sequences from UniProt, identify 
+protein-protein interactions using STRING, map to biological pathways in Reactome and KEGG, 
+analyze network topology with Torch Geometric, identify hub genes and bottleneck proteins, 
+perform gene regulatory network reconstruction with Arboreto, integrate with Open Targets 
+for druggability assessment, use PyMC for Bayesian network modeling, and create interactive 
+network visualizations. Finally, search GEO for similar expression patterns across diseases."
 ```
 
 ---
