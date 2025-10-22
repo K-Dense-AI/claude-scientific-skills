@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-71%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-72%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -47,6 +47,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | 📊 **Scientific Databases** | 24 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, and more |
 | 🔬 **Scientific Packages** | 41 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
+| 🎯 **Context Initialization** | 1 | Auto-invoked skill to ensure Claude uses existing skills effectively |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
 
 ---
@@ -80,9 +81,12 @@ Then, to install a specific set of skills:
    - `scientific-packages` - 40 specialized Python packages
    - `scientific-thinking` - Analysis tools and document processing
    - `scientific-integrations` - Lab automation and platform integrations
+   - `scientific-context-initialization` - Ensures Claude searches for and uses existing skills
 4. Select **Install now**
 
 After installation, simply mention the skill or describe your task - Claude Code will automatically use the appropriate skills!
+
+> 💡 **Tip**: If you find that Claude isn't utilizing the installed skills as much as you'd like, install the `scientific-context-initialization` skill. It automatically creates/updates an `AGENT.md` file in your workspace that instructs Claude to always search for and use existing skills before attempting any scientific task. This ensures Claude leverages documented patterns, authentication methods, working examples, and best practices from the repository.
 
 ### Any MCP Client (including ChatGPT, Cursor, Google ADK, OpenAI Agent SDK, etc.)
 Use our newly released MCP server that allows you to use any Claude Skill in any client!
@@ -360,6 +364,11 @@ Your contributions help make scientific computing more accessible and enable res
 ## 🔧 Troubleshooting
 
 ### Common Issues
+
+**Problem: Claude not using installed skills**
+- Solution: Install the `scientific-context-initialization` skill
+- This creates an `AGENT.md` file that instructs Claude to search for and use existing skills before attempting tasks
+- After installation, Claude will automatically leverage documented patterns, examples, and best practices
 
 **Problem: Skills not loading in Claude Code**
 - Solution: Ensure you've installed the latest version of Claude Code
