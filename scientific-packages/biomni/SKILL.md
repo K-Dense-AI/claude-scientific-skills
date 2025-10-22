@@ -1,375 +1,316 @@
 ---
 name: biomni
-description: "AI agent for autonomous biomedical task execution. CRISPR design, scRNA-seq, ADMET, GWAS, structure prediction, multi-omics, with automated planning/code generation, for complex workflows."
+description: Autonomous biomedical AI agent framework for executing complex research tasks across genomics, drug discovery, molecular biology, and clinical analysis. Use this skill when conducting multi-step biomedical research including CRISPR screening design, single-cell RNA-seq analysis, ADMET prediction, GWAS interpretation, rare disease diagnosis, or lab protocol optimization. Leverages LLM reasoning with code execution and integrated biomedical databases.
 ---
 
 # Biomni
 
 ## Overview
 
-Biomni is a general-purpose biomedical AI agent that autonomously executes research tasks across diverse biomedical subfields. Use Biomni to combine large language model reasoning with retrieval-augmented planning and code-based execution for scientific productivity and hypothesis generation. The system operates with an ~11GB biomedical knowledge base covering molecular, genomic, and clinical domains.
+Biomni is an open-source biomedical AI agent framework from Stanford's SNAP lab that autonomously executes complex research tasks across biomedical domains. Use this skill when working on multi-step biological reasoning tasks, analyzing biomedical data, or conducting research spanning genomics, drug discovery, molecular biology, and clinical analysis.
+
+## Core Capabilities
+
+Biomni excels at:
+
+1. **Multi-step biological reasoning** - Autonomous task decomposition and planning for complex biomedical queries
+2. **Code generation and execution** - Dynamic analysis pipeline creation for data processing
+3. **Knowledge retrieval** - Access to ~11GB of integrated biomedical databases and literature
+4. **Cross-domain problem solving** - Unified interface for genomics, proteomics, drug discovery, and clinical tasks
+
+## When to Use This Skill
+
+Use biomni for:
+- **CRISPR screening** - Design screens, prioritize genes, analyze knockout effects
+- **Single-cell RNA-seq** - Cell type annotation, differential expression, trajectory analysis
+- **Drug discovery** - ADMET prediction, target identification, compound optimization
+- **GWAS analysis** - Variant interpretation, causal gene identification, pathway enrichment
+- **Clinical genomics** - Rare disease diagnosis, variant pathogenicity, phenotype-genotype mapping
+- **Lab protocols** - Protocol optimization, literature synthesis, experimental design
 
 ## Quick Start
 
-Initialize and use the Biomni agent with these basic steps:
+### Installation and Setup
+
+Biomni requires conda environment setup and API keys for LLM providers:
+
+```bash
+# Clone repository and set up environment
+git clone https://github.com/snap-stanford/biomni
+cd biomni
+bash setup.sh
+
+# Or install via pip
+conda activate biomni_e1
+pip install biomni --upgrade
+```
+
+Configure API keys (store in `.env` file or environment variables):
+```bash
+export ANTHROPIC_API_KEY="your-key-here"
+# Optional: OpenAI, Azure, Google, Groq, AWS Bedrock keys
+```
+
+Use `scripts/setup_environment.py` for interactive setup assistance.
+
+### Basic Usage Pattern
 
 ```python
 from biomni.agent import A1
 
-# Initialize agent with data path and LLM model
+# Initialize agent with data path and LLM choice
 agent = A1(path='./data', llm='claude-sonnet-4-20250514')
 
-# Execute a biomedical research task
-agent.go("Your biomedical task description")
+# Execute biomedical task autonomously
+agent.go("Your biomedical research question or task")
+
+# Save conversation history and results
+agent.save_conversation_history("report.pdf")
 ```
 
-The agent will autonomously decompose the task, retrieve relevant biomedical knowledge, generate and execute code, and provide results.
+## Working with Biomni
 
-## Installation and Setup
+### 1. Agent Initialization
 
-### Environment Preparation
-
-1. **Set up the conda environment:**
-   - Follow instructions in `biomni_env/README.md` from the repository
-   - Activate the environment: `conda activate biomni_e1`
-
-2. **Install the package:**
-   ```bash
-   pip install biomni --upgrade
-   ```
-
-   Or install from source:
-   ```bash
-   git clone https://github.com/snap-stanford/biomni.git
-   cd biomni
-   pip install -e .
-   ```
-
-3. **Configure API keys:**
-
-   Set up credentials via environment variables or `.env` file:
-   ```bash
-   export ANTHROPIC_API_KEY="your-key-here"
-   export OPENAI_API_KEY="your-key-here"  # Optional
-   ```
-
-4. **Data initialization:**
-
-   On first use, the agent will automatically download the ~11GB biomedical knowledge base.
-
-### LLM Provider Configuration
-
-Biomni supports multiple LLM providers. Configure the default provider using:
+The A1 class is the primary interface for biomni:
 
 ```python
+from biomni.agent import A1
 from biomni.config import default_config
 
-# Set the default LLM model
-default_config.llm = "claude-sonnet-4-20250514"  # Anthropic
-# default_config.llm = "gpt-4"  # OpenAI
-# default_config.llm = "azure/gpt-4"  # Azure OpenAI
-# default_config.llm = "gemini/gemini-pro"  # Google Gemini
-
-# Set timeout (optional)
-default_config.timeout_seconds = 1200
-
-# Set data path (optional)
-default_config.data_path = "./custom/data/path"
-```
-
-Refer to `references/llm_providers.md` for detailed configuration options for each provider.
-
-## Core Biomedical Research Tasks
-
-### 1. CRISPR Screening and Design
-
-Execute CRISPR screening tasks including guide RNA design, off-target analysis, and screening experiment planning:
-
-```python
-agent.go("Design a CRISPR screening experiment to identify genes involved in cancer cell resistance to drug X")
-```
-
-The agent will:
-- Retrieve relevant gene databases
-- Design guide RNAs with specificity analysis
-- Plan experimental controls and readout strategies
-- Generate analysis code for screening results
-
-### 2. Single-Cell RNA-seq Analysis
-
-Perform comprehensive scRNA-seq analysis workflows:
-
-```python
-agent.go("Analyze this 10X Genomics scRNA-seq dataset, identify cell types, and find differentially expressed genes between clusters")
-```
-
-Capabilities include:
-- Quality control and preprocessing
-- Dimensionality reduction and clustering
-- Cell type annotation using marker databases
-- Differential expression analysis
-- Pathway enrichment analysis
-
-### 3. Molecular Property Prediction (ADMET)
-
-Predict absorption, distribution, metabolism, excretion, and toxicity properties:
-
-```python
-agent.go("Predict ADMET properties for these drug candidates: [SMILES strings]")
-```
-
-The agent handles:
-- Molecular descriptor calculation
-- Property prediction using integrated models
-- Toxicity screening
-- Drug-likeness assessment
-
-### 4. Genomic Analysis
-
-Execute genomic data analysis tasks:
-
-```python
-agent.go("Perform GWAS analysis to identify SNPs associated with disease phenotype in this cohort")
-```
-
-Supports:
-- Genome-wide association studies (GWAS)
-- Variant calling and annotation
-- Population genetics analysis
-- Functional genomics integration
-
-### 5. Protein Structure and Function
-
-Analyze protein sequences and structures:
-
-```python
-agent.go("Predict the structure of this protein sequence and identify potential binding sites")
-```
-
-Capabilities:
-- Sequence analysis and domain identification
-- Structure prediction integration
-- Binding site prediction
-- Protein-protein interaction analysis
-
-### 6. Disease Diagnosis and Classification
-
-Perform disease classification from multi-omics data:
-
-```python
-agent.go("Build a classifier to diagnose disease X from patient RNA-seq and clinical data")
-```
-
-### 7. Systems Biology and Pathway Analysis
-
-Analyze biological pathways and networks:
-
-```python
-agent.go("Identify dysregulated pathways in this differential expression dataset")
-```
-
-### 8. Drug Discovery and Repurposing
-
-Support drug discovery workflows:
-
-```python
-agent.go("Identify FDA-approved drugs that could be repurposed for treating disease Y based on mechanism of action")
-```
-
-## Advanced Features
-
-### Custom Configuration per Agent
-
-Override global configuration for specific agent instances:
-
-```python
+# Basic initialization
 agent = A1(
-    path='./project_data',
-    llm='gpt-4o',
-    timeout=1800
+    path='./data',  # Path to data lake (~11GB downloaded on first use)
+    llm='claude-sonnet-4-20250514'  # LLM model selection
 )
+
+# Advanced configuration
+default_config.llm = "gpt-4"
+default_config.timeout_seconds = 1200
+default_config.max_iterations = 50
 ```
 
-### Conversation History and Reporting
+**Supported LLM Providers:**
+- Anthropic Claude (recommended): `claude-sonnet-4-20250514`, `claude-opus-4-20250514`
+- OpenAI: `gpt-4`, `gpt-4-turbo`
+- Azure OpenAI: via Azure configuration
+- Google Gemini: `gemini-2.0-flash-exp`
+- Groq: `llama-3.3-70b-versatile`
+- AWS Bedrock: Various models via Bedrock API
 
-Save execution traces as formatted PDF reports:
+See `references/llm_providers.md` for detailed LLM configuration instructions.
+
+### 2. Task Execution Workflow
+
+Biomni follows an autonomous agent workflow:
 
 ```python
-# After executing tasks
-agent.save_conversation_history(
-    output_path='./reports/experiment_log.pdf',
-    format='pdf'
+# Step 1: Initialize agent
+agent = A1(path='./data', llm='claude-sonnet-4-20250514')
+
+# Step 2: Execute task with natural language query
+result = agent.go("""
+Design a CRISPR screen to identify genes regulating autophagy in
+HEK293 cells. Prioritize genes based on essentiality and pathway
+relevance.
+""")
+
+# Step 3: Review generated code and analysis
+# Agent autonomously:
+# - Decomposes task into sub-steps
+# - Retrieves relevant biological knowledge
+# - Generates and executes analysis code
+# - Interprets results and provides insights
+
+# Step 4: Save results
+agent.save_conversation_history("autophagy_screen_report.pdf")
+```
+
+### 3. Common Task Patterns
+
+#### CRISPR Screening Design
+```python
+agent.go("""
+Design a genome-wide CRISPR knockout screen for identifying genes
+affecting [phenotype] in [cell type]. Include:
+1. sgRNA library design
+2. Gene prioritization criteria
+3. Expected hit genes based on pathway analysis
+""")
+```
+
+#### Single-Cell RNA-seq Analysis
+```python
+agent.go("""
+Analyze this single-cell RNA-seq dataset:
+- Perform quality control and filtering
+- Identify cell populations via clustering
+- Annotate cell types using marker genes
+- Conduct differential expression between conditions
+File path: [path/to/data.h5ad]
+""")
+```
+
+#### Drug ADMET Prediction
+```python
+agent.go("""
+Predict ADMET properties for these drug candidates:
+[SMILES strings or compound IDs]
+Focus on:
+- Absorption (Caco-2 permeability, HIA)
+- Distribution (plasma protein binding, BBB penetration)
+- Metabolism (CYP450 interaction)
+- Excretion (clearance)
+- Toxicity (hERG liability, hepatotoxicity)
+""")
+```
+
+#### GWAS Variant Interpretation
+```python
+agent.go("""
+Interpret GWAS results for [trait/disease]:
+- Identify genome-wide significant variants
+- Map variants to causal genes
+- Perform pathway enrichment analysis
+- Predict functional consequences
+Summary statistics file: [path/to/gwas_summary.txt]
+""")
+```
+
+See `references/use_cases.md` for comprehensive task examples across all biomedical domains.
+
+### 4. Data Integration
+
+Biomni integrates ~11GB of biomedical knowledge sources:
+- **Gene databases** - Ensembl, NCBI Gene, UniProt
+- **Protein structures** - PDB, AlphaFold
+- **Clinical datasets** - ClinVar, OMIM, HPO
+- **Literature indices** - PubMed abstracts, biomedical ontologies
+- **Pathway databases** - KEGG, Reactome, GO
+
+Data is automatically downloaded to the specified `path` on first use.
+
+### 5. MCP Server Integration
+
+Extend biomni with external tools via Model Context Protocol:
+
+```python
+# MCP servers can provide:
+# - FDA drug databases
+# - Web search for literature
+# - Custom biomedical APIs
+# - Laboratory equipment interfaces
+
+# Configure MCP servers in .biomni/mcp_config.json
+```
+
+### 6. Evaluation Framework
+
+Benchmark agent performance on biomedical tasks:
+
+```python
+from biomni.eval import BiomniEval1
+
+evaluator = BiomniEval1()
+
+# Evaluate on specific task types
+score = evaluator.evaluate(
+    task_type='crispr_design',
+    instance_id='test_001',
+    answer=agent_output
 )
+
+# Access evaluation dataset
+dataset = evaluator.load_dataset()
 ```
-
-Requires one of: WeasyPrint, markdown2pdf, or Pandoc.
-
-### Model Context Protocol (MCP) Integration
-
-Extend agent capabilities with external tools:
-
-```python
-# Add MCP-compatible tools
-agent.add_mcp(config_path='./mcp_config.json')
-```
-
-MCP enables integration with:
-- Laboratory information management systems (LIMS)
-- Specialized bioinformatics databases
-- Custom analysis pipelines
-- External computational resources
-
-### Using Biomni-R0 (Specialized Reasoning Model)
-
-Deploy the 32B parameter Biomni-R0 model for enhanced biological reasoning:
-
-```bash
-# Install SGLang
-pip install "sglang[all]"
-
-# Deploy Biomni-R0
-python -m sglang.launch_server \
-    --model-path snap-stanford/biomni-r0 \
-    --port 30000 \
-    --trust-remote-code
-```
-
-Then configure the agent:
-
-```python
-from biomni.config import default_config
-
-default_config.llm = "openai/biomni-r0"
-default_config.api_base = "http://localhost:30000/v1"
-```
-
-Biomni-R0 provides specialized reasoning for:
-- Complex multi-step biological workflows
-- Hypothesis generation and evaluation
-- Experimental design optimization
-- Literature-informed analysis
 
 ## Best Practices
 
-### Task Specification
-
-Provide clear, specific task descriptions:
-
-✅ **Good:** "Analyze this scRNA-seq dataset (file: data.h5ad) to identify T cell subtypes, then perform differential expression analysis comparing activated vs. resting T cells"
-
-❌ **Vague:** "Analyze my RNA-seq data"
-
-### Data Organization
-
-Structure data directories for efficient retrieval:
-
-```
-project/
-├── data/              # Biomni knowledge base
-├── raw_data/          # Your experimental data
-├── results/           # Analysis outputs
-└── reports/           # Generated reports
-```
-
-### Iterative Refinement
-
-Use iterative task execution for complex analyses:
-
-```python
-# Step 1: Exploratory analysis
-agent.go("Load and perform initial QC on the proteomics dataset")
-
-# Step 2: Based on results, refine analysis
-agent.go("Based on the QC results, remove low-quality samples and normalize using method X")
-
-# Step 3: Downstream analysis
-agent.go("Perform differential abundance analysis with adjusted parameters")
-```
+### Task Formulation
+- **Be specific** - Include biological context, organism, cell type, conditions
+- **Specify outputs** - Clearly state desired analysis outputs and formats
+- **Provide data paths** - Include file paths for datasets to analyze
+- **Set constraints** - Mention time/computational limits if relevant
 
 ### Security Considerations
+⚠️ **Important**: Biomni executes LLM-generated code with full system privileges. For production use:
+- Run in isolated environments (Docker, VMs)
+- Avoid exposing sensitive credentials
+- Review generated code before execution in sensitive contexts
+- Use sandboxed execution environments when possible
 
-**CRITICAL:** Biomni executes LLM-generated code with full system privileges. For production use:
+### Performance Optimization
+- **Choose appropriate LLMs** - Claude Sonnet 4 recommended for balance of speed/quality
+- **Set reasonable timeouts** - Adjust `default_config.timeout_seconds` for complex tasks
+- **Monitor iterations** - Track `max_iterations` to prevent runaway loops
+- **Cache data** - Reuse downloaded data lake across sessions
 
-1. **Use sandboxed environments:** Deploy in Docker containers or VMs with restricted permissions
-2. **Validate sensitive operations:** Review code before execution for file access, network calls, or credential usage
-3. **Limit data access:** Restrict agent access to only necessary data directories
-4. **Monitor execution:** Log all executed code for audit trails
+### Result Documentation
+```python
+# Always save conversation history for reproducibility
+agent.save_conversation_history("results/project_name_YYYYMMDD.pdf")
 
-Never run Biomni with:
-- Unrestricted file system access
-- Direct access to sensitive credentials
-- Network access to production systems
-- Elevated system privileges
+# Include in reports:
+# - Original task description
+# - Generated analysis code
+# - Results and interpretations
+# - Data sources used
+```
 
-### Model Selection Guidelines
+## Resources
 
-Choose models based on task complexity:
+### References
+Detailed documentation available in the `references/` directory:
 
-- **Claude Sonnet 4:** Recommended for most biomedical tasks, excellent biological reasoning
-- **GPT-4/GPT-4o:** Strong general capabilities, good for diverse tasks
-- **Biomni-R0:** Specialized for complex biological reasoning, multi-step workflows
-- **Smaller models:** Use for simple, well-defined tasks to reduce cost
+- **`api_reference.md`** - Complete API documentation for A1 class, configuration, and evaluation
+- **`llm_providers.md`** - LLM provider setup (Anthropic, OpenAI, Azure, Google, Groq, AWS)
+- **`use_cases.md`** - Comprehensive task examples for all biomedical domains
 
-## Evaluation and Benchmarking
+### Scripts
+Helper scripts in the `scripts/` directory:
 
-Biomni-Eval1 benchmark contains 433 evaluation instances across 10 biological tasks:
+- **`setup_environment.py`** - Interactive environment and API key configuration
+- **`generate_report.py`** - Enhanced PDF report generation with custom formatting
 
-- GWAS analysis
-- Disease diagnosis
-- Gene detection and classification
-- Molecular property prediction
-- Pathway analysis
-- Protein function prediction
-- Drug response prediction
-- Variant interpretation
-- Cell type annotation
-- Biomarker discovery
-
-Use the benchmark to:
-- Evaluate custom agent configurations
-- Compare LLM providers for specific tasks
-- Validate analysis pipelines
+### External Resources
+- **GitHub**: https://github.com/snap-stanford/biomni
+- **Web Platform**: https://biomni.stanford.edu
+- **Paper**: https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1
+- **Model**: https://huggingface.co/biomni/Biomni-R0-32B-Preview
+- **Evaluation Dataset**: https://huggingface.co/datasets/biomni/Eval1
 
 ## Troubleshooting
 
 ### Common Issues
 
-**Issue:** Data download fails or times out
-**Solution:** Manually download the knowledge base or increase timeout settings
+**Data download fails**
+```python
+# Manually trigger data lake download
+agent = A1(path='./data', llm='your-llm')
+# First .go() call will download data
+```
 
-**Issue:** Package dependency conflicts
-**Solution:** Some optional dependencies cannot be installed by default due to conflicts. Install specific packages manually and uncomment relevant code sections as documented in the repository
+**API key errors**
+```bash
+# Verify environment variables
+echo $ANTHROPIC_API_KEY
+# Or check .env file in working directory
+```
 
-**Issue:** LLM API errors
-**Solution:** Verify API key configuration, check rate limits, ensure sufficient credits
+**Timeout on complex tasks**
+```python
+from biomni.config import default_config
+default_config.timeout_seconds = 3600  # 1 hour
+```
 
-**Issue:** Memory errors with large datasets
-**Solution:** Process data in chunks, use data subsampling, or deploy on higher-memory instances
+**Memory issues with large datasets**
+- Use streaming for large files
+- Process data in chunks
+- Increase system memory allocation
 
 ### Getting Help
 
-For detailed troubleshooting:
-- Review the Biomni GitHub repository issues
-- Check `references/api_reference.md` for detailed API documentation
-- Consult `references/task_examples.md` for comprehensive task patterns
-
-## Resources
-
-### references/
-Detailed reference documentation for advanced usage:
-
-- **api_reference.md:** Complete API documentation for A1 agent, configuration objects, and utility functions
-- **llm_providers.md:** Comprehensive guide for configuring all supported LLM providers (Anthropic, OpenAI, Azure, Gemini, Groq, Ollama, AWS Bedrock)
-- **task_examples.md:** Extensive collection of biomedical task examples with code patterns
-
-### scripts/
-Helper scripts for common operations:
-
-- **setup_environment.py:** Automated environment setup and validation
-- **generate_report.py:** Enhanced PDF report generation with custom formatting
-
-Load reference documentation as needed:
-```python
-# Claude can read reference files when needed for detailed information
-# Example: "Check references/llm_providers.md for Azure OpenAI configuration"
-```
+For issues or questions:
+- GitHub Issues: https://github.com/snap-stanford/biomni/issues
+- Documentation: Check `references/` files for detailed guidance
+- Community: Stanford SNAP lab and biomni contributors

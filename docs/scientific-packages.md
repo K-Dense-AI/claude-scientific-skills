@@ -56,7 +56,7 @@
 - **scikit-bio** - Bioinformatics sequence analysis and diversity metrics
 - **Zarr** - Chunked, compressed N-dimensional array storage
 
-## Multi-omics & Integration
-- **BIOMNI** - Multi-omics data integration with LLM-powered analysis
+## Multi-omics & AI Agent Frameworks
+- **BIOMNI** - Autonomous biomedical AI agent framework from Stanford SNAP lab for executing complex research tasks across genomics, drug discovery, molecular biology, and clinical analysis. Combines LLM reasoning with code execution and ~11GB of integrated biomedical databases (Ensembl, NCBI Gene, UniProt, PDB, AlphaFold, ClinVar, OMIM, HPO, PubMed, KEGG, Reactome, GO). Supports multiple LLM providers (Claude, GPT-4, Gemini, Groq, Bedrock). Includes A1 agent class for autonomous task decomposition, BiomniEval1 benchmark framework, and MCP server integration. Use cases: CRISPR screening design, single-cell RNA-seq analysis, ADMET prediction, GWAS interpretation, rare disease diagnosis, protein structure analysis, literature synthesis, and multi-omics integration
 
 
