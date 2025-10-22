@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-72%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-73%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 24 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, and more |
-| 🔬 **Scientific Packages** | 42 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
+| 🔬 **Scientific Packages** | 43 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🎯 **Context Initialization** | 1 | Auto-invoked skill to ensure Claude uses existing skills effectively |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -78,7 +78,7 @@ Then, to install a specific set of skills:
 2. Select **claude-scientific-skills**
 3. Choose from:
    - `scientific-databases` - Access to 24 scientific databases
-   - `scientific-packages` - 40 specialized Python packages
+   - `scientific-packages` - 43 specialized Python packages
    - `scientific-thinking` - Analysis tools and document processing
    - `scientific-integrations` - Lab automation and platform integrations
    - `scientific-context-initialization` - Ensures Claude searches for and uses existing skills
@@ -247,7 +247,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ---
 
 ### 🔬 Scientific Packages
-**42 specialized Python packages** organized by domain.
+**43 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
@@ -296,11 +296,12 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 </details>
 
 <details>
-<summary><strong>Additional Packages (5 packages)</strong></summary>
+<summary><strong>Additional Packages (6 packages)</strong></summary>
 
 - BIOMNI (Multi-omics), ETE Toolkit (Phylogenetics)
 - Paper-2-Web (Academic paper dissemination and presentation)
-- scikit-bio (Sequence analysis), Zarr (Array storage)
+- scikit-bio (Sequence analysis), ToolUniverse (600+ scientific tool ecosystem)
+- Zarr (Array storage)
 
 </details>
 
