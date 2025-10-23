@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-73%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-74%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -44,7 +44,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| 📊 **Scientific Databases** | 24 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, and more |
+| 📊 **Scientific Databases** | 25 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, bioRxiv, and more |
 | 🔬 **Scientific Packages** | 43 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🎯 **Context Initialization** | 1 | Auto-invoked skill to ensure Claude uses existing skills effectively |
@@ -77,7 +77,7 @@ Then, to install a specific set of skills:
 1. Select **Browse and install plugins**
 2. Select **claude-scientific-skills**
 3. Choose from:
-   - `scientific-databases` - Access to 24 scientific databases
+   - `scientific-databases` - Access to 25 scientific databases
    - `scientific-packages` - 43 specialized Python packages
    - `scientific-thinking` - Analysis tools and document processing
    - `scientific-integrations` - Lab automation and platform integrations
@@ -210,7 +210,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ## 📚 Available Skills
 
 ### 🗄️ Scientific Databases
-**24 comprehensive databases** including PubMed, PubChem, UniProt, ChEMBL, AlphaFold DB, COSMIC, Ensembl, KEGG, and more.
+**25 comprehensive databases** including PubMed, PubChem, UniProt, ChEMBL, AlphaFold DB, bioRxiv, COSMIC, Ensembl, KEGG, and more.
 
 📖 **[Full Database Documentation →](docs/scientific-databases.md)**
 
@@ -218,6 +218,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 <summary><strong>View all databases</strong></summary>
 
 - **AlphaFold DB** - AI-predicted protein structures (200M+ predictions)
+- **bioRxiv** - Life sciences preprint server with medRxiv integration
 - **ChEMBL** - Bioactive molecules and drug-like properties
 - **ClinPGx** - Clinical pharmacogenomics and gene-drug interactions
 - **ClinVar** - Genomic variants and clinical significance

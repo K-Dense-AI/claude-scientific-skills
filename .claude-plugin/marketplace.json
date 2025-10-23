@@ -68,6 +68,7 @@
       "strict": false,
       "skills": [
         "./scientific-databases/alphafold-database",
+        "./scientific-databases/biorxiv-database",
         "./scientific-databases/chembl-database",
         "./scientific-databases/clinpgx-database",
         "./scientific-databases/clinvar-database",
