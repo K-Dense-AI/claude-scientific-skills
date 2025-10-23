@@ -55,6 +55,7 @@
         "./scientific-packages/scvi-tools",
         "./scientific-packages/scikit-bio",
         "./scientific-packages/scikit-learn",
+        "./scientific-packages/scikit-survival",
         "./scientific-packages/seaborn",
         "./scientific-packages/shap",
         "./scientific-packages/simpy",
