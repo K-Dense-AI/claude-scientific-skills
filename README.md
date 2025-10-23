@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-74%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-77%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,9 +45,9 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 25 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 43 | BioPython, RDKit, PyTorch, Scanpy, and specialized tools |
+| 🔬 **Scientific Packages** | 46 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
-| 🎯 **Context Initialization** | 1 | Auto-invoked skill to ensure Claude uses existing skills effectively |
+| 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
 
 ---
@@ -78,7 +78,7 @@ Then, to install a specific set of skills:
 2. Select **claude-scientific-skills**
 3. Choose from:
    - `scientific-databases` - Access to 25 scientific databases
-   - `scientific-packages` - 43 specialized Python packages
+   - `scientific-packages` - 46 specialized Python packages
    - `scientific-thinking` - Analysis tools and document processing
    - `scientific-integrations` - Lab automation and platform integrations
    - `scientific-context-initialization` - Ensures Claude searches for and uses existing skills
@@ -248,15 +248,15 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ---
 
 ### 🔬 Scientific Packages
-**43 specialized Python packages** organized by domain.
+**44 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
 <details>
-<summary><strong>Bioinformatics & Genomics (11 packages)</strong></summary>
+<summary><strong>Bioinformatics & Genomics (12 packages)</strong></summary>
 
 - AnnData, Arboreto, BioPython, BioServices, Cellxgene Census
-- deepTools, FlowIO, gget, pysam, PyDESeq2, Scanpy
+- deepTools, FlowIO, gget, pysam, PyDESeq2, Scanpy, scvi-tools
 
 </details>
 
@@ -275,9 +275,9 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 </details>
 
 <details>
-<summary><strong>Machine Learning & Deep Learning (8 packages)</strong></summary>
+<summary><strong>Machine Learning & Deep Learning (9 packages)</strong></summary>
 
-- PyMC, PyMOO, PyTorch Lightning, scikit-learn, statsmodels
+- PyMC, PyMOO, PyTorch Lightning, scikit-learn, SHAP, statsmodels
 - Torch Geometric, Transformers, UMAP-learn
 
 </details>
@@ -341,6 +341,14 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 - **LatchBio** - Workflow platform and cloud execution
 - **OMERO** - Microscopy and bio-image data management
 - **Opentrons** - Laboratory automation protocols
+
+---
+
+### 🛠️ Scientific Helpers
+**2 helper utilities** for enhanced scientific computing capabilities.
+
+- **scientific-context-initialization** - Auto-invoked skill that creates/updates workspace AGENT.md to instruct Claude to search for and use existing skills before attempting any scientific task
+- **get-available-resources** - Detects available system resources (CPU cores, GPUs, memory, disk space) and generates strategic recommendations for computational approaches (parallel processing, out-of-core computing, GPU acceleration)
 
 ---
 
