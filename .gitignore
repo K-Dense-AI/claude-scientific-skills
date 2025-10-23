@@ -9,3 +9,5 @@ uv.lock
 .venv/
 .python-version
 main.py
+
+__pycache__/
