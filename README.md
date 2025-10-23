@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-80%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-83-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 25 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 49 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, and more |
+| 🔬 **Scientific Packages** | 50 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, and more |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -78,7 +78,7 @@ Then, to install a specific set of skills:
 2. Select **claude-scientific-skills**
 3. Choose from:
    - `scientific-databases` - Access to 25 scientific databases
-   - `scientific-packages` - 48 specialized Python packages
+   - `scientific-packages` - 50 specialized Python packages
    - `scientific-thinking` - Analysis tools and document processing
    - `scientific-integrations` - Lab automation and platform integrations
    - `scientific-context-initialization` - Ensures Claude searches for and uses existing skills
@@ -275,10 +275,10 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 </details>
 
 <details>
-<summary><strong>Machine Learning & Deep Learning (9 packages)</strong></summary>
+<summary><strong>Machine Learning & Deep Learning (10 packages)</strong></summary>
 
-- PyMC, PyMOO, PyTorch Lightning, scikit-learn, SHAP, statsmodels
-- Torch Geometric, Transformers, UMAP-learn
+- PyMC, PyMOO, PyTorch Lightning, scikit-learn, scikit-survival, SHAP
+- statsmodels, Torch Geometric, Transformers, UMAP-learn
 
 </details>
 
