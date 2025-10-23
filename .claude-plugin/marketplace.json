@@ -41,6 +41,7 @@
         "./scientific-packages/polars",
         "./scientific-packages/pydeseq2",
         "./scientific-packages/pydicom",
+        "./scientific-packages/pyhealth",
         "./scientific-packages/pymatgen",
         "./scientific-packages/pymc",
         "./scientific-packages/pymoo",

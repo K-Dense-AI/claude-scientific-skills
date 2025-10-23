@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-79%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-80%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 25 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 48 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, and more |
+| 🔬 **Scientific Packages** | 49 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, and more |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -248,7 +248,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ---
 
 ### 🔬 Scientific Packages
-**46 specialized Python packages** organized by domain.
+**49 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
