@@ -29,6 +29,7 @@
         "./scientific-packages/deepchem",
         "./scientific-packages/deeptools",
         "./scientific-packages/diffdock",
+        "./scientific-packages/esm",
         "./scientific-packages/etetoolkit",
         "./scientific-packages/flowio",
         "./scientific-packages/gget",
@@ -49,9 +50,11 @@
         "./scientific-packages/rdkit",
         "./scientific-packages/reportlab",
         "./scientific-packages/scanpy",
+        "./scientific-packages/scvi-tools",
         "./scientific-packages/scikit-bio",
         "./scientific-packages/scikit-learn",
         "./scientific-packages/seaborn",
+        "./scientific-packages/shap",
         "./scientific-packages/statsmodels",
         "./scientific-packages/torch_geometric",
         "./scientific-packages/torchdrug",
@@ -132,6 +135,12 @@
       "name": "scientific-context-initialization",
       "description": "Always Auto-invoked skill that creates/updates workspace AGENT.md to instruct the agent to always search for existing skills before attempting any scientific task",
       "source": "./scientific-helpers/scientific-context-initialization",
+      "strict": false
+    },
+    {
+      "name": "get-available-resources",
+      "description": "Detects and reports available system resources (CPU cores, GPUs, memory, disk space) to inform computational approach decisions",
+      "source": "./scientific-helpers/get-available-resources",
       "strict": false
     }
   ]
