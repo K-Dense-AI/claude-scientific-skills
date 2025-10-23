@@ -50,6 +50,7 @@
 - **Matplotlib** - Publication-quality plotting and visualization
 - **Polars** - High-performance DataFrame operations with lazy evaluation
 - **Seaborn** - Statistical data visualization with dataset-oriented interface, automatic confidence intervals, publication-quality themes, colorblind-safe palettes, and comprehensive support for exploratory analysis, distribution comparisons, correlation matrices, regression plots, and multi-panel figures
+- **SimPy** - Process-based discrete-event simulation framework for modeling systems with processes, queues, and resource contention (manufacturing, service operations, network traffic, logistics). Supports generator-based process definition, multiple resource types (Resource, PriorityResource, PreemptiveResource, Container, Store), event-driven scheduling, process interaction mechanisms (signaling, interruption, parallel/sequential execution), real-time simulation synchronized with wall-clock time, and comprehensive monitoring capabilities for utilization, wait times, and queue statistics
 - **ReportLab** - Programmatic PDF generation for reports and documents
 
 ## Phylogenetics & Trees
