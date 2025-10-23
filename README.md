@@ -2,7 +2,7 @@
 
 [![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-77%2B-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-78%2B-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 25 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 46 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, and specialized tools |
+| 🔬 **Scientific Packages** | 47 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, and specialized tools |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -248,7 +248,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ---
 
 ### 🔬 Scientific Packages
-**44 specialized Python packages** organized by domain.
+**46 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
@@ -290,9 +290,9 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 </details>
 
 <details>
-<summary><strong>Data Analysis & Visualization (5 packages)</strong></summary>
+<summary><strong>Data Analysis & Visualization (6 packages)</strong></summary>
 
-- Dask, Matplotlib, Polars, ReportLab, Seaborn
+- Dask, Matplotlib, Polars, ReportLab, Seaborn, SimPy
 
 </details>
 

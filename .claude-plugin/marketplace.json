@@ -55,6 +55,7 @@
         "./scientific-packages/scikit-learn",
         "./scientific-packages/seaborn",
         "./scientific-packages/shap",
+        "./scientific-packages/simpy",
         "./scientific-packages/statsmodels",
         "./scientific-packages/torch_geometric",
         "./scientific-packages/torchdrug",
