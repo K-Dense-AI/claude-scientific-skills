@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.56.0"
+    "version": "1.57.0"
   },
   "plugins": [
     {
@@ -25,6 +25,7 @@
         "./scientific-packages/cellxgene-census",
         "./scientific-packages/cobrapy",
         "./scientific-packages/dask",
+        "./scientific-packages/datacommons-client",
         "./scientific-packages/datamol",
         "./scientific-packages/deepchem",
         "./scientific-packages/deeptools",
@@ -81,6 +82,7 @@
         "./scientific-databases/clinvar-database",
         "./scientific-databases/clinicaltrials-database",
         "./scientific-databases/cosmic-database",
+        "./scientific-databases/drugbank-database",
         "./scientific-databases/ena-database",
         "./scientific-databases/ensembl-database",
         "./scientific-databases/fda-database",
