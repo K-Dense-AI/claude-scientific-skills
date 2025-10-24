@@ -111,7 +111,9 @@ Once you've installed the skills, you can ask Claude to execute complex multi-st
 
 ### End-to-End Drug Discovery Pipeline
 ```
-"I need to find novel EGFR inhibitors for lung cancer treatment. Query ChEMBL for existing 
+"Always use available 'skills' when possible
+
+I need to find novel EGFR inhibitors for lung cancer treatment. Query ChEMBL for existing 
 EGFR inhibitors with IC50 < 50nM, analyze their structure-activity relationships using RDKit, 
 generate similar molecules with improved properties using datamol, perform virtual screening 
 with DiffDock against the AlphaFold-predicted EGFR structure, and search PubMed for recent 
@@ -121,7 +123,9 @@ EGFR mutations and assess how our candidates might interact with mutant forms."
 
 ### Comprehensive Single-Cell Analysis Workflow
 ```
-"Load this 10X Genomics dataset using Scanpy, perform quality control and doublet removal, 
+"Always use available 'skills' when possible
+
+Load this 10X Genomics dataset using Scanpy, perform quality control and doublet removal, 
 integrate with public data from Cellxgene Census for the same tissue type, identify cell 
 populations using known markers from NCBI Gene, perform differential expression analysis 
 with PyDESeq2, run gene regulatory network inference with Arboreto, query Reactome and 
@@ -132,7 +136,9 @@ therapeutic targets."
 
 ### Multi-Omics Integration for Biomarker Discovery
 ```
-"I have RNA-seq, proteomics, and metabolomics data from cancer patients. Use PyDESeq2 for 
+"Always use available 'skills' when possible
+
+I have RNA-seq, proteomics, and metabolomics data from cancer patients. Use PyDESeq2 for 
 differential expression, pyOpenMS to analyze mass spec data, and integrate metabolite 
 information from HMDB and Metabolomics Workbench. Map proteins to pathways using UniProt 
 and KEGG, identify protein-protein interactions via STRING, correlate multi-omics layers 
@@ -142,7 +148,9 @@ outcomes. Search ClinicalTrials.gov for ongoing trials targeting the top candida
 
 ### Structure-Based Virtual Screening Campaign
 ```
-"I want to discover allosteric modulators for a protein-protein interaction. Retrieve the 
+"Always use available 'skills' when possible
+
+I want to discover allosteric modulators for a protein-protein interaction. Retrieve the 
 AlphaFold structure for both proteins, identify the interaction interface using BioPython, 
 search ZINC15 for molecules with suitable properties for allosteric binding (MW 300-500, 
 logP 2-4), filter for drug-likeness using RDKit, perform molecular docking with DiffDock 
@@ -153,7 +161,9 @@ Finally, generate analogs with MedChem and molfeat for lead optimization."
 
 ### Clinical Genomics Variant Interpretation Pipeline
 ```
-"Analyze this VCF file from a patient with suspected hereditary cancer. Use pysam to parse 
+"Always use available 'skills' when possible
+
+Analyze this VCF file from a patient with suspected hereditary cancer. Use pysam to parse 
 variants, annotate with Ensembl for functional consequences, query ClinVar for known 
 pathogenic variants, check COSMIC for somatic mutations in cancer, retrieve gene information 
 from NCBI Gene, analyze protein impact using UniProt, search PubMed for case reports of 
@@ -164,7 +174,9 @@ the patient's profile."
 
 ### Systems Biology Network Analysis
 ```
-"Starting with a list of differentially expressed genes from my RNA-seq experiment, query 
+"Always use available 'skills' when possible
+
+Starting with a list of differentially expressed genes from my RNA-seq experiment, query 
 NCBI Gene for detailed annotations, retrieve protein sequences from UniProt, identify 
 protein-protein interactions using STRING, map to biological pathways in Reactome and KEGG, 
 analyze network topology with Torch Geometric, identify hub genes and bottleneck proteins, 
