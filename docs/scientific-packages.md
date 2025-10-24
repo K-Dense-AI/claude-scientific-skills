@@ -54,6 +54,7 @@
 
 ## Data Analysis & Visualization
 - **Dask** - Parallel computing for larger-than-memory datasets with distributed DataFrames, Arrays, Bags, and Futures
+- **Data Commons** - Programmatic access to public statistical data from global sources including census bureaus, health organizations, and environmental agencies. Provides unified Python API for querying demographic data, economic indicators, health statistics, and environmental datasets through a knowledge graph interface. Features three main endpoints: Observation (statistical time-series queries for population, GDP, unemployment rates, disease prevalence), Node (knowledge graph exploration for entity relationships and hierarchies), and Resolve (entity identification from names, coordinates, or Wikidata IDs). Seamless Pandas integration for DataFrames, relation expressions for hierarchical queries, data source filtering for consistency, and support for custom Data Commons instances
 - **Matplotlib** - Publication-quality plotting and visualization
 - **Polars** - High-performance DataFrame operations with lazy evaluation
 - **Seaborn** - Statistical data visualization with dataset-oriented interface, automatic confidence intervals, publication-quality themes, colorblind-safe palettes, and comprehensive support for exploratory analysis, distribution comparisons, correlation matrices, regression plots, and multi-panel figures
