@@ -111,19 +111,22 @@ Once you've installed the skills, you can ask Claude to execute complex multi-st
 
 ### End-to-End Drug Discovery Pipeline
 ```
-"Always use available 'skills' when possible
+"Always use available 'skills' when possible. Keep the output organized.
 
 I need to find novel EGFR inhibitors for lung cancer treatment. Query ChEMBL for existing 
 EGFR inhibitors with IC50 < 50nM, analyze their structure-activity relationships using RDKit, 
 generate similar molecules with improved properties using datamol, perform virtual screening 
 with DiffDock against the AlphaFold-predicted EGFR structure, and search PubMed for recent 
 papers on resistance mechanisms to prioritize scaffolds. Finally, check COSMIC for common 
-EGFR mutations and assess how our candidates might interact with mutant forms."
+EGFR mutations and assess how our candidates might interact with mutant forms. 
+Create useful visualizations in the form of scientific figures as you go (if needed).
+When done, create a comprehensive README.md and a well formatted pdf summarizing the methodology, 
+results, conclusions and providing recommendations."
 ```
 
 ### Comprehensive Single-Cell Analysis Workflow
 ```
-"Always use available 'skills' when possible
+"Always use available 'skills' when possible. Keep the output organized.
 
 Load this 10X Genomics dataset using Scanpy, perform quality control and doublet removal, 
 integrate with public data from Cellxgene Census for the same tissue type, identify cell 
@@ -131,24 +134,30 @@ populations using known markers from NCBI Gene, perform differential expression 
 with PyDESeq2, run gene regulatory network inference with Arboreto, query Reactome and 
 KEGG for pathway enrichment, and create publication-quality visualizations with matplotlib. 
 Then cross-reference top dysregulated genes with Open Targets to identify potential 
-therapeutic targets."
+therapeutic targets.
+Create useful visualizations in the form of scientific figures as you go (if needed).
+When done, create a comprehensive README.md and a well formatted pdf summarizing the methodology, 
+results, conclusions and providing recommendations."
 ```
 
 ### Multi-Omics Integration for Biomarker Discovery
 ```
-"Always use available 'skills' when possible
+"Always use available 'skills' when possible. Keep the output organized.
 
 I have RNA-seq, proteomics, and metabolomics data from cancer patients. Use PyDESeq2 for 
 differential expression, pyOpenMS to analyze mass spec data, and integrate metabolite 
 information from HMDB and Metabolomics Workbench. Map proteins to pathways using UniProt 
 and KEGG, identify protein-protein interactions via STRING, correlate multi-omics layers 
 using statsmodels, and build a machine learning model with scikit-learn to predict patient 
-outcomes. Search ClinicalTrials.gov for ongoing trials targeting the top candidates."
+outcomes. Search ClinicalTrials.gov for ongoing trials targeting the top candidates.
+Create useful visualizations in the form of scientific figures as you go (if needed).
+When done, create a comprehensive README.md and a well formatted pdf summarizing the methodology, 
+results, conclusions and providing recommendations."
 ```
 
 ### Structure-Based Virtual Screening Campaign
 ```
-"Always use available 'skills' when possible
+"Always use available 'skills' when possible. Keep the output organized.
 
 I want to discover allosteric modulators for a protein-protein interaction. Retrieve the 
 AlphaFold structure for both proteins, identify the interaction interface using BioPython, 
@@ -156,12 +165,15 @@ search ZINC15 for molecules with suitable properties for allosteric binding (MW 
 logP 2-4), filter for drug-likeness using RDKit, perform molecular docking with DiffDock 
 to identify potential allosteric sites, rank candidates using DeepChem's property prediction 
 models, check PubChem for suppliers, and search USPTO patents to assess freedom to operate. 
-Finally, generate analogs with MedChem and molfeat for lead optimization."
+Finally, generate analogs with MedChem and molfeat for lead optimization.
+Create useful visualizations in the form of scientific figures as you go (if needed).
+When done, create a comprehensive README.md and a well formatted pdf summarizing the methodology, 
+results, conclusions and providing recommendations."
 ```
 
 ### Clinical Genomics Variant Interpretation Pipeline
 ```
-"Always use available 'skills' when possible
+"Always use available 'skills' when possible. Keep the output organized.
 
 Analyze this VCF file from a patient with suspected hereditary cancer. Use pysam to parse 
 variants, annotate with Ensembl for functional consequences, query ClinVar for known 
@@ -169,12 +181,15 @@ pathogenic variants, check COSMIC for somatic mutations in cancer, retrieve gene
 from NCBI Gene, analyze protein impact using UniProt, search PubMed for case reports of 
 similar variants, query ClinPGx for pharmacogenomic implications, and generate a clinical 
 report with ReportLab. Then search ClinicalTrials.gov for precision medicine trials matching 
-the patient's profile."
+the patient's profile.
+Create useful visualizations in the form of scientific figures as you go (if needed).
+When done, create a comprehensive README.md and a well formatted pdf summarizing the methodology, 
+results, conclusions and providing recommendations."
 ```
 
 ### Systems Biology Network Analysis
 ```
-"Always use available 'skills' when possible
+"Always use available 'skills' when possible. Keep the output organized.
 
 Starting with a list of differentially expressed genes from my RNA-seq experiment, query 
 NCBI Gene for detailed annotations, retrieve protein sequences from UniProt, identify 
@@ -182,7 +197,10 @@ protein-protein interactions using STRING, map to biological pathways in Reactom
 analyze network topology with Torch Geometric, identify hub genes and bottleneck proteins, 
 perform gene regulatory network reconstruction with Arboreto, integrate with Open Targets 
 for druggability assessment, use PyMC for Bayesian network modeling, and create interactive 
-network visualizations. Finally, search GEO for similar expression patterns across diseases."
+network visualizations. Finally, search GEO for similar expression patterns across diseases.
+Create useful visualizations in the form of scientific figures as you go (if needed).
+When done, create a comprehensive README.md and a well formatted pdf summarizing the methodology, 
+results, conclusions and providing recommendations."
 ```
 
 ---
