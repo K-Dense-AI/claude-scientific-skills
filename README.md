@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-84-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-86-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -46,7 +46,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 26 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, DrugBank, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 51 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, Data Commons, and more |
+| 🔬 **Scientific Packages** | 53 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, Data Commons, histolab, PathML, and more |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -280,7 +280,7 @@ results, conclusions and providing recommendations."
 ---
 
 ### 🔬 Scientific Packages
-**49 specialized Python packages** organized by domain.
+**50 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
@@ -329,10 +329,12 @@ results, conclusions and providing recommendations."
 </details>
 
 <details>
-<summary><strong>Additional Packages (6 packages)</strong></summary>
+<summary><strong>Additional Packages (8 packages)</strong></summary>
 
 - BIOMNI (Multi-omics), ETE Toolkit (Phylogenetics)
+- histolab (Digital pathology WSI processing and tile extraction)
 - Paper-2-Web (Academic paper dissemination and presentation)
+- PathML (Computational pathology and whole-slide image analysis)
 - scikit-bio (Sequence analysis), ToolUniverse (600+ scientific tool ecosystem)
 - Zarr (Array storage)
 
