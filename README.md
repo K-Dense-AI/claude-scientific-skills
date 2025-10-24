@@ -1,6 +1,6 @@
 # Claude Scientific Skills
 
-[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
 [![Skills](https://img.shields.io/badge/Skills-83-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
@@ -36,6 +36,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
 - [Support](#support)
+- [Citation](#citation)
 - [License](#license)
 
 ---
@@ -440,7 +441,7 @@ Your contributions help make scientific computing more accessible and enable res
 ## ❓ FAQ
 
 **Q: Is this free to use?**  
-A: Yes, for noncommercial use. See the [License](#license) section for details.
+A: Yes, for any purpose including commercial use. This project is MIT licensed.
 
 **Q: Do I need all the Python packages installed?**  
 A: No, only install the packages you need. Each skill specifies its requirements.
@@ -452,7 +453,7 @@ A: The skills are designed for Claude but can be adapted for other models with M
 A: We regularly update skills to reflect the latest versions of packages and APIs.
 
 **Q: Can I use this for commercial projects?**  
-A: For commercial use, please visit [K-Dense](https://k-dense.ai/) for enterprise licensing.
+A: Yes! The MIT License allows both commercial and noncommercial use without restrictions.
 
 **Q: What if a skill doesn't work?**  
 A: First check the troubleshooting section, then file an issue on GitHub with details.
@@ -477,15 +478,51 @@ Need help? Here's how to get support:
 
 ---
 
+## 📖 Citation
+
+If you use Claude Scientific Skills in your research or project, please cite it as:
+
+### BibTeX
+```bibtex
+@software{claude_scientific_skills_2025,
+  author = {{K-Dense Inc.}},
+  title = {Claude Scientific Skills: A Comprehensive Collection of Scientific Tools for Claude AI},
+  year = {2025},
+  url = {https://github.com/K-Dense-AI/claude-scientific-skills},
+  note = {skills covering databases, packages, integrations, and analysis tools}
+}
+```
+
+### APA
+```
+K-Dense Inc. (2025). Claude Scientific Skills: A comprehensive collection of scientific tools for Claude AI [Computer software]. https://github.com/K-Dense-AI/claude-scientific-skills
+```
+
+### MLA
+```
+K-Dense Inc. Claude Scientific Skills: A Comprehensive Collection of Scientific Tools for Claude AI. 2025, github.com/K-Dense-AI/claude-scientific-skills.
+```
+
+### Plain Text
+```
+Claude Scientific Skills by K-Dense Inc. (2025)
+Available at: https://github.com/K-Dense-AI/claude-scientific-skills
+```
+
+We appreciate acknowledgment in publications, presentations, or projects that benefit from these skills!
+
+---
+
 ## 📄 License
 
-This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+This project is licensed under the **MIT License**.
 
-**Copyright © K-Dense Inc.** ([k-dense.ai](https://k-dense.ai/))
+**Copyright © 2025 K-Dense Inc.** ([k-dense.ai](https://k-dense.ai/))
 
 ### Key Points:
-- ✅ **Free for noncommercial use** (research, education, personal projects)
-- ✅ **Free for noncommercial organizations** (universities, research institutions)
-- ❌ **Commercial use requires separate license** (contact K-Dense)
+- ✅ **Free for any use** (commercial and noncommercial)
+- ✅ **Open source** - modify, distribute, and use freely
+- ✅ **Permissive** - minimal restrictions on reuse
+- ⚠️ **No warranty** - provided "as is" without warranty of any kind
 
 See [LICENSE.md](LICENSE.md) for full terms.
