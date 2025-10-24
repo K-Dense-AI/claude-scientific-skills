@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
-[![Skills](https://img.shields.io/badge/Skills-83-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-84-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,8 +45,8 @@ These skills enable Claude to work with specialized scientific libraries and dat
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| 📊 **Scientific Databases** | 25 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 50 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, and more |
+| 📊 **Scientific Databases** | 26 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, DrugBank, AlphaFold DB, bioRxiv, and more |
+| 🔬 **Scientific Packages** | 51 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, Data Commons, and more |
 | 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -211,7 +211,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 ## 📚 Available Skills
 
 ### 🗄️ Scientific Databases
-**25 comprehensive databases** including PubMed, PubChem, UniProt, ChEMBL, AlphaFold DB, bioRxiv, COSMIC, Ensembl, KEGG, and more.
+**26 comprehensive databases** including PubMed, PubChem, UniProt, ChEMBL, DrugBank, AlphaFold DB, bioRxiv, COSMIC, Ensembl, KEGG, and more.
 
 📖 **[Full Database Documentation →](docs/scientific-databases.md)**
 
@@ -225,6 +225,7 @@ network visualizations. Finally, search GEO for similar expression patterns acro
 - **ClinVar** - Genomic variants and clinical significance
 - **ClinicalTrials.gov** - Global clinical studies registry
 - **COSMIC** - Somatic cancer mutations database
+- **DrugBank** - Comprehensive drug and drug target information
 - **ENA** - European Nucleotide Archive
 - **Ensembl** - Genome browser and annotations
 - **FDA Databases** - Drug approvals, adverse events, recalls
