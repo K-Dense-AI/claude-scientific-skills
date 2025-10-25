@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.59.0"
+    "version": "1.60.0"
   },
   "plugins": [
     {
@@ -113,6 +113,7 @@
       "skills": [
         "./scientific-thinking/exploratory-data-analysis",
         "./scientific-thinking/hypothesis-generation",
+        "./scientific-thinking/literature-review",
         "./scientific-thinking/peer-review",
         "./scientific-thinking/scientific-brainstorming",
         "./scientific-thinking/scientific-critical-thinking",
