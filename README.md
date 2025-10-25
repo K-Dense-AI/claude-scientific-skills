@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![GitHub Stars](https://img.shields.io/github/stars/K-Dense-AI/claude-scientific-skills?style=social)](https://github.com/K-Dense-AI/claude-scientific-skills)
+[![Downloads](https://img.shields.io/github/downloads/K-Dense-AI/claude-scientific-skills/total)](https://github.com/K-Dense-AI/claude-scientific-skills/releases)
 [![Skills](https://img.shields.io/badge/Skills-86-brightgreen.svg)](#what-s-included)
 [![Workflows](https://img.shields.io/badge/Workflows-122-orange.svg)](#what-s-included)
 
