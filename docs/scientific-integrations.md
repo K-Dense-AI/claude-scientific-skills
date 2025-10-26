@@ -18,4 +18,7 @@
 ## Microscopy & Bio-image Data
 - **OMERO Integration** - Toolkit for interacting with OMERO microscopy data management systems using Python. Provides comprehensive access to microscopy images stored in OMERO servers, including dataset and screening data retrieval, pixel data analysis, annotation and metadata management, regions of interest (ROIs) creation and analysis, batch processing, OMERO.scripts development, and OMERO.tables for structured data storage. Essential for researchers working with high-content screening data, multi-dimensional microscopy datasets, or collaborative image repositories
 
+## Protocol Management & Sharing
+- **Protocols.io Integration** - Integration with protocols.io API for managing scientific protocols. Enables programmatic access to protocol discovery (search by keywords, DOI, category), protocol lifecycle management (create, update, publish with DOI), step-by-step procedure documentation, collaborative development with workspaces and discussions, file management (upload data, images, documents), experiment tracking and documentation, and data export. Supports OAuth authentication, protocol PDF generation, materials management, threaded comments, workspace permissions, and institutional protocol repositories. Essential for protocol standardization, reproducibility, lab knowledge management, and scientific collaboration
+
 
