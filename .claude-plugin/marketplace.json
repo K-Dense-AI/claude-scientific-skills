@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.60.0"
+    "version": "1.61.0"
   },
   "plugins": [
     {
@@ -16,6 +16,7 @@
       "source": "./",
       "strict": false,
       "skills": [
+        "./scientific-packages/aeon",
         "./scientific-packages/anndata",
         "./scientific-packages/arboreto",
         "./scientific-packages/astropy",
@@ -39,6 +40,7 @@
         "./scientific-packages/matplotlib",
         "./scientific-packages/medchem",
         "./scientific-packages/molfeat",
+        "./scientific-packages/neurokit2",
         "./scientific-packages/paper-2-web",
         "./scientific-packages/pathml",
         "./scientific-packages/polars",
@@ -47,6 +49,7 @@
         "./scientific-packages/pyhealth",
         "./scientific-packages/pymatgen",
         "./scientific-packages/pymc",
+        "./scientific-packages/pylabrobot",
         "./scientific-packages/pymoo",
         "./scientific-packages/pyopenms",
         "./scientific-packages/pysam",
