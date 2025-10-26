@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.62.0"
+    "version": "1.63.0"
   },
   "plugins": [
     {
@@ -140,7 +140,8 @@
         "./scientific-integrations/labarchive-integration",
         "./scientific-integrations/latchbio-integration",
         "./scientific-integrations/omero-integration",
-        "./scientific-integrations/opentrons-integration"
+        "./scientific-integrations/opentrons-integration",
+        "./scientific-integrations/protocolsio-integration"
       ]
     },
     {

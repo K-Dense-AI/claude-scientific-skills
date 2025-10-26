@@ -46,7 +46,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 26 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, DrugBank, AlphaFold DB, bioRxiv, and more |
 | 🔬 **Scientific Packages** | 56 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, Data Commons, histolab, PathML, PyLabRobot, and more |
-| 🔌 **Scientific Integrations** | 6 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO |
+| 🔌 **Scientific Integrations** | 7 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO, Protocols.io |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
 
@@ -366,7 +366,7 @@ results, conclusions and providing recommendations."
 ---
 
 ### 🔌 Scientific Integrations
-**6 platform integrations** for lab automation and workflow management.
+**7 platform integrations** for lab automation and workflow management.
 
 📖 **[Full Integration Documentation →](docs/scientific-integrations.md)**
 
@@ -376,6 +376,7 @@ results, conclusions and providing recommendations."
 - **LatchBio** - Workflow platform and cloud execution
 - **OMERO** - Microscopy and bio-image data management
 - **Opentrons** - Laboratory automation protocols
+- **Protocols.io** - Scientific protocol management and sharing platform
 
 ---
 
