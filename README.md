@@ -86,7 +86,7 @@ Then, to install a specific set of skills:
 
 After installation, simply mention the skill or describe your task - Claude Code will automatically use the appropriate skills!
 
-> 💡 **Tip**: If you find that Claude isn't utilizing the installed skills as much as you'd like, install the `scientific-context-initialization` skill. It automatically creates/updates an `AGENT.md` file in your workspace that instructs Claude to always search for and use existing skills before attempting any scientific task. This ensures Claude leverages documented patterns, authentication methods, working examples, and best practices from the repository.
+> 💡 **Tip**: If you find that Claude isn't utilizing the installed skills as much as you'd like, install the `scientific-context-initialization` skill. It automatically creates/updates an `AGENTS.md` file in your workspace that instructs Claude to always search for and use existing skills before attempting any scientific task. This ensures Claude leverages documented patterns, authentication methods, working examples, and best practices from the repository.
 
 ### Any MCP Client (including ChatGPT, Cursor, Google ADK, OpenAI Agent SDK, etc.)
 Use our newly released MCP server that allows you to use any Claude Skill in any client!
@@ -382,7 +382,7 @@ results, conclusions and providing recommendations."
 ### 🛠️ Scientific Helpers
 **2 helper utilities** for enhanced scientific computing capabilities.
 
-- **scientific-context-initialization** - Auto-invoked skill that creates/updates workspace AGENT.md to instruct Claude to search for and use existing skills before attempting any scientific task
+- **scientific-context-initialization** - Auto-invoked skill that creates/updates workspace AGENTS.md to instruct Claude to search for and use existing skills before attempting any scientific task
 - **get-available-resources** - Detects available system resources (CPU cores, GPUs, memory, disk space) and generates strategic recommendations for computational approaches (parallel processing, out-of-core computing, GPU acceleration)
 
 ---
@@ -447,7 +447,7 @@ Your contributions help make scientific computing more accessible and enable res
 
 **Problem: Claude not using installed skills**
 - Solution: Install the `scientific-context-initialization` skill
-- This creates an `AGENT.md` file that instructs Claude to search for and use existing skills before attempting tasks
+- This creates an `AGENTS.md` file that instructs Claude to search for and use existing skills before attempting tasks
 - After installation, Claude will automatically leverage documented patterns, examples, and best practices
 
 **Problem: Skills not loading in Claude Code**

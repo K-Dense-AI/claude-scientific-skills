@@ -1,13 +1,13 @@
 ---
 name: context-initialization
-description: "Always Auto-invoked skill that creates/updates workspace AGENT.md to instruct the agent to always search for existing skills before attempting any scientific task."
+description: "Always Auto-invoked skill that creates/updates workspace AGENTS.md to instruct the agent to always search for existing skills before attempting any scientific task."
 ---
 
 # Context Initialization
 
 ## Overview
 
-This skill automatically creates or updates an `AGENT.md` file in the workspace root that instructs the agent to use existing skills before attempting to solve scientific tasks. This ensures the agent uses documented patterns, authentication methods, working examples, and best practices from the repository's skills rather than inventing solutions from scratch.
+This skill automatically creates or updates an `AGENTS.md` file in the workspace root that instructs the agent to use existing skills before attempting to solve scientific tasks. This ensures the agent uses documented patterns, authentication methods, working examples, and best practices from the repository's skills rather than inventing solutions from scratch.
 
 ## When to Use This Skill
 
@@ -21,14 +21,14 @@ This skill is automatically invoked when:
 
 ## What This Skill Does
 
-Creates or updates `AGENT.md` in the workspace root with instructions for the agent to:
+Creates or updates `AGENTS.md` in the workspace root with instructions for the agent to:
 
 1. **Search first**: Look for relevant skills across all skill categories before writing code
 2. **Use existing patterns**: Apply documented API access patterns, workflows, and examples
 3. **Follow best practices**: Use rate limits, authentication, configurations, and established methodologies
 4. **Adapt examples**: Leverage working code examples from `scripts/` folders and reference documentation
 
-**Important**: If `AGENT.md` already exists in the workspace, this skill will update it intelligently rather than overwriting it. This preserves any custom instructions or modifications while ensuring the essential skill-search directives are present.
+**Important**: If `AGENTS.md` already exists in the workspace, this skill will update it intelligently rather than overwriting it. This preserves any custom instructions or modifications while ensuring the essential skill-search directives are present.
 
 ## Skill Categories
 
@@ -61,14 +61,14 @@ This unified context initialization covers four major skill categories:
 
 ## Implementation
 
-When invoked, this skill manages the workspace `AGENT.md` file as follows:
+When invoked, this skill manages the workspace `AGENTS.md` file as follows:
 
-- **If `AGENT.md` does not exist**: Creates a new file using the complete template from `references/AGENT.md`
-- **If `AGENT.md` already exists**: Updates the file to ensure the essential skill-search directives are present, while preserving any existing custom content or modifications
+- **If `AGENTS.md` does not exist**: Creates a new file using the complete template from `references/AGENTS.md`
+- **If `AGENTS.md` already exists**: Updates the file to ensure the essential skill-search directives are present, while preserving any existing custom content or modifications
 
 The file includes sections instructing the agent to search for and use existing skills across all scientific task categories.
 
-The complete reference template is available in `references/AGENT.md`.
+The complete reference template is available in `references/AGENTS.md`.
 
 ## Benefits
 
