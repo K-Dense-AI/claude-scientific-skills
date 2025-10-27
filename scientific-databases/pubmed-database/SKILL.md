@@ -1,6 +1,6 @@
 ---
 name: pubmed-database
-description: "Search PubMed biomedical literature. Advanced queries with Boolean/MeSH/field tags, E-utilities API access, batch processing, citation management, for literature review and systematic analysis."
+description: "Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopython (Bio.Entrez). Use this for direct HTTP/REST work or custom API implementations."
 ---
 
 # PubMed Database

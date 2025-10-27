@@ -1,6 +1,6 @@
 ---
 name: kegg-database
-description: "Query KEGG REST API for pathway analysis, gene-pathway mapping, metabolic pathways, drug interactions, ID conversion, compound structures, for systems biology and enrichment analysis."
+description: "Direct REST API access to KEGG (academic use only). Pathway analysis, gene-pathway mapping, metabolic pathways, drug interactions, ID conversion. For Python workflows with multiple databases, prefer bioservices. Use this for direct HTTP/REST work or KEGG-specific control."
 ---
 
 # KEGG Database
