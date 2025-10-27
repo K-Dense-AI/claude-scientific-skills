@@ -1,6 +1,6 @@
 ---
 name: bioservices
-description: "Access 40+ bio web services (UniProt, KEGG, ChEMBL, PubChem, BLAST, QuickGO, Reactome). Retrieve data, map IDs, pathway analysis, for multi-database integration workflows."
+description: "Primary Python tool for 40+ bioinformatics services. Preferred for multi-database workflows: UniProt, KEGG, ChEMBL, PubChem, Reactome, QuickGO. Unified API for queries, ID mapping, pathway analysis. For direct REST control, use individual database skills (uniprot-database, kegg-database)."
 ---
 
 # BioServices

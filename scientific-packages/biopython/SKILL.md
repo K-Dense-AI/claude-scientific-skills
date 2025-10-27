@@ -1,6 +1,6 @@
 ---
 name: biopython
-description: "Toolkit for computational molecular biology. Manipulate sequences, parse biological file formats (FASTA, GenBank, FASTQ, PDB), access NCBI databases, run BLAST, analyze structures, build phylogenetic trees, for bioinformatics workflows."
+description: "Primary Python toolkit for molecular biology. Preferred for Python-based PubMed/NCBI queries (Bio.Entrez), sequence manipulation, file parsing (FASTA, GenBank, FASTQ, PDB), advanced BLAST workflows, structures, phylogenetics. For quick BLAST, use gget. For direct REST API, use pubmed-database."
 ---
 
 # Biopython: Computational Molecular Biology in Python
