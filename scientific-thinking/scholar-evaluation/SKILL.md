@@ -227,3 +227,11 @@ python scripts/calculate_scores.py --scores <dimension_scores.json> --output <re
 - Some dimensions may not apply to all work types (e.g., data collection for purely theoretical papers)
 - Cultural and disciplinary differences in scholarly norms should be considered
 - This framework complements, not replaces, domain-specific expertise
+
+## Citation
+
+This skill is based on the ScholarEval framework introduced in:
+
+**Moussa, H. N., Da Silva, P. Q., Adu-Ampratwum, D., East, A., Lu, Z., Puccetti, N., Xue, M., Sun, H., Majumder, B. P., & Kumar, S. (2025).** _ScholarEval: Research Idea Evaluation Grounded in Literature_. arXiv preprint arXiv:2510.16234. [https://arxiv.org/abs/2510.16234](https://arxiv.org/abs/2510.16234)
+
+**Abstract:** ScholarEval is a retrieval augmented evaluation framework that assesses research ideas based on two fundamental criteria: soundness (the empirical validity of proposed methods based on existing literature) and contribution (the degree of advancement made by the idea across different dimensions relative to prior research). The framework achieves significantly higher coverage of expert-annotated evaluation points and is consistently preferred over baseline systems in terms of evaluation actionability, depth, and evidence support.
