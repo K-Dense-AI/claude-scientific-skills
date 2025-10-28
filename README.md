@@ -1,7 +1,7 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-92-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-93-brightgreen.svg)](#what-s-included)
 [![Equivalent Tools](https://img.shields.io/badge/Equivalent_Tools-1002-blue.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -45,7 +45,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 26 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, DrugBank, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 57 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, Data Commons, histolab, PathML, PyLabRobot, HypoGeniC, and more |
+| 🔬 **Scientific Packages** | 58 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, SimPy, pydicom, PyHealth, Data Commons, histolab, PathML, PyLabRobot, HypoGeniC, MarkItDown, and more |
 | 🔌 **Scientific Integrations** | 7 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO, Protocols.io |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -328,11 +328,12 @@ results, conclusions and providing recommendations."
 </details>
 
 <details>
-<summary><strong>Additional Packages (10 packages)</strong></summary>
+<summary><strong>Additional Packages (11 packages)</strong></summary>
 
 - BIOMNI (Multi-omics), ETE Toolkit (Phylogenetics)
 - histolab (Digital pathology WSI processing and tile extraction)
 - HypoGeniC (Automated hypothesis generation and testing)
+- MarkItDown (Document format conversion to Markdown for LLM processing)
 - Paper-2-Web (Academic paper dissemination and presentation)
 - PathML (Computational pathology and whole-slide image analysis)
 - PyLabRobot (Laboratory automation for liquid handlers, plate readers, and lab equipment)
