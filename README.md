@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Skills](https://img.shields.io/badge/Skills-92-brightgreen.svg)](#what-s-included)
-[![Equivalent Tools](https://img.shields.io/badge/Equivalent_Tools-500-blue.svg)](#what-s-included)
+[![Equivalent Tools](https://img.shields.io/badge/Equivalent_Tools-1002-blue.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
 
