@@ -1,7 +1,7 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-90-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-91-brightgreen.svg)](#what-s-included)
 [![Equivalent Tools](https://img.shields.io/badge/Equivalent_Tools-500-blue.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -352,6 +352,7 @@ results, conclusions and providing recommendations."
 - Hypothesis Generation (structured frameworks)
 - Literature Review (systematic search and citation management)
 - Peer Review (comprehensive evaluation toolkit)
+- Scholar Evaluation (systematic framework for evaluating scholarly and research work)
 - Scientific Brainstorming (ideation workflows)
 - Scientific Critical Thinking (rigorous reasoning)
 - Scientific Visualization (publication-quality figures)
