@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.65.0"
+    "version": "1.66.0"
   },
   "plugins": [
     {
@@ -37,6 +37,7 @@
         "./scientific-packages/gget",
         "./scientific-packages/hypogenic",
         "./scientific-packages/histolab",
+        "./scientific-packages/markitdown",
         "./scientific-packages/matchms",
         "./scientific-packages/matplotlib",
         "./scientific-packages/medchem",
