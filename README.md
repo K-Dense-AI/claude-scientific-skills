@@ -564,3 +564,7 @@ This project is licensed under the **MIT License**.
 - ⚠️ **No warranty** - provided "as is" without warranty of any kind
 
 See [LICENSE.md](LICENSE.md) for full terms.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=K-Dense-AI/claude-scientific-skills&type=date&legend=top-left)](https://www.star-history.com/#K-Dense-AI/claude-scientific-skills&type=date&legend=top-left)
