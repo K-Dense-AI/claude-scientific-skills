@@ -18,6 +18,8 @@ These skills enable Claude to work with specialized scientific libraries and dat
 
 > 💼 For substantially more advanced capabilities, compute infrastructure, and enterprise-ready offerings, check out [k-dense.ai](https://k-dense.ai/).
 
+> ⭐ **If you find this repository useful**, please consider giving it a star! It helps others discover these tools and encourages us to continue maintaining and expanding this collection.
+
 ---
 
 ## 📋 Table of Contents
