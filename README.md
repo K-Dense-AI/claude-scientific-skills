@@ -16,6 +16,20 @@ These skills enable Claude to work with specialized scientific libraries and dat
 
 **Transform Claude Code into an 'AI Scientist' on your desktop!**
 
+### Quick Install
+
+**For Cursor:**
+
+<a href="https://cursor.com/en-US/install-mcp?name=claude-scientific-skills&config=eyJ1cmwiOiJodHRwczovL21jcC5rLWRlbnNlLmFpL2NsYXVkZS1zY2llbnRpZmljLXNraWxscy9tY3AifQ%3D%3D">
+  <picture>
+    <source srcset="https://cursor.com/deeplink/mcp-install-light.svg" media="(prefers-color-scheme: dark)">
+    <source srcset="https://cursor.com/deeplink/mcp-install-dark.svg" media="(prefers-color-scheme: light)">
+    <img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Install MCP Server" style="height:2.7em;"/>
+  </picture>
+</a>
+
+**For Claude Code:** See [Getting Started](#getting-started)
+
 > 💼 For substantially more advanced capabilities, compute infrastructure, and enterprise-ready offerings, check out [k-dense.ai](https://k-dense.ai/).
 
 > ⭐ **If you find this repository useful**, please consider giving it a star! It helps others discover these tools and encourages us to continue maintaining and expanding this collection.
@@ -90,17 +104,30 @@ After installation, simply mention the skill or describe your task - Claude Code
 
 > 💡 **Tip**: If you find that Claude isn't utilizing the installed skills as much as you'd like, install the `scientific-context-initialization` skill. It automatically creates/updates an `AGENTS.md` file in your workspace that instructs Claude to always search for and use existing skills before attempting any scientific task. This ensures Claude leverages documented patterns, authentication methods, working examples, and best practices from the repository.
 
-### Any MCP Client (including ChatGPT, Cursor, Google ADK, OpenAI Agent SDK, etc.)
-Use our newly released MCP server that allows you to use any Claude Skill in any client!
+### Cursor
 
-🔗 **[claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp)**
+For Cursor users, we now offer a hosted MCP server for one-click installation:
+
+<a href="https://cursor.com/en-US/install-mcp?name=claude-scientific-skills&config=eyJ1cmwiOiJodHRwczovL21jcC5rLWRlbnNlLmFpL2NsYXVkZS1zY2llbnRpZmljLXNraWxscy9tY3AifQ%3D%3D">
+  <picture>
+    <source srcset="https://cursor.com/deeplink/mcp-install-light.svg" media="(prefers-color-scheme: dark)">
+    <source srcset="https://cursor.com/deeplink/mcp-install-dark.svg" media="(prefers-color-scheme: light)">
+    <img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Install MCP Server" style="height:2.7em;"/>
+  </picture>
+</a>
+
+### Any MCP Client (including ChatGPT, Google ADK, OpenAI Agent SDK, etc.)
+Use our MCP server to access the complete skills collection in any MCP-compatible client:
+
+🔗 **[claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp)** - Self-hosted MCP server  
+🔗 **Hosted MCP**: Available at `https://mcp.k-dense.ai/claude-scientific-skills/mcp`
 
 ---
 
 ## ⚙️ Prerequisites
 
 - **Python**: 3.8+ (3.10+ recommended for best compatibility)
-- **Claude Code**: Latest version or any MCP-compatible client
+- **Client**: Claude Code, Cursor, or any MCP-compatible client
 - **System**: macOS, Linux, or Windows with WSL2
 - **Dependencies**: Automatically handled by individual skills (check `SKILL.md` files for specific requirements)
 
@@ -514,7 +541,7 @@ Need help? Here's how to get support:
 - 🐛 **Bug Reports**: [Open an issue](https://github.com/K-Dense-AI/claude-scientific-skills/issues)
 - 💡 **Feature Requests**: [Submit a feature request](https://github.com/K-Dense-AI/claude-scientific-skills/issues/new)
 - 💼 **Enterprise Support**: Contact [K-Dense](https://k-dense.ai/) for commercial support
-- 🌐 **MCP Support**: Visit the [claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp) repository
+- 🌐 **MCP Support**: Visit the [claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp) repository or use our hosted MCP server
 
 ---
 
