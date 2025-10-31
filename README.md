@@ -68,6 +68,25 @@ These skills enable Claude to work with specialized scientific libraries and dat
 ## 🎯 Getting Started
 
 ### Claude Code
+
+> 📚 **New to Claude Code?** Check out the [Claude Code Quickstart Guide](https://docs.claude.com/en/docs/claude-code/quickstart) to get started.
+
+#### Installation
+
+Install Claude Code on your system:
+
+**macOS:**
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+**Windows:**
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+#### Setup
+
 Register this repository as a Claude Code Plugin marketplace by running:
 
 ```bash
