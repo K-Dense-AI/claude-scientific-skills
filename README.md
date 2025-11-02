@@ -1,7 +1,7 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-98-brightgreen.svg)](#what-s-included)
+[![Skills](https://img.shields.io/badge/Skills-113-brightgreen.svg)](#what-s-included)
 [![Equivalent Tools](https://img.shields.io/badge/Equivalent_Tools-1002-blue.svg)](#what-s-included)
 
 A comprehensive collection of ready-to-use scientific skills for Claude, curated by the K-Dense team.
@@ -47,7 +47,7 @@ These skills enable Claude to work with specialized scientific libraries and dat
 | Category | Count | Description |
 |----------|-------|-------------|
 | 📊 **Scientific Databases** | 26 | PubMed, PubChem, UniProt, ChEMBL, COSMIC, DrugBank, AlphaFold DB, bioRxiv, and more |
-| 🔬 **Scientific Packages** | 63 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, NetworkX, SimPy, pydicom, PyHealth, Data Commons, histolab, LaminDB, PathML, PyLabRobot, HypoGeniC, MarkItDown, PufferLib, Stable Baselines3, Vaex, and more |
+| 🔬 **Scientific Packages** | 64 | BioPython, RDKit, PyTorch, Scanpy, scvi-tools, ESM, NetworkX, SimPy, pydicom, PyHealth, Data Commons, histolab, LaminDB, PathML, PyLabRobot, HypoGeniC, MarkItDown, PufferLib, Stable Baselines3, Vaex, and more |
 | 🔌 **Scientific Integrations** | 7 | Benchling, DNAnexus, Opentrons, LabArchives, LatchBio, OMERO, Protocols.io |
 | 🛠️ **Scientific Helpers** | 2 | Context initialization and resource detection utilities |
 | 📚 **Documented Workflows** | 122 | Ready-to-use examples and reference materials |
@@ -98,8 +98,8 @@ Then, to install a specific set of skills:
 1. Select **Browse and install plugins**
 2. Select **claude-scientific-skills**
 3. Choose from:
-   - `scientific-databases` - Access to 25 scientific databases
-   - `scientific-packages` - 59 specialized Python packages
+   - `scientific-databases` - Access to 26 scientific databases
+   - `scientific-packages` - 64 specialized Python packages
    - `scientific-thinking` - Analysis tools and document processing
    - `scientific-integrations` - Lab automation and platform integrations
    - `scientific-context-initialization` - Ensures Claude searches for and uses existing skills
@@ -313,7 +313,7 @@ results, conclusions and providing recommendations."
 ---
 
 ### 🔬 Scientific Packages
-**63 specialized Python packages** organized by domain.
+**64 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
