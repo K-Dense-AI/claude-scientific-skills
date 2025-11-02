@@ -313,7 +313,7 @@ results, conclusions and providing recommendations."
 ---
 
 ### 🔬 Scientific Packages
-**60 specialized Python packages** organized by domain.
+**61 specialized Python packages** organized by domain.
 
 📖 **[Full Package Documentation →](docs/scientific-packages.md)**
 
@@ -355,9 +355,9 @@ results, conclusions and providing recommendations."
 </details>
 
 <details>
-<summary><strong>Data Analysis & Visualization (7 packages)</strong></summary>
+<summary><strong>Data Analysis & Visualization (8 packages)</strong></summary>
 
-- Dask, Matplotlib, NetworkX, Polars, ReportLab, Seaborn, SimPy
+- Dask, Matplotlib, NetworkX, Polars, ReportLab, Seaborn, SimPy, SymPy
 
 </details>
 

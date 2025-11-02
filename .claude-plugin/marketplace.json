@@ -70,6 +70,7 @@
         "./scientific-packages/shap",
         "./scientific-packages/simpy",
         "./scientific-packages/statsmodels",
+        "./scientific-packages/sympy",
         "./scientific-packages/torch_geometric",
         "./scientific-packages/torchdrug",
         "./scientific-packages/tooluniverse",
