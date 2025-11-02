@@ -44,6 +44,7 @@
         "./scientific-packages/medchem",
         "./scientific-packages/molfeat",
         "./scientific-packages/neurokit2",
+        "./scientific-packages/networkx",
         "./scientific-packages/paper-2-web",
         "./scientific-packages/pathml",
         "./scientific-packages/polars",
