@@ -76,6 +76,7 @@
         "./scientific-packages/tooluniverse",
         "./scientific-packages/transformers",
         "./scientific-packages/umap-learn",
+        "./scientific-packages/vaex",
         "./scientific-packages/zarr-python"
       ]
     },
