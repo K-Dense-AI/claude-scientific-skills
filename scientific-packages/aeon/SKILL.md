@@ -1,224 +1,368 @@
 ---
 name: aeon
-description: Time series machine learning toolkit for classification, regression, clustering, forecasting, anomaly detection, segmentation, and similarity search. Use this skill when working with temporal data, performing time series analysis, building predictive models on sequential data, or implementing workflows that involve distance metrics (DTW), transformations (ROCKET, Catch22), or deep learning for time series. Applicable for tasks like ECG classification, stock price forecasting, sensor anomaly detection, or activity recognition from wearable devices.
+description: This skill should be used for time series machine learning tasks including classification, regression, clustering, forecasting, anomaly detection, segmentation, and similarity search. Use when working with temporal data, sequential patterns, or time-indexed observations requiring specialized algorithms beyond standard ML approaches. Particularly suited for univariate and multivariate time series analysis with scikit-learn compatible APIs.
 ---
 
-# Aeon
+# Aeon Time Series Machine Learning
 
 ## Overview
 
-Aeon is a comprehensive Python toolkit for time series machine learning, providing state-of-the-art algorithms and classical techniques for analyzing temporal data. Use this skill when working with sequential/temporal data across seven primary learning tasks: classification, regression, clustering, forecasting, anomaly detection, segmentation, and similarity search.
+Aeon is a scikit-learn compatible Python toolkit for time series machine learning. It provides state-of-the-art algorithms for classification, regression, clustering, forecasting, anomaly detection, segmentation, and similarity search.
 
 ## When to Use This Skill
 
 Apply this skill when:
-- Classifying or predicting from time series data (e.g., ECG classification, activity recognition)
-- Forecasting future values in temporal sequences (e.g., stock prices, energy demand)
-- Detecting anomalies in sensor streams or operational data
-- Clustering temporal patterns or discovering motifs
-- Segmenting time series into meaningful regions (change point detection)
-- Computing distances between time series using specialized metrics (DTW, MSM, ERP)
-- Extracting features from temporal data using ROCKET, Catch22, TSFresh, or shapelets
-- Building deep learning models for time series with specialized architectures
+- Classifying or predicting from time series data
+- Detecting anomalies or change points in temporal sequences
+- Clustering similar time series patterns
+- Forecasting future values
+- Finding repeated patterns (motifs) or unusual subsequences (discords)
+- Comparing time series with specialized distance metrics
+- Extracting features from temporal data
+
+## Installation
+
+```bash
+pip install aeon
+```
 
 ## Core Capabilities
 
 ### 1. Time Series Classification
-Classify labeled time series using diverse algorithm families:
-- **Convolution-based**: ROCKET, MiniRocket, MultiRocket, Arsenal, Hydra
-- **Deep learning**: InceptionTime, ResNet, FCN, TimeCNN, LITE
-- **Dictionary-based**: BOSS, TDE, WEASEL, MrSEQL (symbolic representations)
-- **Distance-based**: KNN with elastic distances, Elastic Ensemble, Proximity Forest
-- **Feature-based**: Catch22, FreshPRINCE, Signature classifiers
-- **Interval-based**: CIF, DrCIF, RISE, Random Interval variants
-- **Shapelet-based**: Learning Shapelet, SAST
-- **Hybrid ensembles**: HIVE-COTE V1/V2
 
-Example:
+Categorize time series into predefined classes. See `references/classification.md` for complete algorithm catalog.
+
+**Quick Start:**
 ```python
 from aeon.classification.convolution_based import RocketClassifier
-from aeon.datasets import load_arrow_head
+from aeon.datasets import load_classification
 
-X_train, y_train = load_arrow_head(split="train")
-X_test, y_test = load_arrow_head(split="test")
+# Load data
+X_train, y_train = load_classification("GunPoint", split="train")
+X_test, y_test = load_classification("GunPoint", split="test")
 
-clf = RocketClassifier()
+# Train classifier
+clf = RocketClassifier(n_kernels=10000)
 clf.fit(X_train, y_train)
 accuracy = clf.score(X_test, y_test)
 ```
 
+**Algorithm Selection:**
+- **Speed + Performance**: `MiniRocketClassifier`, `Arsenal`
+- **Maximum Accuracy**: `HIVECOTEV2`, `InceptionTimeClassifier`
+- **Interpretability**: `ShapeletTransformClassifier`, `Catch22Classifier`
+- **Small Datasets**: `KNeighborsTimeSeriesClassifier` with DTW distance
+
 ### 2. Time Series Regression
-Predict continuous values from time series using adapted classification algorithms:
+
+Predict continuous values from time series. See `references/regression.md` for algorithms.
+
+**Quick Start:**
 ```python
 from aeon.regression.convolution_based import RocketRegressor
+from aeon.datasets import load_regression
+
+X_train, y_train = load_regression("Covid3Month", split="train")
+X_test, y_test = load_regression("Covid3Month", split="test")
 
 reg = RocketRegressor()
-reg.fit(X_train, y_train_continuous)
+reg.fit(X_train, y_train)
 predictions = reg.predict(X_test)
 ```
 
-### 3. Forecasting
-Predict future values using statistical and deep learning models:
-- Statistical: ARIMA, ETS, Theta, TAR, AutoTAR, TVP
-- Naive baselines: NaiveForecaster with seasonal strategies
-- Deep learning: TCN (Temporal Convolutional Networks)
-- Regression-based: RegressionForecaster with sliding windows
+### 3. Time Series Clustering
 
-Example:
+Group similar time series without labels. See `references/clustering.md` for methods.
+
+**Quick Start:**
 ```python
-from aeon.forecasting.naive import NaiveForecaster
+from aeon.clustering import TimeSeriesKMeans
 
-forecaster = NaiveForecaster(strategy="last")
-forecaster.fit(y_train)
-y_pred = forecaster.predict(fh=[1, 2, 3])  # forecast 3 steps ahead
+clusterer = TimeSeriesKMeans(
+    n_clusters=3,
+    distance="dtw",
+    averaging_method="ba"
+)
+labels = clusterer.fit_predict(X_train)
+centers = clusterer.cluster_centers_
 ```
 
-### 4. Anomaly Detection
-Identify outliers in time series data:
-- **Distance-based**: KMeansAD, CBLOF, LOF, STOMP, LeftSTAMPi, MERLIN, ROCKAD
-- **Distribution-based**: COPOD, DWT_MLEAD
-- **Outlier detection**: IsolationForest, OneClassSVM, STRAY
-- **Collection adapters**: ClassificationAdapter, OutlierDetectionAdapter
+### 4. Forecasting
 
-Example:
+Predict future time series values. See `references/forecasting.md` for forecasters.
+
+**Quick Start:**
+```python
+from aeon.forecasting.arima import ARIMA
+
+forecaster = ARIMA(order=(1, 1, 1))
+forecaster.fit(y_train)
+y_pred = forecaster.predict(fh=[1, 2, 3, 4, 5])
+```
+
+### 5. Anomaly Detection
+
+Identify unusual patterns or outliers. See `references/anomaly_detection.md` for detectors.
+
+**Quick Start:**
 ```python
 from aeon.anomaly_detection import STOMP
 
 detector = STOMP(window_size=50)
-anomaly_scores = detector.fit_predict(X_series)
-```
+anomaly_scores = detector.fit_predict(y)
 
-### 5. Clustering
-Group similar time series without labels:
-```python
-from aeon.clustering import TimeSeriesKMeans
-
-clusterer = TimeSeriesKMeans(n_clusters=3, distance="dtw")
-clusterer.fit(X_collection)
-labels = clusterer.predict(X_new)
+# Higher scores indicate anomalies
+threshold = np.percentile(anomaly_scores, 95)
+anomalies = anomaly_scores > threshold
 ```
 
 ### 6. Segmentation
-Divide time series into distinct regions or identify change points:
+
+Partition time series into regions with change points. See `references/segmentation.md`.
+
+**Quick Start:**
 ```python
 from aeon.segmentation import ClaSPSegmenter
 
 segmenter = ClaSPSegmenter()
-change_points = segmenter.fit_predict(X_series)
+change_points = segmenter.fit_predict(y)
 ```
 
 ### 7. Similarity Search
-Find motifs and nearest neighbors in time series collections using specialized distance metrics and matrix profile techniques.
 
-### 8. Transformations
-Preprocess and extract features from time series:
-- **Collection transformers**: ROCKET, Catch22, TSFresh, Shapelet, SAX, PAA, SFA
-- **Series transformers**: Moving Average, Box-Cox, PCA, Fourier, Savitzky-Golay
-- **Channel operations**: Selection, scoring, balancing
-- **Data balancing**: SMOTE, ADASYN
+Find similar patterns within or across time series. See `references/similarity_search.md`.
 
-Example:
+**Quick Start:**
 ```python
-from aeon.transformations.collection.convolution_based import Rocket
+from aeon.similarity_search import StompMotif
 
-rocket = Rocket(num_kernels=10000)
-X_transformed = rocket.fit_transform(X_train)
+# Find recurring patterns
+motif_finder = StompMotif(window_size=50, k=3)
+motifs = motif_finder.fit_predict(y)
 ```
 
-### 9. Distance Metrics
-Compute specialized time series distances:
-- **Warping**: DTW, WDTW, DDTW, WDDTW, Shape DTW, ADTW
-- **Edit distances**: ERP, EDR, LCSS, TWE
-- **Standard**: Euclidean, Manhattan, Minkowski, Squared
-- **Specialized**: MSM, SBD
+## Feature Extraction and Transformations
 
-Example:
+Transform time series for feature engineering. See `references/transformations.md`.
+
+**ROCKET Features:**
 ```python
-from aeon.distances import dtw_distance, pairwise_distance
+from aeon.transformations.collection.convolution_based import RocketTransformer
 
-dist = dtw_distance(series1, series2)
-dist_matrix = pairwise_distance(X_collection, metric="dtw")
+rocket = RocketTransformer()
+X_features = rocket.fit_transform(X_train)
+
+# Use features with any sklearn classifier
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier()
+clf.fit(X_features, y_train)
 ```
 
-## Installation
-
-Install aeon using pip:
-```bash
-# Core dependencies only
-pip install -U aeon
-
-# All optional dependencies
-pip install -U "aeon[all_extras]"
-```
-
-Or using conda:
-```bash
-conda create -n aeon-env -c conda-forge aeon
-conda activate aeon-env
-```
-
-**Requirements**: Python 3.9, 3.10, 3.11, or 3.12
-
-## Data Format
-
-Aeon uses standardized data shapes:
-- **Collections**: `(n_cases, n_channels, n_timepoints)` as NumPy arrays or pandas DataFrames
-- **Single series**: NumPy arrays or pandas Series
-- **Variable-length**: Supported with padding or specialized handling
-
-Load example datasets:
+**Statistical Features:**
 ```python
-from aeon.datasets import load_arrow_head, load_airline
+from aeon.transformations.collection.feature_based import Catch22
 
-# Classification dataset
-X_train, y_train = load_arrow_head(split="train")
-
-# Forecasting dataset
-y = load_airline()
+catch22 = Catch22()
+X_features = catch22.fit_transform(X_train)
 ```
 
-## Workflow Patterns
-
-### Pipeline Construction
-Combine transformers and estimators using scikit-learn pipelines:
+**Preprocessing:**
 ```python
-from sklearn.pipeline import Pipeline
-from aeon.transformations.collection import Catch22
+from aeon.transformations.collection import MinMaxScaler, Normalizer
+
+scaler = Normalizer()  # Z-normalization
+X_normalized = scaler.fit_transform(X_train)
+```
+
+## Distance Metrics
+
+Specialized temporal distance measures. See `references/distances.md` for complete catalog.
+
+**Usage:**
+```python
+from aeon.distances import dtw_distance, dtw_pairwise_distance
+
+# Single distance
+distance = dtw_distance(x, y, window=0.1)
+
+# Pairwise distances
+distance_matrix = dtw_pairwise_distance(X_train)
+
+# Use with classifiers
 from aeon.classification.distance_based import KNeighborsTimeSeriesClassifier
 
-pipeline = Pipeline([
-    ('features', Catch22()),
-    ('classifier', KNeighborsTimeSeriesClassifier())
-])
-pipeline.fit(X_train, y_train)
+clf = KNeighborsTimeSeriesClassifier(
+    n_neighbors=5,
+    distance="dtw",
+    distance_params={"window": 0.2}
+)
 ```
 
-### Discovery and Tags
-Find estimators programmatically:
+**Available Distances:**
+- **Elastic**: DTW, DDTW, WDTW, ERP, EDR, LCSS, TWE, MSM
+- **Lock-step**: Euclidean, Manhattan, Minkowski
+- **Shape-based**: Shape DTW, SBD
+
+## Deep Learning Networks
+
+Neural architectures for time series. See `references/networks.md`.
+
+**Architectures:**
+- Convolutional: `FCNClassifier`, `ResNetClassifier`, `InceptionTimeClassifier`
+- Recurrent: `RecurrentNetwork`, `TCNNetwork`
+- Autoencoders: `AEFCNClusterer`, `AEResNetClusterer`
+
+**Usage:**
 ```python
-from aeon.utils.discovery import all_estimators
+from aeon.classification.deep_learning import InceptionTimeClassifier
 
-# Find all classifiers
-classifiers = all_estimators(type_filter="classifier")
-
-# Find all forecasters
-forecasters = all_estimators(type_filter="forecaster")
+clf = InceptionTimeClassifier(n_epochs=100, batch_size=32)
+clf.fit(X_train, y_train)
+predictions = clf.predict(X_test)
 ```
 
-## References
+## Datasets and Benchmarking
 
-The skill includes modular reference files with comprehensive details:
+Load standard benchmarks and evaluate performance. See `references/datasets_benchmarking.md`.
 
-### references/learning_tasks.md
-In-depth coverage of classification, regression, clustering, and similarity search, including algorithm categories, use cases, and code patterns.
+**Load Datasets:**
+```python
+from aeon.datasets import load_classification, load_regression
 
-### references/temporal_analysis.md
-Detailed information on forecasting, anomaly detection, and segmentation tasks with model descriptions and workflows.
+# Classification
+X_train, y_train = load_classification("ArrowHead", split="train")
 
-### references/core_modules.md
-Comprehensive documentation of transformations, distances, networks, datasets, and benchmarking utilities.
+# Regression
+X_train, y_train = load_regression("Covid3Month", split="train")
+```
 
-### references/workflows.md
-Common workflow patterns, pipeline examples, cross-validation strategies, and integration with scikit-learn.
+**Benchmarking:**
+```python
+from aeon.benchmarking import get_estimator_results
 
-Load these reference files as needed for detailed information on specific modules or workflows.
+# Compare with published results
+published = get_estimator_results("ROCKET", "GunPoint")
+```
+
+## Common Workflows
+
+### Classification Pipeline
+
+```python
+from aeon.transformations.collection import Normalizer
+from aeon.classification.convolution_based import RocketClassifier
+from sklearn.pipeline import Pipeline
+
+pipeline = Pipeline([
+    ('normalize', Normalizer()),
+    ('classify', RocketClassifier())
+])
+
+pipeline.fit(X_train, y_train)
+accuracy = pipeline.score(X_test, y_test)
+```
+
+### Feature Extraction + Traditional ML
+
+```python
+from aeon.transformations.collection import RocketTransformer
+from sklearn.ensemble import GradientBoostingClassifier
+
+# Extract features
+rocket = RocketTransformer()
+X_train_features = rocket.fit_transform(X_train)
+X_test_features = rocket.transform(X_test)
+
+# Train traditional ML
+clf = GradientBoostingClassifier()
+clf.fit(X_train_features, y_train)
+predictions = clf.predict(X_test_features)
+```
+
+### Anomaly Detection with Visualization
+
+```python
+from aeon.anomaly_detection import STOMP
+import matplotlib.pyplot as plt
+
+detector = STOMP(window_size=50)
+scores = detector.fit_predict(y)
+
+plt.figure(figsize=(15, 5))
+plt.subplot(2, 1, 1)
+plt.plot(y, label='Time Series')
+plt.subplot(2, 1, 2)
+plt.plot(scores, label='Anomaly Scores', color='red')
+plt.axhline(np.percentile(scores, 95), color='k', linestyle='--')
+plt.show()
+```
+
+## Best Practices
+
+### Data Preparation
+
+1. **Normalize**: Most algorithms benefit from z-normalization
+   ```python
+   from aeon.transformations.collection import Normalizer
+   normalizer = Normalizer()
+   X_train = normalizer.fit_transform(X_train)
+   X_test = normalizer.transform(X_test)
+   ```
+
+2. **Handle Missing Values**: Impute before analysis
+   ```python
+   from aeon.transformations.collection import SimpleImputer
+   imputer = SimpleImputer(strategy='mean')
+   X_train = imputer.fit_transform(X_train)
+   ```
+
+3. **Check Data Format**: Aeon expects shape `(n_samples, n_channels, n_timepoints)`
+
+### Model Selection
+
+1. **Start Simple**: Begin with ROCKET variants before deep learning
+2. **Use Validation**: Split training data for hyperparameter tuning
+3. **Compare Baselines**: Test against simple methods (1-NN Euclidean, Naive)
+4. **Consider Resources**: ROCKET for speed, deep learning if GPU available
+
+### Algorithm Selection Guide
+
+**For Fast Prototyping:**
+- Classification: `MiniRocketClassifier`
+- Regression: `MiniRocketRegressor`
+- Clustering: `TimeSeriesKMeans` with Euclidean
+
+**For Maximum Accuracy:**
+- Classification: `HIVECOTEV2`, `InceptionTimeClassifier`
+- Regression: `InceptionTimeRegressor`
+- Forecasting: `ARIMA`, `TCNForecaster`
+
+**For Interpretability:**
+- Classification: `ShapeletTransformClassifier`, `Catch22Classifier`
+- Features: `Catch22`, `TSFresh`
+
+**For Small Datasets:**
+- Distance-based: `KNeighborsTimeSeriesClassifier` with DTW
+- Avoid: Deep learning (requires large data)
+
+## Reference Documentation
+
+Detailed information available in `references/`:
+- `classification.md` - All classification algorithms
+- `regression.md` - Regression methods
+- `clustering.md` - Clustering algorithms
+- `forecasting.md` - Forecasting approaches
+- `anomaly_detection.md` - Anomaly detection methods
+- `segmentation.md` - Segmentation algorithms
+- `similarity_search.md` - Pattern matching and motif discovery
+- `transformations.md` - Feature extraction and preprocessing
+- `distances.md` - Time series distance metrics
+- `networks.md` - Deep learning architectures
+- `datasets_benchmarking.md` - Data loading and evaluation tools
+
+## Additional Resources
+
+- Documentation: https://www.aeon-toolkit.org/
+- GitHub: https://github.com/aeon-toolkit/aeon
+- Examples: https://www.aeon-toolkit.org/en/stable/examples.html
+- API Reference: https://www.aeon-toolkit.org/en/stable/api_reference.html
