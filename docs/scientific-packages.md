@@ -57,7 +57,7 @@
 - **UMAP-learn** - Dimensionality reduction and manifold learning
 
 ## Materials Science & Chemistry
-- **Astropy** - Astronomy and astrophysics (coordinates, cosmology, FITS files)
+- **Astropy** - Comprehensive Python library for astronomy and astrophysics providing core functionality for astronomical research and data analysis. Includes coordinate system transformations (ICRS, Galactic, FK5, AltAz), physical units and quantities with automatic dimensional consistency, FITS file operations (reading, writing, manipulating headers and data), cosmological calculations (luminosity distance, lookback time, Hubble parameter, Planck/WMAP models), precise time handling across multiple time scales (UTC, TAI, TT, TDB) and formats (JD, MJD, ISO), table operations with unit support (FITS, CSV, HDF5, VOTable), WCS transformations between pixel and world coordinates, astronomical constants, modeling framework, visualization tools, and statistical functions. Use for celestial coordinate transformations, unit conversions, FITS image/table processing, cosmological distance calculations, barycentric time corrections, catalog cross-matching, and astronomical data analysis
 - **COBRApy** - Constraint-based metabolic modeling and flux balance analysis
 - **Pymatgen** - Materials structure analysis, phase diagrams, and electronic structure
 
