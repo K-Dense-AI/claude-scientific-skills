@@ -1,443 +1,399 @@
-# Model Evaluation and Selection in scikit-learn
+# Model Selection and Evaluation Reference
 
 ## Overview
-Model evaluation assesses how well models generalize to unseen data. Scikit-learn provides three main APIs for evaluation:
-1. **Estimator score methods**: Built-in evaluation (accuracy for classifiers, R² for regressors)
-2. **Scoring parameter**: Used in cross-validation and hyperparameter tuning
-3. **Metric functions**: Specialized evaluation in `sklearn.metrics`
+
+Comprehensive guide for evaluating models, tuning hyperparameters, and selecting the best model using scikit-learn's model selection tools.
+
+## Train-Test Split
+
+### Basic Splitting
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Basic split (default 75/25)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+# With stratification (preserves class distribution)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, stratify=y, random_state=42
+)
+
+# Three-way split (train/val/test)
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+```
 
 ## Cross-Validation
 
-Cross-validation evaluates model performance by splitting data into multiple train/test sets. This addresses overfitting: "a model that would just repeat the labels of the samples that it has just seen would have a perfect score but would fail to predict anything useful on yet-unseen data."
-
-### Basic Cross-Validation
-
-```python
-from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import LogisticRegression
-
-model = LogisticRegression()
-scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
-print(f"Accuracy: {scores.mean():.3f} (+/- {scores.std():.3f})")
-```
-
 ### Cross-Validation Strategies
 
-#### For i.i.d. Data
-
-**KFold**: Standard k-fold cross-validation
-- Splits data into k equal folds
-- Each fold used once as test set
-- `n_splits`: Number of folds (typically 5 or 10)
-
+**KFold**
+- Standard k-fold cross-validation
+- Splits data into k consecutive folds
 ```python
 from sklearn.model_selection import KFold
-cv = KFold(n_splits=5, shuffle=True, random_state=42)
+
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+for train_idx, val_idx in kf.split(X):
+    X_train, X_val = X[train_idx], X[val_idx]
+    y_train, y_val = y[train_idx], y[val_idx]
 ```
 
-**RepeatedKFold**: Repeats KFold with different randomization
-- More robust estimation
-- Computationally expensive
-
-**LeaveOneOut (LOO)**: Each sample is a test set
-- Maximum training data usage
-- Very computationally expensive
-- High variance in estimates
-- Use only for small datasets (<1000 samples)
-
-**ShuffleSplit**: Random train/test splits
-- Flexible train/test sizes
-- Can control number of iterations
-- Good for quick evaluation
-
-```python
-from sklearn.model_selection import ShuffleSplit
-cv = ShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
-```
-
-#### For Imbalanced Classes
-
-**StratifiedKFold**: Preserves class proportions in each fold
-- Essential for imbalanced datasets
-- Default for classification in cross_val_score()
-
+**StratifiedKFold**
+- Preserves class distribution in each fold
+- Use for imbalanced classification
 ```python
 from sklearn.model_selection import StratifiedKFold
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+for train_idx, val_idx in skf.split(X, y):
+    X_train, X_val = X[train_idx], X[val_idx]
+    y_train, y_val = y[train_idx], y[val_idx]
 ```
 
-**StratifiedShuffleSplit**: Stratified random splits
-
-#### For Grouped Data
-
-Use when samples are not independent (e.g., multiple measurements from same subject).
-
-**GroupKFold**: Groups don't appear in both train and test
-```python
-from sklearn.model_selection import GroupKFold
-cv = GroupKFold(n_splits=5)
-scores = cross_val_score(model, X, y, groups=groups, cv=cv)
-```
-
-**StratifiedGroupKFold**: Combines stratification with group separation
-
-**LeaveOneGroupOut**: Each group becomes a test set
-
-#### For Time Series
-
-**TimeSeriesSplit**: Expanding window approach
-- Successive training sets are supersets
-- Respects temporal ordering
-- No data leakage from future to past
-
+**TimeSeriesSplit**
+- For time series data
+- Respects temporal order
 ```python
 from sklearn.model_selection import TimeSeriesSplit
-cv = TimeSeriesSplit(n_splits=5)
-for train_idx, test_idx in cv.split(X):
-    # Train on indices 0 to t, test on t+1 to t+k
-    pass
+
+tscv = TimeSeriesSplit(n_splits=5)
+for train_idx, val_idx in tscv.split(X):
+    X_train, X_val = X[train_idx], X[val_idx]
+    y_train, y_val = y[train_idx], y[val_idx]
+```
+
+**GroupKFold**
+- Ensures samples from same group don't appear in both train and validation
+- Use when samples are not independent
+```python
+from sklearn.model_selection import GroupKFold
+
+gkf = GroupKFold(n_splits=5)
+for train_idx, val_idx in gkf.split(X, y, groups=group_ids):
+    X_train, X_val = X[train_idx], X[val_idx]
+    y_train, y_val = y[train_idx], y[val_idx]
+```
+
+**LeaveOneOut (LOO)**
+- Each sample used as validation set once
+- Use for very small datasets
+- Computationally expensive
+```python
+from sklearn.model_selection import LeaveOneOut
+
+loo = LeaveOneOut()
+for train_idx, val_idx in loo.split(X):
+    X_train, X_val = X[train_idx], X[val_idx]
+    y_train, y_val = y[train_idx], y[val_idx]
 ```
 
 ### Cross-Validation Functions
 
-**cross_val_score**: Returns array of scores
+**cross_val_score**
+- Evaluate model using cross-validation
+- Returns array of scores
 ```python
-scores = cross_val_score(model, X, y, cv=5, scoring='f1_weighted')
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+
+print(f"Scores: {scores}")
+print(f"Mean: {scores.mean():.3f} (+/- {scores.std() * 2:.3f})")
 ```
 
-**cross_validate**: Returns multiple metrics and timing
+**cross_validate**
+- More comprehensive than cross_val_score
+- Can return multiple metrics and fit times
 ```python
-results = cross_validate(
+from sklearn.model_selection import cross_validate
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+cv_results = cross_validate(
     model, X, y, cv=5,
-    scoring=['accuracy', 'f1_weighted', 'roc_auc'],
+    scoring=['accuracy', 'precision', 'recall', 'f1'],
     return_train_score=True,
     return_estimator=True  # Returns fitted estimators
 )
-print(results['test_accuracy'])
-print(results['fit_time'])
+
+print(f"Test accuracy: {cv_results['test_accuracy'].mean():.3f}")
+print(f"Test precision: {cv_results['test_precision'].mean():.3f}")
+print(f"Fit time: {cv_results['fit_time'].mean():.3f}s")
 ```
 
-**cross_val_predict**: Returns predictions for model blending/visualization
+**cross_val_predict**
+- Get predictions for each sample when it was in validation set
+- Useful for analyzing errors
 ```python
 from sklearn.model_selection import cross_val_predict
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
 y_pred = cross_val_predict(model, X, y, cv=5)
-# Use for confusion matrix, error analysis, etc.
+
+# Now can analyze predictions vs actual
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y, y_pred)
 ```
 
 ## Hyperparameter Tuning
 
-### GridSearchCV
-Exhaustively searches all parameter combinations.
+### Grid Search
 
+**GridSearchCV**
+- Exhaustive search over parameter grid
+- Tests all combinations
 ```python
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 
 param_grid = {
-    'n_estimators': [100, 200, 500],
-    'max_depth': [10, 20, 30, None],
+    'n_estimators': [50, 100, 200],
+    'max_depth': [5, 10, 15, None],
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4]
 }
 
+model = RandomForestClassifier(random_state=42)
 grid_search = GridSearchCV(
-    RandomForestClassifier(random_state=42),
-    param_grid,
+    model, param_grid,
     cv=5,
-    scoring='f1_weighted',
+    scoring='accuracy',
     n_jobs=-1,  # Use all CPU cores
-    verbose=2
+    verbose=1
 )
 
 grid_search.fit(X_train, y_train)
-print("Best parameters:", grid_search.best_params_)
-print("Best score:", grid_search.best_score_)
 
-# Use best model
+print(f"Best parameters: {grid_search.best_params_}")
+print(f"Best cross-validation score: {grid_search.best_score_:.3f}")
+print(f"Test score: {grid_search.score(X_test, y_test):.3f}")
+
+# Access best model
 best_model = grid_search.best_estimator_
+
+# View all results
+import pandas as pd
+results_df = pd.DataFrame(grid_search.cv_results_)
 ```
 
-**When to use**:
-- Small parameter spaces
-- When computational resources allow
-- When exhaustive search is desired
+### Randomized Search
 
-### RandomizedSearchCV
-Samples parameter combinations from distributions.
-
+**RandomizedSearchCV**
+- Samples random combinations from parameter distributions
+- More efficient for large search spaces
 ```python
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import randint, uniform
 
 param_distributions = {
-    'n_estimators': randint(100, 1000),
-    'max_depth': randint(5, 50),
+    'n_estimators': randint(50, 300),
+    'max_depth': [5, 10, 15, 20, None],
     'min_samples_split': randint(2, 20),
     'min_samples_leaf': randint(1, 10),
-    'max_features': uniform(0.1, 0.9)
+    'max_features': uniform(0.1, 0.9)  # Continuous distribution
 }
 
+model = RandomForestClassifier(random_state=42)
 random_search = RandomizedSearchCV(
-    RandomForestClassifier(random_state=42),
-    param_distributions,
+    model, param_distributions,
     n_iter=100,  # Number of parameter settings sampled
     cv=5,
-    scoring='f1_weighted',
+    scoring='accuracy',
     n_jobs=-1,
+    verbose=1,
     random_state=42
 )
 
 random_search.fit(X_train, y_train)
+
+print(f"Best parameters: {random_search.best_params_}")
+print(f"Best score: {random_search.best_score_:.3f}")
 ```
-
-**When to use**:
-- Large parameter spaces
-- When budget is limited
-- Often finds good parameters faster than GridSearchCV
-
-**Advantage**: "Budget can be chosen independent of the number of parameters and possible values"
 
 ### Successive Halving
 
-**HalvingGridSearchCV** and **HalvingRandomSearchCV**: Tournament-style selection
-
-**How it works**:
-1. Start with many candidates, minimal resources
-2. Eliminate poor performers
-3. Increase resources for remaining candidates
-4. Repeat until best candidates found
-
-**When to use**:
-- Large parameter spaces
-- Expensive model training
-- When many parameter combinations are clearly inferior
-
+**HalvingGridSearchCV / HalvingRandomSearchCV**
+- Iteratively selects best candidates using successive halving
+- More efficient than exhaustive search
 ```python
 from sklearn.experimental import enable_halving_search_cv
 from sklearn.model_selection import HalvingGridSearchCV
 
+param_grid = {
+    'n_estimators': [50, 100, 200, 300],
+    'max_depth': [5, 10, 15, 20, None],
+    'min_samples_split': [2, 5, 10, 20]
+}
+
+model = RandomForestClassifier(random_state=42)
 halving_search = HalvingGridSearchCV(
-    estimator,
-    param_grid,
-    factor=3,  # Proportion of candidates eliminated each round
-    cv=5
+    model, param_grid,
+    cv=5,
+    factor=3,  # Proportion of candidates eliminated in each iteration
+    resource='n_samples',  # Can also use 'n_estimators' for ensembles
+    max_resources='auto',
+    random_state=42
 )
+
+halving_search.fit(X_train, y_train)
+print(f"Best parameters: {halving_search.best_params_}")
 ```
 
 ## Classification Metrics
 
-### Accuracy-Based Metrics
-
-**Accuracy**: Proportion of correct predictions
-```python
-from sklearn.metrics import accuracy_score
-accuracy = accuracy_score(y_true, y_pred)
-```
-
-**When to use**: Balanced datasets only
-**When NOT to use**: Imbalanced datasets (misleading)
-
-**Balanced Accuracy**: Average recall per class
-```python
-from sklearn.metrics import balanced_accuracy_score
-bal_acc = balanced_accuracy_score(y_true, y_pred)
-```
-
-**When to use**: Imbalanced datasets, ensures all classes matter equally
-
-### Precision, Recall, F-Score
-
-**Precision**: Of predicted positives, how many are actually positive
-- Formula: TP / (TP + FP)
-- Answers: "How reliable are positive predictions?"
-
-**Recall** (Sensitivity): Of actual positives, how many are predicted positive
-- Formula: TP / (TP + FN)
-- Answers: "How complete is positive detection?"
-
-**F1-Score**: Harmonic mean of precision and recall
-- Formula: 2 * (precision * recall) / (precision + recall)
-- Balanced measure when both precision and recall are important
+### Basic Metrics
 
 ```python
-from sklearn.metrics import precision_recall_fscore_support, f1_score
-
-precision, recall, f1, support = precision_recall_fscore_support(
-    y_true, y_pred, average='weighted'
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    balanced_accuracy_score, matthews_corrcoef
 )
 
-# Or individually
-f1 = f1_score(y_true, y_pred, average='weighted')
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='weighted')  # For multiclass
+recall = recall_score(y_test, y_pred, average='weighted')
+f1 = f1_score(y_test, y_pred, average='weighted')
+balanced_acc = balanced_accuracy_score(y_test, y_pred)  # Good for imbalanced data
+mcc = matthews_corrcoef(y_test, y_pred)  # Matthews correlation coefficient
+
+print(f"Accuracy: {accuracy:.3f}")
+print(f"Precision: {precision:.3f}")
+print(f"Recall: {recall:.3f}")
+print(f"F1-score: {f1:.3f}")
+print(f"Balanced Accuracy: {balanced_acc:.3f}")
+print(f"MCC: {mcc:.3f}")
 ```
 
-**Averaging strategies for multiclass**:
-- `binary`: Binary classification only
-- `micro`: Calculate globally (total TP, FP, FN)
-- `macro`: Calculate per class, unweighted mean (all classes equal)
-- `weighted`: Calculate per class, weighted by support (class frequency)
-- `samples`: For multilabel classification
+### Classification Report
 
-**When to use**:
-- `macro`: When all classes equally important (even rare ones)
-- `weighted`: When class frequency matters
-- `micro`: When overall performance across all samples matters
+```python
+from sklearn.metrics import classification_report
+
+print(classification_report(y_test, y_pred, target_names=class_names))
+```
 
 ### Confusion Matrix
-
-Shows true positives, false positives, true negatives, false negatives.
 
 ```python
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-cm = confusion_matrix(y_true, y_pred)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Class 0', 'Class 1'])
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+disp.plot(cmap='Blues')
+plt.show()
+```
+
+### ROC and AUC
+
+```python
+from sklearn.metrics import roc_auc_score, roc_curve, RocCurveDisplay
+
+# Binary classification
+y_proba = model.predict_proba(X_test)[:, 1]
+auc = roc_auc_score(y_test, y_proba)
+print(f"ROC AUC: {auc:.3f}")
+
+# Plot ROC curve
+fpr, tpr, thresholds = roc_curve(y_test, y_proba)
+RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=auc).plot()
+
+# Multiclass (one-vs-rest)
+auc_ovr = roc_auc_score(y_test, y_proba_multi, multi_class='ovr')
+```
+
+### Precision-Recall Curve
+
+```python
+from sklearn.metrics import precision_recall_curve, PrecisionRecallDisplay
+from sklearn.metrics import average_precision_score
+
+precision, recall, thresholds = precision_recall_curve(y_test, y_proba)
+ap = average_precision_score(y_test, y_proba)
+
+disp = PrecisionRecallDisplay(precision=precision, recall=recall, average_precision=ap)
 disp.plot()
-plt.show()
-```
-
-### ROC Curve and AUC
-
-**ROC (Receiver Operating Characteristic)**: Plot of true positive rate vs false positive rate at different thresholds
-
-**AUC (Area Under Curve)**: Measures overall ability to discriminate between classes
-- 1.0 = perfect classifier
-- 0.5 = random classifier
-- <0.5 = worse than random
-
-```python
-from sklearn.metrics import roc_auc_score, roc_curve
-import matplotlib.pyplot as plt
-
-# Requires probability predictions
-y_proba = model.predict_proba(X_test)[:, 1]  # Probabilities for positive class
-
-auc = roc_auc_score(y_true, y_proba)
-fpr, tpr, thresholds = roc_curve(y_true, y_proba)
-
-plt.plot(fpr, tpr, label=f'AUC = {auc:.3f}')
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.legend()
-plt.show()
-```
-
-**Multiclass ROC**: Use `multi_class='ovr'` (one-vs-rest) or `'ovo'` (one-vs-one)
-
-```python
-auc = roc_auc_score(y_true, y_proba, multi_class='ovr')
 ```
 
 ### Log Loss
 
-Measures probability calibration quality.
-
 ```python
 from sklearn.metrics import log_loss
-loss = log_loss(y_true, y_proba)
-```
 
-**When to use**: When probability quality matters, not just class predictions
-**Lower is better**: Perfect predictions have log loss of 0
-
-### Classification Report
-
-Comprehensive summary of precision, recall, f1-score per class.
-
-```python
-from sklearn.metrics import classification_report
-
-print(classification_report(y_true, y_pred, target_names=['Class 0', 'Class 1']))
+y_proba = model.predict_proba(X_test)
+logloss = log_loss(y_test, y_proba)
+print(f"Log Loss: {logloss:.3f}")
 ```
 
 ## Regression Metrics
 
-### Mean Squared Error (MSE)
-Average squared difference between predictions and true values.
-
 ```python
-from sklearn.metrics import mean_squared_error
-mse = mean_squared_error(y_true, y_pred)
-rmse = mean_squared_error(y_true, y_pred, squared=False)  # Root MSE
+from sklearn.metrics import (
+    mean_squared_error, mean_absolute_error, r2_score,
+    mean_absolute_percentage_error, median_absolute_error
+)
+
+y_pred = model.predict(X_test)
+
+mse = mean_squared_error(y_test, y_pred)
+rmse = mean_squared_error(y_test, y_pred, squared=False)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+mape = mean_absolute_percentage_error(y_test, y_pred)
+median_ae = median_absolute_error(y_test, y_pred)
+
+print(f"MSE: {mse:.3f}")
+print(f"RMSE: {rmse:.3f}")
+print(f"MAE: {mae:.3f}")
+print(f"R² Score: {r2:.3f}")
+print(f"MAPE: {mape:.3f}")
+print(f"Median AE: {median_ae:.3f}")
 ```
 
-**Characteristics**:
-- Penalizes large errors heavily (squared term)
-- Same units as target² (use RMSE for same units as target)
-- Lower is better
+## Clustering Metrics
 
-### Mean Absolute Error (MAE)
-Average absolute difference between predictions and true values.
+### With Ground Truth Labels
 
 ```python
-from sklearn.metrics import mean_absolute_error
-mae = mean_absolute_error(y_true, y_pred)
+from sklearn.metrics import (
+    adjusted_rand_score, normalized_mutual_info_score,
+    adjusted_mutual_info_score, fowlkes_mallows_score,
+    homogeneity_score, completeness_score, v_measure_score
+)
+
+ari = adjusted_rand_score(y_true, y_pred)
+nmi = normalized_mutual_info_score(y_true, y_pred)
+ami = adjusted_mutual_info_score(y_true, y_pred)
+fmi = fowlkes_mallows_score(y_true, y_pred)
+homogeneity = homogeneity_score(y_true, y_pred)
+completeness = completeness_score(y_true, y_pred)
+v_measure = v_measure_score(y_true, y_pred)
 ```
 
-**Characteristics**:
-- More robust to outliers than MSE
-- Same units as target
-- More interpretable
-- Lower is better
-
-**MSE vs MAE**: Use MAE when outliers shouldn't dominate the metric
-
-### R² Score (Coefficient of Determination)
-Proportion of variance explained by the model.
+### Without Ground Truth
 
 ```python
-from sklearn.metrics import r2_score
-r2 = r2_score(y_true, y_pred)
+from sklearn.metrics import (
+    silhouette_score, calinski_harabasz_score, davies_bouldin_score
+)
+
+silhouette = silhouette_score(X, labels)  # [-1, 1], higher better
+ch_score = calinski_harabasz_score(X, labels)  # Higher better
+db_score = davies_bouldin_score(X, labels)  # Lower better
 ```
 
-**Interpretation**:
-- 1.0 = perfect predictions
-- 0.0 = model as good as mean
-- <0.0 = model worse than mean (possible!)
-- Higher is better
+## Custom Scoring
 
-**Note**: Can be negative for models that perform worse than predicting the mean.
-
-### Mean Absolute Percentage Error (MAPE)
-Percentage-based error metric.
+### Using make_scorer
 
 ```python
-from sklearn.metrics import mean_absolute_percentage_error
-mape = mean_absolute_percentage_error(y_true, y_pred)
-```
+from sklearn.metrics import make_scorer
 
-**When to use**: When relative errors matter more than absolute errors
-**Warning**: Undefined when true values are zero
-
-### Median Absolute Error
-Median of absolute errors (robust to outliers).
-
-```python
-from sklearn.metrics import median_absolute_error
-med_ae = median_absolute_error(y_true, y_pred)
-```
-
-### Max Error
-Maximum residual error.
-
-```python
-from sklearn.metrics import max_error
-max_err = max_error(y_true, y_pred)
-```
-
-**When to use**: When worst-case performance matters
-
-## Custom Scoring Functions
-
-Create custom scorers for GridSearchCV and cross_val_score:
-
-```python
-from sklearn.metrics import make_scorer, fbeta_score
-
-# F2 score (weights recall higher than precision)
-f2_scorer = make_scorer(fbeta_score, beta=2)
-
-# Custom function
 def custom_metric(y_true, y_pred):
     # Your custom logic
     return score
@@ -448,78 +404,37 @@ custom_scorer = make_scorer(custom_metric, greater_is_better=True)
 scores = cross_val_score(model, X, y, cv=5, scoring=custom_scorer)
 ```
 
-## Scoring Parameter Options
-
-Common scoring strings for `scoring` parameter:
-
-**Classification**:
-- `'accuracy'`, `'balanced_accuracy'`
-- `'precision'`, `'recall'`, `'f1'` (add `_macro`, `_micro`, `_weighted` for multiclass)
-- `'roc_auc'`, `'roc_auc_ovr'`, `'roc_auc_ovo'`
-- `'log_loss'` (lower is better, negate for maximization)
-- `'jaccard'` (Jaccard similarity)
-
-**Regression**:
-- `'r2'`
-- `'neg_mean_squared_error'`, `'neg_root_mean_squared_error'`
-- `'neg_mean_absolute_error'`
-- `'neg_mean_absolute_percentage_error'`
-- `'neg_median_absolute_error'`
-
-**Note**: Many metrics are negated (neg_*) so GridSearchCV can maximize them.
-
-## Validation Strategies
-
-### Train-Test Split
-Simple single split.
+### Multiple Metrics in Grid Search
 
 ```python
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    random_state=42,
-    stratify=y  # For classification with imbalanced classes
+scoring = {
+    'accuracy': 'accuracy',
+    'precision': 'precision_weighted',
+    'recall': 'recall_weighted',
+    'f1': 'f1_weighted'
+}
+
+grid_search = GridSearchCV(
+    model, param_grid,
+    cv=5,
+    scoring=scoring,
+    refit='f1',  # Refit on best f1 score
+    return_train_score=True
 )
+
+grid_search.fit(X_train, y_train)
 ```
 
-**When to use**: Large datasets, quick evaluation
-**Parameters**:
-- `test_size`: Proportion for test (typically 0.2-0.3)
-- `stratify`: Preserves class proportions
-- `random_state`: Reproducibility
+## Validation Curves
 
-### Train-Validation-Test Split
-Three-way split for hyperparameter tuning.
-
-```python
-# First split: train+val and test
-X_trainval, X_test, y_trainval, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-# Second split: train and validation
-X_train, X_val, y_train, y_val = train_test_split(
-    X_trainval, y_trainval, test_size=0.2, random_state=42
-)
-
-# Or use GridSearchCV with train+val, then evaluate on test
-```
-
-**When to use**: Model selection and final evaluation
-**Strategy**:
-1. Train: Model training
-2. Validation: Hyperparameter tuning
-3. Test: Final, unbiased evaluation (touch only once!)
-
-### Learning Curves
-
-Diagnose bias vs variance issues.
+### Learning Curve
 
 ```python
 from sklearn.model_selection import learning_curve
 import matplotlib.pyplot as plt
+import numpy as np
 
 train_sizes, train_scores, val_scores = learning_curve(
     model, X, y,
@@ -529,73 +444,149 @@ train_sizes, train_scores, val_scores = learning_curve(
     n_jobs=-1
 )
 
-plt.plot(train_sizes, train_scores.mean(axis=1), label='Training score')
-plt.plot(train_sizes, val_scores.mean(axis=1), label='Validation score')
-plt.xlabel('Training set size')
+train_mean = train_scores.mean(axis=1)
+train_std = train_scores.std(axis=1)
+val_mean = val_scores.mean(axis=1)
+val_std = val_scores.std(axis=1)
+
+plt.figure(figsize=(10, 6))
+plt.plot(train_sizes, train_mean, label='Training score')
+plt.plot(train_sizes, val_mean, label='Validation score')
+plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.1)
+plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.1)
+plt.xlabel('Training Set Size')
 plt.ylabel('Score')
+plt.title('Learning Curve')
 plt.legend()
-plt.show()
+plt.grid(True)
 ```
 
-**Interpretation**:
-- Large gap between train and validation: **Overfitting** (high variance)
-- Both scores low: **Underfitting** (high bias)
-- Scores converging but low: Need better features or more complex model
-- Validation score still improving: More data would help
+### Validation Curve
+
+```python
+from sklearn.model_selection import validation_curve
+
+param_range = [1, 10, 50, 100, 200, 500]
+train_scores, val_scores = validation_curve(
+    model, X, y,
+    param_name='n_estimators',
+    param_range=param_range,
+    cv=5,
+    scoring='accuracy',
+    n_jobs=-1
+)
+
+train_mean = train_scores.mean(axis=1)
+val_mean = val_scores.mean(axis=1)
+
+plt.figure(figsize=(10, 6))
+plt.plot(param_range, train_mean, label='Training score')
+plt.plot(param_range, val_mean, label='Validation score')
+plt.xlabel('n_estimators')
+plt.ylabel('Score')
+plt.title('Validation Curve')
+plt.legend()
+plt.grid(True)
+```
+
+## Model Persistence
+
+### Save and Load Models
+
+```python
+import joblib
+
+# Save model
+joblib.dump(model, 'model.pkl')
+
+# Load model
+loaded_model = joblib.load('model.pkl')
+
+# Also works with pipelines
+joblib.dump(pipeline, 'pipeline.pkl')
+```
+
+### Using pickle
+
+```python
+import pickle
+
+# Save
+with open('model.pkl', 'wb') as f:
+    pickle.dump(model, f)
+
+# Load
+with open('model.pkl', 'rb') as f:
+    loaded_model = pickle.load(f)
+```
+
+## Imbalanced Data Strategies
+
+### Class Weighting
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+# Automatically balance classes
+model = RandomForestClassifier(class_weight='balanced', random_state=42)
+model.fit(X_train, y_train)
+
+# Custom weights
+class_weights = {0: 1, 1: 10}  # Give class 1 more weight
+model = RandomForestClassifier(class_weight=class_weights, random_state=42)
+```
+
+### Resampling (using imbalanced-learn)
+
+```python
+# Install: uv pip install imbalanced-learn
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.pipeline import Pipeline as ImbPipeline
+
+# SMOTE oversampling
+smote = SMOTE(random_state=42)
+X_resampled, y_resampled = smote.fit_resample(X_train, y_train)
+
+# Combined approach
+pipeline = ImbPipeline([
+    ('over', SMOTE(sampling_strategy=0.5)),
+    ('under', RandomUnderSampler(sampling_strategy=0.8)),
+    ('model', RandomForestClassifier())
+])
+```
 
 ## Best Practices
 
-### Metric Selection Guidelines
+### Stratified Splitting
+Always use stratified splitting for classification:
+```python
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+```
 
-**Classification - Balanced classes**:
-- Accuracy or F1-score
+### Appropriate Metrics
+- **Balanced data**: Accuracy, F1-score
+- **Imbalanced data**: Precision, Recall, F1-score, ROC AUC, Balanced Accuracy
+- **Cost-sensitive**: Define custom scorer with costs
+- **Ranking**: ROC AUC, Average Precision
 
-**Classification - Imbalanced classes**:
-- Balanced accuracy
-- F1-score (weighted or macro)
-- ROC-AUC
-- Precision-Recall curve
+### Cross-Validation
+- Use 5 or 10-fold CV for most cases
+- Use StratifiedKFold for classification
+- Use TimeSeriesSplit for time series
+- Use GroupKFold when samples are grouped
 
-**Classification - Cost-sensitive**:
-- Custom scorer with cost matrix
-- Adjust threshold on probabilities
+### Nested Cross-Validation
+For unbiased performance estimates when tuning:
+```python
+from sklearn.model_selection import cross_val_score, GridSearchCV
 
-**Regression - Typical use**:
-- RMSE (sensitive to outliers)
-- R² (proportion of variance explained)
+# Inner loop: hyperparameter tuning
+grid_search = GridSearchCV(model, param_grid, cv=5)
 
-**Regression - Outliers present**:
-- MAE (robust to outliers)
-- Median absolute error
-
-**Regression - Percentage errors matter**:
-- MAPE
-
-### Cross-Validation Guidelines
-
-**Number of folds**:
-- 5-10 folds typical
-- More folds = more computation, less variance in estimate
-- LeaveOneOut only for small datasets
-
-**Stratification**:
-- Always use for classification with imbalanced classes
-- Use StratifiedKFold by default for classification
-
-**Grouping**:
-- Always use when samples are not independent
-- Time series: Always use TimeSeriesSplit
-
-**Nested cross-validation**:
-- For unbiased performance estimate when doing hyperparameter tuning
-- Outer loop: Performance estimation
-- Inner loop: Hyperparameter selection
-
-### Avoiding Common Pitfalls
-
-1. **Data leakage**: Fit preprocessors only on training data within each CV fold (use Pipeline!)
-2. **Test set leakage**: Never use test set for model selection
-3. **Improper metric**: Use metrics appropriate for problem (balanced_accuracy for imbalanced data)
-4. **Multiple testing**: More models evaluated = higher chance of random good results
-5. **Temporal leakage**: For time series, use TimeSeriesSplit, not random splits
-6. **Target leakage**: Features shouldn't contain information not available at prediction time
+# Outer loop: performance estimation
+scores = cross_val_score(grid_search, X, y, cv=5)
+print(f"Nested CV score: {scores.mean():.3f} (+/- {scores.std() * 2:.3f})")
+```
