@@ -1,560 +1,497 @@
-# pyOpenMS Data Structures Reference
+# Core Data Structures
 
-This document provides comprehensive coverage of core data structures in pyOpenMS for representing mass spectrometry data.
+## Overview
 
-## Core Hierarchy
+PyOpenMS uses C++ objects with Python bindings. Understanding these core data structures is essential for effective data manipulation.
 
-```
-MSExperiment                    # Top-level: Complete LC-MS/MS run
-├── MSSpectrum[]               # Collection of mass spectra
-│   ├── Peak1D[]              # Individual m/z, intensity pairs
-│   └── SpectrumSettings      # Metadata (RT, MS level, precursor)
-└── MSChromatogram[]          # Collection of chromatograms
-    ├── ChromatogramPeak[]    # RT, intensity pairs
-    └── ChromatogramSettings  # Metadata
-```
+## Spectrum and Experiment Objects
 
-## MSSpectrum
+### MSExperiment
 
-Represents a single mass spectrum (1-dimensional peak data).
-
-### Creation and Basic Properties
+Container for complete LC-MS experiment data (spectra and chromatograms).
 
 ```python
-import pyopenms as oms
+import pyopenms as ms
 
-# Create empty spectrum
-spectrum = oms.MSSpectrum()
+# Create experiment
+exp = ms.MSExperiment()
 
-# Set metadata
-spectrum.setRT(123.45)           # Retention time in seconds
-spectrum.setMSLevel(1)           # MS level (1 for MS1, 2 for MS2, etc.)
-spectrum.setNativeID("scan=1234") # Native ID from file
+# Load from file
+ms.MzMLFile().load("data.mzML", exp)
 
-# Additional metadata
-spectrum.setDriftTime(15.2)      # Ion mobility drift time
-spectrum.setName("MyScan")       # Optional name
-```
-
-### Peak Data Management
-
-**Setting Peaks (Method 1 - Lists):**
-```python
-mz_values = [100.5, 200.3, 300.7, 400.2, 500.1]
-intensity_values = [1000, 5000, 3000, 2000, 1500]
-
-spectrum.set_peaks((mz_values, intensity_values))
-```
-
-**Setting Peaks (Method 2 - NumPy arrays):**
-```python
-import numpy as np
-
-mz_array = np.array([100.5, 200.3, 300.7, 400.2, 500.1])
-intensity_array = np.array([1000, 5000, 3000, 2000, 1500])
-
-spectrum.set_peaks((mz_array, intensity_array))
-```
-
-**Retrieving Peaks:**
-```python
-# Get as numpy arrays (efficient)
-mz_array, intensity_array = spectrum.get_peaks()
-
-# Check number of peaks
-n_peaks = spectrum.size()
-
-# Get individual peak (slower)
-for i in range(spectrum.size()):
-    peak = spectrum[i]
-    mz = peak.getMZ()
-    intensity = peak.getIntensity()
-```
-
-### Precursor Information (for MS2/MSn spectra)
-
-```python
-# Create precursor
-precursor = oms.Precursor()
-precursor.setMZ(456.789)           # Precursor m/z
-precursor.setCharge(2)             # Precursor charge
-precursor.setIntensity(50000)      # Precursor intensity
-precursor.setIsolationWindowLowerOffset(1.5)  # Lower isolation window
-precursor.setIsolationWindowUpperOffset(1.5)  # Upper isolation window
-
-# Set activation method
-activation = oms.Activation()
-activation.setActivationEnergy(35.0)  # Collision energy
-activation.setMethod(oms.Activation.ActivationMethod.CID)
-precursor.setActivation(activation)
-
-# Assign to spectrum
-spectrum.setPrecursors([precursor])
-
-# Retrieve precursor information
-precursors = spectrum.getPrecursors()
-if len(precursors) > 0:
-    prec = precursors[0]
-    print(f"Precursor m/z: {prec.getMZ()}")
-    print(f"Precursor charge: {prec.getCharge()}")
-```
-
-### Spectrum Metadata Access
-
-```python
-# Check if spectrum is sorted by m/z
-is_sorted = spectrum.isSorted()
-
-# Sort spectrum by m/z
-spectrum.sortByPosition()
-
-# Sort by intensity
-spectrum.sortByIntensity()
-
-# Clear all peaks
-spectrum.clear(False)  # False = keep metadata, True = clear everything
-
-# Get retention time
-rt = spectrum.getRT()
-
-# Get MS level
-ms_level = spectrum.getMSLevel()
-```
-
-### Spectrum Types and Modes
-
-```python
-# Set spectrum type
-spectrum.setType(oms.SpectrumSettings.SpectrumType.CENTROID)  # or PROFILE
-
-# Get spectrum type
-spec_type = spectrum.getType()
-if spec_type == oms.SpectrumSettings.SpectrumType.CENTROID:
-    print("Centroid spectrum")
-elif spec_type == oms.SpectrumSettings.SpectrumType.PROFILE:
-    print("Profile spectrum")
-```
-
-### Data Processing Annotations
-
-```python
-# Add processing information
-processing = oms.DataProcessing()
-processing.setMetaValue("smoothing", "gaussian")
-spectrum.setDataProcessing([processing])
-```
-
-## MSExperiment
-
-Represents a complete LC-MS/MS experiment containing multiple spectra and chromatograms.
-
-### Creation and Population
-
-```python
-# Create empty experiment
-exp = oms.MSExperiment()
-
-# Add spectra
-spectrum1 = oms.MSSpectrum()
-spectrum1.setRT(100.0)
-spectrum1.set_peaks(([100, 200], [1000, 2000]))
-
-spectrum2 = oms.MSSpectrum()
-spectrum2.setRT(200.0)
-spectrum2.set_peaks(([100, 200], [1500, 2500]))
-
-exp.addSpectrum(spectrum1)
-exp.addSpectrum(spectrum2)
-
-# Add chromatograms
-chrom = oms.MSChromatogram()
-chrom.set_peaks(([10.5, 11.0, 11.5], [1000, 5000, 3000]))
-exp.addChromatogram(chrom)
-```
-
-### Accessing Spectra and Chromatograms
-
-```python
-# Get number of spectra and chromatograms
-n_spectra = exp.getNrSpectra()
-n_chroms = exp.getNrChromatograms()
-
-# Access by index
-first_spectrum = exp.getSpectrum(0)
-last_spectrum = exp.getSpectrum(exp.getNrSpectra() - 1)
-
-# Iterate over all spectra
-for spectrum in exp:
-    rt = spectrum.getRT()
-    ms_level = spectrum.getMSLevel()
-    n_peaks = spectrum.size()
-    print(f"RT: {rt:.2f}s, MS{ms_level}, Peaks: {n_peaks}")
-
-# Get all spectra as list
-spectra = exp.getSpectra()
-
-# Access chromatograms
-chrom = exp.getChromatogram(0)
-```
-
-### Filtering Operations
-
-```python
-# Filter by MS level
-exp.filterMSLevel(1)  # Keep only MS1 spectra
-exp.filterMSLevel(2)  # Keep only MS2 spectra
-
-# Filter by retention time range
-exp.filterRT(100.0, 500.0)  # Keep RT between 100-500 seconds
-
-# Filter by m/z range (all spectra)
-exp.filterMZ(300.0, 1500.0)  # Keep m/z between 300-1500
-
-# Filter by scan number
-exp.filterScanNumber(100, 200)  # Keep scans 100-200
-```
-
-### Metadata and Properties
-
-```python
-# Set experiment metadata
-exp.setMetaValue("operator", "John Doe")
-exp.setMetaValue("instrument", "Q Exactive HF")
-
-# Get metadata
-operator = exp.getMetaValue("operator")
+# Access properties
+print(f"Number of spectra: {exp.getNrSpectra()}")
+print(f"Number of chromatograms: {exp.getNrChromatograms()}")
 
 # Get RT range
-rt_range = exp.getMinRT(), exp.getMaxRT()
+rts = [spec.getRT() for spec in exp]
+print(f"RT range: {min(rts):.1f} - {max(rts):.1f} seconds")
 
-# Get m/z range
-mz_range = exp.getMinMZ(), exp.getMaxMZ()
+# Access individual spectrum
+spec = exp.getSpectrum(0)
 
-# Clear all data
-exp.clear(False)  # False = keep metadata
+# Iterate through spectra
+for spec in exp:
+    if spec.getMSLevel() == 2:
+        print(f"MS2 spectrum at RT {spec.getRT():.2f}")
+
+# Get metadata
+exp_settings = exp.getExperimentalSettings()
+instrument = exp_settings.getInstrument()
+print(f"Instrument: {instrument.getName()}")
 ```
 
-### Sorting and Organization
+### MSSpectrum
+
+Individual mass spectrum with m/z and intensity arrays.
 
 ```python
-# Sort spectra by retention time
-exp.sortSpectra()
+# Create empty spectrum
+spec = ms.MSSpectrum()
 
-# Update ranges (call after modifications)
-exp.updateRanges()
+# Get from experiment
+exp = ms.MSExperiment()
+ms.MzMLFile().load("data.mzML", exp)
+spec = exp.getSpectrum(0)
 
-# Check if experiment is empty
-is_empty = exp.empty()
+# Basic properties
+print(f"MS level: {spec.getMSLevel()}")
+print(f"Retention time: {spec.getRT():.2f} seconds")
+print(f"Number of peaks: {spec.size()}")
 
-# Reset (clear everything)
-exp.reset()
+# Get peak data as numpy arrays
+mz, intensity = spec.get_peaks()
+print(f"m/z range: {mz.min():.2f} - {mz.max():.2f}")
+print(f"Max intensity: {intensity.max():.0f}")
+
+# Access individual peaks
+for i in range(min(5, spec.size())):  # First 5 peaks
+    print(f"Peak {i}: m/z={mz[i]:.4f}, intensity={intensity[i]:.0f}")
+
+# Precursor information (for MS2)
+if spec.getMSLevel() == 2:
+    precursors = spec.getPrecursors()
+    if precursors:
+        precursor = precursors[0]
+        print(f"Precursor m/z: {precursor.getMZ():.4f}")
+        print(f"Precursor charge: {precursor.getCharge()}")
+        print(f"Precursor intensity: {precursor.getIntensity():.0f}")
+
+# Set peak data
+new_mz = [100.0, 200.0, 300.0]
+new_intensity = [1000.0, 2000.0, 1500.0]
+spec.set_peaks((new_mz, new_intensity))
 ```
 
-## MSChromatogram
+### MSChromatogram
 
-Represents an extracted or reconstructed chromatogram (retention time vs. intensity).
-
-### Creation and Basic Usage
+Chromatographic trace (TIC, XIC, or SRM transition).
 
 ```python
-# Create chromatogram
-chrom = oms.MSChromatogram()
+# Access chromatogram from experiment
+for chrom in exp.getChromatograms():
+    print(f"Chromatogram ID: {chrom.getNativeID()}")
 
-# Set peaks (RT, intensity pairs)
-rt_values = [10.0, 10.5, 11.0, 11.5, 12.0]
-intensity_values = [1000, 5000, 8000, 6000, 2000]
-chrom.set_peaks((rt_values, intensity_values))
+    # Get data
+    rt, intensity = chrom.get_peaks()
 
-# Get peaks
-rt_array, int_array = chrom.get_peaks()
+    print(f"  RT points: {len(rt)}")
+    print(f"  Max intensity: {intensity.max():.0f}")
 
-# Get size
-n_points = chrom.size()
+    # Precursor info (for XIC)
+    precursor = chrom.getPrecursor()
+    print(f"  Precursor m/z: {precursor.getMZ():.4f}")
 ```
 
-### Chromatogram Types
-
-```python
-# Set chromatogram type
-chrom.setChromatogramType(oms.ChromatogramSettings.ChromatogramType.SELECTED_ION_CURRENT_CHROMATOGRAM)
-
-# Other types:
-# - TOTAL_ION_CURRENT_CHROMATOGRAM
-# - BASEPEAK_CHROMATOGRAM
-# - SELECTED_ION_CURRENT_CHROMATOGRAM
-# - SELECTED_REACTION_MONITORING_CHROMATOGRAM
-```
-
-### Metadata
-
-```python
-# Set native ID
-chrom.setNativeID("TIC")
-
-# Set name
-chrom.setName("Total Ion Current")
-
-# Access
-native_id = chrom.getNativeID()
-name = chrom.getName()
-```
-
-### Precursor and Product Information (for SRM/MRM)
-
-```python
-# For targeted experiments
-precursor = oms.Precursor()
-precursor.setMZ(456.7)
-chrom.setPrecursor(precursor)
-
-product = oms.Product()
-product.setMZ(789.4)
-chrom.setProduct(product)
-```
-
-## Peak1D and ChromatogramPeak
-
-Individual peak data points.
-
-### Peak1D (for mass spectra)
-
-```python
-# Create individual peak
-peak = oms.Peak1D()
-peak.setMZ(456.789)
-peak.setIntensity(10000)
-
-# Access
-mz = peak.getMZ()
-intensity = peak.getIntensity()
-
-# Set position and intensity
-peak.setPosition([456.789])
-peak.setIntensity(10000)
-```
-
-### ChromatogramPeak (for chromatograms)
-
-```python
-# Create chromatogram peak
-chrom_peak = oms.ChromatogramPeak()
-chrom_peak.setRT(125.5)
-chrom_peak.setIntensity(5000)
-
-# Access
-rt = chrom_peak.getRT()
-intensity = chrom_peak.getIntensity()
-```
-
-## FeatureMap and Feature
-
-For quantification results.
+## Feature Objects
 
 ### Feature
 
-Represents a detected LC-MS feature (peptide or metabolite signal).
+Detected chromatographic peak with 2D spatial extent (RT-m/z).
 
 ```python
-# Create feature
-feature = oms.Feature()
+# Load features
+feature_map = ms.FeatureMap()
+ms.FeatureXMLFile().load("features.featureXML", feature_map)
 
-# Set properties
-feature.setMZ(456.789)
-feature.setRT(123.45)
-feature.setIntensity(1000000)
-feature.setCharge(2)
-feature.setWidth(15.0)  # RT width in seconds
+# Access individual feature
+feature = feature_map[0]
 
-# Set quality score
-feature.setOverallQuality(0.95)
+# Core properties
+print(f"m/z: {feature.getMZ():.4f}")
+print(f"RT: {feature.getRT():.2f} seconds")
+print(f"Intensity: {feature.getIntensity():.0f}")
+print(f"Charge: {feature.getCharge()}")
 
-# Access
-mz = feature.getMZ()
-rt = feature.getRT()
-intensity = feature.getIntensity()
-charge = feature.getCharge()
+# Quality metrics
+print(f"Overall quality: {feature.getOverallQuality():.3f}")
+print(f"Width (RT): {feature.getWidth():.2f}")
+
+# Convex hull (spatial extent)
+hull = feature.getConvexHull()
+print(f"Hull points: {hull.getHullPoints().size()}")
+
+# Bounding box
+bbox = hull.getBoundingBox()
+print(f"RT range: {bbox.minPosition()[0]:.2f} - {bbox.maxPosition()[0]:.2f}")
+print(f"m/z range: {bbox.minPosition()[1]:.4f} - {bbox.maxPosition()[1]:.4f}")
+
+# Subordinate features (isotopes)
+subordinates = feature.getSubordinates()
+if subordinates:
+    print(f"Isotopic features: {len(subordinates)}")
+    for sub in subordinates:
+        print(f"  m/z: {sub.getMZ():.4f}, intensity: {sub.getIntensity():.0f}")
+
+# Metadata values
+if feature.metaValueExists("label"):
+    label = feature.getMetaValue("label")
+    print(f"Label: {label}")
 ```
 
 ### FeatureMap
 
-Collection of features.
+Collection of features from a single LC-MS run.
 
 ```python
 # Create feature map
-feature_map = oms.FeatureMap()
+feature_map = ms.FeatureMap()
 
-# Add features
-feature1 = oms.Feature()
-feature1.setMZ(456.789)
-feature1.setRT(123.45)
-feature1.setIntensity(1000000)
+# Load from file
+ms.FeatureXMLFile().load("features.featureXML", feature_map)
 
-feature_map.push_back(feature1)
+# Access properties
+print(f"Number of features: {feature_map.size()}")
 
-# Get size
-n_features = feature_map.size()
+# Get unique features
+print(f"Unique features: {feature_map.getUniqueId()}")
 
-# Iterate
+# Metadata
+primary_path = feature_map.getPrimaryMSRunPath()
+if primary_path:
+    print(f"Source file: {primary_path[0].decode()}")
+
+# Iterate through features
 for feature in feature_map:
-    print(f"m/z: {feature.getMZ():.4f}, RT: {feature.getRT():.2f}")
+    print(f"Feature: m/z={feature.getMZ():.4f}, RT={feature.getRT():.2f}")
 
-# Access by index
-first_feature = feature_map[0]
+# Add new feature
+new_feature = ms.Feature()
+new_feature.setMZ(500.0)
+new_feature.setRT(300.0)
+new_feature.setIntensity(10000.0)
+feature_map.push_back(new_feature)
 
-# Clear
-feature_map.clear()
+# Sort features
+feature_map.sortByRT()  # or sortByMZ(), sortByIntensity()
+
+# Export to pandas
+df = feature_map.get_df()
+print(df.head())
 ```
-
-## PeptideIdentification and ProteinIdentification
-
-For identification results.
-
-### PeptideIdentification
-
-```python
-# Create peptide identification
-pep_id = oms.PeptideIdentification()
-pep_id.setRT(123.45)
-pep_id.setMZ(456.789)
-
-# Create peptide hit
-hit = oms.PeptideHit()
-hit.setSequence(oms.AASequence.fromString("PEPTIDE"))
-hit.setCharge(2)
-hit.setScore(25.5)
-hit.setRank(1)
-
-# Add to identification
-pep_id.setHits([hit])
-pep_id.setHigherScoreBetter(True)
-pep_id.setScoreType("XCorr")
-
-# Access
-hits = pep_id.getHits()
-for hit in hits:
-    seq = hit.getSequence().toString()
-    score = hit.getScore()
-    print(f"Sequence: {seq}, Score: {score}")
-```
-
-### ProteinIdentification
-
-```python
-# Create protein identification
-prot_id = oms.ProteinIdentification()
-
-# Create protein hit
-prot_hit = oms.ProteinHit()
-prot_hit.setAccession("P12345")
-prot_hit.setSequence("MKTAYIAKQRQISFVK...")
-prot_hit.setScore(100.5)
-
-# Add to identification
-prot_id.setHits([prot_hit])
-prot_id.setScoreType("Mascot Score")
-prot_id.setHigherScoreBetter(True)
-
-# Search parameters
-search_params = oms.ProteinIdentification.SearchParameters()
-search_params.db = "uniprot_human.fasta"
-search_params.enzyme = "Trypsin"
-prot_id.setSearchParameters(search_params)
-```
-
-## ConsensusMap and ConsensusFeature
-
-For linking features across multiple samples.
 
 ### ConsensusFeature
 
-```python
-# Create consensus feature
-cons_feature = oms.ConsensusFeature()
-cons_feature.setMZ(456.789)
-cons_feature.setRT(123.45)
-cons_feature.setIntensity(5000000)  # Combined intensity
+Feature linked across multiple samples.
 
-# Access linked features
-for handle in cons_feature.getFeatureList():
-    map_index = handle.getMapIndex()
-    feature_index = handle.getIndex()
+```python
+# Load consensus map
+consensus_map = ms.ConsensusMap()
+ms.ConsensusXMLFile().load("consensus.consensusXML", consensus_map)
+
+# Access consensus feature
+cons_feature = consensus_map[0]
+
+# Consensus properties
+print(f"Consensus m/z: {cons_feature.getMZ():.4f}")
+print(f"Consensus RT: {cons_feature.getRT():.2f}")
+print(f"Consensus intensity: {cons_feature.getIntensity():.0f}")
+
+# Get feature handles (individual map features)
+feature_list = cons_feature.getFeatureList()
+print(f"Present in {len(feature_list)} maps")
+
+for handle in feature_list:
+    map_idx = handle.getMapIndex()
     intensity = handle.getIntensity()
+    mz = handle.getMZ()
+    rt = handle.getRT()
+
+    print(f"  Map {map_idx}: m/z={mz:.4f}, RT={rt:.2f}, intensity={intensity:.0f}")
+
+# Get unique ID in originating map
+for handle in feature_list:
+    unique_id = handle.getUniqueId()
+    print(f"Unique ID: {unique_id}")
 ```
 
 ### ConsensusMap
 
+Collection of consensus features across samples.
+
 ```python
 # Create consensus map
-consensus_map = oms.ConsensusMap()
+consensus_map = ms.ConsensusMap()
 
-# Add consensus features
-consensus_map.push_back(cons_feature)
+# Load from file
+ms.ConsensusXMLFile().load("consensus.consensusXML", consensus_map)
 
-# Iterate
-for cons_feat in consensus_map:
-    mz = cons_feat.getMZ()
-    rt = cons_feat.getRT()
-    n_features = cons_feat.size()  # Number of linked features
+# Access properties
+print(f"Consensus features: {consensus_map.size()}")
+
+# Column headers (file descriptions)
+headers = consensus_map.getColumnHeaders()
+print(f"Number of files: {len(headers)}")
+
+for map_idx, description in headers.items():
+    print(f"Map {map_idx}:")
+    print(f"  Filename: {description.filename}")
+    print(f"  Label: {description.label}")
+    print(f"  Size: {description.size}")
+
+# Iterate through consensus features
+for cons_feature in consensus_map:
+    print(f"Consensus feature: m/z={cons_feature.getMZ():.4f}")
+
+# Export to DataFrame
+df = consensus_map.get_df()
+```
+
+## Identification Objects
+
+### PeptideIdentification
+
+Identification results for a single spectrum.
+
+```python
+# Load identifications
+protein_ids = []
+peptide_ids = []
+ms.IdXMLFile().load("identifications.idXML", protein_ids, peptide_ids)
+
+# Access peptide identification
+peptide_id = peptide_ids[0]
+
+# Spectrum metadata
+print(f"RT: {peptide_id.getRT():.2f}")
+print(f"m/z: {peptide_id.getMZ():.4f}")
+
+# Identification metadata
+print(f"Identifier: {peptide_id.getIdentifier()}")
+print(f"Score type: {peptide_id.getScoreType()}")
+print(f"Higher score better: {peptide_id.isHigherScoreBetter()}")
+
+# Get peptide hits
+hits = peptide_id.getHits()
+print(f"Number of hits: {len(hits)}")
+
+for hit in hits:
+    print(f"  Sequence: {hit.getSequence().toString()}")
+    print(f"  Score: {hit.getScore()}")
+    print(f"  Charge: {hit.getCharge()}")
+```
+
+### PeptideHit
+
+Individual peptide match to a spectrum.
+
+```python
+# Access hit
+hit = peptide_id.getHits()[0]
+
+# Sequence information
+sequence = hit.getSequence()
+print(f"Sequence: {sequence.toString()}")
+print(f"Mass: {sequence.getMonoWeight():.4f}")
+
+# Score and rank
+print(f"Score: {hit.getScore()}")
+print(f"Rank: {hit.getRank()}")
+
+# Charge state
+print(f"Charge: {hit.getCharge()}")
+
+# Protein accessions
+accessions = hit.extractProteinAccessionsSet()
+for acc in accessions:
+    print(f"Protein: {acc.decode()}")
+
+# Meta values (additional scores, errors)
+if hit.metaValueExists("MS:1002252"):  # mass error
+    mass_error = hit.getMetaValue("MS:1002252")
+    print(f"Mass error: {mass_error:.4f} ppm")
+```
+
+### ProteinIdentification
+
+Protein-level identification information.
+
+```python
+# Access protein identification
+protein_id = protein_ids[0]
+
+# Search engine info
+print(f"Search engine: {protein_id.getSearchEngine()}")
+print(f"Search engine version: {protein_id.getSearchEngineVersion()}")
+
+# Search parameters
+search_params = protein_id.getSearchParameters()
+print(f"Database: {search_params.db}")
+print(f"Enzyme: {search_params.digestion_enzyme.getName()}")
+print(f"Missed cleavages: {search_params.missed_cleavages}")
+print(f"Precursor tolerance: {search_params.precursor_mass_tolerance}")
+
+# Protein hits
+hits = protein_id.getHits()
+for hit in hits:
+    print(f"Accession: {hit.getAccession()}")
+    print(f"Score: {hit.getScore()}")
+    print(f"Coverage: {hit.getCoverage():.1f}%")
+```
+
+### ProteinHit
+
+Individual protein identification.
+
+```python
+# Access protein hit
+protein_hit = protein_id.getHits()[0]
+
+# Protein information
+print(f"Accession: {protein_hit.getAccession()}")
+print(f"Description: {protein_hit.getDescription()}")
+print(f"Sequence: {protein_hit.getSequence()}")
+
+# Scoring
+print(f"Score: {protein_hit.getScore()}")
+print(f"Coverage: {protein_hit.getCoverage():.1f}%")
+
+# Rank
+print(f"Rank: {protein_hit.getRank()}")
+```
+
+## Sequence Objects
+
+### AASequence
+
+Amino acid sequence with modifications.
+
+```python
+# Create sequence from string
+seq = ms.AASequence.fromString("PEPTIDE")
+
+# Basic properties
+print(f"Sequence: {seq.toString()}")
+print(f"Length: {seq.size()}")
+print(f"Monoisotopic mass: {seq.getMonoWeight():.4f}")
+print(f"Average mass: {seq.getAverageWeight():.4f}")
+
+# Individual residues
+for i in range(seq.size()):
+    residue = seq.getResidue(i)
+    print(f"Position {i}: {residue.getOneLetterCode()}")
+    print(f"  Mass: {residue.getMonoWeight():.4f}")
+    print(f"  Formula: {residue.getFormula().toString()}")
+
+# Modified sequence
+mod_seq = ms.AASequence.fromString("PEPTIDEM(Oxidation)K")
+print(f"Modified: {mod_seq.isModified()}")
+
+# Check modifications
+for i in range(mod_seq.size()):
+    residue = mod_seq.getResidue(i)
+    if residue.isModified():
+        print(f"Modification at {i}: {residue.getModificationName()}")
+
+# N-terminal and C-terminal modifications
+term_mod_seq = ms.AASequence.fromString("(Acetyl)PEPTIDE(Amidated)")
+```
+
+### EmpiricalFormula
+
+Molecular formula representation.
+
+```python
+# Create formula
+formula = ms.EmpiricalFormula("C6H12O6")  # Glucose
+
+# Properties
+print(f"Formula: {formula.toString()}")
+print(f"Monoisotopic mass: {formula.getMonoWeight():.4f}")
+print(f"Average mass: {formula.getAverageWeight():.4f}")
+
+# Element composition
+print(f"Carbon atoms: {formula.getNumberOf(b'C')}")
+print(f"Hydrogen atoms: {formula.getNumberOf(b'H')}")
+print(f"Oxygen atoms: {formula.getNumberOf(b'O')}")
+
+# Arithmetic operations
+formula2 = ms.EmpiricalFormula("H2O")
+combined = formula + formula2  # Add water
+print(f"Combined: {combined.toString()}")
+```
+
+## Parameter Objects
+
+### Param
+
+Generic parameter container used by algorithms.
+
+```python
+# Get algorithm parameters
+algo = ms.GaussFilter()
+params = algo.getParameters()
+
+# List all parameters
+for key in params.keys():
+    value = params.getValue(key)
+    print(f"{key}: {value}")
+
+# Get specific parameter
+gaussian_width = params.getValue("gaussian_width")
+print(f"Gaussian width: {gaussian_width}")
+
+# Set parameter
+params.setValue("gaussian_width", 0.2)
+
+# Apply modified parameters
+algo.setParameters(params)
+
+# Copy parameters
+params_copy = ms.Param(params)
 ```
 
 ## Best Practices
 
-1. **Use numpy arrays** for peak data when possible - much faster than individual peak access
-2. **Sort spectra** by position (m/z) before searching or filtering
-3. **Update ranges** after modifying MSExperiment: `exp.updateRanges()`
-4. **Check MS level** before processing - different algorithms for MS1 vs MS2
-5. **Validate precursor info** for MS2 spectra - ensure charge and m/z are set
-6. **Use appropriate containers** - MSExperiment for raw data, FeatureMap for quantification
-7. **Clear metadata carefully** - use `clear(False)` to preserve metadata when clearing peaks
-
-## Common Patterns
-
-### Create MS2 Spectrum with Precursor
+### Memory Management
 
 ```python
-spectrum = oms.MSSpectrum()
-spectrum.setRT(205.2)
-spectrum.setMSLevel(2)
-spectrum.set_peaks(([100, 200, 300], [1000, 5000, 3000]))
+# For large files, use indexed access instead of full loading
+indexed_mzml = ms.IndexedMzMLFileLoader()
+indexed_mzml.load("large_file.mzML")
 
-precursor = oms.Precursor()
-precursor.setMZ(450.5)
-precursor.setCharge(2)
-spectrum.setPrecursors([precursor])
+# Access specific spectrum without loading entire file
+spec = indexed_mzml.getSpectrumById(100)
 ```
 
-### Extract MS1 Spectra from Experiment
+### Type Conversion
 
 ```python
-ms1_exp = oms.MSExperiment()
-for spectrum in exp:
-    if spectrum.getMSLevel() == 1:
-        ms1_exp.addSpectrum(spectrum)
+# Convert peak arrays to numpy
+import numpy as np
+
+mz, intensity = spec.get_peaks()
+# These are already numpy arrays
+
+# Can perform numpy operations
+filtered_mz = mz[intensity > 1000]
 ```
 
-### Calculate Total Ion Current (TIC)
+### Object Copying
 
 ```python
-tic_values = []
-rt_values = []
-for spectrum in exp:
-    if spectrum.getMSLevel() == 1:
-        mz, intensity = spectrum.get_peaks()
-        tic = np.sum(intensity)
-        tic_values.append(tic)
-        rt_values.append(spectrum.getRT())
-```
+# Create deep copy
+exp_copy = ms.MSExperiment(exp)
 
-### Find Spectrum Closest to RT
-
-```python
-target_rt = 125.5
-closest_spectrum = None
-min_diff = float('inf')
-
-for spectrum in exp:
-    diff = abs(spectrum.getRT() - target_rt)
-    if diff < min_diff:
-        min_diff = diff
-        closest_spectrum = spectrum
+# Modifications to copy don't affect original
 ```
