@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.68.1"
+    "version": "1.69.0"
   },
   "plugins": [
     {
@@ -27,6 +27,7 @@
         "./scientific-packages/cobrapy",
         "./scientific-packages/dask",
         "./scientific-packages/datacommons-client",
+        "./scientific-packages/denario",
         "./scientific-packages/datamol",
         "./scientific-packages/deepchem",
         "./scientific-packages/deeptools",
