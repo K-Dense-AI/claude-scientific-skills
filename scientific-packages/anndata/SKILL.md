@@ -1,527 +1,394 @@
 ---
 name: anndata
-description: "Manipulate AnnData objects for single-cell genomics. Load/save .h5ad files, manage obs/var metadata, layers, embeddings (PCA/UMAP), concatenate datasets, for scRNA-seq workflows."
+description: This skill should be used when working with annotated data matrices in Python, particularly for single-cell genomics analysis, managing experimental measurements with metadata, or handling large-scale biological datasets. Use when tasks involve AnnData objects, h5ad files, single-cell RNA-seq data, or integration with scanpy/scverse tools.
 ---
 
 # AnnData
 
 ## Overview
 
-AnnData (Annotated Data) is Python's standard for storing and manipulating annotated data matrices, particularly in single-cell genomics. Work with AnnData objects for data creation, manipulation, file I/O, concatenation, and memory-efficient workflows.
+AnnData is a Python package for handling annotated data matrices, storing experimental measurements (X) alongside observation metadata (obs), variable metadata (var), and multi-dimensional annotations (obsm, varm, obsp, varp, uns). Originally designed for single-cell genomics through Scanpy, it now serves as a general-purpose framework for any annotated data requiring efficient storage, manipulation, and analysis.
 
-## Core Capabilities
+## When to Use This Skill
 
-### 1. Creating and Structuring AnnData Objects
+Use this skill when:
+- Creating, reading, or writing AnnData objects
+- Working with h5ad, zarr, or other genomics data formats
+- Performing single-cell RNA-seq analysis
+- Managing large datasets with sparse matrices or backed mode
+- Concatenating multiple datasets or experimental batches
+- Subsetting, filtering, or transforming annotated data
+- Integrating with scanpy, scvi-tools, or other scverse ecosystem tools
 
-Create AnnData objects from various data sources and organize multi-dimensional annotations.
+## Installation
 
-**Basic creation:**
+```bash
+pip install anndata
+
+# With optional dependencies
+pip install anndata[dev,test,doc]
+```
+
+## Quick Start
+
+### Creating an AnnData object
 ```python
 import anndata as ad
 import numpy as np
-from scipy.sparse import csr_matrix
-
-# From dense or sparse arrays
-counts = np.random.poisson(1, size=(100, 2000))
-adata = ad.AnnData(counts)
-
-# With sparse matrix (memory-efficient)
-counts = csr_matrix(np.random.poisson(1, size=(100, 2000)), dtype=np.float32)
-adata = ad.AnnData(counts)
-```
-
-**With metadata:**
-```python
 import pandas as pd
 
-obs_meta = pd.DataFrame({
-    'cell_type': pd.Categorical(['B', 'T', 'Monocyte'] * 33 + ['B']),
-    'batch': ['batch1'] * 50 + ['batch2'] * 50
-})
-var_meta = pd.DataFrame({
-    'gene_name': [f'Gene_{i}' for i in range(2000)],
-    'highly_variable': np.random.choice([True, False], 2000)
-})
+# Minimal creation
+X = np.random.rand(100, 2000)  # 100 cells × 2000 genes
+adata = ad.AnnData(X)
 
-adata = ad.AnnData(counts, obs=obs_meta, var=var_meta)
+# With metadata
+obs = pd.DataFrame({
+    'cell_type': ['T cell', 'B cell'] * 50,
+    'sample': ['A', 'B'] * 50
+}, index=[f'cell_{i}' for i in range(100)])
+
+var = pd.DataFrame({
+    'gene_name': [f'Gene_{i}' for i in range(2000)]
+}, index=[f'ENSG{i:05d}' for i in range(2000)])
+
+adata = ad.AnnData(X=X, obs=obs, var=var)
 ```
 
-**Understanding the structure:**
-- **X**: Primary data matrix (observations × variables)
-- **obs**: Row (observation) annotations as DataFrame
-- **var**: Column (variable) annotations as DataFrame
-- **obsm**: Multi-dimensional observation annotations (e.g., PCA, UMAP coordinates)
-- **varm**: Multi-dimensional variable annotations (e.g., gene loadings)
-- **layers**: Alternative data matrices with same dimensions as X
-- **uns**: Unstructured metadata dictionary
-- **obsp/varp**: Pairwise relationship matrices (graphs)
-
-### 2. Adding Annotations and Layers
-
-Organize different data representations and metadata within a single object.
-
-**Cell-level metadata (obs):**
+### Reading data
 ```python
-adata.obs['n_genes'] = (adata.X > 0).sum(axis=1)
-adata.obs['total_counts'] = adata.X.sum(axis=1)
-adata.obs['condition'] = pd.Categorical(['control', 'treated'] * 50)
-```
+# Read h5ad file
+adata = ad.read_h5ad('data.h5ad')
 
-**Gene-level metadata (var):**
-```python
-adata.var['highly_variable'] = gene_variance > threshold
-adata.var['chromosome'] = pd.Categorical(['chr1', 'chr2', ...])
-```
+# Read with backed mode (for large files)
+adata = ad.read_h5ad('large_data.h5ad', backed='r')
 
-**Embeddings (obsm/varm):**
-```python
-# Dimensionality reduction results
-adata.obsm['X_pca'] = pca_coordinates  # Shape: (n_obs, n_components)
-adata.obsm['X_umap'] = umap_coordinates  # Shape: (n_obs, 2)
-adata.obsm['X_tsne'] = tsne_coordinates
-
-# Gene loadings
-adata.varm['PCs'] = principal_components  # Shape: (n_vars, n_components)
-```
-
-**Alternative data representations (layers):**
-```python
-# Store multiple versions
-adata.layers['counts'] = raw_counts
-adata.layers['log1p'] = np.log1p(adata.X)
-adata.layers['scaled'] = (adata.X - mean) / std
-```
-
-**Unstructured metadata (uns):**
-```python
-# Analysis parameters
-adata.uns['preprocessing'] = {
-    'normalization': 'TPM',
-    'min_genes': 200,
-    'date': '2024-01-15'
-}
-
-# Results
-adata.uns['pca'] = {'variance_ratio': variance_explained}
-```
-
-### 3. Subsetting and Views
-
-Efficiently subset data while managing memory through views and copies.
-
-**Subsetting operations:**
-```python
-# By observation/variable names
-subset = adata[['Cell_1', 'Cell_10'], ['Gene_5', 'Gene_1900']]
-
-# By boolean masks
-b_cells = adata[adata.obs.cell_type == 'B']
-high_quality = adata[adata.obs.n_genes > 200]
-
-# By position
-first_cells = adata[:100, :]
-top_genes = adata[:, :500]
-
-# Combined conditions
-filtered = adata[
-    (adata.obs.batch == 'batch1') & (adata.obs.n_genes > 200),
-    adata.var.highly_variable
-]
-```
-
-**Understanding views:**
-- Subsetting returns **views** by default (memory-efficient, shares data with original)
-- Modifying a view affects the original object
-- Check with `adata.is_view`
-- Convert to independent copy with `.copy()`
-
-```python
-# View (memory-efficient)
-subset = adata[adata.obs.condition == 'treated']
-print(subset.is_view)  # True
-
-# Independent copy
-subset_copy = adata[adata.obs.condition == 'treated'].copy()
-print(subset_copy.is_view)  # False
-```
-
-### 4. File I/O and Backed Mode
-
-Read and write data efficiently, with options for memory-limited environments.
-
-**Writing data:**
-```python
-# Standard format with compression
-adata.write('results.h5ad', compression='gzip')
-
-# Alternative formats
-adata.write_zarr('results.zarr')  # For cloud storage
-adata.write_loom('results.loom')  # For compatibility
-adata.write_csvs('results/')      # As CSV files
-```
-
-**Reading data:**
-```python
-# Load into memory
-adata = ad.read_h5ad('results.h5ad')
-
-# Backed mode (disk-backed, memory-efficient)
-adata = ad.read_h5ad('large_file.h5ad', backed='r')
-print(adata.isbacked)  # True
-print(adata.filename)  # Path to file
-
-# Close file connection when done
-adata.file.close()
-```
-
-**Reading from other formats:**
-```python
-# 10X format
-adata = ad.read_mtx('matrix.mtx')
-
-# CSV
+# Read other formats
 adata = ad.read_csv('data.csv')
-
-# Loom
 adata = ad.read_loom('data.loom')
+adata = ad.read_10x_h5('filtered_feature_bc_matrix.h5')
 ```
 
-**Working with backed mode:**
+### Writing data
 ```python
-# Read in backed mode for large files
-adata = ad.read_h5ad('large_dataset.h5ad', backed='r')
+# Write h5ad file
+adata.write_h5ad('output.h5ad')
 
-# Process in chunks
-for chunk in adata.chunk_X(chunk_size=1000):
-    result = process_chunk(chunk)
+# Write with compression
+adata.write_h5ad('output.h5ad', compression='gzip')
 
-# Load to memory if needed
-adata_memory = adata.to_memory()
+# Write other formats
+adata.write_zarr('output.zarr')
+adata.write_csvs('output_dir/')
 ```
 
-### 5. Concatenating Multiple Datasets
-
-Combine multiple AnnData objects with control over how data is merged.
-
-**Basic concatenation:**
+### Basic operations
 ```python
-# Concatenate observations (most common)
-combined = ad.concat([adata1, adata2, adata3], axis=0)
+# Subset by conditions
+t_cells = adata[adata.obs['cell_type'] == 'T cell']
 
-# Concatenate variables (rare)
-combined = ad.concat([adata1, adata2], axis=1)
+# Subset by indices
+subset = adata[0:50, 0:100]
+
+# Add metadata
+adata.obs['quality_score'] = np.random.rand(adata.n_obs)
+adata.var['highly_variable'] = np.random.rand(adata.n_vars) > 0.8
+
+# Access dimensions
+print(f"{adata.n_obs} observations × {adata.n_vars} variables")
 ```
 
-**Join strategies:**
-```python
-# Inner join: only shared variables (no missing data)
-combined = ad.concat([adata1, adata2], join='inner')
+## Core Capabilities
 
-# Outer join: all variables (fills missing with 0)
-combined = ad.concat([adata1, adata2], join='outer')
+### 1. Data Structure
+
+Understand the AnnData object structure including X, obs, var, layers, obsm, varm, obsp, varp, uns, and raw components.
+
+**See**: `references/data_structure.md` for comprehensive information on:
+- Core components (X, obs, var, layers, obsm, varm, obsp, varp, uns, raw)
+- Creating AnnData objects from various sources
+- Accessing and manipulating data components
+- Memory-efficient practices
+
+### 2. Input/Output Operations
+
+Read and write data in various formats with support for compression, backed mode, and cloud storage.
+
+**See**: `references/io_operations.md` for details on:
+- Native formats (h5ad, zarr)
+- Alternative formats (CSV, MTX, Loom, 10X, Excel)
+- Backed mode for large datasets
+- Remote data access
+- Format conversion
+- Performance optimization
+
+Common commands:
+```python
+# Read/write h5ad
+adata = ad.read_h5ad('data.h5ad', backed='r')
+adata.write_h5ad('output.h5ad', compression='gzip')
+
+# Read 10X data
+adata = ad.read_10x_h5('filtered_feature_bc_matrix.h5')
+
+# Read MTX format
+adata = ad.read_mtx('matrix.mtx').T
 ```
 
-**Tracking data sources:**
+### 3. Concatenation
+
+Combine multiple AnnData objects along observations or variables with flexible join strategies.
+
+**See**: `references/concatenation.md` for comprehensive coverage of:
+- Basic concatenation (axis=0 for observations, axis=1 for variables)
+- Join types (inner, outer)
+- Merge strategies (same, unique, first, only)
+- Tracking data sources with labels
+- Lazy concatenation (AnnCollection)
+- On-disk concatenation for large datasets
+
+Common commands:
 ```python
-# Add source labels
-combined = ad.concat(
+# Concatenate observations (combine samples)
+adata = ad.concat(
     [adata1, adata2, adata3],
-    label='dataset',
-    keys=['exp1', 'exp2', 'exp3']
-)
-# Creates combined.obs['dataset'] with values 'exp1', 'exp2', 'exp3'
-
-# Make duplicate indices unique
-combined = ad.concat(
-    [adata1, adata2],
-    keys=['batch1', 'batch2'],
-    index_unique='-'
-)
-# Cell names become: Cell_0-batch1, Cell_0-batch2, etc.
-```
-
-**Merge strategies for metadata:**
-```python
-# merge=None: exclude variable annotations (default)
-combined = ad.concat([adata1, adata2], merge=None)
-
-# merge='same': keep only identical annotations
-combined = ad.concat([adata1, adata2], merge='same')
-
-# merge='first': use first occurrence
-combined = ad.concat([adata1, adata2], merge='first')
-
-# merge='unique': keep annotations with single value
-combined = ad.concat([adata1, adata2], merge='unique')
-```
-
-**Complete example:**
-```python
-# Load batches
-batch1 = ad.read_h5ad('batch1.h5ad')
-batch2 = ad.read_h5ad('batch2.h5ad')
-batch3 = ad.read_h5ad('batch3.h5ad')
-
-# Concatenate with full tracking
-combined = ad.concat(
-    [batch1, batch2, batch3],
     axis=0,
-    join='outer',              # Keep all genes
-    merge='first',             # Use first batch's annotations
-    label='batch_id',          # Track source
-    keys=['b1', 'b2', 'b3'],  # Custom labels
-    index_unique='-'           # Make cell names unique
+    join='inner',
+    label='batch',
+    keys=['batch1', 'batch2', 'batch3']
+)
+
+# Concatenate variables (combine modalities)
+adata = ad.concat([adata_rna, adata_protein], axis=1)
+
+# Lazy concatenation
+from anndata.experimental import AnnCollection
+collection = AnnCollection(
+    ['data1.h5ad', 'data2.h5ad'],
+    join_obs='outer',
+    label='dataset'
 )
 ```
 
-### 6. Data Conversion and Extraction
+### 4. Data Manipulation
 
-Convert between AnnData and other formats for interoperability.
+Transform, subset, filter, and reorganize data efficiently.
 
-**To DataFrame:**
+**See**: `references/manipulation.md` for detailed guidance on:
+- Subsetting (by indices, names, boolean masks, metadata conditions)
+- Transposition
+- Copying (full copies vs views)
+- Renaming (observations, variables, categories)
+- Type conversions (strings to categoricals, sparse/dense)
+- Adding/removing data components
+- Reordering
+- Quality control filtering
+
+Common commands:
 ```python
-# Convert X to DataFrame
-df = adata.to_df()
+# Subset by metadata
+filtered = adata[adata.obs['quality_score'] > 0.8]
+hv_genes = adata[:, adata.var['highly_variable']]
 
-# Convert specific layer
-df = adata.to_df(layer='log1p')
+# Transpose
+adata_T = adata.T
+
+# Copy vs view
+view = adata[0:100, :]  # View (lightweight reference)
+copy = adata[0:100, :].copy()  # Independent copy
+
+# Convert strings to categoricals
+adata.strings_to_categoricals()
 ```
 
-**Extract vectors:**
+### 5. Best Practices
+
+Follow recommended patterns for memory efficiency, performance, and reproducibility.
+
+**See**: `references/best_practices.md` for guidelines on:
+- Memory management (sparse matrices, categoricals, backed mode)
+- Views vs copies
+- Data storage optimization
+- Performance optimization
+- Working with raw data
+- Metadata management
+- Reproducibility
+- Error handling
+- Integration with other tools
+- Common pitfalls and solutions
+
+Key recommendations:
 ```python
-# Get 1D arrays from data or annotations
-gene_expression = adata.obs_vector('Gene_100')
-cell_metadata = adata.obs_vector('n_genes')
-```
-
-**Transpose:**
-```python
-# Swap observations and variables
-transposed = adata.T
-```
-
-### 7. Memory Optimization
-
-Strategies for working with large datasets efficiently.
-
-**Use sparse matrices:**
-```python
+# Use sparse matrices for sparse data
 from scipy.sparse import csr_matrix
+adata.X = csr_matrix(adata.X)
 
-# Check sparsity
-density = (adata.X != 0).sum() / adata.X.size
-if density < 0.3:  # Less than 30% non-zero
-    adata.X = csr_matrix(adata.X)
-```
-
-**Convert strings to categoricals:**
-```python
-# Automatic conversion
+# Convert strings to categoricals
 adata.strings_to_categoricals()
 
-# Manual conversion (more control)
-adata.obs['cell_type'] = pd.Categorical(adata.obs['cell_type'])
+# Use backed mode for large files
+adata = ad.read_h5ad('large.h5ad', backed='r')
+
+# Store raw before filtering
+adata.raw = adata.copy()
+adata = adata[:, adata.var['highly_variable']]
 ```
 
-**Use backed mode:**
-```python
-# Read without loading into memory
-adata = ad.read_h5ad('large_file.h5ad', backed='r')
+## Integration with Scverse Ecosystem
 
-# Work with subsets
-subset = adata[:1000, :500].copy()  # Only this subset in memory
+AnnData serves as the foundational data structure for the scverse ecosystem:
+
+### Scanpy (Single-cell analysis)
+```python
+import scanpy as sc
+
+# Preprocessing
+sc.pp.filter_cells(adata, min_genes=200)
+sc.pp.normalize_total(adata, target_sum=1e4)
+sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata, n_top_genes=2000)
+
+# Dimensionality reduction
+sc.pp.pca(adata, n_comps=50)
+sc.pp.neighbors(adata, n_neighbors=15)
+sc.tl.umap(adata)
+sc.tl.leiden(adata)
+
+# Visualization
+sc.pl.umap(adata, color=['cell_type', 'leiden'])
 ```
 
-**Chunked processing:**
+### Muon (Multimodal data)
 ```python
-# Process data in chunks
-results = []
-for chunk in adata.chunk_X(chunk_size=1000):
-    result = expensive_computation(chunk)
-    results.append(result)
+import muon as mu
+
+# Combine RNA and protein data
+mdata = mu.MuData({'rna': adata_rna, 'protein': adata_protein})
+```
+
+### PyTorch integration
+```python
+from anndata.experimental import AnnLoader
+
+# Create DataLoader for deep learning
+dataloader = AnnLoader(adata, batch_size=128, shuffle=True)
+
+for batch in dataloader:
+    X = batch.X
+    # Train model
 ```
 
 ## Common Workflows
 
-### Single-Cell RNA-seq Analysis
-
-Complete workflow from loading to analysis:
-
+### Single-cell RNA-seq analysis
 ```python
 import anndata as ad
-import numpy as np
-import pandas as pd
+import scanpy as sc
 
 # 1. Load data
-adata = ad.read_mtx('matrix.mtx')
-adata.obs_names = pd.read_csv('barcodes.tsv', header=None)[0]
-adata.var_names = pd.read_csv('genes.tsv', header=None)[0]
+adata = ad.read_10x_h5('filtered_feature_bc_matrix.h5')
 
 # 2. Quality control
 adata.obs['n_genes'] = (adata.X > 0).sum(axis=1)
-adata.obs['total_counts'] = adata.X.sum(axis=1)
-adata = adata[adata.obs.n_genes > 200]
-adata = adata[adata.obs.total_counts < 10000]
+adata.obs['n_counts'] = adata.X.sum(axis=1)
+adata = adata[adata.obs['n_genes'] > 200]
+adata = adata[adata.obs['n_counts'] < 50000]
 
-# 3. Filter genes
-min_cells = 3
-adata = adata[:, (adata.X > 0).sum(axis=0) >= min_cells]
+# 3. Store raw
+adata.raw = adata.copy()
 
-# 4. Store raw counts
-adata.layers['counts'] = adata.X.copy()
+# 4. Normalize and filter
+sc.pp.normalize_total(adata, target_sum=1e4)
+sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata, n_top_genes=2000)
+adata = adata[:, adata.var['highly_variable']]
 
-# 5. Normalize
-adata.X = adata.X / adata.obs.total_counts.values[:, None] * 1e4
-adata.X = np.log1p(adata.X)
-
-# 6. Feature selection
-gene_var = adata.X.var(axis=0)
-adata.var['highly_variable'] = gene_var > np.percentile(gene_var, 90)
-
-# 7. Dimensionality reduction (example with external tools)
-# adata.obsm['X_pca'] = compute_pca(adata.X)
-# adata.obsm['X_umap'] = compute_umap(adata.obsm['X_pca'])
-
-# 8. Save results
-adata.write('analyzed.h5ad', compression='gzip')
+# 5. Save processed data
+adata.write_h5ad('processed.h5ad')
 ```
 
-### Batch Integration
-
-Combining multiple experimental batches:
-
+### Batch integration
 ```python
-# Load batches
-batches = [ad.read_h5ad(f'batch_{i}.h5ad') for i in range(3)]
+# Load multiple batches
+adata1 = ad.read_h5ad('batch1.h5ad')
+adata2 = ad.read_h5ad('batch2.h5ad')
+adata3 = ad.read_h5ad('batch3.h5ad')
 
-# Concatenate with tracking
-combined = ad.concat(
-    batches,
-    axis=0,
-    join='outer',
+# Concatenate with batch labels
+adata = ad.concat(
+    [adata1, adata2, adata3],
     label='batch',
-    keys=['batch_0', 'batch_1', 'batch_2'],
-    index_unique='-'
+    keys=['batch1', 'batch2', 'batch3'],
+    join='inner'
 )
 
-# Add batch as numeric for correction algorithms
-combined.obs['batch_numeric'] = combined.obs['batch'].cat.codes
+# Apply batch correction
+import scanpy as sc
+sc.pp.combat(adata, key='batch')
 
-# Perform batch correction (with external tools)
-# corrected_pca = run_harmony(combined.obsm['X_pca'], combined.obs['batch'])
-# combined.obsm['X_pca_corrected'] = corrected_pca
-
-# Save integrated data
-combined.write('integrated.h5ad', compression='gzip')
+# Continue analysis
+sc.pp.pca(adata)
+sc.pp.neighbors(adata)
+sc.tl.umap(adata)
 ```
 
-### Memory-Efficient Large Dataset Processing
-
-Working with datasets too large for memory:
-
+### Working with large datasets
 ```python
-# Read in backed mode
-adata = ad.read_h5ad('huge_dataset.h5ad', backed='r')
+# Open in backed mode
+adata = ad.read_h5ad('100GB_dataset.h5ad', backed='r')
 
-# Compute statistics in chunks
-total = 0
-for chunk in adata.chunk_X(chunk_size=1000):
-    total += chunk.sum()
+# Filter based on metadata (no data loading)
+high_quality = adata[adata.obs['quality_score'] > 0.8]
 
-mean_expression = total / (adata.n_obs * adata.n_vars)
+# Load filtered subset
+adata_subset = high_quality.to_memory()
 
-# Work with subset
-high_quality_cells = adata.obs.n_genes > 1000
-subset = adata[high_quality_cells, :].copy()
+# Process subset
+process(adata_subset)
 
-# Close file
-adata.file.close()
+# Or process in chunks
+chunk_size = 1000
+for i in range(0, adata.n_obs, chunk_size):
+    chunk = adata[i:i+chunk_size, :].to_memory()
+    process(chunk)
 ```
 
-## Best Practices
+## Troubleshooting
 
-### Data Organization
-
-1. **Use layers for different representations**: Store raw counts, normalized, log-transformed, and scaled data in separate layers
-2. **Use obsm/varm for multi-dimensional data**: Embeddings, loadings, and other matrix-like annotations
-3. **Use uns for metadata**: Analysis parameters, dates, version information
-4. **Use categoricals for efficiency**: Convert repeated strings to categorical types
-
-### Subsetting
-
-1. **Understand views vs copies**: Subsetting returns views by default; use `.copy()` when you need independence
-2. **Chain conditions efficiently**: Combine boolean masks in a single subsetting operation
-3. **Validate after subsetting**: Check dimensions and data integrity
-
-### File I/O
-
-1. **Use compression**: Always use `compression='gzip'` when writing h5ad files
-2. **Choose the right format**: H5AD for general use, Zarr for cloud storage, Loom for compatibility
-3. **Close backed files**: Always close file connections when done
-4. **Use backed mode for large files**: Don't load everything into memory if not needed
-
-### Concatenation
-
-1. **Choose appropriate join**: Inner join for complete cases, outer join to preserve all features
-2. **Track sources**: Use `label` and `keys` to track data origin
-3. **Handle duplicates**: Use `index_unique` to make observation names unique
-4. **Select merge strategy**: Choose appropriate merge strategy for variable annotations
-
-### Memory Management
-
-1. **Use sparse matrices**: For data with <30% non-zero values
-2. **Convert to categoricals**: For repeated string values
-3. **Process in chunks**: For operations on very large matrices
-4. **Use backed mode**: Read large files with `backed='r'`
-
-### Naming Conventions
-
-Follow these conventions for consistency:
-
-- **Embeddings**: `X_pca`, `X_umap`, `X_tsne`
-- **Layers**: Descriptive names like `counts`, `log1p`, `scaled`
-- **Observations**: Use snake_case like `cell_type`, `n_genes`, `total_counts`
-- **Variables**: Use snake_case like `highly_variable`, `gene_name`
-
-## Reference Documentation
-
-For detailed API information, usage patterns, and troubleshooting, refer to the comprehensive reference files in the `references/` directory:
-
-1. **api_reference.md**: Complete API documentation including all classes, methods, and functions with usage examples. Use `grep -r "pattern" references/api_reference.md` to search for specific functions or parameters.
-
-2. **workflows_best_practices.md**: Detailed workflows for common tasks (single-cell analysis, batch integration, large datasets), best practices for memory management, data organization, and common pitfalls to avoid. Use `grep -r "pattern" references/workflows_best_practices.md` to search for specific workflows.
-
-3. **concatenation_guide.md**: Comprehensive guide to concatenation strategies, join types, merge strategies, source tracking, and troubleshooting concatenation issues. Use `grep -r "pattern" references/concatenation_guide.md` to search for concatenation patterns.
-
-## When to Load References
-
-Load reference files into context when:
-- Implementing complex concatenation with specific merge strategies
-- Troubleshooting errors or unexpected behavior
-- Optimizing memory usage for large datasets
-- Implementing complete analysis workflows
-- Understanding nuances of specific API methods
-
-To search within references without loading them:
+### Out of memory errors
+Use backed mode or convert to sparse matrices:
 ```python
-# Example: Search for information about backed mode
-grep -r "backed mode" references/
+# Backed mode
+adata = ad.read_h5ad('file.h5ad', backed='r')
+
+# Sparse matrices
+from scipy.sparse import csr_matrix
+adata.X = csr_matrix(adata.X)
 ```
 
-## Common Error Patterns
+### Slow file reading
+Use compression and appropriate formats:
+```python
+# Optimize for storage
+adata.strings_to_categoricals()
+adata.write_h5ad('file.h5ad', compression='gzip')
 
-### Memory Errors
-**Problem**: "MemoryError: Unable to allocate array"
-**Solution**: Use backed mode, sparse matrices, or process in chunks
+# Use Zarr for cloud storage
+adata.write_zarr('file.zarr', chunks=(1000, 1000))
+```
 
-### Dimension Mismatch
-**Problem**: "ValueError: operands could not be broadcast together"
-**Solution**: Use outer join in concatenation or align indices before operations
+### Index alignment issues
+Always align external data on index:
+```python
+# Wrong
+adata.obs['new_col'] = external_data['values']
 
-### View Modification
-**Problem**: "ValueError: assignment destination is read-only"
-**Solution**: Convert view to copy with `.copy()` before modification
+# Correct
+adata.obs['new_col'] = external_data.set_index('cell_id').loc[adata.obs_names, 'values']
+```
 
-### File Already Open
-**Problem**: "OSError: Unable to open file (file is already open)"
-**Solution**: Close previous file connection with `adata.file.close()`
+## Additional Resources
+
+- **Official documentation**: https://anndata.readthedocs.io/
+- **Scanpy tutorials**: https://scanpy.readthedocs.io/
+- **Scverse ecosystem**: https://scverse.org/
+- **GitHub repository**: https://github.com/scverse/anndata
