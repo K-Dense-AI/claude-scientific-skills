@@ -1,182 +1,50 @@
-# Training with Transformers
+# Training and Fine-Tuning
 
-Transformers provides comprehensive training capabilities through the `Trainer` API, supporting distributed training, mixed precision, and advanced optimization techniques.
+## Overview
 
-## Basic Training Workflow
+Fine-tune pre-trained models on custom datasets using the Trainer API. The Trainer handles training loops, gradient accumulation, mixed precision, logging, and checkpointing.
+
+## Basic Fine-Tuning Workflow
+
+### Step 1: Load and Preprocess Data
 
 ```python
-from transformers import (
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    Trainer,
-    TrainingArguments
-)
 from datasets import load_dataset
 
-# 1. Load and preprocess data
-dataset = load_dataset("imdb")
+# Load dataset
+dataset = load_dataset("yelp_review_full")
+train_dataset = dataset["train"]
+eval_dataset = dataset["test"]
+
+# Tokenize
+from transformers import AutoTokenizer
+
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 
 def tokenize_function(examples):
-    return tokenizer(examples["text"], padding="max_length", truncation=True)
+    return tokenizer(
+        examples["text"],
+        padding="max_length",
+        truncation=True,
+        max_length=512
+    )
 
-tokenized_datasets = dataset.map(tokenize_function, batched=True)
+train_dataset = train_dataset.map(tokenize_function, batched=True)
+eval_dataset = eval_dataset.map(tokenize_function, batched=True)
+```
 
-# 2. Load model
+### Step 2: Load Model
+
+```python
+from transformers import AutoModelForSequenceClassification
+
 model = AutoModelForSequenceClassification.from_pretrained(
     "bert-base-uncased",
-    num_labels=2
-)
-
-# 3. Define training arguments
-training_args = TrainingArguments(
-    output_dir="./results",
-    num_train_epochs=3,
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=64,
-    learning_rate=2e-5,
-    eval_strategy="epoch",
-    save_strategy="epoch",
-    load_best_model_at_end=True,
-)
-
-# 4. Create trainer
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized_datasets["train"],
-    eval_dataset=tokenized_datasets["test"],
-)
-
-# 5. Train
-trainer.train()
-
-# 6. Evaluate
-trainer.evaluate()
-
-# 7. Save model
-trainer.save_model("./final_model")
-```
-
-## TrainingArguments Configuration
-
-### Essential Parameters
-
-**Output and Logging:**
-- `output_dir`: Directory for checkpoints and outputs (required)
-- `logging_dir`: TensorBoard log directory (default: `{output_dir}/runs`)
-- `logging_steps`: Log every N steps (default: 500)
-- `logging_strategy`: "steps" or "epoch"
-
-**Training Duration:**
-- `num_train_epochs`: Number of epochs (default: 3.0)
-- `max_steps`: Max training steps (overrides num_train_epochs if set)
-
-**Batch Size and Gradient Accumulation:**
-- `per_device_train_batch_size`: Batch size per device (default: 8)
-- `per_device_eval_batch_size`: Eval batch size per device (default: 8)
-- `gradient_accumulation_steps`: Accumulate gradients over N steps (default: 1)
-- Effective batch size = `per_device_train_batch_size * gradient_accumulation_steps * num_gpus`
-
-**Learning Rate:**
-- `learning_rate`: Peak learning rate (default: 5e-5)
-- `lr_scheduler_type`: Scheduler type ("linear", "cosine", "constant", etc.)
-- `warmup_steps`: Warmup steps (default: 0)
-- `warmup_ratio`: Warmup as fraction of total steps
-
-**Evaluation:**
-- `eval_strategy`: "no", "steps", or "epoch" (default: "no")
-- `eval_steps`: Evaluate every N steps (if eval_strategy="steps")
-- `eval_delay`: Delay evaluation until N steps
-
-**Checkpointing:**
-- `save_strategy`: "no", "steps", or "epoch" (default: "steps")
-- `save_steps`: Save checkpoint every N steps (default: 500)
-- `save_total_limit`: Keep only N most recent checkpoints
-- `load_best_model_at_end`: Load best checkpoint at end (default: False)
-- `metric_for_best_model`: Metric to determine best model
-
-**Optimization:**
-- `optim`: Optimizer ("adamw_torch", "adamw_hf", "sgd", etc.)
-- `weight_decay`: Weight decay coefficient (default: 0.0)
-- `adam_beta1`, `adam_beta2`: Adam optimizer betas
-- `adam_epsilon`: Epsilon for Adam (default: 1e-8)
-- `max_grad_norm`: Max gradient norm for clipping (default: 1.0)
-
-### Mixed Precision Training
-
-```python
-training_args = TrainingArguments(
-    output_dir="./results",
-    fp16=True,  # Use fp16 on NVIDIA GPUs
-    fp16_opt_level="O1",  # O0, O1, O2, O3 (Apex levels)
-    # or
-    bf16=True,  # Use bf16 on Ampere+ GPUs (better than fp16)
+    num_labels=5  # Number of classes
 )
 ```
 
-### Distributed Training
-
-**DataParallel (single-node multi-GPU):**
-```python
-# Automatic with multiple GPUs
-training_args = TrainingArguments(
-    output_dir="./results",
-    per_device_train_batch_size=16,  # Per GPU
-)
-# Run: python script.py
-```
-
-**DistributedDataParallel (multi-node or multi-GPU):**
-```bash
-# Single node, multiple GPUs
-python -m torch.distributed.launch --nproc_per_node=4 script.py
-
-# Or use accelerate
-accelerate config
-accelerate launch script.py
-```
-
-**DeepSpeed Integration:**
-```python
-training_args = TrainingArguments(
-    output_dir="./results",
-    deepspeed="ds_config.json",  # DeepSpeed config file
-)
-```
-
-### Advanced Features
-
-**Gradient Checkpointing (reduce memory):**
-```python
-training_args = TrainingArguments(
-    output_dir="./results",
-    gradient_checkpointing=True,
-)
-```
-
-**Compilation with torch.compile:**
-```python
-training_args = TrainingArguments(
-    output_dir="./results",
-    torch_compile=True,
-    torch_compile_backend="inductor",  # or "cudagraphs"
-)
-```
-
-**Push to Hub:**
-```python
-training_args = TrainingArguments(
-    output_dir="./results",
-    push_to_hub=True,
-    hub_model_id="username/model-name",
-    hub_strategy="every_save",  # or "end"
-)
-```
-
-## Custom Training Components
-
-### Custom Metrics
+### Step 3: Define Metrics
 
 ```python
 import evaluate
@@ -188,32 +56,195 @@ def compute_metrics(eval_pred):
     logits, labels = eval_pred
     predictions = np.argmax(logits, axis=-1)
     return metric.compute(predictions=predictions, references=labels)
+```
+
+### Step 4: Configure Training
+
+```python
+from transformers import TrainingArguments
+
+training_args = TrainingArguments(
+    output_dir="./results",
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    learning_rate=2e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+    num_train_epochs=3,
+    weight_decay=0.01,
+    logging_dir="./logs",
+    logging_steps=10,
+    load_best_model_at_end=True,
+    metric_for_best_model="accuracy",
+)
+```
+
+### Step 5: Create Trainer and Train
+
+```python
+from transformers import Trainer
 
 trainer = Trainer(
     model=model,
     args=training_args,
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
     compute_metrics=compute_metrics,
 )
+
+# Start training
+trainer.train()
+
+# Evaluate
+results = trainer.evaluate()
+print(results)
 ```
 
-### Custom Loss Function
+### Step 6: Save Model
 
 ```python
-class CustomTrainer(Trainer):
-    def compute_loss(self, model, inputs, return_outputs=False):
-        labels = inputs.pop("labels")
-        outputs = model(**inputs)
-        logits = outputs.logits
+trainer.save_model("./fine_tuned_model")
+tokenizer.save_pretrained("./fine_tuned_model")
 
-        # Custom loss calculation
-        loss_fct = torch.nn.CrossEntropyLoss(weight=class_weights)
-        loss = loss_fct(logits.view(-1, self.model.config.num_labels), labels.view(-1))
-
-        return (loss, outputs) if return_outputs else loss
+# Or push to Hub
+trainer.push_to_hub("username/my-finetuned-model")
 ```
 
-### Data Collator
+## TrainingArguments Parameters
 
+### Essential Parameters
+
+**output_dir**: Directory for checkpoints and logs
+```python
+output_dir="./results"
+```
+
+**num_train_epochs**: Number of training epochs
+```python
+num_train_epochs=3
+```
+
+**per_device_train_batch_size**: Batch size per GPU/CPU
+```python
+per_device_train_batch_size=8
+```
+
+**learning_rate**: Optimizer learning rate
+```python
+learning_rate=2e-5  # Common for BERT-style models
+learning_rate=5e-5  # Common for smaller models
+```
+
+**weight_decay**: L2 regularization
+```python
+weight_decay=0.01
+```
+
+### Evaluation and Saving
+
+**eval_strategy**: When to evaluate ("no", "steps", "epoch")
+```python
+eval_strategy="epoch"  # Evaluate after each epoch
+eval_strategy="steps"  # Evaluate every eval_steps
+```
+
+**save_strategy**: When to save checkpoints
+```python
+save_strategy="epoch"
+save_strategy="steps"
+save_steps=500
+```
+
+**load_best_model_at_end**: Load best checkpoint after training
+```python
+load_best_model_at_end=True
+metric_for_best_model="accuracy"  # Metric to compare
+```
+
+### Optimization
+
+**gradient_accumulation_steps**: Accumulate gradients over multiple steps
+```python
+gradient_accumulation_steps=4  # Effective batch size = batch_size * 4
+```
+
+**fp16**: Enable mixed precision (NVIDIA GPUs)
+```python
+fp16=True
+```
+
+**bf16**: Enable bfloat16 (newer GPUs)
+```python
+bf16=True
+```
+
+**gradient_checkpointing**: Trade compute for memory
+```python
+gradient_checkpointing=True  # Slower but uses less memory
+```
+
+**optim**: Optimizer choice
+```python
+optim="adamw_torch"  # Default
+optim="adamw_8bit"    # 8-bit Adam (requires bitsandbytes)
+optim="adafactor"     # Memory-efficient alternative
+```
+
+### Learning Rate Scheduling
+
+**lr_scheduler_type**: Learning rate schedule
+```python
+lr_scheduler_type="linear"       # Linear decay
+lr_scheduler_type="cosine"       # Cosine annealing
+lr_scheduler_type="constant"     # No decay
+lr_scheduler_type="constant_with_warmup"
+```
+
+**warmup_steps** or **warmup_ratio**: Warmup period
+```python
+warmup_steps=500
+# Or
+warmup_ratio=0.1  # 10% of total steps
+```
+
+### Logging
+
+**logging_dir**: TensorBoard logs directory
+```python
+logging_dir="./logs"
+```
+
+**logging_steps**: Log every N steps
+```python
+logging_steps=10
+```
+
+**report_to**: Logging integrations
+```python
+report_to=["tensorboard"]
+report_to=["wandb"]
+report_to=["tensorboard", "wandb"]
+```
+
+### Distributed Training
+
+**ddp_backend**: Distributed backend
+```python
+ddp_backend="nccl"  # For multi-GPU
+```
+
+**deepspeed**: DeepSpeed config file
+```python
+deepspeed="ds_config.json"
+```
+
+## Data Collators
+
+Handle dynamic padding and special preprocessing:
+
+### DataCollatorWithPadding
+
+Pad sequences to longest in batch:
 ```python
 from transformers import DataCollatorWithPadding
 
@@ -227,102 +258,243 @@ trainer = Trainer(
 )
 ```
 
-### Callbacks
+### DataCollatorForLanguageModeling
+
+For masked language modeling:
+```python
+from transformers import DataCollatorForLanguageModeling
+
+data_collator = DataCollatorForLanguageModeling(
+    tokenizer=tokenizer,
+    mlm=True,
+    mlm_probability=0.15
+)
+```
+
+### DataCollatorForSeq2Seq
+
+For sequence-to-sequence tasks:
+```python
+from transformers import DataCollatorForSeq2Seq
+
+data_collator = DataCollatorForSeq2Seq(
+    tokenizer=tokenizer,
+    model=model,
+    padding=True
+)
+```
+
+## Custom Training
+
+### Custom Trainer
+
+Override methods for custom behavior:
+
+```python
+from transformers import Trainer
+
+class CustomTrainer(Trainer):
+    def compute_loss(self, model, inputs, return_outputs=False):
+        labels = inputs.pop("labels")
+        outputs = model(**inputs)
+        logits = outputs.logits
+
+        # Custom loss computation
+        loss_fct = torch.nn.CrossEntropyLoss(weight=class_weights)
+        loss = loss_fct(logits.view(-1, self.model.config.num_labels), labels.view(-1))
+
+        return (loss, outputs) if return_outputs else loss
+```
+
+### Custom Callbacks
+
+Monitor and control training:
 
 ```python
 from transformers import TrainerCallback
 
 class CustomCallback(TrainerCallback):
     def on_epoch_end(self, args, state, control, **kwargs):
-        print(f"Epoch {state.epoch} completed!")
+        print(f"Epoch {state.epoch} completed")
+        # Custom logic here
         return control
 
 trainer = Trainer(
     model=model,
     args=training_args,
+    train_dataset=train_dataset,
     callbacks=[CustomCallback],
 )
 ```
 
-## Hyperparameter Search
+## Advanced Training Techniques
+
+### Parameter-Efficient Fine-Tuning (PEFT)
+
+Use LoRA for efficient fine-tuning:
+
+```python
+from peft import LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["query", "value"],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="SEQ_CLS"
+)
+
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()  # Shows reduced parameter count
+
+# Train normally with Trainer
+trainer = Trainer(model=model, args=training_args, ...)
+trainer.train()
+```
+
+### Gradient Checkpointing
+
+Reduce memory at cost of speed:
+
+```python
+model.gradient_checkpointing_enable()
+
+training_args = TrainingArguments(
+    gradient_checkpointing=True,
+    ...
+)
+```
+
+### Mixed Precision Training
+
+```python
+training_args = TrainingArguments(
+    fp16=True,  # For NVIDIA GPUs with Tensor Cores
+    # or
+    bf16=True,  # For newer GPUs (A100, H100)
+    ...
+)
+```
+
+### DeepSpeed Integration
+
+For very large models:
+
+```python
+# ds_config.json
+{
+  "train_batch_size": 16,
+  "gradient_accumulation_steps": 1,
+  "optimizer": {
+    "type": "AdamW",
+    "params": {
+      "lr": 2e-5
+    }
+  },
+  "fp16": {
+    "enabled": true
+  },
+  "zero_optimization": {
+    "stage": 2
+  }
+}
+```
+
+```python
+training_args = TrainingArguments(
+    deepspeed="ds_config.json",
+    ...
+)
+```
+
+## Training Tips
+
+### Hyperparameter Tuning
+
+Common starting points:
+- **Learning rate**: 2e-5 to 5e-5 for BERT-like models, 1e-4 to 1e-3 for smaller models
+- **Batch size**: 8-32 depending on GPU memory
+- **Epochs**: 2-4 for fine-tuning, more for domain adaptation
+- **Warmup**: 10% of total steps
+
+Use Optuna for hyperparameter search:
 
 ```python
 def model_init():
     return AutoModelForSequenceClassification.from_pretrained(
         "bert-base-uncased",
-        num_labels=2
+        num_labels=5
     )
 
-trainer = Trainer(
-    model_init=model_init,
-    args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=eval_dataset,
-    compute_metrics=compute_metrics,
-)
-
-# Optuna-based search
-best_trial = trainer.hyperparameter_search(
-    direction="maximize",
-    backend="optuna",
-    n_trials=10,
-    hp_space=lambda trial: {
+def optuna_hp_space(trial):
+    return {
         "learning_rate": trial.suggest_float("learning_rate", 1e-5, 5e-5, log=True),
         "per_device_train_batch_size": trial.suggest_categorical("per_device_train_batch_size", [8, 16, 32]),
         "num_train_epochs": trial.suggest_int("num_train_epochs", 2, 5),
     }
+
+trainer = Trainer(model_init=model_init, args=training_args, ...)
+best_trial = trainer.hyperparameter_search(
+    direction="maximize",
+    backend="optuna",
+    hp_space=optuna_hp_space,
+    n_trials=10,
 )
 ```
 
-## Training Best Practices
+### Monitoring Training
 
-1. **Start with small learning rates**: 2e-5 to 5e-5 for fine-tuning
-2. **Use warmup**: 5-10% of total steps for learning rate warmup
-3. **Monitor training**: Use eval_strategy="epoch" or "steps" to track progress
-4. **Save checkpoints**: Set save_strategy and save_total_limit
-5. **Use mixed precision**: Enable fp16 or bf16 for faster training
-6. **Gradient accumulation**: For large effective batch sizes on limited memory
-7. **Load best model**: Set load_best_model_at_end=True to avoid overfitting
-8. **Push to Hub**: Enable push_to_hub for easy model sharing and versioning
+Use TensorBoard:
+```bash
+tensorboard --logdir ./logs
+```
 
-## Common Training Patterns
-
-### Classification
+Or Weights & Biases:
 ```python
-model = AutoModelForSequenceClassification.from_pretrained(
-    "bert-base-uncased",
-    num_labels=num_classes,
-    id2label=id2label,
-    label2id=label2id
+import wandb
+wandb.init(project="my-project")
+
+training_args = TrainingArguments(
+    report_to=["wandb"],
+    ...
 )
 ```
 
-### Question Answering
+### Resume Training
+
+Resume from checkpoint:
 ```python
-model = AutoModelForQuestionAnswering.from_pretrained("bert-base-uncased")
+trainer.train(resume_from_checkpoint="./results/checkpoint-1000")
 ```
 
-### Token Classification (NER)
-```python
-model = AutoModelForTokenClassification.from_pretrained(
-    "bert-base-uncased",
-    num_labels=num_tags,
-    id2label=id2label,
-    label2id=label2id
-)
-```
+## Common Issues
 
-### Sequence-to-Sequence
-```python
-model = AutoModelForSeq2SeqLM.from_pretrained("t5-base")
-```
+**CUDA out of memory:**
+- Reduce batch size
+- Enable gradient checkpointing
+- Use gradient accumulation
+- Use 8-bit optimizers
 
-### Causal Language Modeling
-```python
-model = AutoModelForCausalLM.from_pretrained("gpt2")
-```
+**Overfitting:**
+- Increase weight_decay
+- Add dropout
+- Use early stopping
+- Reduce model size or training epochs
 
-### Masked Language Modeling
-```python
-model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
-```
+**Slow training:**
+- Increase batch size
+- Enable mixed precision (fp16/bf16)
+- Use multiple GPUs
+- Optimize data loading
+
+## Best Practices
+
+1. **Start small**: Test on small dataset subset first
+2. **Use evaluation**: Monitor validation metrics
+3. **Save checkpoints**: Enable save_strategy
+4. **Log extensively**: Use TensorBoard or W&B
+5. **Try different learning rates**: Start with 2e-5
+6. **Use warmup**: Helps training stability
+7. **Enable mixed precision**: Faster training
+8. **Consider PEFT**: For large models with limited resources
