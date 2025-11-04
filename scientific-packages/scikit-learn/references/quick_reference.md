@@ -1,546 +1,287 @@
 # Scikit-learn Quick Reference
 
-## Essential Imports
+## Common Import Patterns
 
 ```python
-# Core
-import numpy as np
-import pandas as pd
+# Core scikit-learn
+import sklearn
+
+# Data splitting and cross-validation
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.compose import ColumnTransformer
 
 # Preprocessing
-from sklearn.preprocessing import (
-    StandardScaler, MinMaxScaler, RobustScaler,
-    OneHotEncoder, OrdinalEncoder, LabelEncoder,
-    PolynomialFeatures
-)
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 
-# Models - Classification
-from sklearn.linear_model import LogisticRegression
+# Feature selection
+from sklearn.feature_selection import SelectKBest, RFE
+
+# Supervised learning
+from sklearn.linear_model import LogisticRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingRegressor
+from sklearn.svm import SVC, SVR
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import (
-    RandomForestClassifier,
-    GradientBoostingClassifier,
-    HistGradientBoostingClassifier
-)
-from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
 
-# Models - Regression
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
-from sklearn.ensemble import (
-    RandomForestRegressor,
-    GradientBoostingRegressor,
-    HistGradientBoostingRegressor
-)
-
-# Clustering
+# Unsupervised learning
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
-from sklearn.mixture import GaussianMixture
-
-# Dimensionality Reduction
-from sklearn.decomposition import PCA, NMF, TruncatedSVD
-from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA, NMF
 
 # Metrics
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
-    confusion_matrix, classification_report,
-    mean_squared_error, r2_score, mean_absolute_error
+    mean_squared_error, r2_score, confusion_matrix, classification_report
 )
+
+# Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.compose import ColumnTransformer, make_column_transformer
+
+# Utilities
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 ```
 
-## Basic Workflow Template
+## Installation
 
-### Classification
+```bash
+# Using uv (recommended)
+uv pip install scikit-learn
+
+# Optional dependencies
+uv pip install scikit-learn[plots]  # For plotting utilities
+uv pip install pandas numpy matplotlib seaborn  # Common companions
+```
+
+## Quick Workflow Templates
+
+### Classification Pipeline
 
 ```python
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
+    X, y, test_size=0.2, stratify=y, random_state=42
 )
 
-# Scale features
+# Preprocess
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Train model
+# Train
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train_scaled, y_train)
 
-# Predict and evaluate
+# Evaluate
 y_pred = model.predict(X_test_scaled)
 print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
 ```
 
-### Regression
+### Regression Pipeline
 
 ```python
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 
-# Split data
+# Split
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Scale features
+# Preprocess and train
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Train model
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+model = GradientBoostingRegressor(n_estimators=100, random_state=42)
 model.fit(X_train_scaled, y_train)
 
-# Predict and evaluate
+# Evaluate
 y_pred = model.predict(X_test_scaled)
 print(f"RMSE: {mean_squared_error(y_test, y_pred, squared=False):.3f}")
-print(f"R²: {r2_score(y_test, y_pred):.3f}")
+print(f"R² Score: {r2_score(y_test, y_pred):.3f}")
 ```
 
-### With Pipeline (Recommended)
+### Cross-Validation
 
 ```python
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, cross_val_score
 
-# Create pipeline
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),
-    ('classifier', RandomForestClassifier(n_estimators=100, random_state=42))
-])
-
-# Split and train
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-pipeline.fit(X_train, y_train)
-
-# Evaluate
-score = pipeline.score(X_test, y_test)
-cv_scores = cross_val_score(pipeline, X_train, y_train, cv=5)
-print(f"Test accuracy: {score:.3f}")
-print(f"CV accuracy: {cv_scores.mean():.3f} (+/- {cv_scores.std():.3f})")
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+print(f"CV Accuracy: {scores.mean():.3f} (+/- {scores.std() * 2:.3f})")
 ```
 
-## Common Preprocessing Patterns
-
-### Numeric Data
+### Complete Pipeline with Mixed Data Types
 
 ```python
-from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import RandomForestClassifier
 
+# Define feature types
+numeric_features = ['age', 'income']
+categorical_features = ['gender', 'occupation']
+
+# Create preprocessing pipelines
 numeric_transformer = Pipeline([
     ('imputer', SimpleImputer(strategy='median')),
     ('scaler', StandardScaler())
 ])
-```
-
-### Categorical Data
-
-```python
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
 
 categorical_transformer = Pipeline([
-    ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
+    ('imputer', SimpleImputer(strategy='most_frequent')),
     ('onehot', OneHotEncoder(handle_unknown='ignore'))
 ])
-```
 
-### Mixed Data with ColumnTransformer
-
-```python
-from sklearn.compose import ColumnTransformer
-
-numeric_features = ['age', 'income', 'credit_score']
-categorical_features = ['country', 'occupation']
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('num', numeric_transformer, numeric_features),
-        ('cat', categorical_transformer, categorical_features)
-    ])
-
-# Complete pipeline
-from sklearn.ensemble import RandomForestClassifier
-pipeline = Pipeline([
-    ('preprocessor', preprocessor),
-    ('classifier', RandomForestClassifier())
+# Combine transformers
+preprocessor = ColumnTransformer([
+    ('num', numeric_transformer, numeric_features),
+    ('cat', categorical_transformer, categorical_features)
 ])
+
+# Full pipeline
+model = Pipeline([
+    ('preprocessor', preprocessor),
+    ('classifier', RandomForestClassifier(n_estimators=100, random_state=42))
+])
+
+# Fit and predict
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
 ```
 
-## Model Selection Cheat Sheet
-
-### Quick Decision Tree
-
-```
-Is it supervised?
-├─ Yes
-│  ├─ Predicting categories? → Classification
-│  │  ├─ Start with: LogisticRegression (baseline)
-│  │  ├─ Then try: RandomForestClassifier
-│  │  └─ Best performance: HistGradientBoostingClassifier
-│  └─ Predicting numbers? → Regression
-│     ├─ Start with: LinearRegression/Ridge (baseline)
-│     ├─ Then try: RandomForestRegressor
-│     └─ Best performance: HistGradientBoostingRegressor
-└─ No
-   ├─ Grouping similar items? → Clustering
-   │  ├─ Know # clusters: KMeans
-   │  └─ Unknown # clusters: DBSCAN or HDBSCAN
-   ├─ Reducing dimensions?
-   │  ├─ For preprocessing: PCA
-   │  └─ For visualization: t-SNE or UMAP
-   └─ Finding outliers? → IsolationForest or LocalOutlierFactor
-```
-
-### Algorithm Selection by Data Size
-
-- **Small (<1K samples)**: Any algorithm
-- **Medium (1K-100K)**: Random Forests, Gradient Boosting, Neural Networks
-- **Large (>100K)**: SGDClassifier/Regressor, HistGradientBoosting, LinearSVC
-
-### When to Scale Features
-
-**Always scale**:
-- SVM, Neural Networks
-- K-Nearest Neighbors
-- Linear/Logistic Regression (with regularization)
-- PCA, LDA
-- Any gradient descent algorithm
-
-**Don't need to scale**:
-- Tree-based (Decision Trees, Random Forests, Gradient Boosting)
-- Naive Bayes
-
-## Hyperparameter Tuning
-
-### GridSearchCV
+### Hyperparameter Tuning
 
 ```python
 from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
 
 param_grid = {
-    'n_estimators': [100, 200, 500],
+    'n_estimators': [100, 200, 300],
     'max_depth': [10, 20, None],
     'min_samples_split': [2, 5, 10]
 }
 
+model = RandomForestClassifier(random_state=42)
 grid_search = GridSearchCV(
-    RandomForestClassifier(random_state=42),
-    param_grid,
-    cv=5,
-    scoring='f1_weighted',
-    n_jobs=-1
+    model, param_grid, cv=5, scoring='accuracy', n_jobs=-1
 )
 
 grid_search.fit(X_train, y_train)
-best_model = grid_search.best_estimator_
 print(f"Best params: {grid_search.best_params_}")
+print(f"Best score: {grid_search.best_score_:.3f}")
+
+# Use best model
+best_model = grid_search.best_estimator_
 ```
 
-### RandomizedSearchCV (Faster)
+## Common Patterns
+
+### Loading Data
 
 ```python
-from sklearn.model_selection import RandomizedSearchCV
-from scipy.stats import randint, uniform
+# From scikit-learn datasets
+from sklearn.datasets import load_iris, load_digits, make_classification
 
-param_distributions = {
-    'n_estimators': randint(100, 1000),
-    'max_depth': randint(5, 50),
-    'min_samples_split': randint(2, 20)
-}
+# Built-in datasets
+iris = load_iris()
+X, y = iris.data, iris.target
 
-random_search = RandomizedSearchCV(
-    RandomForestClassifier(random_state=42),
-    param_distributions,
-    n_iter=50,  # Number of combinations to try
-    cv=5,
-    n_jobs=-1,
-    random_state=42
+# Synthetic data
+X, y = make_classification(
+    n_samples=1000, n_features=20, n_classes=2, random_state=42
 )
 
-random_search.fit(X_train, y_train)
+# From pandas
+import pandas as pd
+df = pd.read_csv('data.csv')
+X = df.drop('target', axis=1)
+y = df['target']
 ```
 
-### Pipeline with GridSearchCV
+### Handling Imbalanced Data
 
 ```python
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-from sklearn.model_selection import GridSearchCV
-
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),
-    ('svm', SVC())
-])
-
-param_grid = {
-    'svm__C': [0.1, 1, 10],
-    'svm__kernel': ['rbf', 'linear'],
-    'svm__gamma': ['scale', 'auto']
-}
-
-grid = GridSearchCV(pipeline, param_grid, cv=5)
-grid.fit(X_train, y_train)
-```
-
-## Cross-Validation
-
-### Basic Cross-Validation
-
-```python
-from sklearn.model_selection import cross_val_score
-
-scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
-print(f"Accuracy: {scores.mean():.3f} (+/- {scores.std():.3f})")
-```
-
-### Multiple Metrics
-
-```python
-from sklearn.model_selection import cross_validate
-
-scoring = ['accuracy', 'precision_weighted', 'recall_weighted', 'f1_weighted']
-results = cross_validate(model, X, y, cv=5, scoring=scoring)
-
-for metric in scoring:
-    scores = results[f'test_{metric}']
-    print(f"{metric}: {scores.mean():.3f} (+/- {scores.std():.3f})")
-```
-
-### Custom CV Strategies
-
-```python
-from sklearn.model_selection import StratifiedKFold, TimeSeriesSplit
-
-# For imbalanced classification
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-
-# For time series
-cv = TimeSeriesSplit(n_splits=5)
-
-scores = cross_val_score(model, X, y, cv=cv)
-```
-
-## Common Metrics
-
-### Classification
-
-```python
-from sklearn.metrics import (
-    accuracy_score, balanced_accuracy_score,
-    precision_score, recall_score, f1_score,
-    confusion_matrix, classification_report,
-    roc_auc_score
-)
-
-# Basic metrics
-accuracy = accuracy_score(y_true, y_pred)
-f1 = f1_score(y_true, y_pred, average='weighted')
-
-# Comprehensive report
-print(classification_report(y_true, y_pred))
-
-# ROC AUC (requires probabilities)
-y_proba = model.predict_proba(X_test)[:, 1]
-auc = roc_auc_score(y_true, y_proba)
-```
-
-### Regression
-
-```python
-from sklearn.metrics import (
-    mean_squared_error,
-    mean_absolute_error,
-    r2_score
-)
-
-mse = mean_squared_error(y_true, y_pred)
-rmse = mean_squared_error(y_true, y_pred, squared=False)
-mae = mean_absolute_error(y_true, y_pred)
-r2 = r2_score(y_true, y_pred)
-
-print(f"RMSE: {rmse:.3f}")
-print(f"MAE: {mae:.3f}")
-print(f"R²: {r2:.3f}")
-```
-
-## Feature Engineering
-
-### Polynomial Features
-
-```python
-from sklearn.preprocessing import PolynomialFeatures
-
-poly = PolynomialFeatures(degree=2, include_bias=False)
-X_poly = poly.fit_transform(X)
-# [x1, x2] → [x1, x2, x1², x1·x2, x2²]
-```
-
-### Feature Selection
-
-```python
-from sklearn.feature_selection import (
-    SelectKBest, f_classif,
-    RFE,
-    SelectFromModel
-)
-
-# Univariate selection
-selector = SelectKBest(f_classif, k=10)
-X_selected = selector.fit_transform(X, y)
-
-# Recursive feature elimination
 from sklearn.ensemble import RandomForestClassifier
-rfe = RFE(RandomForestClassifier(), n_features_to_select=10)
-X_selected = rfe.fit_transform(X, y)
 
-# Model-based selection
-selector = SelectFromModel(
-    RandomForestClassifier(n_estimators=100),
-    threshold='median'
-)
-X_selected = selector.fit_transform(X, y)
+# Use class_weight parameter
+model = RandomForestClassifier(class_weight='balanced', random_state=42)
+model.fit(X_train, y_train)
+
+# Or use appropriate metrics
+from sklearn.metrics import balanced_accuracy_score, f1_score
+print(f"Balanced Accuracy: {balanced_accuracy_score(y_test, y_pred):.3f}")
+print(f"F1 Score: {f1_score(y_test, y_pred):.3f}")
 ```
 
 ### Feature Importance
 
 ```python
-# Tree-based models
-model = RandomForestClassifier()
+from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
-importances = model.feature_importances_
 
-# Visualize
-import matplotlib.pyplot as plt
-indices = np.argsort(importances)[::-1]
-plt.bar(range(X.shape[1]), importances[indices])
-plt.xticks(range(X.shape[1]), feature_names[indices], rotation=90)
-plt.show()
+# Get feature importances
+importances = pd.DataFrame({
+    'feature': feature_names,
+    'importance': model.feature_importances_
+}).sort_values('importance', ascending=False)
 
-# Permutation importance (works for any model)
-from sklearn.inspection import permutation_importance
-result = permutation_importance(model, X_test, y_test, n_repeats=10)
-importances = result.importances_mean
+print(importances.head(10))
 ```
 
-## Clustering
-
-### K-Means
+### Clustering
 
 ```python
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
-# Always scale for k-means
+# Scale data first
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Fit k-means
+# Fit K-Means
 kmeans = KMeans(n_clusters=3, random_state=42)
 labels = kmeans.fit_predict(X_scaled)
 
 # Evaluate
 from sklearn.metrics import silhouette_score
 score = silhouette_score(X_scaled, labels)
-print(f"Silhouette score: {score:.3f}")
+print(f"Silhouette Score: {score:.3f}")
 ```
 
-### Elbow Method
-
-```python
-inertias = []
-K_range = range(2, 11)
-
-for k in K_range:
-    kmeans = KMeans(n_clusters=k, random_state=42)
-    kmeans.fit(X_scaled)
-    inertias.append(kmeans.inertia_)
-
-plt.plot(K_range, inertias, 'bo-')
-plt.xlabel('k')
-plt.ylabel('Inertia')
-plt.show()
-```
-
-### DBSCAN
-
-```python
-from sklearn.cluster import DBSCAN
-
-dbscan = DBSCAN(eps=0.5, min_samples=5)
-labels = dbscan.fit_predict(X_scaled)
-
-# -1 indicates noise/outliers
-n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
-n_noise = list(labels).count(-1)
-print(f"Clusters: {n_clusters}, Noise points: {n_noise}")
-```
-
-## Dimensionality Reduction
-
-### PCA
+### Dimensionality Reduction
 
 ```python
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
-# Always scale before PCA
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# Specify n_components
+# Fit PCA
 pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X_scaled)
+X_reduced = pca.fit_transform(X)
 
-# Or specify variance to retain
-pca = PCA(n_components=0.95)  # Keep 95% variance
-X_pca = pca.fit_transform(X_scaled)
-
-print(f"Explained variance: {pca.explained_variance_ratio_}")
-print(f"Components needed: {pca.n_components_}")
+# Plot
+plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c=y, cmap='viridis')
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.title(f'PCA (explained variance: {pca.explained_variance_ratio_.sum():.2%})')
 ```
 
-### t-SNE (Visualization Only)
-
-```python
-from sklearn.manifold import TSNE
-
-# Reduce to 50 dimensions with PCA first (recommended)
-pca = PCA(n_components=50)
-X_pca = pca.fit_transform(X_scaled)
-
-# Apply t-SNE
-tsne = TSNE(n_components=2, random_state=42, perplexity=30)
-X_tsne = tsne.fit_transform(X_pca)
-
-# Visualize
-plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=y, cmap='viridis')
-plt.colorbar()
-plt.show()
-```
-
-## Saving and Loading Models
+### Model Persistence
 
 ```python
 import joblib
@@ -548,78 +289,145 @@ import joblib
 # Save model
 joblib.dump(model, 'model.pkl')
 
-# Save pipeline
-joblib.dump(pipeline, 'pipeline.pkl')
-
-# Load
-model = joblib.load('model.pkl')
-pipeline = joblib.load('pipeline.pkl')
-
-# Use loaded model
-y_pred = model.predict(X_new)
+# Load model
+loaded_model = joblib.load('model.pkl')
+predictions = loaded_model.predict(X_new)
 ```
 
-## Common Pitfalls and Solutions
+## Common Gotchas and Solutions
 
 ### Data Leakage
-❌ **Wrong**: Fit on all data before split
 ```python
-scaler = StandardScaler().fit(X)
-X_train, X_test = train_test_split(scaler.transform(X))
-```
+# WRONG: Fitting scaler on all data
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+X_train, X_test = train_test_split(X_scaled)
 
-✅ **Correct**: Use pipeline or fit only on train
-```python
+# RIGHT: Fit on training data only
 X_train, X_test = train_test_split(X)
-pipeline = Pipeline([('scaler', StandardScaler()), ('model', model)])
-pipeline.fit(X_train, y_train)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# BEST: Use Pipeline
+from sklearn.pipeline import Pipeline
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('model', LogisticRegression())
+])
+pipeline.fit(X_train, y_train)  # No leakage!
 ```
 
-### Not Scaling
-❌ **Wrong**: Using SVM without scaling
+### Stratified Splitting for Classification
 ```python
-svm = SVC()
-svm.fit(X_train, y_train)
-```
-
-✅ **Correct**: Scale for SVM
-```python
-pipeline = Pipeline([('scaler', StandardScaler()), ('svm', SVC())])
-pipeline.fit(X_train, y_train)
-```
-
-### Wrong Metric for Imbalanced Data
-❌ **Wrong**: Using accuracy for 99:1 imbalance
-```python
-accuracy = accuracy_score(y_true, y_pred)  # Can be misleading
-```
-
-✅ **Correct**: Use appropriate metrics
-```python
-f1 = f1_score(y_true, y_pred, average='weighted')
-balanced_acc = balanced_accuracy_score(y_true, y_pred)
-```
-
-### Not Using Stratification
-❌ **Wrong**: Random split for imbalanced data
-```python
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-```
-
-✅ **Correct**: Stratify for imbalanced classes
-```python
+# Always use stratify for classification
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, stratify=y
+    X, y, test_size=0.2, stratify=y, random_state=42
 )
 ```
 
+### Random State for Reproducibility
+```python
+# Set random_state for reproducibility
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+```
+
+### Handling Unknown Categories
+```python
+# Use handle_unknown='ignore' for OneHotEncoder
+encoder = OneHotEncoder(handle_unknown='ignore')
+```
+
+### Feature Names with Pipelines
+```python
+# Get feature names after transformation
+preprocessor.fit(X_train)
+feature_names = preprocessor.get_feature_names_out()
+```
+
+## Cheat Sheet: Algorithm Selection
+
+### Classification
+
+| Problem | Algorithm | When to Use |
+|---------|-----------|-------------|
+| Binary/Multiclass | Logistic Regression | Fast baseline, interpretability |
+| Binary/Multiclass | Random Forest | Good default, robust |
+| Binary/Multiclass | Gradient Boosting | Best accuracy, willing to tune |
+| Binary/Multiclass | SVM | Small data, complex boundaries |
+| Binary/Multiclass | Naive Bayes | Text classification, fast |
+| High dimensions | Linear SVM or Logistic | Text, many features |
+
+### Regression
+
+| Problem | Algorithm | When to Use |
+|---------|-----------|-------------|
+| Continuous target | Linear Regression | Fast baseline, interpretability |
+| Continuous target | Ridge/Lasso | Regularization needed |
+| Continuous target | Random Forest | Good default, non-linear |
+| Continuous target | Gradient Boosting | Best accuracy |
+| Continuous target | SVR | Small data, non-linear |
+
+### Clustering
+
+| Problem | Algorithm | When to Use |
+|---------|-----------|-------------|
+| Known K, spherical | K-Means | Fast, simple |
+| Unknown K, arbitrary shapes | DBSCAN | Noise/outliers present |
+| Hierarchical structure | Agglomerative | Need dendrogram |
+| Soft clustering | Gaussian Mixture | Probability estimates |
+
+### Dimensionality Reduction
+
+| Problem | Algorithm | When to Use |
+|---------|-----------|-------------|
+| Linear reduction | PCA | Variance explanation |
+| Visualization | t-SNE | 2D/3D plots |
+| Non-negative data | NMF | Images, text |
+| Sparse data | TruncatedSVD | Text, recommender systems |
+
 ## Performance Tips
 
-1. **Use n_jobs=-1** for parallel processing (RandomForest, GridSearchCV)
-2. **Use HistGradientBoosting** for large datasets (>10K samples)
-3. **Use MiniBatchKMeans** for large clustering tasks
-4. **Use IncrementalPCA** for data that doesn't fit in memory
-5. **Use sparse matrices** for high-dimensional sparse data (text)
-6. **Cache transformers** in pipelines during grid search
-7. **Use RandomizedSearchCV** instead of GridSearchCV for large parameter spaces
-8. **Reduce dimensionality** with PCA before applying expensive algorithms
+### Speed Up Training
+```python
+# Use n_jobs=-1 for parallel processing
+model = RandomForestClassifier(n_estimators=100, n_jobs=-1)
+
+# Use warm_start for incremental learning
+model = RandomForestClassifier(n_estimators=100, warm_start=True)
+model.fit(X, y)
+model.n_estimators += 50
+model.fit(X, y)  # Adds 50 more trees
+
+# Use partial_fit for online learning
+from sklearn.linear_model import SGDClassifier
+model = SGDClassifier()
+for X_batch, y_batch in batches:
+    model.partial_fit(X_batch, y_batch, classes=np.unique(y))
+```
+
+### Memory Efficiency
+```python
+# Use sparse matrices
+from scipy.sparse import csr_matrix
+X_sparse = csr_matrix(X)
+
+# Use MiniBatchKMeans for large data
+from sklearn.cluster import MiniBatchKMeans
+model = MiniBatchKMeans(n_clusters=8, batch_size=100)
+```
+
+## Version Check
+
+```python
+import sklearn
+print(f"scikit-learn version: {sklearn.__version__}")
+```
+
+## Useful Resources
+
+- Official Documentation: https://scikit-learn.org/stable/
+- User Guide: https://scikit-learn.org/stable/user_guide.html
+- API Reference: https://scikit-learn.org/stable/api/index.html
+- Examples: https://scikit-learn.org/stable/auto_examples/index.html
+- Tutorials: https://scikit-learn.org/stable/tutorial/index.html

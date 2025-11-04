@@ -1,728 +1,505 @@
-# Unsupervised Learning in scikit-learn
+# Unsupervised Learning Reference
 
 ## Overview
-Unsupervised learning discovers patterns in data without labeled targets. Main tasks include clustering (grouping similar samples), dimensionality reduction (reducing feature count), and anomaly detection (finding outliers).
 
-## Clustering Algorithms
+Unsupervised learning discovers patterns in unlabeled data through clustering, dimensionality reduction, and density estimation.
+
+## Clustering
 
 ### K-Means
 
-Groups data into k clusters by minimizing within-cluster variance.
-
-**Algorithm**:
-1. Initialize k centroids (k-means++ initialization recommended)
-2. Assign each point to nearest centroid
-3. Update centroids to mean of assigned points
-4. Repeat until convergence
-
+**KMeans (`sklearn.cluster.KMeans`)**
+- Partition-based clustering into K clusters
+- Key parameters:
+  - `n_clusters`: Number of clusters to form
+  - `init`: Initialization method ('k-means++', 'random')
+  - `n_init`: Number of initializations (default=10)
+  - `max_iter`: Maximum iterations
+- Use when: Know number of clusters, spherical cluster shapes
+- Fast and scalable
+- Example:
 ```python
 from sklearn.cluster import KMeans
 
-kmeans = KMeans(
-    n_clusters=3,
-    init='k-means++',  # Smart initialization
-    n_init=10,         # Number of times to run with different seeds
-    max_iter=300,
-    random_state=42
-)
-labels = kmeans.fit_predict(X)
-centroids = kmeans.cluster_centers_
+model = KMeans(n_clusters=3, init='k-means++', n_init=10, random_state=42)
+labels = model.fit_predict(X)
+centers = model.cluster_centers_
+
+# Inertia (sum of squared distances to nearest center)
+print(f"Inertia: {model.inertia_}")
 ```
 
-**Use cases**:
-- Customer segmentation
-- Image compression
-- Data preprocessing (clustering as features)
+**MiniBatchKMeans**
+- Faster K-Means using mini-batches
+- Use when: Large datasets, need faster training
+- Slightly less accurate than K-Means
+- Example:
+```python
+from sklearn.cluster import MiniBatchKMeans
 
-**Strengths**:
-- Fast and scalable
-- Simple to understand
-- Works well with spherical clusters
+model = MiniBatchKMeans(n_clusters=3, batch_size=100, random_state=42)
+labels = model.fit_predict(X)
+```
 
-**Limitations**:
-- Assumes spherical clusters of similar size
-- Sensitive to initialization (mitigated by k-means++)
-- Must specify k beforehand
-- Sensitive to outliers
+### Density-Based Clustering
 
-**Choosing k**: Use elbow method, silhouette score, or domain knowledge
-
-**Variants**:
-- **MiniBatchKMeans**: Faster for large datasets, uses mini-batches
-- **KMeans with n_init='auto'**: Adaptive number of initializations
-
-### DBSCAN
-
-Density-Based Spatial Clustering of Applications with Noise. Identifies clusters as dense regions separated by sparse areas.
-
+**DBSCAN (`sklearn.cluster.DBSCAN`)**
+- Density-Based Spatial Clustering
+- Key parameters:
+  - `eps`: Maximum distance between two samples to be neighbors
+  - `min_samples`: Minimum samples in neighborhood to form core point
+  - `metric`: Distance metric
+- Use when: Arbitrary cluster shapes, presence of noise/outliers
+- Automatically determines number of clusters
+- Labels noise points as -1
+- Example:
 ```python
 from sklearn.cluster import DBSCAN
 
-dbscan = DBSCAN(
-    eps=0.5,           # Maximum distance between neighbors
-    min_samples=5,     # Minimum points to form dense region
-    metric='euclidean'
-)
-labels = dbscan.fit_predict(X)
-# -1 indicates noise/outliers
+model = DBSCAN(eps=0.5, min_samples=5, metric='euclidean')
+labels = model.fit_predict(X)
+
+# Number of clusters (excluding noise)
+n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
+n_noise = list(labels).count(-1)
+print(f"Clusters: {n_clusters}, Noise points: {n_noise}")
 ```
 
-**Use cases**:
-- Arbitrary cluster shapes
-- Outlier detection
-- When cluster count is unknown
-- Geographic/spatial data
-
-**Strengths**:
-- Discovers arbitrary-shaped clusters
-- Automatically detects outliers
-- Doesn't require specifying number of clusters
-- Robust to outliers
-
-**Limitations**:
-- Struggles with varying densities
-- Sensitive to eps and min_samples parameters
-- Not deterministic (border points may vary)
-
-**Parameter tuning**:
-- `eps`: Plot k-distance graph, look for elbow
-- `min_samples`: Rule of thumb: 2 * dimensions
-
-### HDBSCAN
-
-Hierarchical DBSCAN that handles variable cluster densities.
-
+**HDBSCAN (`sklearn.cluster.HDBSCAN`)**
+- Hierarchical DBSCAN with adaptive epsilon
+- More robust than DBSCAN
+- Key parameter: `min_cluster_size`
+- Use when: Varying density clusters
+- Example:
 ```python
 from sklearn.cluster import HDBSCAN
 
-hdbscan = HDBSCAN(
-    min_cluster_size=5,
-    min_samples=None,  # Defaults to min_cluster_size
-    metric='euclidean'
-)
-labels = hdbscan.fit_predict(X)
+model = HDBSCAN(min_cluster_size=10, min_samples=5)
+labels = model.fit_predict(X)
 ```
 
-**Advantages over DBSCAN**:
-- Handles variable density clusters
-- More robust parameter selection
-- Provides cluster membership probabilities
-- Hierarchical structure
+**OPTICS (`sklearn.cluster.OPTICS`)**
+- Ordering points to identify clustering structure
+- Similar to DBSCAN but doesn't require eps parameter
+- Key parameters: `min_samples`, `max_eps`
+- Use when: Varying density, exploratory analysis
+- Example:
+```python
+from sklearn.cluster import OPTICS
 
-**Use cases**: When DBSCAN struggles with varying densities
+model = OPTICS(min_samples=5, max_eps=0.5)
+labels = model.fit_predict(X)
+```
 
 ### Hierarchical Clustering
 
-Builds nested cluster hierarchies using agglomerative (bottom-up) approach.
-
+**AgglomerativeClustering**
+- Bottom-up hierarchical clustering
+- Key parameters:
+  - `n_clusters`: Number of clusters (or use `distance_threshold`)
+  - `linkage`: 'ward', 'complete', 'average', 'single'
+  - `metric`: Distance metric
+- Use when: Need dendrogram, hierarchical structure important
+- Example:
 ```python
 from sklearn.cluster import AgglomerativeClustering
 
-agg_clust = AgglomerativeClustering(
-    n_clusters=3,
-    linkage='ward',  # 'ward', 'complete', 'average', 'single'
-    metric='euclidean'
-)
-labels = agg_clust.fit_predict(X)
+model = AgglomerativeClustering(n_clusters=3, linkage='ward')
+labels = model.fit_predict(X)
 
-# Visualize with dendrogram
-from scipy.cluster.hierarchy import dendrogram, linkage as scipy_linkage
-import matplotlib.pyplot as plt
-
-linkage_matrix = scipy_linkage(X, method='ward')
-dendrogram(linkage_matrix)
-plt.show()
+# Create dendrogram using scipy
+from scipy.cluster.hierarchy import dendrogram, linkage
+Z = linkage(X, method='ward')
+dendrogram(Z)
 ```
 
-**Linkage methods**:
-- `ward`: Minimizes variance (only with Euclidean) - **most common**
-- `complete`: Maximum distance between clusters
-- `average`: Average distance between clusters
-- `single`: Minimum distance between clusters
+### Other Clustering Methods
 
-**Use cases**:
-- When hierarchical structure is meaningful
-- Taxonomy/phylogenetic trees
-- When visualization is important (dendrograms)
-
-**Strengths**:
-- No need to specify k initially (cut dendrogram at desired level)
-- Produces hierarchy of clusters
-- Deterministic
-
-**Limitations**:
-- Computationally expensive (O(n²) to O(n³))
-- Not suitable for large datasets
-- Cannot undo previous merges
-
-### Spectral Clustering
-
-Performs dimensionality reduction using affinity matrix before clustering.
-
-```python
-from sklearn.cluster import SpectralClustering
-
-spectral = SpectralClustering(
-    n_clusters=3,
-    affinity='rbf',  # 'rbf', 'nearest_neighbors', 'precomputed'
-    gamma=1.0,
-    n_neighbors=10,
-    random_state=42
-)
-labels = spectral.fit_predict(X)
-```
-
-**Use cases**:
-- Non-convex clusters
-- Image segmentation
-- Graph clustering
-- When similarity matrix is available
-
-**Strengths**:
-- Handles non-convex clusters
-- Works with similarity matrices
-- Often better than k-means for complex shapes
-
-**Limitations**:
-- Computationally expensive
-- Requires specifying number of clusters
-- Memory intensive
-
-### Mean Shift
-
-Discovers clusters through iterative centroid updates based on density.
-
+**MeanShift**
+- Finds clusters by shifting points toward mode of density
+- Automatically determines number of clusters
+- Key parameter: `bandwidth`
+- Use when: Don't know number of clusters, arbitrary shapes
+- Example:
 ```python
 from sklearn.cluster import MeanShift, estimate_bandwidth
 
 # Estimate bandwidth
 bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=500)
-
-mean_shift = MeanShift(bandwidth=bandwidth)
-labels = mean_shift.fit_predict(X)
-cluster_centers = mean_shift.cluster_centers_
+model = MeanShift(bandwidth=bandwidth)
+labels = model.fit_predict(X)
 ```
 
-**Use cases**:
-- When cluster count is unknown
-- Computer vision applications
-- Object tracking
+**SpectralClustering**
+- Uses graph-based approach with eigenvalues
+- Key parameters: `n_clusters`, `affinity` ('rbf', 'nearest_neighbors')
+- Use when: Non-convex clusters, graph structure
+- Example:
+```python
+from sklearn.cluster import SpectralClustering
 
-**Strengths**:
+model = SpectralClustering(n_clusters=3, affinity='rbf', random_state=42)
+labels = model.fit_predict(X)
+```
+
+**AffinityPropagation**
+- Finds exemplars by message passing
 - Automatically determines number of clusters
-- Handles arbitrary shapes
-- No assumptions about cluster shape
-
-**Limitations**:
-- Computationally expensive
-- Very sensitive to bandwidth parameter
-- Doesn't scale well
-
-### Affinity Propagation
-
-Uses message-passing between samples to identify exemplars.
-
+- Key parameters: `damping`, `preference`
+- Use when: Don't know number of clusters
+- Example:
 ```python
 from sklearn.cluster import AffinityPropagation
 
-affinity_prop = AffinityPropagation(
-    damping=0.5,       # Damping factor (0.5-1.0)
-    preference=None,   # Self-preference (controls number of clusters)
-    random_state=42
-)
-labels = affinity_prop.fit_predict(X)
-exemplars = affinity_prop.cluster_centers_indices_
+model = AffinityPropagation(damping=0.9, random_state=42)
+labels = model.fit_predict(X)
+n_clusters = len(model.cluster_centers_indices_)
 ```
 
-**Use cases**:
-- When number of clusters is unknown
-- When exemplars (representative samples) are needed
-
-**Strengths**:
-- Automatically determines number of clusters
-- Identifies exemplar samples
-- No initialization required
-
-**Limitations**:
-- Very slow: O(n²t) where t is iterations
-- Not suitable for large datasets
-- Memory intensive
-
-### Gaussian Mixture Models (GMM)
-
-Probabilistic model assuming data comes from mixture of Gaussian distributions.
-
-```python
-from sklearn.mixture import GaussianMixture
-
-gmm = GaussianMixture(
-    n_components=3,
-    covariance_type='full',  # 'full', 'tied', 'diag', 'spherical'
-    random_state=42
-)
-labels = gmm.fit_predict(X)
-probabilities = gmm.predict_proba(X)  # Soft clustering
-```
-
-**Covariance types**:
-- `full`: Each component has its own covariance matrix
-- `tied`: All components share same covariance
-- `diag`: Diagonal covariance (independent features)
-- `spherical`: Spherical covariance (isotropic)
-
-**Use cases**:
-- When soft clustering is needed (probabilities)
-- When clusters have different shapes/sizes
-- Generative modeling
-- Density estimation
-
-**Strengths**:
-- Provides probabilities (soft clustering)
-- Can handle elliptical clusters
-- Generative model (can sample new data)
-- Model selection with BIC/AIC
-
-**Limitations**:
-- Assumes Gaussian distributions
-- Sensitive to initialization
-- Can converge to local optima
-
-**Model selection**:
-```python
-from sklearn.mixture import GaussianMixture
-import numpy as np
-
-n_components_range = range(2, 10)
-bic_scores = []
-
-for n in n_components_range:
-    gmm = GaussianMixture(n_components=n, random_state=42)
-    gmm.fit(X)
-    bic_scores.append(gmm.bic(X))
-
-optimal_n = n_components_range[np.argmin(bic_scores)]
-```
-
-### BIRCH
-
-Builds Clustering Feature Tree for memory-efficient processing of large datasets.
-
+**BIRCH**
+- Balanced Iterative Reducing and Clustering using Hierarchies
+- Memory efficient for large datasets
+- Key parameters: `n_clusters`, `threshold`, `branching_factor`
+- Use when: Very large datasets
+- Example:
 ```python
 from sklearn.cluster import Birch
 
-birch = Birch(
-    n_clusters=3,
-    threshold=0.5,
-    branching_factor=50
-)
-labels = birch.fit_predict(X)
+model = Birch(n_clusters=3, threshold=0.5)
+labels = model.fit_predict(X)
 ```
 
-**Use cases**:
-- Very large datasets
-- Streaming data
-- Memory constraints
+### Clustering Evaluation
 
-**Strengths**:
-- Memory efficient
-- Single pass over data
-- Incremental learning
-
-## Dimensionality Reduction
-
-### Principal Component Analysis (PCA)
-
-Finds orthogonal components that explain maximum variance.
-
+**Metrics when ground truth is known:**
 ```python
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.metrics import adjusted_mutual_info_score, fowlkes_mallows_score
 
-# Specify number of components
-pca = PCA(n_components=2, random_state=42)
-X_transformed = pca.fit_transform(X)
-
-print("Explained variance ratio:", pca.explained_variance_ratio_)
-print("Total variance explained:", pca.explained_variance_ratio_.sum())
-
-# Or specify variance to retain
-pca = PCA(n_components=0.95)  # Keep 95% of variance
-X_transformed = pca.fit_transform(X)
-print(f"Components needed: {pca.n_components_}")
-
-# Visualize explained variance
-plt.plot(np.cumsum(pca.explained_variance_ratio_))
-plt.xlabel('Number of components')
-plt.ylabel('Cumulative explained variance')
-plt.show()
-```
-
-**Use cases**:
-- Visualization (reduce to 2-3 dimensions)
-- Remove multicollinearity
-- Noise reduction
-- Speed up training
-- Feature extraction
-
-**Strengths**:
-- Fast and efficient
-- Reduces multicollinearity
-- Works well for linear relationships
-- Interpretable components
-
-**Limitations**:
-- Only linear transformations
-- Sensitive to scaling (always standardize first!)
-- Components may be hard to interpret
-
-**Variants**:
-- **IncrementalPCA**: For datasets that don't fit in memory
-- **KernelPCA**: Non-linear dimensionality reduction
-- **SparsePCA**: Sparse loadings for interpretability
-
-### t-SNE
-
-t-Distributed Stochastic Neighbor Embedding for visualization.
-
-```python
-from sklearn.manifold import TSNE
-
-tsne = TSNE(
-    n_components=2,
-    perplexity=30,      # Balance local vs global structure (5-50)
-    learning_rate='auto',
-    n_iter=1000,
-    random_state=42
-)
-X_embedded = tsne.fit_transform(X)
-
-# Visualize
-plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y)
-plt.show()
-```
-
-**Use cases**:
-- Visualization only (do not use for preprocessing!)
-- Exploring high-dimensional data
-- Finding clusters visually
-
-**Important notes**:
-- **Only for visualization**, not for preprocessing
-- Each run produces different results (use random_state for reproducibility)
-- Slow for large datasets
-- Cannot transform new data (no transform() method)
-
-**Parameter tuning**:
-- `perplexity`: 5-50, larger for larger datasets
-- Lower perplexity = focus on local structure
-- Higher perplexity = focus on global structure
-
-### UMAP
-
-Uniform Manifold Approximation and Projection (requires umap-learn package).
-
-**Advantages over t-SNE**:
-- Preserves global structure better
-- Faster
-- Can transform new data
-- Can be used for preprocessing (not just visualization)
-
-### Truncated SVD (LSA)
-
-Similar to PCA but works with sparse matrices (e.g., TF-IDF).
-
-```python
-from sklearn.decomposition import TruncatedSVD
-
-svd = TruncatedSVD(n_components=100, random_state=42)
-X_reduced = svd.fit_transform(X_sparse)
-```
-
-**Use cases**:
-- Text data (after TF-IDF)
-- Sparse matrices
-- Latent Semantic Analysis (LSA)
-
-### Non-negative Matrix Factorization (NMF)
-
-Factorizes data into non-negative components.
-
-```python
-from sklearn.decomposition import NMF
-
-nmf = NMF(n_components=10, init='nndsvd', random_state=42)
-W = nmf.fit_transform(X)  # Document-topic matrix
-H = nmf.components_        # Topic-word matrix
-```
-
-**Use cases**:
-- Topic modeling
-- Audio source separation
-- Image processing
-- When non-negativity is important (e.g., counts)
-
-**Strengths**:
-- Interpretable components (additive, non-negative)
-- Sparse representations
-
-### Independent Component Analysis (ICA)
-
-Separates multivariate signal into independent components.
-
-```python
-from sklearn.decomposition import FastICA
-
-ica = FastICA(n_components=10, random_state=42)
-X_independent = ica.fit_transform(X)
-```
-
-**Use cases**:
-- Blind source separation
-- Signal processing
-- Feature extraction when independence is expected
-
-### Factor Analysis
-
-Models observed variables as linear combinations of latent factors plus noise.
-
-```python
-from sklearn.decomposition import FactorAnalysis
-
-fa = FactorAnalysis(n_components=5, random_state=42)
-X_factors = fa.fit_transform(X)
-```
-
-**Use cases**:
-- When noise is heteroscedastic
-- Latent variable modeling
-- Psychology/social science research
-
-**Difference from PCA**: Models noise explicitly, assumes features have independent noise
-
-## Anomaly Detection
-
-### One-Class SVM
-
-Learns boundary around normal data.
-
-```python
-from sklearn.svm import OneClassSVM
-
-oc_svm = OneClassSVM(
-    nu=0.1,           # Proportion of outliers expected
-    kernel='rbf',
-    gamma='auto'
-)
-oc_svm.fit(X_train)
-predictions = oc_svm.predict(X_test)  # 1 for inliers, -1 for outliers
-```
-
-**Use cases**:
-- Novelty detection
-- When only normal data is available for training
-
-### Isolation Forest
-
-Isolates outliers using random forests.
-
-```python
-from sklearn.ensemble import IsolationForest
-
-iso_forest = IsolationForest(
-    contamination=0.1,  # Expected proportion of outliers
-    random_state=42
-)
-predictions = iso_forest.fit_predict(X)  # 1 for inliers, -1 for outliers
-scores = iso_forest.score_samples(X)     # Anomaly scores
-```
-
-**Use cases**:
-- General anomaly detection
-- Works well with high-dimensional data
-- Fast and scalable
-
-**Strengths**:
-- Fast
-- Effective in high dimensions
-- Low memory requirements
-
-### Local Outlier Factor (LOF)
-
-Detects outliers based on local density deviation.
-
-```python
-from sklearn.neighbors import LocalOutlierFactor
-
-lof = LocalOutlierFactor(
-    n_neighbors=20,
-    contamination=0.1
-)
-predictions = lof.fit_predict(X)  # 1 for inliers, -1 for outliers
-scores = lof.negative_outlier_factor_  # Anomaly scores (negative)
-```
-
-**Use cases**:
-- Finding local outliers
-- When global methods fail
-
-## Clustering Evaluation
-
-### With Ground Truth Labels
-
-When true labels are available (for validation):
-
-**Adjusted Rand Index (ARI)**:
-```python
-from sklearn.metrics import adjusted_rand_score
+# Compare predicted labels with true labels
 ari = adjusted_rand_score(y_true, y_pred)
-# Range: [-1, 1], 1 = perfect, 0 = random
-```
-
-**Normalized Mutual Information (NMI)**:
-```python
-from sklearn.metrics import normalized_mutual_info_score
 nmi = normalized_mutual_info_score(y_true, y_pred)
-# Range: [0, 1], 1 = perfect
+ami = adjusted_mutual_info_score(y_true, y_pred)
+fmi = fowlkes_mallows_score(y_true, y_pred)
 ```
 
-**V-Measure**:
+**Metrics without ground truth:**
 ```python
-from sklearn.metrics import v_measure_score
-v = v_measure_score(y_true, y_pred)
-# Range: [0, 1], harmonic mean of homogeneity and completeness
-```
-
-### Without Ground Truth Labels
-
-When true labels are unavailable (unsupervised evaluation):
-
-**Silhouette Score**:
-Measures how similar objects are to their own cluster vs other clusters.
-
-```python
-from sklearn.metrics import silhouette_score, silhouette_samples
-import matplotlib.pyplot as plt
-
-score = silhouette_score(X, labels)
-# Range: [-1, 1], higher is better
-# >0.7: Strong structure
-# 0.5-0.7: Reasonable structure
-# 0.25-0.5: Weak structure
-# <0.25: No substantial structure
-
-# Per-sample scores for detailed analysis
-sample_scores = silhouette_samples(X, labels)
-
-# Visualize silhouette plot
-for i in range(n_clusters):
-    cluster_scores = sample_scores[labels == i]
-    cluster_scores.sort()
-    plt.barh(range(len(cluster_scores)), cluster_scores)
-plt.axvline(x=score, color='red', linestyle='--')
-plt.show()
-```
-
-**Davies-Bouldin Index**:
-```python
+from sklearn.metrics import silhouette_score, calinski_harabasz_score
 from sklearn.metrics import davies_bouldin_score
-db = davies_bouldin_score(X, labels)
-# Lower is better, 0 = perfect
+
+# Silhouette: [-1, 1], higher is better
+silhouette = silhouette_score(X, labels)
+
+# Calinski-Harabasz: higher is better
+ch_score = calinski_harabasz_score(X, labels)
+
+# Davies-Bouldin: lower is better
+db_score = davies_bouldin_score(X, labels)
 ```
 
-**Calinski-Harabasz Index** (Variance Ratio Criterion):
-```python
-from sklearn.metrics import calinski_harabasz_score
-ch = calinski_harabasz_score(X, labels)
-# Higher is better
-```
-
-**Inertia** (K-Means specific):
-```python
-inertia = kmeans.inertia_
-# Sum of squared distances to nearest cluster center
-# Use for elbow method
-```
-
-### Elbow Method (K-Means)
-
+**Elbow method for K-Means:**
 ```python
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 inertias = []
 K_range = range(2, 11)
-
 for k in K_range:
-    kmeans = KMeans(n_clusters=k, random_state=42)
-    kmeans.fit(X)
-    inertias.append(kmeans.inertia_)
+    model = KMeans(n_clusters=k, random_state=42)
+    model.fit(X)
+    inertias.append(model.inertia_)
 
 plt.plot(K_range, inertias, 'bo-')
-plt.xlabel('Number of clusters (k)')
+plt.xlabel('Number of clusters')
 plt.ylabel('Inertia')
 plt.title('Elbow Method')
-plt.show()
-# Look for "elbow" where inertia starts decreasing more slowly
 ```
 
-## Best Practices
+## Dimensionality Reduction
 
-### Clustering Algorithm Selection
+### Principal Component Analysis (PCA)
 
-**Use K-Means when**:
-- Clusters are spherical and similar size
-- Speed is important
-- Data is not too high-dimensional
+**PCA (`sklearn.decomposition.PCA`)**
+- Linear dimensionality reduction using SVD
+- Key parameters:
+  - `n_components`: Number of components (int or float for explained variance)
+  - `whiten`: Whiten components to unit variance
+- Use when: Linear relationships, want to explain variance
+- Example:
+```python
+from sklearn.decomposition import PCA
 
-**Use DBSCAN when**:
-- Arbitrary cluster shapes
-- Number of clusters unknown
-- Outlier detection needed
+# Keep components explaining 95% variance
+pca = PCA(n_components=0.95)
+X_reduced = pca.fit_transform(X)
 
-**Use Hierarchical when**:
-- Hierarchy is meaningful
-- Small to medium datasets
-- Visualization is important
+print(f"Original dimensions: {X.shape[1]}")
+print(f"Reduced dimensions: {X_reduced.shape[1]}")
+print(f"Explained variance ratio: {pca.explained_variance_ratio_}")
+print(f"Total variance explained: {pca.explained_variance_ratio_.sum()}")
 
-**Use GMM when**:
-- Soft clustering needed
-- Clusters have different shapes/sizes
-- Probabilistic interpretation needed
+# Or specify exact number of components
+pca = PCA(n_components=2)
+X_2d = pca.fit_transform(X)
+```
 
-**Use Spectral Clustering when**:
-- Non-convex clusters
-- Have similarity matrix
-- Moderate dataset size
+**IncrementalPCA**
+- PCA for large datasets that don't fit in memory
+- Processes data in batches
+- Key parameter: `n_components`, `batch_size`
+- Example:
+```python
+from sklearn.decomposition import IncrementalPCA
 
-### Preprocessing for Clustering
+pca = IncrementalPCA(n_components=50, batch_size=100)
+X_reduced = pca.fit_transform(X)
+```
 
-1. **Always scale features**: Use StandardScaler or MinMaxScaler
-2. **Handle outliers**: Remove or use robust algorithms (DBSCAN, HDBSCAN)
-3. **Reduce dimensionality if needed**: PCA for speed, careful with interpretation
-4. **Check for categorical variables**: Encode appropriately or use specialized algorithms
+**KernelPCA**
+- Non-linear dimensionality reduction using kernels
+- Key parameters: `n_components`, `kernel` ('linear', 'poly', 'rbf', 'sigmoid')
+- Use when: Non-linear relationships
+- Example:
+```python
+from sklearn.decomposition import KernelPCA
 
-### Dimensionality Reduction Guidelines
+pca = KernelPCA(n_components=2, kernel='rbf', gamma=0.1)
+X_reduced = pca.fit_transform(X)
+```
 
-**For preprocessing/feature extraction**:
-- PCA (linear relationships)
-- TruncatedSVD (sparse data)
-- NMF (non-negative data)
+### Manifold Learning
 
-**For visualization only**:
-- t-SNE (preserves local structure)
-- UMAP (preserves both local and global structure)
+**t-SNE (`sklearn.manifold.TSNE`)**
+- t-distributed Stochastic Neighbor Embedding
+- Excellent for 2D/3D visualization
+- Key parameters:
+  - `n_components`: Usually 2 or 3
+  - `perplexity`: Balance between local and global structure (5-50)
+  - `learning_rate`: Usually 10-1000
+  - `n_iter`: Number of iterations (min 250)
+- Use when: Visualizing high-dimensional data
+- Note: Slow on large datasets, no transform() method
+- Example:
+```python
+from sklearn.manifold import TSNE
 
-**Always**:
-- Standardize features before PCA
-- Use appropriate n_components (elbow plot, explained variance)
-- Don't use t-SNE for anything except visualization
+tsne = TSNE(n_components=2, perplexity=30, learning_rate=200, n_iter=1000, random_state=42)
+X_embedded = tsne.fit_transform(X)
 
-### Common Pitfalls
+# Visualize
+import matplotlib.pyplot as plt
+plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=labels, cmap='viridis')
+plt.title('t-SNE visualization')
+```
 
-1. **Not scaling data**: Most algorithms sensitive to scale
-2. **Using t-SNE for preprocessing**: Only for visualization!
-3. **Overfitting cluster count**: Too many clusters = overfitting noise
-4. **Ignoring outliers**: Can severely affect centroid-based methods
-5. **Wrong metric**: Euclidean assumes all features equally important
-6. **Not validating results**: Always check with multiple metrics and domain knowledge
-7. **PCA without standardization**: Components dominated by high-variance features
+**UMAP (not in scikit-learn, but compatible)**
+- Uniform Manifold Approximation and Projection
+- Faster than t-SNE, preserves global structure better
+- Install: `uv pip install umap-learn`
+- Example:
+```python
+from umap import UMAP
+
+reducer = UMAP(n_components=2, n_neighbors=15, min_dist=0.1, random_state=42)
+X_embedded = reducer.fit_transform(X)
+```
+
+**Isomap**
+- Isometric Mapping
+- Preserves geodesic distances
+- Key parameters: `n_components`, `n_neighbors`
+- Use when: Non-linear manifolds
+- Example:
+```python
+from sklearn.manifold import Isomap
+
+isomap = Isomap(n_components=2, n_neighbors=5)
+X_embedded = isomap.fit_transform(X)
+```
+
+**Locally Linear Embedding (LLE)**
+- Preserves local neighborhood structure
+- Key parameters: `n_components`, `n_neighbors`
+- Example:
+```python
+from sklearn.manifold import LocallyLinearEmbedding
+
+lle = LocallyLinearEmbedding(n_components=2, n_neighbors=10)
+X_embedded = lle.fit_transform(X)
+```
+
+**MDS (Multidimensional Scaling)**
+- Preserves pairwise distances
+- Key parameter: `n_components`, `metric` (True/False)
+- Example:
+```python
+from sklearn.manifold import MDS
+
+mds = MDS(n_components=2, metric=True, random_state=42)
+X_embedded = mds.fit_transform(X)
+```
+
+### Matrix Factorization
+
+**NMF (Non-negative Matrix Factorization)**
+- Factorizes into non-negative matrices
+- Key parameters: `n_components`, `init` ('nndsvd', 'random')
+- Use when: Data is non-negative (images, text)
+- Interpretable components
+- Example:
+```python
+from sklearn.decomposition import NMF
+
+nmf = NMF(n_components=10, init='nndsvd', random_state=42)
+W = nmf.fit_transform(X)  # Document-topic matrix
+H = nmf.components_  # Topic-word matrix
+```
+
+**TruncatedSVD**
+- SVD for sparse matrices
+- Similar to PCA but works with sparse data
+- Use when: Text data, sparse matrices
+- Example:
+```python
+from sklearn.decomposition import TruncatedSVD
+
+svd = TruncatedSVD(n_components=100, random_state=42)
+X_reduced = svd.fit_transform(X_sparse)
+print(f"Explained variance: {svd.explained_variance_ratio_.sum()}")
+```
+
+**FastICA**
+- Independent Component Analysis
+- Separates multivariate signal into independent components
+- Key parameter: `n_components`
+- Use when: Signal separation (e.g., audio, EEG)
+- Example:
+```python
+from sklearn.decomposition import FastICA
+
+ica = FastICA(n_components=10, random_state=42)
+S = ica.fit_transform(X)  # Independent sources
+A = ica.mixing_  # Mixing matrix
+```
+
+**LatentDirichletAllocation (LDA)**
+- Topic modeling for text data
+- Key parameters: `n_components` (number of topics), `learning_method` ('batch', 'online')
+- Use when: Topic modeling, document clustering
+- Example:
+```python
+from sklearn.decomposition import LatentDirichletAllocation
+
+lda = LatentDirichletAllocation(n_components=10, random_state=42)
+doc_topics = lda.fit_transform(X_counts)  # Document-topic distribution
+
+# Get top words for each topic
+feature_names = vectorizer.get_feature_names_out()
+for topic_idx, topic in enumerate(lda.components_):
+    top_words = [feature_names[i] for i in topic.argsort()[-10:]]
+    print(f"Topic {topic_idx}: {', '.join(top_words)}")
+```
+
+## Outlier and Novelty Detection
+
+### Outlier Detection
+
+**IsolationForest**
+- Isolates anomalies using random trees
+- Key parameters:
+  - `contamination`: Expected proportion of outliers
+  - `n_estimators`: Number of trees
+- Use when: High-dimensional data, efficiency important
+- Example:
+```python
+from sklearn.ensemble import IsolationForest
+
+model = IsolationForest(contamination=0.1, random_state=42)
+predictions = model.fit_predict(X)  # -1 for outliers, 1 for inliers
+```
+
+**LocalOutlierFactor**
+- Measures local density deviation
+- Key parameters: `n_neighbors`, `contamination`
+- Use when: Varying density regions
+- Example:
+```python
+from sklearn.neighbors import LocalOutlierFactor
+
+lof = LocalOutlierFactor(n_neighbors=20, contamination=0.1)
+predictions = lof.fit_predict(X)  # -1 for outliers, 1 for inliers
+outlier_scores = lof.negative_outlier_factor_
+```
+
+**One-Class SVM**
+- Learns decision boundary around normal data
+- Key parameters: `nu` (upper bound on outliers), `kernel`, `gamma`
+- Use when: Small training set of normal data
+- Example:
+```python
+from sklearn.svm import OneClassSVM
+
+model = OneClassSVM(nu=0.1, kernel='rbf', gamma='auto')
+model.fit(X_train)
+predictions = model.predict(X_test)  # -1 for outliers, 1 for inliers
+```
+
+**EllipticEnvelope**
+- Assumes Gaussian distribution
+- Key parameter: `contamination`
+- Use when: Data is Gaussian-distributed
+- Example:
+```python
+from sklearn.covariance import EllipticEnvelope
+
+model = EllipticEnvelope(contamination=0.1, random_state=42)
+predictions = model.fit_predict(X)
+```
+
+## Gaussian Mixture Models
+
+**GaussianMixture**
+- Probabilistic clustering with mixture of Gaussians
+- Key parameters:
+  - `n_components`: Number of mixture components
+  - `covariance_type`: 'full', 'tied', 'diag', 'spherical'
+- Use when: Soft clustering, need probability estimates
+- Example:
+```python
+from sklearn.mixture import GaussianMixture
+
+gmm = GaussianMixture(n_components=3, covariance_type='full', random_state=42)
+gmm.fit(X)
+
+# Predict cluster labels
+labels = gmm.predict(X)
+
+# Get probability of each cluster
+probabilities = gmm.predict_proba(X)
+
+# Information criteria for model selection
+print(f"BIC: {gmm.bic(X)}")  # Lower is better
+print(f"AIC: {gmm.aic(X)}")  # Lower is better
+```
+
+## Choosing the Right Method
+
+### Clustering:
+- **Know K, spherical clusters**: K-Means
+- **Arbitrary shapes, noise**: DBSCAN, HDBSCAN
+- **Hierarchical structure**: AgglomerativeClustering
+- **Very large data**: MiniBatchKMeans, BIRCH
+- **Probabilistic**: GaussianMixture
+
+### Dimensionality Reduction:
+- **Linear, variance explanation**: PCA
+- **Non-linear, visualization**: t-SNE, UMAP
+- **Non-negative data**: NMF
+- **Sparse data**: TruncatedSVD
+- **Topic modeling**: LatentDirichletAllocation
+
+### Outlier Detection:
+- **High-dimensional**: IsolationForest
+- **Varying density**: LocalOutlierFactor
+- **Gaussian data**: EllipticEnvelope
