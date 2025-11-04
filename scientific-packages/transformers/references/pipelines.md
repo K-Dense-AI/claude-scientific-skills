@@ -1,234 +1,335 @@
-# Transformers Pipelines
+# Pipeline API Reference
 
-Pipelines provide a simple and optimized interface for inference across many machine learning tasks. They abstract away the complexity of tokenization, model invocation, and post-processing.
+## Overview
 
-## Usage Pattern
+Pipelines provide the simplest way to use pre-trained models for inference. They abstract away tokenization, model loading, and post-processing, offering a unified interface for dozens of tasks.
+
+## Basic Usage
+
+Create a pipeline by specifying a task:
 
 ```python
 from transformers import pipeline
 
-# Basic usage
-classifier = pipeline("text-classification")
-result = classifier("This movie was amazing!")
-
-# With specific model
-classifier = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
-result = classifier("This movie was amazing!")
+# Auto-select default model for task
+pipe = pipeline("text-classification")
+result = pipe("This is great!")
 ```
 
-## Natural Language Processing Pipelines
+Or specify a model:
 
-### Text Classification
+```python
+pipe = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
+```
+
+## Supported Tasks
+
+### Natural Language Processing
+
+**text-generation**: Generate text continuations
+```python
+generator = pipeline("text-generation", model="gpt2")
+output = generator("Once upon a time", max_length=50, num_return_sequences=2)
+```
+
+**text-classification**: Classify text into categories
 ```python
 classifier = pipeline("text-classification")
-classifier("I love this product!")
-# [{'label': 'POSITIVE', 'score': 0.9998}]
+result = classifier("I love this product!")  # Returns label and score
 ```
 
-### Zero-Shot Classification
+**token-classification**: Label individual tokens (NER, POS tagging)
 ```python
-classifier = pipeline("zero-shot-classification")
-classifier("This is about climate change", candidate_labels=["politics", "science", "sports"])
+ner = pipeline("token-classification", model="dslim/bert-base-NER")
+entities = ner("Hugging Face is based in New York City")
 ```
 
-### Token Classification (NER)
-```python
-ner = pipeline("token-classification")
-ner("My name is Sarah and I work at Microsoft in Seattle")
-```
-
-### Question Answering
+**question-answering**: Extract answers from context
 ```python
 qa = pipeline("question-answering")
-qa(question="What is the capital?", context="The capital of France is Paris.")
+result = qa(question="What is the capital?", context="Paris is the capital of France.")
 ```
 
-### Text Generation
+**fill-mask**: Predict masked tokens
 ```python
-generator = pipeline("text-generation")
-generator("Once upon a time", max_length=50)
+unmasker = pipeline("fill-mask", model="bert-base-uncased")
+result = unmasker("Paris is the [MASK] of France")
 ```
 
-### Text2Text Generation
+**summarization**: Summarize long texts
 ```python
-generator = pipeline("text2text-generation", model="t5-base")
-generator("translate English to French: Hello")
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+summary = summarizer("Long article text...", max_length=130, min_length=30)
 ```
 
-### Summarization
+**translation**: Translate between languages
 ```python
-summarizer = pipeline("summarization")
-summarizer("Long article text here...", max_length=130, min_length=30)
+translator = pipeline("translation_en_to_fr", model="Helsinki-NLP/opus-mt-en-fr")
+result = translator("Hello, how are you?")
 ```
 
-### Translation
+**zero-shot-classification**: Classify without training data
 ```python
-translator = pipeline("translation_en_to_fr")
-translator("Hello, how are you?")
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+result = classifier(
+    "This is a course about Python programming",
+    candidate_labels=["education", "politics", "business"]
+)
 ```
 
-### Fill Mask
+**sentiment-analysis**: Alias for text-classification focused on sentiment
 ```python
-unmasker = pipeline("fill-mask")
-unmasker("Paris is the [MASK] of France.")
+sentiment = pipeline("sentiment-analysis")
+result = sentiment("This product exceeded my expectations!")
 ```
 
-### Feature Extraction
+### Computer Vision
+
+**image-classification**: Classify images
 ```python
-extractor = pipeline("feature-extraction")
-embeddings = extractor("This is a sentence")
+classifier = pipeline("image-classification", model="google/vit-base-patch16-224")
+result = classifier("path/to/image.jpg")
+# Or use PIL Image or URL
+from PIL import Image
+result = classifier(Image.open("image.jpg"))
 ```
 
-### Document Question Answering
+**object-detection**: Detect objects in images
 ```python
-doc_qa = pipeline("document-question-answering")
-doc_qa(image="document.png", question="What is the invoice number?")
+detector = pipeline("object-detection", model="facebook/detr-resnet-50")
+results = detector("image.jpg")  # Returns bounding boxes and labels
 ```
 
-### Table Question Answering
+**image-segmentation**: Segment images
 ```python
-table_qa = pipeline("table-question-answering")
-table_qa(table=data, query="How many employees?")
+segmenter = pipeline("image-segmentation", model="facebook/detr-resnet-50-panoptic")
+segments = segmenter("image.jpg")
 ```
 
-## Computer Vision Pipelines
-
-### Image Classification
+**depth-estimation**: Estimate depth from images
 ```python
-classifier = pipeline("image-classification")
-classifier("cat.jpg")
+depth = pipeline("depth-estimation", model="Intel/dpt-large")
+result = depth("image.jpg")
 ```
 
-### Zero-Shot Image Classification
+**zero-shot-image-classification**: Classify images without training
 ```python
-classifier = pipeline("zero-shot-image-classification")
-classifier("cat.jpg", candidate_labels=["cat", "dog", "bird"])
+classifier = pipeline("zero-shot-image-classification", model="openai/clip-vit-base-patch32")
+result = classifier("image.jpg", candidate_labels=["cat", "dog", "bird"])
 ```
 
-### Object Detection
+### Audio
+
+**automatic-speech-recognition**: Transcribe speech
 ```python
-detector = pipeline("object-detection")
-detector("street.jpg")
+asr = pipeline("automatic-speech-recognition", model="openai/whisper-base")
+text = asr("audio.mp3")
 ```
 
-### Image Segmentation
+**audio-classification**: Classify audio
 ```python
-segmenter = pipeline("image-segmentation")
-segmenter("image.jpg")
+classifier = pipeline("audio-classification", model="MIT/ast-finetuned-audioset-10-10-0.4593")
+result = classifier("audio.wav")
 ```
 
-### Image-to-Image
+**text-to-speech**: Generate speech from text (with specific models)
 ```python
-img2img = pipeline("image-to-image", model="lllyasviel/sd-controlnet-canny")
-img2img("input.jpg")
+tts = pipeline("text-to-speech", model="microsoft/speecht5_tts")
+audio = tts("Hello, this is a test")
 ```
 
-### Depth Estimation
+### Multimodal
+
+**visual-question-answering**: Answer questions about images
 ```python
-depth = pipeline("depth-estimation")
-depth("image.jpg")
+vqa = pipeline("visual-question-answering", model="dandelin/vilt-b32-finetuned-vqa")
+result = vqa(image="image.jpg", question="What color is the car?")
 ```
 
-### Video Classification
+**document-question-answering**: Answer questions about documents
 ```python
-classifier = pipeline("video-classification")
-classifier("video.mp4")
+doc_qa = pipeline("document-question-answering", model="impira/layoutlm-document-qa")
+result = doc_qa(image="document.png", question="What is the invoice number?")
 ```
 
-### Keypoint Matching
+**image-to-text**: Generate captions for images
 ```python
-matcher = pipeline("keypoint-matching")
-matcher(image1="img1.jpg", image2="img2.jpg")
+captioner = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+caption = captioner("image.jpg")
 ```
 
-## Audio Pipelines
-
-### Automatic Speech Recognition
-```python
-asr = pipeline("automatic-speech-recognition")
-asr("audio.wav")
-```
-
-### Audio Classification
-```python
-classifier = pipeline("audio-classification")
-classifier("audio.wav")
-```
-
-### Zero-Shot Audio Classification
-```python
-classifier = pipeline("zero-shot-audio-classification")
-classifier("audio.wav", candidate_labels=["speech", "music", "noise"])
-```
-
-### Text-to-Audio/Text-to-Speech
-```python
-synthesizer = pipeline("text-to-audio")
-audio = synthesizer("Hello, how are you today?")
-```
-
-## Multimodal Pipelines
-
-### Image-to-Text (Image Captioning)
-```python
-captioner = pipeline("image-to-text")
-captioner("image.jpg")
-```
-
-### Visual Question Answering
-```python
-vqa = pipeline("visual-question-answering")
-vqa(image="image.jpg", question="What color is the car?")
-```
-
-### Image-Text-to-Text (VLMs)
-```python
-vlm = pipeline("image-text-to-text")
-vlm(images="image.jpg", text="Describe this image in detail")
-```
-
-### Zero-Shot Object Detection
-```python
-detector = pipeline("zero-shot-object-detection")
-detector("image.jpg", candidate_labels=["car", "person", "tree"])
-```
-
-## Pipeline Configuration
+## Pipeline Parameters
 
 ### Common Parameters
 
-- `model`: Specify model identifier or path
-- `device`: Set device (0 for GPU, -1 for CPU, or "cuda:0")
-- `batch_size`: Process multiple inputs at once
-- `torch_dtype`: Set precision (torch.float16, torch.bfloat16)
-
+**model**: Model identifier or path
 ```python
-# GPU with half precision
-pipe = pipeline("text-generation", model="gpt2", device=0, torch_dtype=torch.float16)
-
-# Batch processing
-pipe(["text 1", "text 2", "text 3"], batch_size=8)
+pipe = pipeline("task", model="model-id")
 ```
 
-### Task-Specific Parameters
+**device**: GPU device index (-1 for CPU, 0+ for GPU)
+```python
+pipe = pipeline("task", device=0)  # Use first GPU
+```
 
-Each pipeline accepts task-specific parameters in the call:
+**device_map**: Automatic device allocation for large models
+```python
+pipe = pipeline("task", model="large-model", device_map="auto")
+```
+
+**dtype**: Model precision (reduces memory)
+```python
+import torch
+pipe = pipeline("task", torch_dtype=torch.float16)
+```
+
+**batch_size**: Process multiple inputs at once
+```python
+pipe = pipeline("task", batch_size=8)
+results = pipe(["text1", "text2", "text3"])
+```
+
+**framework**: Choose PyTorch or TensorFlow
+```python
+pipe = pipeline("task", framework="pt")  # or "tf"
+```
+
+## Batch Processing
+
+Process multiple inputs efficiently:
 
 ```python
-# Text generation
-generator("prompt", max_length=100, temperature=0.7, top_p=0.9, num_return_sequences=3)
+classifier = pipeline("text-classification")
+texts = ["Great product!", "Terrible experience", "Just okay"]
+results = classifier(texts)
+```
 
-# Summarization
-summarizer("text", max_length=130, min_length=30, do_sample=False)
+For large datasets, use generators or KeyDataset:
 
-# Translation
-translator("text", max_length=512, num_beams=4)
+```python
+from transformers.pipelines.pt_utils import KeyDataset
+import datasets
+
+dataset = datasets.load_dataset("dataset-name", split="test")
+pipe = pipeline("task", device=0)
+
+for output in pipe(KeyDataset(dataset, "text")):
+    print(output)
+```
+
+## Performance Optimization
+
+### GPU Acceleration
+
+Always specify device for GPU usage:
+```python
+pipe = pipeline("task", device=0)
+```
+
+### Mixed Precision
+
+Use float16 for 2x speedup on supported GPUs:
+```python
+import torch
+pipe = pipeline("task", torch_dtype=torch.float16, device=0)
+```
+
+### Batching Guidelines
+
+- **CPU**: Usually skip batching
+- **GPU with variable lengths**: May reduce efficiency
+- **GPU with similar lengths**: Significant speedup
+- **Real-time applications**: Skip batching (increases latency)
+
+```python
+# Good for throughput
+pipe = pipeline("task", batch_size=32, device=0)
+results = pipe(list_of_texts)
+```
+
+### Streaming Output
+
+For text generation, stream tokens as they're generated:
+
+```python
+from transformers import TextStreamer
+
+generator = pipeline("text-generation", model="gpt2", streamer=TextStreamer())
+generator("The future of AI", max_length=100)
+```
+
+## Custom Pipeline Configuration
+
+Specify tokenizer and model separately:
+
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+tokenizer = AutoTokenizer.from_pretrained("model-id")
+model = AutoModelForSequenceClassification.from_pretrained("model-id")
+pipe = pipeline("text-classification", model=model, tokenizer=tokenizer)
+```
+
+Use custom pipeline classes:
+
+```python
+from transformers import TextClassificationPipeline
+
+class CustomPipeline(TextClassificationPipeline):
+    def postprocess(self, model_outputs, **kwargs):
+        # Custom post-processing
+        return super().postprocess(model_outputs, **kwargs)
+
+pipe = pipeline("text-classification", model="model-id", pipeline_class=CustomPipeline)
+```
+
+## Input Formats
+
+Pipelines accept various input types:
+
+**Text tasks**: Strings or lists of strings
+```python
+pipe("single text")
+pipe(["text1", "text2"])
+```
+
+**Image tasks**: URLs, file paths, PIL Images, or numpy arrays
+```python
+pipe("https://example.com/image.jpg")
+pipe("local/path/image.png")
+pipe(PIL.Image.open("image.jpg"))
+pipe(numpy_array)
+```
+
+**Audio tasks**: File paths, numpy arrays, or raw waveforms
+```python
+pipe("audio.mp3")
+pipe(audio_array)
+```
+
+## Error Handling
+
+Handle common issues:
+
+```python
+try:
+    result = pipe(input_data)
+except Exception as e:
+    if "CUDA out of memory" in str(e):
+        # Reduce batch size or use CPU
+        pipe = pipeline("task", device=-1)
+    elif "does not appear to have a file named" in str(e):
+        # Model not found
+        print("Check model identifier")
+    else:
+        raise
 ```
 
 ## Best Practices
 
-1. **Reuse pipelines**: Create once, use multiple times for efficiency
-2. **Batch processing**: Use batches for multiple inputs to maximize throughput
-3. **GPU acceleration**: Set `device=0` for GPU when available
-4. **Model selection**: Choose task-specific models for best results
-5. **Memory management**: Use `torch_dtype=torch.float16` for large models
+1. **Use pipelines for prototyping**: Fast iteration without boilerplate
+2. **Specify models explicitly**: Default models may change
+3. **Enable GPU when available**: Significant speedup
+4. **Use batching for throughput**: When processing many inputs
+5. **Consider memory usage**: Use float16 or smaller models for large batches
+6. **Cache models locally**: Avoid repeated downloads
