@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "1.69.0"
+    "version": "1.70.0"
   },
   "plugins": [
     {
@@ -35,7 +35,9 @@
         "./scientific-packages/esm",
         "./scientific-packages/etetoolkit",
         "./scientific-packages/flowio",
+        "./scientific-packages/geniml",
         "./scientific-packages/gget",
+        "./scientific-packages/gtars",
         "./scientific-packages/hypogenic",
         "./scientific-packages/histolab",
         "./scientific-packages/lamindb",
