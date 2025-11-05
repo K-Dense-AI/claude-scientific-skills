@@ -1,275 +1,202 @@
 ---
 name: exploratory-data-analysis
-description: "EDA toolkit. Analyze CSV/Excel/JSON/Parquet files, statistical summaries, distributions, correlations, outliers, missing data, visualizations, markdown reports, for data profiling and insights."
+description: "Analyze datasets to discover patterns, anomalies, and relationships. Use when exploring data files, generating statistical summaries, checking data quality, or creating visualizations. Supports CSV, Excel, JSON, Parquet, and more."
 ---
 
 # Exploratory Data Analysis
 
-## Overview
+Discover patterns, anomalies, and relationships in tabular data through statistical analysis and visualization.
 
-EDA is a process for discovering patterns, anomalies, and relationships in data. Analyze CSV/Excel/JSON/Parquet files to generate statistical summaries, distributions, correlations, outliers, and visualizations. All outputs are markdown-formatted for integration into workflows.
+**Supported formats**: CSV, Excel (.xlsx, .xls), JSON, Parquet, TSV, Feather, HDF5, Pickle
 
-## When to Use This Skill
+## Standard Workflow
 
-This skill should be used when:
-- User provides a data file and requests analysis or exploration
-- User asks to "explore this dataset", "analyze this data", or "what's in this file?"
-- User needs statistical summaries, distributions, or correlations
-- User requests data visualizations or insights
-- User wants to understand data quality issues or patterns
-- User mentions EDA, exploratory analysis, or data profiling
-
-**Supported file formats**: CSV, Excel (.xlsx, .xls), JSON, Parquet, TSV, Feather, HDF5, Pickle
-
-## Quick Start Workflow
-
-1. **Receive data file** from user
-2. **Run comprehensive analysis** using `scripts/eda_analyzer.py`
-3. **Generate visualizations** using `scripts/visualizer.py`
-4. **Create markdown report** using insights and the `assets/report_template.md` template
-5. **Present findings** to user with key insights highlighted
-
-## Core Capabilities
-
-### 1. Comprehensive Data Analysis
-
-Execute full statistical analysis using the `eda_analyzer.py` script:
-
+1. Run statistical analysis:
 ```bash
-python scripts/eda_analyzer.py <data_file_path> -o <output_directory>
+python scripts/eda_analyzer.py <data_file> -o <output_dir>
 ```
 
-**What it provides**:
-- Auto-detection and loading of file formats
-- Basic dataset information (shape, types, memory usage)
-- Missing data analysis (patterns, percentages)
-- Summary statistics for numeric and categorical variables
-- Outlier detection using IQR and Z-score methods
-- Distribution analysis with normality tests (Shapiro-Wilk, Anderson-Darling)
-- Correlation analysis (Pearson and Spearman)
-- Data quality assessment (completeness, duplicates, issues)
-- Automated insight generation
-
-**Output**: JSON file containing all analysis results at `<output_directory>/eda_analysis.json`
-
-### 2. Comprehensive Visualizations
-
-Generate complete visualization suite using the `visualizer.py` script:
-
+2. Generate visualizations:
 ```bash
-python scripts/visualizer.py <data_file_path> -o <output_directory>
+python scripts/visualizer.py <data_file> -o <output_dir>
 ```
 
-**Generated visualizations**:
-- **Missing data patterns**: Heatmap and bar chart showing missing data
-- **Distribution plots**: Histograms with KDE overlays for all numeric variables
-- **Box plots with violin plots**: Outlier detection visualizations
-- **Correlation heatmap**: Both Pearson and Spearman correlation matrices
-- **Scatter matrix**: Pairwise relationships between numeric variables
-- **Categorical analysis**: Bar charts for top categories
-- **Time series plots**: Temporal trends with trend lines (if datetime columns exist)
+3. Read analysis results from `<output_dir>/eda_analysis.json`
 
-**Output**: High-quality PNG files saved to `<output_directory>/eda_visualizations/`
+4. Create report using `assets/report_template.md` structure
 
-All visualizations are production-ready with:
-- 300 DPI resolution
-- Clear titles and labels
-- Statistical annotations
-- Professional styling using seaborn
+5. Present findings with key insights and visualizations
 
-### 3. Automated Insight Generation
+## Analysis Capabilities
 
-The analyzer automatically generates actionable insights including:
+### Statistical Analysis
 
-- **Data scale insights**: Dataset size considerations for processing
-- **Missing data alerts**: Warnings when missing data exceeds thresholds
-- **Correlation discoveries**: Strong relationships identified for feature engineering
-- **Outlier warnings**: Variables with high outlier rates flagged
-- **Distribution assessments**: Skewness issues requiring transformations
-- **Duplicate alerts**: Duplicate row detection
-- **Imbalance warnings**: Categorical variable imbalance detection
+Run `scripts/eda_analyzer.py` to generate comprehensive analysis:
 
-Access insights from the analysis results JSON under the `"insights"` key.
+```bash
+python scripts/eda_analyzer.py sales_data.csv -o ./output
+```
 
-### 4. Statistical Interpretation
+Produces `output/eda_analysis.json` containing:
+- Dataset shape, types, memory usage
+- Missing data patterns and percentages
+- Summary statistics (numeric and categorical)
+- Outlier detection (IQR and Z-score methods)
+- Distribution analysis with normality tests
+- Correlation matrices (Pearson and Spearman)
+- Data quality metrics (completeness, duplicates)
+- Automated insights
 
-For detailed interpretation of statistical tests and measures, reference:
+### Visualizations
 
-**`references/statistical_tests_guide.md`** - Comprehensive guide covering:
+Run `scripts/visualizer.py` to generate plots:
+
+```bash
+python scripts/visualizer.py sales_data.csv -o ./output
+```
+
+Creates high-resolution (300 DPI) PNG files in `output/eda_visualizations/`:
+- Missing data heatmaps and bar charts
+- Distribution plots (histograms with KDE)
+- Box plots and violin plots for outliers
+- Correlation heatmaps
+- Scatter matrices for numeric relationships
+- Categorical bar charts
+- Time series plots (if datetime columns detected)
+
+### Automated Insights
+
+Access generated insights from the `"insights"` key in the analysis JSON:
+- Dataset size considerations
+- Missing data warnings (when exceeding thresholds)
+- Strong correlations for feature engineering
+- High outlier rate flags
+- Skewness requiring transformations
+- Duplicate detection
+- Categorical imbalance warnings
+
+## Reference Materials
+
+### Statistical Interpretation
+
+See `references/statistical_tests_guide.md` for detailed guidance on:
 - Normality tests (Shapiro-Wilk, Anderson-Darling, Kolmogorov-Smirnov)
 - Distribution characteristics (skewness, kurtosis)
-- Correlation tests (Pearson, Spearman)
-- Outlier detection methods (IQR, Z-score)
-- Hypothesis testing guidelines
-- Data transformation strategies
+- Correlation methods (Pearson, Spearman)
+- Outlier detection (IQR, Z-score)
+- Hypothesis testing and data transformations
 
-Load this reference when needing to interpret specific statistical tests or explain results to users.
+Use when interpreting statistical results or explaining findings.
 
-### 5. Best Practices Guidance
+### Methodology
 
-For methodological guidance, reference:
+See `references/eda_best_practices.md` for comprehensive guidance on:
+- 6-step EDA process framework
+- Univariate, bivariate, multivariate analysis approaches
+- Visualization and statistical analysis guidelines
+- Common pitfalls and domain-specific considerations
+- Communication strategies for different audiences
 
-**`references/eda_best_practices.md`** - Detailed best practices including:
-- EDA process framework (6-step methodology)
-- Univariate, bivariate, and multivariate analysis approaches
-- Visualization guidelines
-- Statistical analysis guidelines
-- Common pitfalls to avoid
-- Domain-specific considerations
-- Communication tips for technical and non-technical audiences
+Use when planning analysis or handling specific scenarios.
 
-Load this reference when planning analysis approach or needing guidance on specific EDA scenarios.
+## Report Template
 
-## Creating Analysis Reports
-
-Use the provided template to structure comprehensive EDA reports:
-
-**`assets/report_template.md`** - Professional report template with sections for:
+Use `assets/report_template.md` to structure findings. Template includes:
 - Executive summary
 - Dataset overview
 - Data quality assessment
 - Univariate, bivariate, and multivariate analysis
 - Outlier analysis
-- Key insights and findings
-- Recommendations
+- Key insights and recommendations
 - Limitations and appendices
 
-**To use the template**:
-1. Copy the template content
-2. Fill in sections with analysis results from JSON output
-3. Embed visualization images using markdown syntax
-4. Populate insights and recommendations
-5. Save as markdown for user consumption
+Fill sections with analysis JSON results and embed visualizations using markdown image syntax.
 
-## Typical Workflow Example
+## Example: Complete Analysis
 
-When user provides a data file:
+User request: "Explore this sales_data.csv file"
 
-```
-User: "Can you explore this sales_data.csv file and tell me what you find?"
+```bash
+# 1. Run analysis
+python scripts/eda_analyzer.py sales_data.csv -o ./output
 
-1. Run analysis:
-   python scripts/eda_analyzer.py sales_data.csv -o ./analysis_output
-
-2. Generate visualizations:
-   python scripts/visualizer.py sales_data.csv -o ./analysis_output
-
-3. Read analysis results:
-   Read ./analysis_output/eda_analysis.json
-
-4. Create markdown report using template:
-   - Copy assets/report_template.md structure
-   - Fill in sections with analysis results
-   - Reference visualizations from ./analysis_output/eda_visualizations/
-   - Include automated insights from JSON
-
-5. Present to user:
-   - Show key insights prominently
-   - Highlight data quality issues
-   - Provide visualizations inline
-   - Make actionable recommendations
-   - Save complete report as .md file
+# 2. Generate visualizations
+python scripts/visualizer.py sales_data.csv -o ./output
 ```
 
-## Advanced Analysis Scenarios
+```python
+# 3. Read results
+import json
+with open('./output/eda_analysis.json') as f:
+    results = json.load(f)
 
-### Large Datasets (>1M rows)
-- Run analysis on sampled data first for quick exploration
-- Note sample size in report
-- Recommend distributed computing for full analysis
+# 4. Build report from assets/report_template.md
+# - Fill sections with results
+# - Embed images: ![Missing Data](./output/eda_visualizations/missing_data.png)
+# - Include insights from results['insights']
+# - Add recommendations
+```
 
-### High-Dimensional Data (>50 columns)
-- Focus on most important variables first
-- Consider PCA or feature selection
-- Generate correlation analysis to identify variable groups
-- Reference `eda_best_practices.md` section on high-dimensional data
+## Special Cases
 
-### Time Series Data
-- Ensure datetime columns are properly detected
-- Time series visualizations will be automatically generated
-- Consider temporal patterns, trends, and seasonality
-- Reference `eda_best_practices.md` section on time series
+### Dataset Size Strategy
 
-### Imbalanced Data
-- Categorical analysis will flag imbalances
-- Report class distributions prominently
-- Recommend stratified sampling if needed
+**If < 100 rows**: Note sample size limitations, use non-parametric methods
 
-### Small Sample Sizes (<100 rows)
-- Non-parametric methods automatically used where appropriate
-- Be conservative in statistical conclusions
-- Note sample size limitations in report
+**If 100-1M rows**: Standard workflow applies
 
-## Output Best Practices
+**If > 1M rows**: Sample first for quick exploration, note sample size in report, recommend distributed computing for full analysis
 
-**Always output as markdown**:
-- Structure findings using markdown headers, tables, and lists
-- Embed visualizations using `![Description](path/to/image.png)` syntax
-- Use tables for statistical summaries
-- Include code blocks for any suggested transformations
-- Highlight key insights with bold or bullet points
+### Data Characteristics
 
-**Ensure reports are actionable**:
-- Provide clear recommendations based on findings
-- Flag data quality issues that need attention
-- Suggest next steps for modeling or further analysis
-- Identify feature engineering opportunities
+**High-dimensional (>50 columns)**: Focus on key variables first, use correlation analysis to identify groups, consider PCA or feature selection. See `references/eda_best_practices.md` for guidance.
 
-**Make insights accessible**:
-- Explain statistical concepts in plain language
-- Use reference guides to provide detailed interpretations
-- Include both technical details and executive summary
+**Time series**: Datetime columns auto-detected, temporal visualizations generated automatically. Consider trends, seasonality, patterns.
+
+**Imbalanced**: Categorical analysis flags imbalances automatically. Report distributions prominently, recommend stratified sampling if needed.
+
+## Output Guidelines
+
+**Format findings as markdown**:
+- Use headers, tables, and lists for structure
+- Embed visualizations: `![Description](path/to/image.png)`
+- Include code blocks for suggested transformations
+- Highlight key insights
+
+**Make reports actionable**:
+- Provide clear recommendations
+- Flag data quality issues requiring attention
+- Suggest next steps (modeling, feature engineering, further analysis)
 - Tailor communication to user's technical level
 
-## Handling Edge Cases
+## Error Handling
 
-**Unsupported file formats**:
-- Request user to convert to supported format
-- Suggest using pandas-compatible formats
+**Unsupported formats**: Request conversion to supported format (CSV, Excel, JSON, Parquet)
 
-**Files too large to load**:
-- Recommend sampling approach
-- Suggest chunked processing
-- Consider alternative tools for big data
+**Files too large**: Recommend sampling or chunked processing
 
-**Corrupted or malformed data**:
-- Report specific errors encountered
-- Suggest data cleaning steps
-- Try to salvage partial analysis if possible
+**Corrupted data**: Report specific errors, suggest cleaning steps, attempt partial analysis
 
-**All missing data in columns**:
-- Flag completely empty columns
-- Recommend removal or investigation
-- Document in data quality section
+**Empty columns**: Flag in data quality section, recommend removal or investigation
 
-## Resources Summary
+## Resources
 
-### scripts/
-- **`eda_analyzer.py`**: Main analysis engine - comprehensive statistical analysis
-- **`visualizer.py`**: Visualization generator - creates all chart types
+**Scripts** (handle all formats automatically):
+- `scripts/eda_analyzer.py` - Statistical analysis engine
+- `scripts/visualizer.py` - Visualization generator
 
-Both scripts are fully executable and handle multiple file formats automatically.
+**References** (load as needed):
+- `references/statistical_tests_guide.md` - Test interpretation and methodology
+- `references/eda_best_practices.md` - EDA process and best practices
 
-### references/
-- **`statistical_tests_guide.md`**: Statistical test interpretation and methodology
-- **`eda_best_practices.md`**: Comprehensive EDA methodology and best practices
+**Template**:
+- `assets/report_template.md` - Professional report structure
 
-Load these references as needed to inform analysis approach and interpretation.
+## Key Points
 
-### assets/
-- **`report_template.md`**: Professional markdown report template
-
-Use this template structure for creating consistent, comprehensive EDA reports.
-
-## Key Reminders
-
-1. **Always generate markdown output** for textual results
-2. **Run both scripts** (analyzer and visualizer) for complete analysis
-3. **Use the template** to structure comprehensive reports
-4. **Include visualizations** by referencing generated PNG files
-5. **Provide actionable insights** - don't just present statistics
-6. **Interpret findings** using reference guides
-7. **Document limitations** and data quality issues
-8. **Make recommendations** for next steps
-
-This skill transforms raw data into actionable insights through systematic exploration, advanced statistics, rich visualizations, and clear communication.
+- Run both scripts for complete analysis
+- Structure reports using the template
+- Provide actionable insights, not just statistics
+- Use reference guides for detailed interpretations
+- Document data quality issues and limitations
+- Make clear recommendations for next steps
