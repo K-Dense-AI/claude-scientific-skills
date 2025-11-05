@@ -1,252 +1,126 @@
-# Statistical Tests Guide for EDA
+# Statistical Tests Guide
 
-This guide provides interpretation guidelines for statistical tests commonly used in exploratory data analysis.
+Interpretation guidelines for common EDA statistical tests.
 
 ## Normality Tests
 
-### Shapiro-Wilk Test
+### Shapiro-Wilk
 
-**Purpose**: Test if a sample comes from a normally distributed population
+**Use**: Small to medium samples (n < 5000)
 
-**When to use**: Best for small to medium sample sizes (n < 5000)
+**H0**: Data is normal | **H1**: Data is not normal
 
-**Interpretation**:
-- **Null Hypothesis (H0)**: The data follows a normal distribution
-- **Alternative Hypothesis (H1)**: The data does not follow a normal distribution
-- **p-value > 0.05**: Fail to reject H0 → Data is likely normally distributed
-- **p-value ≤ 0.05**: Reject H0 → Data is not normally distributed
+**Interpretation**: p > 0.05 → likely normal | p ≤ 0.05 → not normal
 
-**Notes**:
-- Very sensitive to sample size
-- Small deviations from normality may be detected as significant in large samples
-- Consider practical significance alongside statistical significance
+**Note**: Very sensitive to sample size; small deviations may be significant in large samples
 
-### Anderson-Darling Test
+### Anderson-Darling
 
-**Purpose**: Test if a sample comes from a specific distribution (typically normal)
+**Use**: More powerful than Shapiro-Wilk, emphasizes tails
 
-**When to use**: More powerful than Shapiro-Wilk for detecting departures from normality
+**Interpretation**: Test statistic > critical value → reject normality
 
-**Interpretation**:
-- Compares test statistic against critical values at different significance levels
-- If test statistic > critical value at given significance level, reject normality
-- More weight given to tails of distribution than other tests
+### Kolmogorov-Smirnov
 
-### Kolmogorov-Smirnov Test
+**Use**: Large samples or testing against non-normal distributions
 
-**Purpose**: Test if a sample comes from a reference distribution
-
-**When to use**: When you have a large sample or want to test against distributions other than normal
-
-**Interpretation**:
-- **p-value > 0.05**: Sample distribution matches reference distribution
-- **p-value ≤ 0.05**: Sample distribution differs from reference distribution
+**Interpretation**: p > 0.05 → matches reference | p ≤ 0.05 → differs from reference
 
 ## Distribution Characteristics
 
 ### Skewness
 
-**Purpose**: Measure asymmetry of the distribution
+**Measures asymmetry**:
+- ≈ 0: Symmetric
+- \> 0: Right-skewed (tail right)
+- < 0: Left-skewed (tail left)
 
-**Interpretation**:
-- **Skewness ≈ 0**: Symmetric distribution
-- **Skewness > 0**: Right-skewed (tail extends to right, most values on left)
-- **Skewness < 0**: Left-skewed (tail extends to left, most values on right)
+**Magnitude**: |s| < 0.5 (symmetric) | 0.5-1 (moderate) | ≥ 1 (high)
 
-**Magnitude interpretation**:
-- **|Skewness| < 0.5**: Approximately symmetric
-- **0.5 ≤ |Skewness| < 1**: Moderately skewed
-- **|Skewness| ≥ 1**: Highly skewed
-
-**Implications**:
-- Highly skewed data may require transformation (log, sqrt, Box-Cox)
-- Mean is pulled toward tail; median more robust for skewed data
-- Many statistical tests assume symmetry/normality
+**Action**: High skew → consider transformation (log, sqrt, Box-Cox); use median over mean
 
 ### Kurtosis
 
-**Purpose**: Measure tailedness and peak of distribution
+**Measures tailedness** (excess kurtosis, normal = 0):
+- ≈ 0: Normal tails
+- \> 0: Heavy tails, more outliers
+- < 0: Light tails, fewer outliers
 
-**Interpretation** (Excess Kurtosis, where normal distribution = 0):
-- **Kurtosis ≈ 0**: Normal tail behavior (mesokurtic)
-- **Kurtosis > 0**: Heavy tails, sharp peak (leptokurtic)
-  - More outliers than normal distribution
-  - Higher probability of extreme values
-- **Kurtosis < 0**: Light tails, flat peak (platykurtic)
-  - Fewer outliers than normal distribution
-  - More uniform distribution
+**Magnitude**: |k| < 0.5 (normal) | 0.5-1 (moderate) | ≥ 1 (very different)
 
-**Magnitude interpretation**:
-- **|Kurtosis| < 0.5**: Normal-like tails
-- **0.5 ≤ |Kurtosis| < 1**: Moderately different tails
-- **|Kurtosis| ≥ 1**: Very different tail behavior from normal
+**Action**: High kurtosis → investigate outliers carefully
 
-**Implications**:
-- High kurtosis → Be cautious with outliers
-- Low kurtosis → Distribution lacks distinct peak
+## Correlation
 
-## Correlation Tests
+### Pearson
 
-### Pearson Correlation
+**Measures**: Linear relationship (-1 to +1)
 
-**Purpose**: Measure linear relationship between two continuous variables
+**Strength**: |r| < 0.3 (weak) | 0.3-0.5 (moderate) | 0.5-0.7 (strong) | ≥ 0.7 (very strong)
 
-**Range**: -1 to +1
+**Assumptions**: Linear, continuous, normal, no outliers, homoscedastic
 
-**Interpretation**:
-- **r = +1**: Perfect positive linear relationship
-- **r = 0**: No linear relationship
-- **r = -1**: Perfect negative linear relationship
+**Use**: Expected linear relationship, assumptions met
 
-**Strength guidelines**:
-- **|r| < 0.3**: Weak correlation
-- **0.3 ≤ |r| < 0.5**: Moderate correlation
-- **0.5 ≤ |r| < 0.7**: Strong correlation
-- **|r| ≥ 0.7**: Very strong correlation
+### Spearman
 
-**Assumptions**:
-- Linear relationship between variables
-- Both variables continuous and normally distributed
-- No significant outliers
-- Homoscedasticity (constant variance)
+**Measures**: Monotonic relationship (-1 to +1), rank-based
 
-**When to use**: When relationship is expected to be linear and data meets assumptions
+**Advantages**: Robust to outliers, no linearity assumption, works with ordinal, no normality required
 
-### Spearman Correlation
+**Use**: Outliers present, non-linear monotonic relationship, ordinal data, non-normal
 
-**Purpose**: Measure monotonic relationship between two variables (rank-based)
+## Outlier Detection
 
-**Range**: -1 to +1
+### IQR Method
 
-**Interpretation**: Same as Pearson, but measures monotonic (not just linear) relationships
+**Bounds**: Q1 - 1.5×IQR to Q3 + 1.5×IQR
 
-**Advantages over Pearson**:
-- Robust to outliers (uses ranks)
-- Doesn't assume linear relationship
-- Works with ordinal data
-- Doesn't require normality assumption
+**Characteristics**: Simple, robust, works with skewed data
 
-**When to use**:
-- Data has outliers
-- Relationship is monotonic but not linear
-- Data is ordinal
-- Distribution is non-normal
-
-## Outlier Detection Methods
-
-### IQR Method (Interquartile Range)
-
-**Definition**:
-- Lower bound: Q1 - 1.5 × IQR
-- Upper bound: Q3 + 1.5 × IQR
-- Values outside these bounds are outliers
-
-**Characteristics**:
-- Simple and interpretable
-- Robust to extreme values
-- Works well for skewed distributions
-- Conservative approach (Tukey's fences)
-
-**Interpretation**:
-- **< 5% outliers**: Typical for most datasets
-- **5-10% outliers**: Moderate, investigate causes
-- **> 10% outliers**: High rate, may indicate data quality issues or interesting phenomena
+**Typical Rates**: < 5% (normal) | 5-10% (moderate) | > 10% (high, investigate)
 
 ### Z-Score Method
 
-**Definition**: Outliers are data points with |z-score| > 3
+**Definition**: |z| > 3 where z = (x - μ) / σ
 
-**Formula**: z = (x - μ) / σ
+**Use**: Normal data, n > 30
 
-**Characteristics**:
-- Assumes normal distribution
-- Sensitive to extreme values
-- Standard threshold is |z| > 3 (99.7% of data within ±3σ)
+**Avoid**: Small samples, skewed data, many outliers (contaminates mean/SD)
 
-**When to use**:
-- Data is approximately normally distributed
-- Large sample sizes (n > 30)
+## Hypothesis Testing
 
-**When NOT to use**:
-- Small samples
-- Heavily skewed data
-- Data with many outliers (contaminates mean and SD)
+**Significance Levels**: α = 0.05 (standard) | 0.01 (conservative) | 0.10 (liberal)
 
-## Hypothesis Testing Guidelines
+**p-value Interpretation**: ≤ 0.001 (***) | ≤ 0.01 (**) | ≤ 0.05 (*) | ≤ 0.10 (weak) | > 0.10 (none)
 
-### Significance Levels
+**Key Considerations**:
+- Statistical ≠ practical significance
+- Multiple testing → use correction (Bonferroni, FDR)
+- Large samples detect trivial effects
+- Always report effect sizes with p-values
 
-- **α = 0.05**: Standard significance level (5% chance of Type I error)
-- **α = 0.01**: More conservative (1% chance of Type I error)
-- **α = 0.10**: More liberal (10% chance of Type I error)
+## Transformations
 
-### p-value Interpretation
+**Right-skewed**: Log, sqrt, Box-Cox
 
-- **p ≤ 0.001**: Very strong evidence against H0 (***)
-- **0.001 < p ≤ 0.01**: Strong evidence against H0 (**)
-- **0.01 < p ≤ 0.05**: Moderate evidence against H0 (*)
-- **0.05 < p ≤ 0.10**: Weak evidence against H0
-- **p > 0.10**: Little to no evidence against H0
+**Left-skewed**: Square, cube, exponential
 
-### Important Considerations
+**Heavy tails**: Robust scaling, winsorization, log
 
-1. **Statistical vs Practical Significance**: A small p-value doesn't always mean the effect is important
-2. **Multiple Testing**: When performing many tests, use correction methods (Bonferroni, FDR)
-3. **Sample Size**: Large samples can detect trivial effects as significant
-4. **Effect Size**: Always report and interpret effect sizes alongside p-values
+**Non-constant variance**: Log, Box-Cox
 
-## Data Transformation Strategies
-
-### When to Transform
-
-- **Right-skewed data**: Log, square root, or Box-Cox transformation
-- **Left-skewed data**: Square, cube, or exponential transformation
-- **Heavy tails/outliers**: Robust scaling, winsorization, or log transformation
-- **Non-constant variance**: Log or Box-Cox transformation
-
-### Common Transformations
-
-1. **Log transformation**: log(x) or log(x + 1)
-   - Best for: Positive skewed data, multiplicative relationships
-   - Cannot use with zero or negative values
-
-2. **Square root transformation**: √x
-   - Best for: Count data, moderate positive skew
-   - Less aggressive than log
-
-3. **Box-Cox transformation**: (x^λ - 1) / λ
-   - Best for: Automatically finds optimal transformation
-   - Requires positive values
-
-4. **Standardization**: (x - μ) / σ
-   - Best for: Scaling features to same range
-   - Centers data at 0 with unit variance
-
-5. **Min-Max scaling**: (x - min) / (max - min)
-   - Best for: Scaling to [0, 1] range
-   - Preserves zero values
+**Common Methods**:
+- **Log**: log(x+1) for positive skew, multiplicative relationships
+- **Sqrt**: Count data, moderate skew
+- **Box-Cox**: Auto-finds optimal (requires positive values)
+- **Standardization**: (x-μ)/σ for scaling to unit variance
+- **Min-Max**: (x-min)/(max-min) for [0,1] scaling
 
 ## Practical Guidelines
 
-### Sample Size Considerations
+**Sample Size**: n < 30 (non-parametric, cautious) | 30-100 (parametric OK) | ≥ 100 (robust) | ≥ 1000 (may detect trivial effects)
 
-- **n < 30**: Use non-parametric tests, be cautious with assumptions
-- **30 ≤ n < 100**: Moderate sample, parametric tests usually acceptable
-- **n ≥ 100**: Large sample, parametric tests robust to violations
-- **n ≥ 1000**: Very large sample, may detect trivial effects as significant
+**Missing Data**: < 5% (simple methods) | 5-10% (imputation) | > 10% (investigate patterns, advanced methods)
 
-### Dealing with Missing Data
-
-- **< 5% missing**: Usually not a problem, simple methods OK
-- **5-10% missing**: Use appropriate imputation methods
-- **> 10% missing**: Investigate patterns, consider advanced imputation or modeling missingness
-
-### Reporting Results
-
-Always include:
-1. Test statistic value
-2. p-value
-3. Confidence interval (when applicable)
-4. Effect size
-5. Sample size
-6. Assumptions checked and violations noted
+**Reporting**: Include test statistic, p-value, CI, effect size, n, assumption checks
