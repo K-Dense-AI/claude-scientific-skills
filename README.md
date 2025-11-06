@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/k-dense-ai-claude-scientific-skills-badge.png)](https://mseep.ai/app/k-dense-ai-claude-scientific-skills)
+
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
