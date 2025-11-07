@@ -1,457 +1,546 @@
 #!/usr/bin/env python3
 """
 Exploratory Data Analysis Analyzer
-Comprehensive data analysis tool that handles multiple file formats and generates
-detailed statistical analysis, insights, and data quality reports.
+Analyzes scientific data files and generates comprehensive markdown reports
 """
 
 import os
 import sys
-import json
-import argparse
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
-import warnings
-warnings.filterwarnings('ignore')
-
-import pandas as pd
-import numpy as np
-from scipy import stats
-from scipy.stats import normaltest, shapiro, kstest, anderson
+from datetime import datetime
+import json
 
 
-class EDAAnalyzer:
-    """Main EDA analysis engine"""
+def detect_file_type(filepath):
+    """
+    Detect the file type based on extension and content.
 
-    def __init__(self, file_path: str, output_dir: Optional[str] = None):
-        self.file_path = Path(file_path)
-        self.output_dir = Path(output_dir) if output_dir else self.file_path.parent
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.df = None
-        self.analysis_results = {}
+    Returns:
+        tuple: (extension, file_category, reference_file)
+    """
+    file_path = Path(filepath)
+    extension = file_path.suffix.lower()
+    name = file_path.name.lower()
 
-    def load_data(self) -> pd.DataFrame:
-        """Auto-detect file type and load data"""
-        file_ext = self.file_path.suffix.lower()
+    # Map extensions to categories and reference files
+    extension_map = {
+        # Chemistry/Molecular
+        'pdb': ('chemistry_molecular', 'Protein Data Bank'),
+        'cif': ('chemistry_molecular', 'Crystallographic Information File'),
+        'mol': ('chemistry_molecular', 'MDL Molfile'),
+        'mol2': ('chemistry_molecular', 'Tripos Mol2'),
+        'sdf': ('chemistry_molecular', 'Structure Data File'),
+        'xyz': ('chemistry_molecular', 'XYZ Coordinates'),
+        'smi': ('chemistry_molecular', 'SMILES String'),
+        'smiles': ('chemistry_molecular', 'SMILES String'),
+        'pdbqt': ('chemistry_molecular', 'AutoDock PDBQT'),
+        'mae': ('chemistry_molecular', 'Maestro Format'),
+        'gro': ('chemistry_molecular', 'GROMACS Coordinate File'),
+        'log': ('chemistry_molecular', 'Gaussian Log File'),
+        'out': ('chemistry_molecular', 'Quantum Chemistry Output'),
+        'wfn': ('chemistry_molecular', 'Wavefunction Files'),
+        'wfx': ('chemistry_molecular', 'Wavefunction Files'),
+        'fchk': ('chemistry_molecular', 'Gaussian Formatted Checkpoint'),
+        'cube': ('chemistry_molecular', 'Gaussian Cube File'),
+        'dcd': ('chemistry_molecular', 'Binary Trajectory'),
+        'xtc': ('chemistry_molecular', 'Compressed Trajectory'),
+        'trr': ('chemistry_molecular', 'GROMACS Trajectory'),
+        'nc': ('chemistry_molecular', 'Amber NetCDF Trajectory'),
+        'netcdf': ('chemistry_molecular', 'Amber NetCDF Trajectory'),
 
-        try:
-            if file_ext == '.csv':
-                self.df = pd.read_csv(self.file_path)
-            elif file_ext in ['.xlsx', '.xls']:
-                self.df = pd.read_excel(self.file_path)
-            elif file_ext == '.json':
-                self.df = pd.read_json(self.file_path)
-            elif file_ext == '.parquet':
-                self.df = pd.read_parquet(self.file_path)
-            elif file_ext == '.tsv':
-                self.df = pd.read_csv(self.file_path, sep='\t')
-            elif file_ext == '.feather':
-                self.df = pd.read_feather(self.file_path)
-            elif file_ext == '.h5' or file_ext == '.hdf5':
-                self.df = pd.read_hdf(self.file_path)
-            elif file_ext == '.pkl' or file_ext == '.pickle':
-                self.df = pd.read_pickle(self.file_path)
-            else:
-                raise ValueError(f"Unsupported file format: {file_ext}")
+        # Bioinformatics/Genomics
+        'fasta': ('bioinformatics_genomics', 'FASTA Format'),
+        'fa': ('bioinformatics_genomics', 'FASTA Format'),
+        'fna': ('bioinformatics_genomics', 'FASTA Format'),
+        'fastq': ('bioinformatics_genomics', 'FASTQ Format'),
+        'fq': ('bioinformatics_genomics', 'FASTQ Format'),
+        'sam': ('bioinformatics_genomics', 'Sequence Alignment/Map'),
+        'bam': ('bioinformatics_genomics', 'Binary Alignment/Map'),
+        'cram': ('bioinformatics_genomics', 'CRAM Format'),
+        'bed': ('bioinformatics_genomics', 'Browser Extensible Data'),
+        'bedgraph': ('bioinformatics_genomics', 'BED with Graph Data'),
+        'bigwig': ('bioinformatics_genomics', 'Binary BigWig'),
+        'bw': ('bioinformatics_genomics', 'Binary BigWig'),
+        'bigbed': ('bioinformatics_genomics', 'Binary BigBed'),
+        'bb': ('bioinformatics_genomics', 'Binary BigBed'),
+        'gff': ('bioinformatics_genomics', 'General Feature Format'),
+        'gff3': ('bioinformatics_genomics', 'General Feature Format'),
+        'gtf': ('bioinformatics_genomics', 'Gene Transfer Format'),
+        'vcf': ('bioinformatics_genomics', 'Variant Call Format'),
+        'bcf': ('bioinformatics_genomics', 'Binary VCF'),
+        'gvcf': ('bioinformatics_genomics', 'Genomic VCF'),
 
-            print(f"✅ Successfully loaded {file_ext} file with shape {self.df.shape}")
-            return self.df
+        # Microscopy/Imaging
+        'tif': ('microscopy_imaging', 'Tagged Image File Format'),
+        'tiff': ('microscopy_imaging', 'Tagged Image File Format'),
+        'nd2': ('microscopy_imaging', 'Nikon NIS-Elements'),
+        'lif': ('microscopy_imaging', 'Leica Image Format'),
+        'czi': ('microscopy_imaging', 'Carl Zeiss Image'),
+        'oib': ('microscopy_imaging', 'Olympus Image Format'),
+        'oif': ('microscopy_imaging', 'Olympus Image Format'),
+        'vsi': ('microscopy_imaging', 'Olympus VSI'),
+        'ims': ('microscopy_imaging', 'Imaris Format'),
+        'lsm': ('microscopy_imaging', 'Zeiss LSM'),
+        'stk': ('microscopy_imaging', 'MetaMorph Stack'),
+        'dv': ('microscopy_imaging', 'DeltaVision'),
+        'mrc': ('microscopy_imaging', 'Medical Research Council'),
+        'dm3': ('microscopy_imaging', 'Gatan Digital Micrograph'),
+        'dm4': ('microscopy_imaging', 'Gatan Digital Micrograph'),
+        'dcm': ('microscopy_imaging', 'DICOM'),
+        'nii': ('microscopy_imaging', 'NIfTI'),
+        'nrrd': ('microscopy_imaging', 'Nearly Raw Raster Data'),
 
-        except Exception as e:
-            print(f"❌ Error loading file: {str(e)}")
-            sys.exit(1)
+        # Spectroscopy/Analytical
+        'fid': ('spectroscopy_analytical', 'NMR Free Induction Decay'),
+        'mzml': ('spectroscopy_analytical', 'Mass Spectrometry Markup Language'),
+        'mzxml': ('spectroscopy_analytical', 'Mass Spectrometry XML'),
+        'raw': ('spectroscopy_analytical', 'Vendor Raw Files'),
+        'd': ('spectroscopy_analytical', 'Agilent Data Directory'),
+        'mgf': ('spectroscopy_analytical', 'Mascot Generic Format'),
+        'spc': ('spectroscopy_analytical', 'Galactic SPC'),
+        'jdx': ('spectroscopy_analytical', 'JCAMP-DX'),
+        'jcamp': ('spectroscopy_analytical', 'JCAMP-DX'),
 
-    def basic_info(self) -> Dict[str, Any]:
-        """Generate basic dataset information"""
-        info = {
-            'rows': len(self.df),
-            'columns': len(self.df.columns),
-            'column_names': list(self.df.columns),
-            'dtypes': self.df.dtypes.astype(str).to_dict(),
-            'memory_usage_mb': self.df.memory_usage(deep=True).sum() / 1024**2
-        }
+        # Proteomics/Metabolomics
+        'pepxml': ('proteomics_metabolomics', 'Trans-Proteomic Pipeline Peptide XML'),
+        'protxml': ('proteomics_metabolomics', 'Protein Inference Results'),
+        'mzid': ('proteomics_metabolomics', 'Peptide Identification Format'),
+        'mztab': ('proteomics_metabolomics', 'Proteomics/Metabolomics Tabular Format'),
 
-        # Categorize columns by type
-        info['numeric_columns'] = list(self.df.select_dtypes(include=[np.number]).columns)
-        info['categorical_columns'] = list(self.df.select_dtypes(include=['object', 'category']).columns)
-        info['datetime_columns'] = list(self.df.select_dtypes(include=['datetime64']).columns)
-        info['boolean_columns'] = list(self.df.select_dtypes(include=['bool']).columns)
+        # General Scientific
+        'npy': ('general_scientific', 'NumPy Array'),
+        'npz': ('general_scientific', 'Compressed NumPy Archive'),
+        'csv': ('general_scientific', 'Comma-Separated Values'),
+        'tsv': ('general_scientific', 'Tab-Separated Values'),
+        'xlsx': ('general_scientific', 'Excel Spreadsheets'),
+        'xls': ('general_scientific', 'Excel Spreadsheets'),
+        'json': ('general_scientific', 'JavaScript Object Notation'),
+        'xml': ('general_scientific', 'Extensible Markup Language'),
+        'hdf5': ('general_scientific', 'Hierarchical Data Format 5'),
+        'h5': ('general_scientific', 'Hierarchical Data Format 5'),
+        'h5ad': ('bioinformatics_genomics', 'Anndata Format'),
+        'zarr': ('general_scientific', 'Chunked Array Storage'),
+        'parquet': ('general_scientific', 'Apache Parquet'),
+        'mat': ('general_scientific', 'MATLAB Data'),
+        'fits': ('general_scientific', 'Flexible Image Transport System'),
+    }
 
-        self.analysis_results['basic_info'] = info
-        return info
+    ext_clean = extension.lstrip('.')
+    if ext_clean in extension_map:
+        category, description = extension_map[ext_clean]
+        return ext_clean, category, description
 
-    def missing_data_analysis(self) -> Dict[str, Any]:
-        """Analyze missing data patterns"""
-        missing_counts = self.df.isnull().sum()
-        missing_pct = (missing_counts / len(self.df) * 100).round(2)
+    return ext_clean, 'unknown', 'Unknown Format'
 
-        missing_info = {
-            'total_missing_cells': int(self.df.isnull().sum().sum()),
-            'missing_percentage': round(self.df.isnull().sum().sum() / (self.df.shape[0] * self.df.shape[1]) * 100, 2),
-            'columns_with_missing': {}
-        }
 
-        for col in self.df.columns:
-            if missing_counts[col] > 0:
-                missing_info['columns_with_missing'][col] = {
-                    'count': int(missing_counts[col]),
-                    'percentage': float(missing_pct[col])
+def get_file_basic_info(filepath):
+    """Get basic file information."""
+    file_path = Path(filepath)
+    stat = file_path.stat()
+
+    return {
+        'filename': file_path.name,
+        'path': str(file_path.absolute()),
+        'size_bytes': stat.st_size,
+        'size_human': format_bytes(stat.st_size),
+        'modified': datetime.fromtimestamp(stat.st_mtime).isoformat(),
+        'extension': file_path.suffix.lower(),
+    }
+
+
+def format_bytes(size):
+    """Convert bytes to human-readable format."""
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if size < 1024.0:
+            return f"{size:.2f} {unit}"
+        size /= 1024.0
+    return f"{size:.2f} PB"
+
+
+def load_reference_info(category, extension):
+    """
+    Load reference information for the file type.
+
+    Args:
+        category: File category (e.g., 'chemistry_molecular')
+        extension: File extension
+
+    Returns:
+        dict: Reference information
+    """
+    # Map categories to reference files
+    category_files = {
+        'chemistry_molecular': 'chemistry_molecular_formats.md',
+        'bioinformatics_genomics': 'bioinformatics_genomics_formats.md',
+        'microscopy_imaging': 'microscopy_imaging_formats.md',
+        'spectroscopy_analytical': 'spectroscopy_analytical_formats.md',
+        'proteomics_metabolomics': 'proteomics_metabolomics_formats.md',
+        'general_scientific': 'general_scientific_formats.md',
+    }
+
+    if category not in category_files:
+        return None
+
+    # Get the reference file path
+    script_dir = Path(__file__).parent
+    ref_file = script_dir.parent / 'references' / category_files[category]
+
+    if not ref_file.exists():
+        return None
+
+    # Parse the reference file for the specific extension
+    # This is a simplified parser - could be more sophisticated
+    try:
+        with open(ref_file, 'r') as f:
+            content = f.read()
+
+        # Extract section for this file type
+        # Look for the extension heading
+        import re
+        pattern = rf'### \.{extension}[^#]*?(?=###|\Z)'
+        match = re.search(pattern, content, re.IGNORECASE | re.DOTALL)
+
+        if match:
+            section = match.group(0)
+            return {
+                'raw_section': section,
+                'reference_file': category_files[category]
+            }
+    except Exception as e:
+        print(f"Error loading reference: {e}", file=sys.stderr)
+
+    return None
+
+
+def analyze_file(filepath):
+    """
+    Main analysis function that routes to specific analyzers.
+
+    Returns:
+        dict: Analysis results
+    """
+    basic_info = get_file_basic_info(filepath)
+    extension, category, description = detect_file_type(filepath)
+
+    analysis = {
+        'basic_info': basic_info,
+        'file_type': {
+            'extension': extension,
+            'category': category,
+            'description': description
+        },
+        'reference_info': load_reference_info(category, extension),
+        'data_analysis': {}
+    }
+
+    # Try to perform data-specific analysis based on file type
+    try:
+        if category == 'general_scientific':
+            analysis['data_analysis'] = analyze_general_scientific(filepath, extension)
+        elif category == 'bioinformatics_genomics':
+            analysis['data_analysis'] = analyze_bioinformatics(filepath, extension)
+        elif category == 'microscopy_imaging':
+            analysis['data_analysis'] = analyze_imaging(filepath, extension)
+        # Add more specific analyzers as needed
+    except Exception as e:
+        analysis['data_analysis']['error'] = str(e)
+
+    return analysis
+
+
+def analyze_general_scientific(filepath, extension):
+    """Analyze general scientific data formats."""
+    results = {}
+
+    try:
+        if extension in ['npy']:
+            import numpy as np
+            data = np.load(filepath)
+            results = {
+                'shape': data.shape,
+                'dtype': str(data.dtype),
+                'size': data.size,
+                'ndim': data.ndim,
+                'statistics': {
+                    'min': float(np.min(data)) if np.issubdtype(data.dtype, np.number) else None,
+                    'max': float(np.max(data)) if np.issubdtype(data.dtype, np.number) else None,
+                    'mean': float(np.mean(data)) if np.issubdtype(data.dtype, np.number) else None,
+                    'std': float(np.std(data)) if np.issubdtype(data.dtype, np.number) else None,
                 }
-
-        self.analysis_results['missing_data'] = missing_info
-        return missing_info
-
-    def summary_statistics(self) -> Dict[str, Any]:
-        """Generate comprehensive summary statistics"""
-        stats_dict = {}
-
-        # Numeric columns
-        if len(self.df.select_dtypes(include=[np.number]).columns) > 0:
-            numeric_stats = self.df.describe().to_dict()
-            stats_dict['numeric'] = numeric_stats
-
-            # Additional statistics
-            for col in self.df.select_dtypes(include=[np.number]).columns:
-                if col not in stats_dict:
-                    stats_dict[col] = {}
-
-                data = self.df[col].dropna()
-                if len(data) > 0:
-                    stats_dict[col].update({
-                        'skewness': float(data.skew()),
-                        'kurtosis': float(data.kurtosis()),
-                        'variance': float(data.var()),
-                        'range': float(data.max() - data.min()),
-                        'iqr': float(data.quantile(0.75) - data.quantile(0.25)),
-                        'cv': float(data.std() / data.mean()) if data.mean() != 0 else np.nan
-                    })
-
-        # Categorical columns
-        categorical_stats = {}
-        for col in self.df.select_dtypes(include=['object', 'category']).columns:
-            categorical_stats[col] = {
-                'unique_values': int(self.df[col].nunique()),
-                'most_common': self.df[col].mode().iloc[0] if len(self.df[col].mode()) > 0 else None,
-                'most_common_freq': int(self.df[col].value_counts().iloc[0]) if len(self.df[col].value_counts()) > 0 else 0,
-                'most_common_pct': float(self.df[col].value_counts(normalize=True).iloc[0] * 100) if len(self.df[col].value_counts()) > 0 else 0
             }
 
-        if categorical_stats:
-            stats_dict['categorical'] = categorical_stats
-
-        self.analysis_results['summary_statistics'] = stats_dict
-        return stats_dict
-
-    def outlier_detection(self) -> Dict[str, Any]:
-        """Detect outliers using multiple methods"""
-        outliers = {}
-
-        for col in self.df.select_dtypes(include=[np.number]).columns:
-            data = self.df[col].dropna()
-            if len(data) == 0:
-                continue
-
-            outliers[col] = {}
-
-            # IQR method
-            Q1 = data.quantile(0.25)
-            Q3 = data.quantile(0.75)
-            IQR = Q3 - Q1
-            lower_bound = Q1 - 1.5 * IQR
-            upper_bound = Q3 + 1.5 * IQR
-            iqr_outliers = data[(data < lower_bound) | (data > upper_bound)]
-
-            outliers[col]['iqr_method'] = {
-                'count': len(iqr_outliers),
-                'percentage': round(len(iqr_outliers) / len(data) * 100, 2),
-                'lower_bound': float(lower_bound),
-                'upper_bound': float(upper_bound)
+        elif extension in ['npz']:
+            import numpy as np
+            data = np.load(filepath)
+            results = {
+                'arrays': list(data.files),
+                'array_count': len(data.files),
+                'array_shapes': {name: data[name].shape for name in data.files}
             }
 
-            # Z-score method (|z| > 3)
-            if len(data) > 2:
-                z_scores = np.abs(stats.zscore(data))
-                z_outliers = data[z_scores > 3]
-                outliers[col]['zscore_method'] = {
-                    'count': len(z_outliers),
-                    'percentage': round(len(z_outliers) / len(data) * 100, 2)
+        elif extension in ['csv', 'tsv']:
+            import pandas as pd
+            sep = '\t' if extension == 'tsv' else ','
+            df = pd.read_csv(filepath, sep=sep, nrows=10000)  # Sample first 10k rows
+
+            results = {
+                'shape': df.shape,
+                'columns': list(df.columns),
+                'dtypes': {col: str(dtype) for col, dtype in df.dtypes.items()},
+                'missing_values': df.isnull().sum().to_dict(),
+                'summary_statistics': df.describe().to_dict() if len(df.select_dtypes(include='number').columns) > 0 else {}
+            }
+
+        elif extension in ['json']:
+            with open(filepath, 'r') as f:
+                data = json.load(f)
+
+            results = {
+                'type': type(data).__name__,
+                'keys': list(data.keys()) if isinstance(data, dict) else None,
+                'length': len(data) if isinstance(data, (list, dict)) else None
+            }
+
+        elif extension in ['h5', 'hdf5']:
+            import h5py
+            with h5py.File(filepath, 'r') as f:
+                def get_structure(group, prefix=''):
+                    items = {}
+                    for key in group.keys():
+                        path = f"{prefix}/{key}"
+                        if isinstance(group[key], h5py.Dataset):
+                            items[path] = {
+                                'type': 'dataset',
+                                'shape': group[key].shape,
+                                'dtype': str(group[key].dtype)
+                            }
+                        elif isinstance(group[key], h5py.Group):
+                            items[path] = {'type': 'group'}
+                            items.update(get_structure(group[key], path))
+                    return items
+
+                results = {
+                    'structure': get_structure(f),
+                    'attributes': dict(f.attrs)
                 }
 
-        self.analysis_results['outliers'] = outliers
-        return outliers
+    except ImportError as e:
+        results['error'] = f"Required library not installed: {e}"
+    except Exception as e:
+        results['error'] = f"Analysis error: {e}"
 
-    def distribution_analysis(self) -> Dict[str, Any]:
-        """Analyze distributions and test for normality"""
-        distributions = {}
+    return results
 
-        for col in self.df.select_dtypes(include=[np.number]).columns:
-            data = self.df[col].dropna()
-            if len(data) < 8:  # Need at least 8 samples for tests
-                continue
 
-            distributions[col] = {}
+def analyze_bioinformatics(filepath, extension):
+    """Analyze bioinformatics/genomics formats."""
+    results = {}
 
-            # Shapiro-Wilk test (best for n < 5000)
-            if len(data) < 5000:
+    try:
+        if extension in ['fasta', 'fa', 'fna']:
+            from Bio import SeqIO
+            sequences = list(SeqIO.parse(filepath, 'fasta'))
+            lengths = [len(seq) for seq in sequences]
+
+            results = {
+                'sequence_count': len(sequences),
+                'total_length': sum(lengths),
+                'mean_length': sum(lengths) / len(lengths) if lengths else 0,
+                'min_length': min(lengths) if lengths else 0,
+                'max_length': max(lengths) if lengths else 0,
+                'sequence_ids': [seq.id for seq in sequences[:10]]  # First 10
+            }
+
+        elif extension in ['fastq', 'fq']:
+            from Bio import SeqIO
+            sequences = []
+            for i, seq in enumerate(SeqIO.parse(filepath, 'fastq')):
+                sequences.append(seq)
+                if i >= 9999:  # Sample first 10k
+                    break
+
+            lengths = [len(seq) for seq in sequences]
+            qualities = [sum(seq.letter_annotations['phred_quality']) / len(seq) for seq in sequences]
+
+            results = {
+                'read_count_sampled': len(sequences),
+                'mean_length': sum(lengths) / len(lengths) if lengths else 0,
+                'mean_quality': sum(qualities) / len(qualities) if qualities else 0,
+                'min_length': min(lengths) if lengths else 0,
+                'max_length': max(lengths) if lengths else 0,
+            }
+
+    except ImportError as e:
+        results['error'] = f"Required library not installed (try: pip install biopython): {e}"
+    except Exception as e:
+        results['error'] = f"Analysis error: {e}"
+
+    return results
+
+
+def analyze_imaging(filepath, extension):
+    """Analyze microscopy/imaging formats."""
+    results = {}
+
+    try:
+        if extension in ['tif', 'tiff', 'png', 'jpg', 'jpeg']:
+            from PIL import Image
+            import numpy as np
+
+            img = Image.open(filepath)
+            img_array = np.array(img)
+
+            results = {
+                'size': img.size,
+                'mode': img.mode,
+                'format': img.format,
+                'shape': img_array.shape,
+                'dtype': str(img_array.dtype),
+                'value_range': [int(img_array.min()), int(img_array.max())],
+                'mean_intensity': float(img_array.mean()),
+            }
+
+            # Check for multi-page TIFF
+            if extension in ['tif', 'tiff']:
                 try:
-                    stat, p_value = shapiro(data)
-                    distributions[col]['shapiro_wilk'] = {
-                        'statistic': float(stat),
-                        'p_value': float(p_value),
-                        'is_normal': p_value > 0.05
-                    }
-                except:
-                    pass
+                    frame_count = 0
+                    while True:
+                        img.seek(frame_count)
+                        frame_count += 1
+                except EOFError:
+                    results['page_count'] = frame_count
 
-            # Anderson-Darling test
-            try:
-                result = anderson(data)
-                distributions[col]['anderson_darling'] = {
-                    'statistic': float(result.statistic),
-                    'critical_values': result.critical_values.tolist(),
-                    'significance_levels': result.significance_level.tolist()
-                }
-            except:
-                pass
+    except ImportError as e:
+        results['error'] = f"Required library not installed (try: pip install pillow): {e}"
+    except Exception as e:
+        results['error'] = f"Analysis error: {e}"
 
-            # Distribution characteristics
-            distributions[col]['characteristics'] = {
-                'skewness': float(data.skew()),
-                'skewness_interpretation': self._interpret_skewness(data.skew()),
-                'kurtosis': float(data.kurtosis()),
-                'kurtosis_interpretation': self._interpret_kurtosis(data.kurtosis())
-            }
+    return results
 
-        self.analysis_results['distributions'] = distributions
-        return distributions
 
-    def correlation_analysis(self) -> Dict[str, Any]:
-        """Analyze correlations between numeric variables"""
-        numeric_df = self.df.select_dtypes(include=[np.number])
+def generate_markdown_report(analysis, output_path=None):
+    """
+    Generate a comprehensive markdown report from analysis results.
 
-        if len(numeric_df.columns) < 2:
-            return {}
+    Args:
+        analysis: Analysis results dictionary
+        output_path: Path to save the report (if None, prints to stdout)
+    """
+    lines = []
 
-        correlations = {}
+    # Title
+    filename = analysis['basic_info']['filename']
+    lines.append(f"# Exploratory Data Analysis Report: {filename}\n")
+    lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    lines.append("---\n")
 
-        # Pearson correlation
-        pearson_corr = numeric_df.corr(method='pearson')
-        correlations['pearson'] = pearson_corr.to_dict()
+    # Basic Information
+    lines.append("## Basic Information\n")
+    basic = analysis['basic_info']
+    lines.append(f"- **Filename:** `{basic['filename']}`")
+    lines.append(f"- **Full Path:** `{basic['path']}`")
+    lines.append(f"- **File Size:** {basic['size_human']} ({basic['size_bytes']:,} bytes)")
+    lines.append(f"- **Last Modified:** {basic['modified']}")
+    lines.append(f"- **Extension:** `.{analysis['file_type']['extension']}`\n")
 
-        # Spearman correlation (rank-based, robust to outliers)
-        spearman_corr = numeric_df.corr(method='spearman')
-        correlations['spearman'] = spearman_corr.to_dict()
+    # File Type Information
+    lines.append("## File Type\n")
+    ft = analysis['file_type']
+    lines.append(f"- **Category:** {ft['category'].replace('_', ' ').title()}")
+    lines.append(f"- **Description:** {ft['description']}\n")
 
-        # Find strong correlations (|r| > 0.7)
-        strong_correlations = []
-        for i in range(len(pearson_corr.columns)):
-            for j in range(i + 1, len(pearson_corr.columns)):
-                col1 = pearson_corr.columns[i]
-                col2 = pearson_corr.columns[j]
-                corr_value = pearson_corr.iloc[i, j]
+    # Reference Information
+    if analysis.get('reference_info'):
+        lines.append("## Format Reference\n")
+        ref = analysis['reference_info']
+        if 'raw_section' in ref:
+            lines.append(ref['raw_section'])
+            lines.append(f"\n*Reference: {ref['reference_file']}*\n")
 
-                if abs(corr_value) > 0.7:
-                    strong_correlations.append({
-                        'variable1': col1,
-                        'variable2': col2,
-                        'correlation': float(corr_value),
-                        'strength': self._interpret_correlation(corr_value)
-                    })
+    # Data Analysis
+    if analysis.get('data_analysis'):
+        lines.append("## Data Analysis\n")
+        data = analysis['data_analysis']
 
-        correlations['strong_correlations'] = strong_correlations
-
-        self.analysis_results['correlations'] = correlations
-        return correlations
-
-    def data_quality_assessment(self) -> Dict[str, Any]:
-        """Assess overall data quality"""
-        quality = {
-            'completeness': {
-                'score': round((1 - self.df.isnull().sum().sum() / (self.df.shape[0] * self.df.shape[1])) * 100, 2),
-                'interpretation': ''
-            },
-            'duplicates': {
-                'count': int(self.df.duplicated().sum()),
-                'percentage': round(self.df.duplicated().sum() / len(self.df) * 100, 2)
-            },
-            'issues': []
-        }
-
-        # Completeness interpretation
-        if quality['completeness']['score'] > 95:
-            quality['completeness']['interpretation'] = 'Excellent'
-        elif quality['completeness']['score'] > 90:
-            quality['completeness']['interpretation'] = 'Good'
-        elif quality['completeness']['score'] > 80:
-            quality['completeness']['interpretation'] = 'Fair'
+        if 'error' in data:
+            lines.append(f"⚠️ **Analysis Error:** {data['error']}\n")
         else:
-            quality['completeness']['interpretation'] = 'Poor'
+            # Format the data analysis based on what's present
+            lines.append("### Summary Statistics\n")
+            lines.append("```json")
+            lines.append(json.dumps(data, indent=2, default=str))
+            lines.append("```\n")
 
-        # Identify potential issues
-        if quality['duplicates']['count'] > 0:
-            quality['issues'].append(f"Found {quality['duplicates']['count']} duplicate rows")
+    # Recommendations
+    lines.append("## Recommendations for Further Analysis\n")
+    lines.append(f"Based on the file type (`.{analysis['file_type']['extension']}`), consider the following analyses:\n")
 
-        if quality['completeness']['score'] < 90:
-            quality['issues'].append("Missing data exceeds 10% threshold")
+    # Add specific recommendations based on category
+    category = analysis['file_type']['category']
+    if category == 'general_scientific':
+        lines.append("- Statistical distribution analysis")
+        lines.append("- Missing value imputation strategies")
+        lines.append("- Correlation analysis between variables")
+        lines.append("- Outlier detection and handling")
+        lines.append("- Dimensionality reduction (PCA, t-SNE)")
+    elif category == 'bioinformatics_genomics':
+        lines.append("- Sequence quality control and filtering")
+        lines.append("- GC content analysis")
+        lines.append("- Read alignment and mapping statistics")
+        lines.append("- Variant calling and annotation")
+        lines.append("- Differential expression analysis")
+    elif category == 'microscopy_imaging':
+        lines.append("- Image quality assessment")
+        lines.append("- Background correction and normalization")
+        lines.append("- Segmentation and object detection")
+        lines.append("- Colocalization analysis")
+        lines.append("- Intensity measurements and quantification")
 
-        # Check for constant columns
-        constant_cols = [col for col in self.df.columns if self.df[col].nunique() == 1]
-        if constant_cols:
-            quality['issues'].append(f"Constant columns detected: {', '.join(constant_cols)}")
-            quality['constant_columns'] = constant_cols
+    lines.append("")
 
-        # Check for high cardinality
-        high_cardinality_cols = []
-        for col in self.df.select_dtypes(include=['object']).columns:
-            if self.df[col].nunique() > len(self.df) * 0.9:
-                high_cardinality_cols.append(col)
+    # Footer
+    lines.append("---")
+    lines.append("*This report was generated by the exploratory-data-analysis skill.*")
 
-        if high_cardinality_cols:
-            quality['issues'].append(f"High cardinality columns (>90% unique): {', '.join(high_cardinality_cols)}")
-            quality['high_cardinality_columns'] = high_cardinality_cols
+    report = '\n'.join(lines)
 
-        self.analysis_results['data_quality'] = quality
-        return quality
+    if output_path:
+        with open(output_path, 'w') as f:
+            f.write(report)
+        print(f"Report saved to: {output_path}")
+    else:
+        print(report)
 
-    def generate_insights(self) -> List[str]:
-        """Generate automated insights from the analysis"""
-        insights = []
-
-        # Dataset size insights
-        info = self.analysis_results.get('basic_info', {})
-        if info.get('rows', 0) > 1000000:
-            insights.append(f"📊 Large dataset with {info['rows']:,} rows - consider sampling for faster iteration")
-
-        # Missing data insights
-        missing = self.analysis_results.get('missing_data', {})
-        if missing.get('missing_percentage', 0) > 20:
-            insights.append(f"⚠️ Significant missing data ({missing['missing_percentage']}%) - imputation or removal may be needed")
-
-        # Correlation insights
-        correlations = self.analysis_results.get('correlations', {})
-        strong_corrs = correlations.get('strong_correlations', [])
-        if len(strong_corrs) > 0:
-            insights.append(f"🔗 Found {len(strong_corrs)} strong correlations - potential for feature engineering or multicollinearity")
-
-        # Outlier insights
-        outliers = self.analysis_results.get('outliers', {})
-        high_outlier_cols = [col for col, data in outliers.items()
-                           if data.get('iqr_method', {}).get('percentage', 0) > 5]
-        if high_outlier_cols:
-            insights.append(f"🎯 Columns with high outlier rates (>5%): {', '.join(high_outlier_cols)}")
-
-        # Distribution insights
-        distributions = self.analysis_results.get('distributions', {})
-        skewed_cols = [col for col, data in distributions.items()
-                      if abs(data.get('characteristics', {}).get('skewness', 0)) > 1]
-        if skewed_cols:
-            insights.append(f"📈 Highly skewed distributions detected in: {', '.join(skewed_cols)} - consider transformations")
-
-        # Data quality insights
-        quality = self.analysis_results.get('data_quality', {})
-        if quality.get('duplicates', {}).get('count', 0) > 0:
-            insights.append(f"🔄 {quality['duplicates']['count']} duplicate rows found - consider deduplication")
-
-        # Categorical insights
-        stats = self.analysis_results.get('summary_statistics', {})
-        categorical = stats.get('categorical', {})
-        imbalanced_cols = [col for col, data in categorical.items()
-                          if data.get('most_common_pct', 0) > 90]
-        if imbalanced_cols:
-            insights.append(f"⚖️ Highly imbalanced categorical variables: {', '.join(imbalanced_cols)}")
-
-        self.analysis_results['insights'] = insights
-        return insights
-
-    def _interpret_skewness(self, skew: float) -> str:
-        """Interpret skewness value"""
-        if abs(skew) < 0.5:
-            return "Approximately symmetric"
-        elif skew > 0.5:
-            return "Right-skewed (positive skew)"
-        else:
-            return "Left-skewed (negative skew)"
-
-    def _interpret_kurtosis(self, kurt: float) -> str:
-        """Interpret kurtosis value"""
-        if abs(kurt) < 0.5:
-            return "Mesokurtic (normal-like tails)"
-        elif kurt > 0.5:
-            return "Leptokurtic (heavy tails)"
-        else:
-            return "Platykurtic (light tails)"
-
-    def _interpret_correlation(self, corr: float) -> str:
-        """Interpret correlation strength"""
-        abs_corr = abs(corr)
-        if abs_corr > 0.9:
-            return "Very strong"
-        elif abs_corr > 0.7:
-            return "Strong"
-        elif abs_corr > 0.5:
-            return "Moderate"
-        elif abs_corr > 0.3:
-            return "Weak"
-        else:
-            return "Very weak"
-
-    def run_full_analysis(self) -> Dict[str, Any]:
-        """Run complete EDA analysis"""
-        print("🔍 Starting comprehensive EDA analysis...")
-
-        self.load_data()
-
-        print("📊 Analyzing basic information...")
-        self.basic_info()
-
-        print("🔎 Analyzing missing data...")
-        self.missing_data_analysis()
-
-        print("📈 Computing summary statistics...")
-        self.summary_statistics()
-
-        print("🎯 Detecting outliers...")
-        self.outlier_detection()
-
-        print("📉 Analyzing distributions...")
-        self.distribution_analysis()
-
-        print("🔗 Computing correlations...")
-        self.correlation_analysis()
-
-        print("✅ Assessing data quality...")
-        self.data_quality_assessment()
-
-        print("💡 Generating insights...")
-        self.generate_insights()
-
-        print("✨ Analysis complete!")
-
-        return self.analysis_results
-
-    def save_results(self, format='json') -> str:
-        """Save analysis results to file"""
-        output_file = self.output_dir / f"eda_analysis.{format}"
-
-        if format == 'json':
-            with open(output_file, 'w') as f:
-                json.dump(self.analysis_results, f, indent=2, default=str)
-
-        print(f"💾 Results saved to: {output_file}")
-        return str(output_file)
+    return report
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Perform comprehensive exploratory data analysis')
-    parser.add_argument('file_path', help='Path to data file')
-    parser.add_argument('-o', '--output', help='Output directory for results', default=None)
-    parser.add_argument('-f', '--format', choices=['json'], default='json', help='Output format')
+    """Main CLI interface."""
+    if len(sys.argv) < 2:
+        print("Usage: python eda_analyzer.py <filepath> [output.md]")
+        print("  filepath: Path to the data file to analyze")
+        print("  output.md: Optional output path for markdown report")
+        sys.exit(1)
 
-    args = parser.parse_args()
+    filepath = sys.argv[1]
+    output_path = sys.argv[2] if len(sys.argv) > 2 else None
 
-    analyzer = EDAAnalyzer(args.file_path, args.output)
-    analyzer.run_full_analysis()
-    analyzer.save_results(format=args.format)
+    if not os.path.exists(filepath):
+        print(f"Error: File not found: {filepath}")
+        sys.exit(1)
+
+    # If no output path specified, use the input filename
+    if output_path is None:
+        input_path = Path(filepath)
+        output_path = input_path.parent / f"{input_path.stem}_eda_report.md"
+
+    print(f"Analyzing: {filepath}")
+    analysis = analyze_file(filepath)
+
+    print(f"\nGenerating report...")
+    generate_markdown_report(analysis, output_path)
+
+    print(f"\n✓ Analysis complete!")
 
 
 if __name__ == '__main__':

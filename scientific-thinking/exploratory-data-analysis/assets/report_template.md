@@ -1,215 +1,196 @@
-# EDA Report: [Dataset Name]
+# Exploratory Data Analysis Report: {FILENAME}
 
-**Date**: [Date] | **Analyst**: [Name]
+**Generated:** {TIMESTAMP}
+
+---
 
 ## Executive Summary
 
-[Concise summary of key findings and recommendations]
-
-**Key Findings**:
-- [Finding 1]
-- [Finding 2]
-- [Finding 3]
-
-**Recommendations**:
-- [Recommendation 1]
-- [Recommendation 2]
+This report provides a comprehensive exploratory data analysis of the file `{FILENAME}`. The analysis includes file type identification, format-specific metadata extraction, data quality assessment, and recommendations for downstream analysis.
 
 ---
 
-## 1. Dataset Overview
+## Basic Information
 
-**Source**: [Source name] | **Format**: [CSV/Excel/JSON/etc.] | **Period**: [Date range]
-
-**Structure**: [Rows] observations × [Columns] variables | **Memory**: [Size] MB
-
-**Variable Types**:
-- Numeric ([Count]): [List names]
-- Categorical ([Count]): [List names]
-- Datetime ([Count]): [List names]
-- Boolean ([Count]): [List names]
+- **Filename:** `{FILENAME}`
+- **Full Path:** `{FILEPATH}`
+- **File Size:** {FILE_SIZE_HUMAN} ({FILE_SIZE_BYTES} bytes)
+- **Last Modified:** {MODIFIED_DATE}
+- **Extension:** `.{EXTENSION}`
+- **Format Category:** {CATEGORY}
 
 ---
 
-## 2. Data Quality
+## File Type Details
 
-**Completeness**: [Percentage]% | **Duplicates**: [Count] ([%]%)
+### Format Description
+{FORMAT_DESCRIPTION}
 
-**Missing Data**:
-| Column | Missing % | Assessment |
-|--------|-----------|------------|
-| [Column 1] | [%] | [High/Medium/Low] |
-| [Column 2] | [%] | [High/Medium/Low] |
+### Typical Data Content
+{TYPICAL_DATA}
 
-![Missing Data](path/to/missing_data.png)
+### Common Use Cases
+{USE_CASES}
 
-**Quality Issues**:
-- [Issue 1]
-- [Issue 2]
+### Python Libraries for Reading
+{PYTHON_LIBRARIES}
 
 ---
 
-## 3. Univariate Analysis
+## Data Structure Analysis
 
-### Numeric: [Variable Name]
+### Overview
+{DATA_STRUCTURE_OVERVIEW}
 
-**Stats**: Mean: [Value] | Median: [Value] | Std: [Value] | Range: [[Min]-[Max]]
+### Dimensions
+{DIMENSIONS}
 
-**Distribution**: Skewness: [Value] | Kurtosis: [Value] | Normality: [Yes/No]
-
-**Outliers**: IQR: [Count] ([%]%) | Z-score: [Count] ([%]%)
-
-![Distribution](path/to/distribution.png)
-
-**Insights**: [Key observations]
-
-### Categorical: [Variable Name]
-
-**Stats**: [Count] unique values | Most common: [Value] ([%]%) | Balance: [Balanced/Imbalanced]
-
-| Category | Count | % |
-|----------|-------|---|
-| [Cat 1] | [Count] | [%] |
-| [Cat 2] | [Count] | [%] |
-
-![Distribution](path/to/categorical.png)
-
-**Insights**: [Key observations]
-
-### Temporal: [Variable Name]
-
-**Range**: [Start] to [End] ([Duration]) | **Trend**: [Increasing/Decreasing/Stable] | **Seasonality**: [Yes/No]
-
-![Time Series](path/to/timeseries.png)
-
-**Insights**: [Key observations]
+### Data Types
+{DATA_TYPES}
 
 ---
 
-## 4. Bivariate Analysis
+## Quality Assessment
 
-**Correlation Summary**: [Count] strong positive | [Count] strong negative | [Count] weak/none
+### Completeness
+- **Missing Values:** {MISSING_VALUES}
+- **Data Coverage:** {COVERAGE}
 
-![Correlation Heatmap](path/to/correlation_heatmap.png)
+### Validity
+- **Range Check:** {RANGE_CHECK}
+- **Format Compliance:** {FORMAT_COMPLIANCE}
+- **Consistency:** {CONSISTENCY}
 
-**Notable Correlations**:
-| Var 1 | Var 2 | Pearson | Spearman | Strength |
-|-------|-------|---------|----------|----------|
-| [Var 1] | [Var 2] | [Value] | [Value] | [Strong/Moderate/Weak] |
-
-**Insights**: [Multicollinearity issues, feature engineering opportunities]
-
-### Key Relationship: [Var 1] vs [Var 2]
-
-**Type**: [Linear/Non-linear/None] | **r**: [Value] | **p-value**: [Value]
-
-![Scatter Plot](path/to/scatter.png)
-
-**Insights**: [Description and implications]
+### Integrity
+- **Checksum/Validation:** {VALIDATION}
+- **File Corruption Check:** {CORRUPTION_CHECK}
 
 ---
 
-## 5. Multivariate Analysis
+## Statistical Summary
 
-![Scatter Matrix](path/to/scatter_matrix.png)
+### Numerical Variables
+{NUMERICAL_STATS}
 
-**Patterns**: [Key observations]
+### Categorical Variables
+{CATEGORICAL_STATS}
 
-**Clustering** (if performed): [Method] | [Count] clusters identified
-
----
-
-## 6. Outliers
-
-**Overall Rate**: [%]%
-
-| Variable | Outlier % | Method | Action |
-|----------|-----------|--------|--------|
-| [Var 1] | [%] | [IQR/Z-score] | [Keep/Investigate/Remove] |
-| [Var 2] | [%] | [IQR/Z-score] | [Keep/Investigate/Remove] |
-
-![Box Plots](path/to/boxplots.png)
-
-**Investigation**: [Description of significant outliers, causes, validity]
+### Distributions
+{DISTRIBUTIONS}
 
 ---
 
-## 7. Key Insights
+## Data Characteristics
 
-**Data Quality**:
-- [Insight with implication]
-- [Insight with implication]
+### Temporal Properties (if applicable)
+- **Time Range:** {TIME_RANGE}
+- **Sampling Rate:** {SAMPLING_RATE}
+- **Missing Time Points:** {MISSING_TIMEPOINTS}
 
-**Statistical Patterns**:
-- [Insight with implication]
-- [Insight with implication]
+### Spatial Properties (if applicable)
+- **Dimensions:** {SPATIAL_DIMENSIONS}
+- **Resolution:** {SPATIAL_RESOLUTION}
+- **Coordinate System:** {COORDINATE_SYSTEM}
 
-**Domain/Research Insights**:
-- [Insight with implication]
-- [Insight with implication]
-
-**Unexpected Findings**:
-- [Finding and significance]
-
----
-
-## 8. Recommendations
-
-**Data Quality Actions**:
-- [ ] [Action - priority]
-- [ ] [Action - priority]
-
-**Next Steps**:
-- [Step with rationale]
-- [Step with rationale]
-
-**Feature Engineering**:
-- [Opportunity]
-- [Opportunity]
-
-**Modeling Considerations**:
-- [Consideration]
-- [Consideration]
+### Experimental Metadata (if applicable)
+- **Instrument:** {INSTRUMENT}
+- **Method:** {METHOD}
+- **Sample Info:** {SAMPLE_INFO}
 
 ---
 
-## 9. Limitations
+## Key Findings
 
-**Data**: [Key limitations]
-
-**Analysis**: [Key limitations]
-
-**Assumptions**: [Key assumptions made]
+1. **Data Volume:** {DATA_VOLUME_FINDING}
+2. **Data Quality:** {DATA_QUALITY_FINDING}
+3. **Notable Patterns:** {PATTERNS_FINDING}
+4. **Potential Issues:** {ISSUES_FINDING}
 
 ---
 
-## Appendices
+## Visualizations
 
-### A: Technical Details
+### Distribution Plots
+{DISTRIBUTION_PLOTS}
 
-**Environment**: Python with pandas, numpy, scipy, matplotlib, seaborn
+### Correlation Analysis
+{CORRELATION_PLOTS}
 
-**Scripts**: [Repository/location]
+### Time Series (if applicable)
+{TIMESERIES_PLOTS}
 
-### B: Variable Dictionary
+---
 
-| Variable | Type | Description | Unit | Range | Missing % |
-|----------|------|-------------|------|-------|-----------|
-| [Var 1] | [Type] | [Description] | [Unit] | [Range] | [%] |
+## Recommendations for Further Analysis
 
-### C: Statistical Tests
+### Immediate Actions
+1. {RECOMMENDATION_1}
+2. {RECOMMENDATION_2}
+3. {RECOMMENDATION_3}
 
-**Normality**:
-| Variable | Test | Statistic | p-value | Result |
-|----------|------|-----------|---------|--------|
-| [Var 1] | Shapiro-Wilk | [Value] | [Value] | [Normal/Non-normal] |
+### Preprocessing Steps
+- {PREPROCESSING_1}
+- {PREPROCESSING_2}
+- {PREPROCESSING_3}
 
-**Correlations**:
-| Var 1 | Var 2 | r | p-value | Significant |
-|-------|-------|---|---------|-------------|
-| [Var 1] | [Var 2] | [Value] | [Value] | [Yes/No] |
+### Analytical Approaches
+{ANALYTICAL_APPROACHES}
 
-### D: Visualizations
+### Tools and Methods
+- **Recommended Software:** {RECOMMENDED_SOFTWARE}
+- **Statistical Methods:** {STATISTICAL_METHODS}
+- **Visualization Tools:** {VIZ_TOOLS}
 
-1. [Description](path/to/viz1.png)
-2. [Description](path/to/viz2.png)
+---
+
+## Data Processing Workflow
+
+```
+{WORKFLOW_DIAGRAM}
+```
+
+---
+
+## Potential Challenges
+
+1. **Challenge:** {CHALLENGE_1}
+   - **Mitigation:** {MITIGATION_1}
+
+2. **Challenge:** {CHALLENGE_2}
+   - **Mitigation:** {MITIGATION_2}
+
+---
+
+## References and Resources
+
+### Format Specification
+- {FORMAT_SPEC_LINK}
+
+### Python Libraries Documentation
+- {LIBRARY_DOCS}
+
+### Related Analysis Examples
+- {EXAMPLE_LINKS}
+
+---
+
+## Appendix
+
+### Complete File Metadata
+```json
+{COMPLETE_METADATA}
+```
+
+### Analysis Parameters
+```json
+{ANALYSIS_PARAMETERS}
+```
+
+### Software Versions
+- Python: {PYTHON_VERSION}
+- Key Libraries: {LIBRARY_VERSIONS}
+
+---
+
+*This report was automatically generated by the exploratory-data-analysis skill.*
+*For questions or issues, refer to the skill documentation.*
