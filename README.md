@@ -236,6 +236,8 @@ When done, create a comprehensive README.md and a well formatted pdf summarizing
 results, conclusions and providing recommendations."
 ```
 
+> 📖 **Want more examples?** Check out [docs/examples.md](docs/examples.md) for comprehensive workflow examples and detailed use cases across all scientific domains.
+
 ---
 
 ## 🔬 Use Cases
