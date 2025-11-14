@@ -490,6 +490,9 @@ Your contributions help make scientific computing more accessible and enable res
 **Q: Is this free to use?**  
 A: Yes! This project is MIT licensed, allowing free use for any purpose including commercial projects.
 
+**Q: Why are all skills grouped into one plugin instead of separate plugins?**  
+A: We believe good science in the age of AI is inherently interdisciplinary. Bundling all skills into a single plugin makes it trivial for you (and Claude) to bridge across fields—e.g., combining genomics, cheminformatics, clinical data, and machine learning in one workflow—without worrying about which individual skills to install or wire together.
+
 **Q: Can I use this for commercial projects?**  
 A: Absolutely! The MIT License allows both commercial and noncommercial use without restrictions.
 
