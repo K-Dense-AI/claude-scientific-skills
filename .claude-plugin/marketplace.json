@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "plugins": [
     {
@@ -35,6 +35,7 @@
         "./scientific-skills/esm",
         "./scientific-skills/etetoolkit",
         "./scientific-skills/flowio",
+        "./scientific-skills/fluidsim",
         "./scientific-skills/geniml",
         "./scientific-skills/gget",
         "./scientific-skills/gtars",
