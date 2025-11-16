@@ -162,10 +162,37 @@ https://mcp.k-dense.ai/claude-scientific-skills/mcp
 
 ## ⚙️ Prerequisites
 
-- **Python**: 3.8+ (3.10+ recommended for best compatibility)
+- **Python**: 3.9+ (3.12+ recommended for best compatibility)
+- **uv**: Python package manager (required for installing skill dependencies)
 - **Client**: Claude Code, Cursor, or any MCP-compatible client
 - **System**: macOS, Linux, or Windows with WSL2
 - **Dependencies**: Automatically handled by individual skills (check `SKILL.md` files for specific requirements)
+
+### Installing uv
+
+The skills use `uv` as the package manager for installing Python dependencies. Install it using the instructions for your operating system:
+
+**macOS and Linux:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Windows:**
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+**Alternative (via pip):**
+```bash
+pip install uv
+```
+
+After installation, verify it works by running:
+```bash
+uv --version
+```
+
+For more installation options and details, visit the [official uv documentation](https://docs.astral.sh/uv/).
 
 ---
 
