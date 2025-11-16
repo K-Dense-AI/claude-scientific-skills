@@ -219,7 +219,7 @@ Install the `labarchives-py` wrapper for simplified API access:
 ```bash
 git clone https://github.com/mcmero/labarchives-py
 cd labarchives-py
-pip install .
+uv pip install .
 ```
 
 Alternatively, use direct HTTP requests via Python's `requests` library for custom implementations.

@@ -23,10 +23,10 @@ Use this skill when:
 ## Installation
 
 ```bash
-pip install anndata
+uv pip install anndata
 
 # With optional dependencies
-pip install anndata[dev,test,doc]
+uv pip install anndata[dev,test,doc]
 ```
 
 ## Quick Start

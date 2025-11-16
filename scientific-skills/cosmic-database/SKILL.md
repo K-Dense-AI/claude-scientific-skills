@@ -30,7 +30,7 @@ COSMIC requires authentication for data downloads:
 
 ### Python Requirements
 ```bash
-pip install requests pandas
+uv pip install requests pandas
 ```
 
 ## Quick Start

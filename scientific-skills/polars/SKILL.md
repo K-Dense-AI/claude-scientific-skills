@@ -15,7 +15,7 @@ Polars is a lightning-fast DataFrame library for Python and Rust built on Apache
 
 Install Polars:
 ```python
-pip install polars
+uv pip install polars
 ```
 
 Basic DataFrame creation and operations:

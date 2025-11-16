@@ -14,7 +14,7 @@ PyOpenMS provides Python bindings to the OpenMS library for computational mass s
 Install using uv:
 
 ```bash
-uv pip install pyopenms
+uv uv pip install pyopenms
 ```
 
 Verify installation:

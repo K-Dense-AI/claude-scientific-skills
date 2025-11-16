@@ -233,10 +233,10 @@ Install the official RCSB PDB Python API client:
 
 ```bash
 # Current recommended package
-pip install rcsb-api
+uv pip install rcsb-api
 
 # For legacy code (deprecated, use rcsb-api instead)
-pip install rcsbsearchapi
+uv pip install rcsbsearchapi
 ```
 
 The `rcsb-api` package provides unified access to both Search and Data APIs through the `rcsbapi.search` and `rcsbapi.data` modules.

@@ -9,7 +9,6 @@
 
 ### Software Requirements
 - **Python**: 3.11 or higher
-- **Conda**: Environment manager for dependency isolation
 - **LibreOffice**: Required for document format conversion (PDF to PPTX, etc.)
 - **Poppler utilities**: Required for PDF processing and manipulation
 
@@ -21,18 +20,12 @@ git clone https://github.com/YuhangChen1/Paper2All.git
 cd Paper2All
 ```
 
-### 2. Create Conda Environment
+### 2. Install Dependencies
 ```bash
-conda create -n paper2all python=3.11
-conda activate paper2all
+uv pip install -r requirements.txt
 ```
 
-### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Install System Dependencies
+### 3. Install System Dependencies
 
 **Ubuntu/Debian:**
 ```bash

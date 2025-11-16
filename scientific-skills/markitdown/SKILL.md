@@ -167,17 +167,17 @@ See `scripts/batch_convert.py` for implementation details.
 
 **Full installation (all features):**
 ```bash
-pip install 'markitdown[all]'
+uv pip install 'markitdown[all]'
 ```
 
 **Modular installation (specific features):**
 ```bash
-pip install 'markitdown[pdf]'           # PDF support
-pip install 'markitdown[docx]'          # Word support
-pip install 'markitdown[pptx]'          # PowerPoint support
-pip install 'markitdown[xlsx]'          # Excel support
-pip install 'markitdown[audio]'         # Audio transcription
-pip install 'markitdown[youtube]'       # YouTube transcripts
+uv pip install 'markitdown[pdf]'           # PDF support
+uv pip install 'markitdown[docx]'          # Word support
+uv pip install 'markitdown[pptx]'          # PowerPoint support
+uv pip install 'markitdown[xlsx]'          # Excel support
+uv pip install 'markitdown[audio]'         # Audio transcription
+uv pip install 'markitdown[youtube]'       # YouTube transcripts
 ```
 
 **Requirements:**

@@ -13,13 +13,13 @@ This skill provides comprehensive guidance for machine learning tasks using scik
 
 ```bash
 # Install scikit-learn using uv
-uv pip install scikit-learn
+uv uv pip install scikit-learn
 
 # Optional: Install visualization dependencies
-uv pip install matplotlib seaborn
+uv uv pip install matplotlib seaborn
 
 # Commonly used with
-uv pip install pandas numpy
+uv uv pip install pandas numpy
 ```
 
 ## When to Use This Skill

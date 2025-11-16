@@ -593,16 +593,16 @@ style = TableStyle([
 ## Installation
 
 ```bash
-pip install reportlab
+uv pip install reportlab
 
 # For image support
-pip install pillow
+uv pip install pillow
 
 # For charts
-pip install reportlab[renderPM]
+uv pip install reportlab[renderPM]
 
 # For barcode support (included in reportlab)
-# QR codes require: pip install qrcode
+# QR codes require: uv pip install qrcode
 ```
 
 ## When to Use This Skill

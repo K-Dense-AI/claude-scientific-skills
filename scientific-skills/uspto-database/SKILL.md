@@ -205,7 +205,7 @@ PEDS provides comprehensive prosecution history including transaction events, st
 #### Installation
 
 ```bash
-pip install uspto-opendata-python
+uv pip install uspto-opendata-python
 ```
 
 #### Basic PEDS Usage

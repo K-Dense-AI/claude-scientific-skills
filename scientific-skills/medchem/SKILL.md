@@ -21,14 +21,8 @@ This skill should be used when:
 
 ## Installation
 
-Install medchem via conda or pip:
-
 ```bash
-# Via conda
-micromamba install -c conda-forge medchem
-
-# Via pip
-pip install medchem
+uv pip install medchem
 ```
 
 ## Core Capabilities

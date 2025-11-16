@@ -29,7 +29,7 @@ This skill should be used when:
 The ChEMBL Python client is required for programmatic access:
 
 ```bash
-pip install chembl_webresource_client
+uv pip install chembl_webresource_client
 ```
 
 ### Basic Usage Pattern

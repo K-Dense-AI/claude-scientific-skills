@@ -548,7 +548,7 @@ python3 scripts/decision_making_example.py
 
 **Installation:**
 ```bash
-pip install pymoo
+uv pip install pymoo
 ```
 
 **Dependencies:** NumPy, SciPy, matplotlib, autograd (optional for gradient-based)

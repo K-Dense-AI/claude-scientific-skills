@@ -43,7 +43,7 @@ Biopython is organized into modular sub-packages, each addressing specific bioin
 Install Biopython using pip (requires Python 3 and NumPy):
 
 ```python
-pip install biopython
+uv pip install biopython
 ```
 
 For NCBI database access, always set your email address (required by NCBI):

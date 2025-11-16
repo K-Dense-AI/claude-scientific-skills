@@ -267,7 +267,7 @@ model.learn(total_timesteps=10000)
 - **Memory errors**: Reduce `buffer_size` for off-policy algorithms or use fewer parallel environments
 - **Slow training**: Consider SubprocVecEnv for parallel environments
 - **Unstable training**: Try different algorithms, tune hyperparameters, or check reward scaling
-- **Import errors**: Ensure `stable_baselines3` is installed: `pip install stable-baselines3[extra]`
+- **Import errors**: Ensure `stable_baselines3` is installed: `uv pip install stable-baselines3[extra]`
 
 ## Resources
 
@@ -286,8 +286,8 @@ model.learn(total_timesteps=10000)
 
 ```bash
 # Basic installation
-pip install stable-baselines3
+uv pip install stable-baselines3
 
 # With extra dependencies (Tensorboard, etc.)
-pip install stable-baselines3[extra]
+uv pip install stable-baselines3[extra]
 ```

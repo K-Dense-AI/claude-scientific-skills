@@ -21,9 +21,9 @@ uv init
 uv add "denario[app]"
 ```
 
-### Method 2: Using pip
+### Method 2: Alternative Installation
 
-Standard pip installation:
+Alternative installation using pip:
 
 ```bash
 # Create virtual environment (recommended)
@@ -31,7 +31,7 @@ python3 -m venv denario_env
 source denario_env/bin/activate  # On Windows: denario_env\Scripts\activate
 
 # Install denario
-pip install "denario[app]"
+uv pip install "denario[app]"
 ```
 
 ### Method 3: Building from Source
@@ -48,7 +48,7 @@ python3 -m venv Denario_env
 source Denario_env/bin/activate
 
 # Install in editable mode
-pip install -e .
+uv pip install -e .
 ```
 
 ### Method 4: Docker Deployment
@@ -146,7 +146,7 @@ Ensure Python 3.12+:
 python --version
 ```
 
-If older, install a newer version or use pyenv/conda for version management.
+If older, install a newer version or use pyenv for version management.
 
 ### Virtual Environment Activation
 
@@ -164,7 +164,7 @@ venv\Scripts\activate
 
 Use `--user` flag or virtual environments:
 ```bash
-pip install --user "denario[app]"
+uv pip install --user "denario[app]"
 ```
 
 ### Docker Port Conflicts
@@ -187,7 +187,7 @@ uv add --upgrade denario
 
 ### pip
 ```bash
-pip install --upgrade "denario[app]"
+uv pip install --upgrade "denario[app]"
 ```
 
 ### Docker
@@ -204,7 +204,7 @@ uv remove denario
 
 ### pip
 ```bash
-pip uninstall denario
+uv pip uninstall denario
 ```
 
 ### Docker

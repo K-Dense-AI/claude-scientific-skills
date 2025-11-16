@@ -280,19 +280,19 @@ url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?
 Install PubChemPy for Python-based access:
 
 ```bash
-pip install pubchempy
+uv pip install pubchempy
 ```
 
 For direct API access and bioactivity queries:
 
 ```bash
-pip install requests
+uv pip install requests
 ```
 
 Optional for data analysis:
 
 ```bash
-pip install pandas
+uv pip install pandas
 ```
 
 ## Helper Scripts

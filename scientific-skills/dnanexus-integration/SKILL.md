@@ -252,7 +252,7 @@ Often you'll need multiple capabilities together (e.g., app development + config
 ### Install dxpy
 
 ```bash
-pip install dxpy
+uv pip install dxpy
 ```
 
 ### Login to DNAnexus

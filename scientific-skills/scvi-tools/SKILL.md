@@ -168,9 +168,9 @@ See `references/theoretical-foundations.md` for detailed background on the mathe
 ## Installation
 
 ```bash
-pip install scvi-tools
+uv pip install scvi-tools
 # For GPU support
-pip install scvi-tools[cuda]
+uv pip install scvi-tools[cuda]
 ```
 
 ## Best Practices

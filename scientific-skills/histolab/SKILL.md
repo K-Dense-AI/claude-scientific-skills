@@ -11,13 +11,8 @@ Histolab is a Python library for processing whole slide images (WSI) in digital 
 
 ## Installation
 
-Install histolab using pip or conda:
-
 ```bash
-pip install histolab
-
-# Or via conda
-conda install -c conda-forge histolab
+uv pip install histolab
 ```
 
 ## Quick Start

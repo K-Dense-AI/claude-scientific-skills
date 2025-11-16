@@ -286,5 +286,5 @@ Run examples to understand typical usage patterns and workflow composition.
 - **Official Website**: https://aiscientist.tools
 - **GitHub**: https://github.com/mims-harvard/ToolUniverse
 - **Documentation**: https://zitniklab.hms.harvard.edu/ToolUniverse/
-- **Installation**: `uv pip install tooluniverse`
+- **Installation**: `uv uv pip install tooluniverse`
 - **MCP Server**: `tooluniverse-smcp`

@@ -195,7 +195,7 @@ For large-scale analyses, use Google Cloud datasets:
 
 ```bash
 # Install gsutil
-pip install gsutil
+uv pip install gsutil
 
 # List available data
 gsutil ls gs://public-datasets-deepmind-alphafold-v4/
@@ -359,16 +359,16 @@ print(df)
 
 ```bash
 # Install Biopython for structure access
-pip install biopython
+uv pip install biopython
 
 # Install requests for API access
-pip install requests
+uv pip install requests
 
 # For visualization and analysis
-pip install numpy matplotlib pandas scipy
+uv pip install numpy matplotlib pandas scipy
 
 # For Google Cloud access (optional)
-pip install google-cloud-bigquery gsutil
+uv pip install google-cloud-bigquery gsutil
 ```
 
 ### 3D-Beacons API Alternative

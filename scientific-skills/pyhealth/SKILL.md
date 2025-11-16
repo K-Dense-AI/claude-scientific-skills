@@ -205,7 +205,7 @@ This skill includes comprehensive reference documentation organized by functiona
 ## Installation
 
 ```bash
-pip install pyhealth
+uv pip install pyhealth
 ```
 
 **Requirements:**

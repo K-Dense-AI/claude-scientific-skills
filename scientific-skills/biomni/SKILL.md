@@ -32,17 +32,10 @@ Use biomni for:
 
 ### Installation and Setup
 
-Biomni requires conda environment setup and API keys for LLM providers:
+Install Biomni and configure API keys for LLM providers:
 
 ```bash
-# Clone repository and set up environment
-git clone https://github.com/snap-stanford/biomni
-cd biomni
-bash setup.sh
-
-# Or install via pip
-conda activate biomni_e1
-pip install biomni --upgrade
+uv pip install biomni --upgrade
 ```
 
 Configure API keys (store in `.env` file or environment variables):

@@ -528,11 +528,11 @@ model = dc.models.GCNModel(batch_size=32)  # Instead of 128
 **Problem**: Module not found errors.
 **Solution**: Ensure DeepChem is installed with required dependencies:
 ```bash
-pip install deepchem
+uv pip install deepchem
 # For PyTorch models
-pip install deepchem[torch]
+uv pip install deepchem[torch]
 # For all features
-pip install deepchem[all]
+uv pip install deepchem[all]
 ```
 
 ## Reference Documentation
@@ -568,17 +568,17 @@ Eight detailed end-to-end workflows:
 
 Basic installation:
 ```bash
-pip install deepchem
+uv pip install deepchem
 ```
 
 For PyTorch models (GCN, GAT, etc.):
 ```bash
-pip install deepchem[torch]
+uv pip install deepchem[torch]
 ```
 
 For all features:
 ```bash
-pip install deepchem[all]
+uv pip install deepchem[all]
 ```
 
 If import errors occur, the user may need specific dependencies. Check the DeepChem documentation for detailed installation instructions.

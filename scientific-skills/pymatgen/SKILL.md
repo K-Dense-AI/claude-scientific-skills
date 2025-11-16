@@ -29,14 +29,14 @@ This skill should be used when:
 
 ```bash
 # Core pymatgen
-pip install pymatgen
+uv pip install pymatgen
 
 # With Materials Project API access
-pip install pymatgen mp-api
+uv pip install pymatgen mp-api
 
 # Optional dependencies for extended functionality
-pip install pymatgen[analysis]  # Additional analysis tools
-pip install pymatgen[vis]       # Visualization tools
+uv pip install pymatgen[analysis]  # Additional analysis tools
+uv pip install pymatgen[vis]       # Visualization tools
 ```
 
 ### Basic Structure Operations
@@ -646,7 +646,7 @@ Pymatgen integrates seamlessly with:
 
 **Import errors**: Install missing dependencies
 ```bash
-pip install pymatgen[analysis,vis]
+uv pip install pymatgen[analysis,vis]
 ```
 
 **API key not found**: Set MP_API_KEY environment variable

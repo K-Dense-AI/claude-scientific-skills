@@ -537,13 +537,13 @@ Includes: Mathematical foundations, proofs, comparisons, advanced topics.
 
 ```bash
 # Basic installation
-pip install shap
+uv pip install shap
 
 # With visualization dependencies
-pip install shap matplotlib
+uv pip install shap matplotlib
 
 # Latest version
-pip install -U shap
+uv pip install -U shap
 ```
 
 **Dependencies**: numpy, pandas, scikit-learn, matplotlib, scipy

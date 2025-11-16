@@ -393,9 +393,7 @@ df = embedding.to_dataframe()
 
 ### Installation
 ```bash
-pip install scikit-bio
-# Or with conda:
-conda install -c conda-forge scikit-bio
+uv pip install scikit-bio
 ```
 
 ### Performance Considerations

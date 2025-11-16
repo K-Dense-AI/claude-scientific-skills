@@ -234,7 +234,7 @@ model = model.to(device)
 The detection script requires the following Python packages:
 
 ```bash
-pip install psutil
+uv pip install psutil
 ```
 
 All other functionality uses Python standard library modules (json, os, platform, subprocess, sys, pathlib).
@@ -261,7 +261,7 @@ All other functionality uses Python standard library modules (json, os, platform
 - Verify GPU is not in use by other processes
 
 **Script execution fails:**
-- Ensure psutil is installed: `pip install psutil`
+- Ensure psutil is installed: `uv pip install psutil`
 - Check Python version compatibility (Python 3.6+)
 - Verify script has execute permissions: `chmod +x scripts/detect_resources.py`
 

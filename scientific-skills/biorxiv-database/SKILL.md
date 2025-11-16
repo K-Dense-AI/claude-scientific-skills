@@ -414,7 +414,7 @@ To verify that the bioRxiv database skill is working correctly, run the comprehe
 
 **Prerequisites:**
 ```bash
-pip install requests
+uv pip install requests
 ```
 
 **Run tests:**

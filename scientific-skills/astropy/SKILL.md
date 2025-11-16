@@ -185,10 +185,10 @@ Robust statistical functions including sigma clipping and outlier rejection.
 
 ```bash
 # Install astropy
-pip install astropy
+uv pip install astropy
 
 # With optional dependencies for full functionality
-pip install astropy[all]
+uv pip install astropy[all]
 ```
 
 ## Common Workflows

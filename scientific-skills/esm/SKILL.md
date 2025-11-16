@@ -226,20 +226,20 @@ See `references/forge-api.md` for detailed Forge API documentation, authenticati
 **Basic installation:**
 
 ```bash
-pip install esm
+uv pip install esm
 ```
 
 **With Flash Attention (recommended for faster inference):**
 
 ```bash
-pip install esm
-pip install flash-attn --no-build-isolation
+uv pip install esm
+uv pip install flash-attn --no-build-isolation
 ```
 
 **For Forge API access:**
 
 ```bash
-pip install esm  # SDK includes Forge client
+uv pip install esm  # SDK includes Forge client
 ```
 
 No additional dependencies needed. Obtain Forge API token at https://forge.evolutionaryscale.ai

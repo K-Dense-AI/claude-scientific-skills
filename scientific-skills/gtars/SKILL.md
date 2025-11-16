@@ -24,7 +24,7 @@ Use this skill when working with:
 Install gtars Python bindings:
 
 ```bash
-uv pip install gtars
+uv uv pip install gtars
 ```
 
 ### CLI Installation

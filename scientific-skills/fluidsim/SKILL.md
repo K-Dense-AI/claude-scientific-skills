@@ -23,13 +23,13 @@ Install fluidsim using uv with appropriate feature flags:
 
 ```bash
 # Basic installation
-uv pip install fluidsim
+uv uv pip install fluidsim
 
 # With FFT support (required for most solvers)
-uv pip install "fluidsim[fft]"
+uv uv pip install "fluidsim[fft]"
 
 # With MPI for parallel computing
-uv pip install "fluidsim[fft,mpi]"
+uv uv pip install "fluidsim[fft,mpi]"
 ```
 
 Set environment variables for output directories (optional):
@@ -41,7 +41,7 @@ export FLUIDDYN_PATH_SCRATCH=/path/to/working/directory
 
 No API keys or authentication required.
 
-See `references/installation.md` for complete installation instructions, conda/mamba alternatives, and environment configuration.
+See `references/installation.md` for complete installation instructions and environment configuration.
 
 ### 2. Running Simulations
 

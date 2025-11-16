@@ -258,8 +258,8 @@ import networkx as nx
 print(nx.__version__)
 
 # Install if needed (via bash)
-# pip install networkx
-# pip install networkx[default]  # With optional dependencies
+# uv pip install networkx
+# uv pip install networkx[default]  # With optional dependencies
 ```
 
 ### Common Workflow Pattern
