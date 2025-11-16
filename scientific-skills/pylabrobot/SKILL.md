@@ -84,7 +84,7 @@ To get started with PyLabRobot, install the package and initialize a liquid hand
 
 ```python
 # Install PyLabRobot
-# pip install pylabrobot
+# uv pip install pylabrobot
 
 # Basic liquid handling setup
 from pylabrobot.liquid_handling import LiquidHandler

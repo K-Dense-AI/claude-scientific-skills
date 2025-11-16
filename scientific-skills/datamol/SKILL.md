@@ -26,11 +26,7 @@ Datamol is a Python library that provides a lightweight, Pythonic abstraction la
 Guide users to install datamol:
 
 ```bash
-# Via conda/mamba (recommended)
-conda install -c conda-forge datamol
-
-# Via pip
-pip install datamol
+uv pip install datamol
 ```
 
 **Import convention**:

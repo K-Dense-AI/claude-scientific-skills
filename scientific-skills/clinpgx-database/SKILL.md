@@ -31,7 +31,7 @@ This skill should be used when:
 The ClinPGx REST API provides programmatic access to all database resources. Basic setup:
 
 ```bash
-pip install requests
+uv pip install requests
 ```
 
 ### API Endpoint

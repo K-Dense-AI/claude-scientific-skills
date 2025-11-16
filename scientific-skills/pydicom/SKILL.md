@@ -27,17 +27,17 @@ Use this skill when working with:
 Install pydicom and common dependencies:
 
 ```bash
-pip install pydicom
-pip install pillow  # For image format conversion
-pip install numpy   # For pixel array manipulation
-pip install matplotlib  # For visualization
+uv pip install pydicom
+uv pip install pillow  # For image format conversion
+uv pip install numpy   # For pixel array manipulation
+uv pip install matplotlib  # For visualization
 ```
 
 For handling compressed DICOM files, additional packages may be needed:
 
 ```bash
-pip install pylibjpeg pylibjpeg-libjpeg pylibjpeg-openjpeg  # JPEG compression
-pip install python-gdcm  # Alternative compression handler
+uv pip install pylibjpeg pylibjpeg-libjpeg pylibjpeg-openjpeg  # JPEG compression
+uv pip install python-gdcm  # Alternative compression handler
 ```
 
 ## Core Workflows
@@ -397,7 +397,7 @@ Detailed reference information is available in the `references/` directory:
 ## Common Issues and Solutions
 
 **Issue: "Unable to decode pixel data"**
-- Solution: Install additional compression handlers: `pip install pylibjpeg pylibjpeg-libjpeg python-gdcm`
+- Solution: Install additional compression handlers: `uv pip install pylibjpeg pylibjpeg-libjpeg python-gdcm`
 
 **Issue: "AttributeError" when accessing tags**
 - Solution: Check if attribute exists with `hasattr(ds, 'AttributeName')` or use `ds.get('AttributeName', default)`

@@ -95,9 +95,7 @@ Creates print-ready academic posters with professional layouts and visual design
    ```bash
    git clone https://github.com/YuhangChen1/Paper2All.git
    cd Paper2All
-   conda create -n paper2all python=3.11
-   conda activate paper2all
-   pip install -r requirements.txt
+   uv pip install -r requirements.txt
    ```
 
 2. **Configure API Keys** (create `.env` file):

@@ -13,18 +13,14 @@ Zarr is a Python library for storing large N-dimensional arrays with chunking an
 
 ### Installation
 
-```python
-# Using pip
-pip install zarr
-
-# Using conda
-conda install --channel conda-forge zarr
+```bash
+uv pip install zarr
 ```
 
 Requires Python 3.11+. For cloud storage support, install additional packages:
 ```python
-pip install s3fs  # For S3
-pip install gcsfs  # For Google Cloud Storage
+uv pip install s3fs  # For S3
+uv pip install gcsfs  # For Google Cloud Storage
 ```
 
 ### Basic Array Creation

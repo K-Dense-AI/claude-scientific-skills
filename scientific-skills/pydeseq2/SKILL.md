@@ -529,14 +529,8 @@ Load these references into context when users need:
 
 ## Installation and Requirements
 
-PyDESeq2 can be installed via pip or conda:
-
 ```bash
-# Via pip
-pip install pydeseq2
-
-# Via conda
-conda install -c bioconda pydeseq2
+uv pip install pydeseq2
 ```
 
 **System requirements:**

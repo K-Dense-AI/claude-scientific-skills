@@ -35,20 +35,6 @@ uv pip install "fluidsim[fft,mpi]"
 
 Note: This triggers local compilation of mpi4py.
 
-### Conda/Mamba Installation
-
-For sequential simulations:
-
-```bash
-conda install fluidsim
-```
-
-For MPI-enabled environment:
-
-```bash
-conda create -n env-fluidsim fluidsim "h5py[build=mpi*]" fluidfft-mpi_with_fftw fluidfft-fftwmpi
-```
-
 ## Environment Configuration
 
 ### Output Directories

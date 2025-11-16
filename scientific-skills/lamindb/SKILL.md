@@ -156,8 +156,8 @@ LaminDB provides six interconnected capability areas, each documented in detail 
 ### 6. Setup and Deployment
 
 **Installation:**
-- Basic: `pip install lamindb`
-- With extras: `pip install 'lamindb[gcp,zarr,fcs]'`
+- Basic: `uv pip install lamindb`
+- With extras: `uv pip install 'lamindb[gcp,zarr,fcs]'`
 - Modules: bionty, wetlab, clinical
 
 **Instance types:**

@@ -229,7 +229,7 @@ def query_ensembl(endpoint, params=None, max_retries=3):
 ### Python Package (Recommended)
 
 ```bash
-pip install ensembl_rest
+uv pip install ensembl_rest
 ```
 
 The `ensembl_rest` package provides a Pythonic interface to all Ensembl REST API endpoints.
@@ -239,7 +239,7 @@ The `ensembl_rest` package provides a Pythonic interface to all Ensembl REST API
 No installation needed - use standard HTTP libraries like `requests`:
 
 ```bash
-pip install requests
+uv pip install requests
 ```
 
 ## Resources

@@ -15,7 +15,7 @@ Get started with Hypogenic in minutes:
 
 ```bash
 # Install the package
-pip install hypogenic
+uv pip install hypogenic
 
 # Clone example datasets
 git clone https://github.com/ChicagoHAI/HypoGeniC-datasets.git ./data
@@ -118,7 +118,7 @@ Mechanistically combine literature-only hypotheses with framework outputs.
 
 Install via pip:
 ```bash
-pip install hypogenic
+uv pip install hypogenic
 ```
 
 **Optional dependencies:**

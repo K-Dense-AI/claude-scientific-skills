@@ -24,10 +24,8 @@ This skill should be used when:
 ## Quick Start
 
 ### Installation
-```python
-# Pysam is typically installed via conda or pip
-# conda install -c bioconda pysam
-# pip install pysam
+```bash
+uv pip install pysam
 ```
 
 ### Basic Examples

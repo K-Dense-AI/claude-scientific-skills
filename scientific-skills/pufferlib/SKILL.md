@@ -420,7 +420,7 @@ env = pufferlib.make(
 ## Installation
 
 ```bash
-pip install pufferlib
+uv pip install pufferlib
 ```
 
 ## Documentation

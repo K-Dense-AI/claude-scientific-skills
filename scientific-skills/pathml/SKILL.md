@@ -78,10 +78,10 @@ Efficiently store and manage large pathology datasets using HDF5 format. PathML 
 
 ```bash
 # Install PathML
-pip install pathml
+uv pip install pathml
 
 # With optional dependencies for all features
-pip install pathml[all]
+uv pip install pathml[all]
 ```
 
 ### Basic Workflow Example

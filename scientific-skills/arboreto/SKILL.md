@@ -15,7 +15,7 @@ Arboreto is a computational library for inferring gene regulatory networks (GRNs
 
 Install arboreto:
 ```bash
-pip install arboreto
+uv pip install arboreto
 ```
 
 Basic GRN inference:
@@ -114,21 +114,8 @@ network = grnboost2(expression_data=matrix, client_or_address=client)
 
 ## Installation
 
-**Recommended (Conda)**:
 ```bash
-conda install -c bioconda arboreto
-```
-
-**Alternative (pip)**:
-```bash
-pip install arboreto
-```
-
-**For isolated environment**:
-```bash
-conda create --name arboreto-env
-conda activate arboreto-env
-conda install -c bioconda arboreto
+uv pip install arboreto
 ```
 
 **Dependencies**: scipy, scikit-learn, numpy, pandas, dask, distributed

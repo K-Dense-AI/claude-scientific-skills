@@ -268,12 +268,12 @@ Most `*_analyze()` functions automatically choose the appropriate mode.
 ## Installation
 
 ```bash
-pip install neurokit2
+uv pip install neurokit2
 ```
 
 For development version:
 ```bash
-pip install https://github.com/neuropsychology/NeuroKit/zipball/dev
+uv pip install https://github.com/neuropsychology/NeuroKit/zipball/dev
 ```
 
 ## Common Workflows

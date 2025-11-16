@@ -512,7 +512,7 @@ This skill works seamlessly with other scientific skills:
 
 ### Required Python Packages
 ```bash
-pip install requests  # For citation verification
+uv pip install requests  # For citation verification
 ```
 
 ### Required System Tools

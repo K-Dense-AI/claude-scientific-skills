@@ -65,20 +65,8 @@ See `assets/quick_reference.md` for frequently used commands and parameters.
 
 ## Installation
 
-Guide users to install deepTools using conda (recommended):
-
 ```bash
-# Standard installation
-conda install -c conda-forge -c bioconda deeptools
-
-# For M1 Macs
-CONDA_SUBDIR=osx-64 conda create -c conda-forge -c bioconda -n deeptools deeptools
-```
-
-Or using pip:
-
-```bash
-pip install deeptools
+uv pip install deeptools
 ```
 
 ## Core Workflows

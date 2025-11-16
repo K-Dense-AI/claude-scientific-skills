@@ -31,12 +31,12 @@ This skill should be used when:
 
 Install the Census API:
 ```bash
-pip install cellxgene-census
+uv pip install cellxgene-census
 ```
 
 For machine learning workflows, install additional dependencies:
 ```bash
-pip install cellxgene-census[experimental]
+uv pip install cellxgene-census[experimental]
 ```
 
 ## Core Workflow Patterns

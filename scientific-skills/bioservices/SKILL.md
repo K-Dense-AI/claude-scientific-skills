@@ -342,7 +342,7 @@ Load references when working with specific services or complex integration tasks
 ## Installation
 
 ```bash
-pip install bioservices
+uv pip install bioservices
 ```
 
 Dependencies are automatically managed. Package is tested on Python 3.9-3.12.

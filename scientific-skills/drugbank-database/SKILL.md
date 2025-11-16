@@ -134,13 +134,13 @@ Perform structure-based analysis including molecular similarity searches, proper
 
 ### Python Packages
 ```bash
-pip install drugbank-downloader  # Core access
-pip install bioversions          # Latest version detection
-pip install lxml                 # XML parsing optimization
-pip install pandas               # Data manipulation
-pip install rdkit                # Chemical informatics (for similarity)
-pip install networkx             # Network analysis (for interactions)
-pip install scikit-learn         # ML/clustering (for chemical space)
+uv pip install drugbank-downloader  # Core access
+uv pip install bioversions          # Latest version detection
+uv pip install lxml                 # XML parsing optimization
+uv pip install pandas               # Data manipulation
+uv pip install rdkit                # Chemical informatics (for similarity)
+uv pip install networkx             # Network analysis (for interactions)
+uv pip install scikit-learn         # ML/clustering (for chemical space)
 ```
 
 ### Account Setup

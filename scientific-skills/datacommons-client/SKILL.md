@@ -14,12 +14,12 @@ Provides comprehensive access to the Data Commons Python API v2 for querying sta
 Install the Data Commons Python client with Pandas support:
 
 ```bash
-pip install "datacommons-client[Pandas]"
+uv pip install "datacommons-client[Pandas]"
 ```
 
 For basic usage without Pandas:
 ```bash
-pip install datacommons-client
+uv pip install datacommons-client
 ```
 
 ## Core Capabilities

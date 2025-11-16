@@ -17,10 +17,10 @@ Install gget in a clean virtual environment to avoid conflicts:
 
 ```bash
 # Using uv (recommended)
-uv pip install gget
+uv uv pip install gget
 
 # Or using pip
-pip install --upgrade gget
+uv pip install --upgrade gget
 
 # In Python/Jupyter
 import gget
@@ -302,13 +302,8 @@ Predict 3D protein structures using simplified AlphaFold2.
 
 **Setup Required**:
 ```bash
-# Install OpenMM first (version depends on Python version)
-# Python < 3.10:
-conda install -qy conda==4.13.0 && conda install -qy -c conda-forge openmm=7.5.1
-# Python 3.10:
-conda install -qy conda==24.1.2 && conda install -qy -c conda-forge openmm=7.7.0
-# Python 3.11:
-conda install -qy conda==24.11.1 && conda install -qy -c conda-forge openmm=8.0.0
+# Install OpenMM first
+uv pip install openmm
 
 # Then setup AlphaFold
 gget setup alphafold
@@ -835,7 +830,7 @@ gget ref -w dna -d homo_sapiens
 - Check PDB database first before running AlphaFold predictions
 
 ### Error Handling
-- Database structures change; update gget regularly: `pip install --upgrade gget`
+- Database structures change; update gget regularly: `uv pip install --upgrade gget`
 - Process max ~1000 Ensembl IDs at once with gget info
 - For large-scale analyses, implement rate limiting for API queries
 - Use virtual environments to avoid dependency conflicts

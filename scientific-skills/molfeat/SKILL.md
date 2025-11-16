@@ -23,14 +23,10 @@ This skill should be used when working with:
 ## Installation
 
 ```bash
-# Recommended: Using conda/mamba
-mamba install -c conda-forge molfeat
-
-# Alternative: Using pip
-pip install molfeat
+uv pip install molfeat
 
 # With all optional dependencies
-pip install "molfeat[all]"
+uv pip install "molfeat[all]"
 ```
 
 **Optional dependencies for specific featurizers:**
@@ -489,8 +485,8 @@ Process in chunks or use streaming approaches for datasets > 100K molecules.
 ### Pretrained Model Dependencies
 Some models require additional packages. Install specific extras:
 ```bash
-pip install "molfeat[transformer]"  # For ChemBERTa/ChemGPT
-pip install "molfeat[dgl]"          # For GIN models
+uv pip install "molfeat[transformer]"  # For ChemBERTa/ChemGPT
+uv pip install "molfeat[dgl]"          # For GIN models
 ```
 
 ### Reproducibility

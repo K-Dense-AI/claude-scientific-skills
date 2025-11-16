@@ -139,7 +139,7 @@ results = advanced_geo_search(search_terms)
 
 **Installation:**
 ```bash
-pip install GEOparse
+uv pip install GEOparse
 ```
 
 **Basic Usage:**
@@ -642,19 +642,19 @@ print(meta_results)
 
 ```bash
 # Primary GEO access library (recommended)
-pip install GEOparse
+uv pip install GEOparse
 
 # For E-utilities and programmatic NCBI access
-pip install biopython
+uv pip install biopython
 
 # For data analysis
-pip install pandas numpy scipy
+uv pip install pandas numpy scipy
 
 # For visualization
-pip install matplotlib seaborn
+uv pip install matplotlib seaborn
 
 # For statistical analysis
-pip install statsmodels scikit-learn
+uv pip install statsmodels scikit-learn
 ```
 
 ### Configuration

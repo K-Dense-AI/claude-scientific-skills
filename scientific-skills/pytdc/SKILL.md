@@ -25,13 +25,13 @@ This skill should be used when:
 Install PyTDC using pip:
 
 ```bash
-pip install PyTDC
+uv pip install PyTDC
 ```
 
 To upgrade to the latest version:
 
 ```bash
-pip install PyTDC --upgrade
+uv pip install PyTDC --upgrade
 ```
 
 Core dependencies (automatically installed):

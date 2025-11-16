@@ -2,14 +2,8 @@
 
 ## Installation
 
-### Using uv (Recommended)
 ```bash
 uv pip install tooluniverse
-```
-
-### Using pip
-```bash
-pip install tooluniverse
 ```
 
 ## Basic Setup

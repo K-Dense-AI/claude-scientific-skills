@@ -23,7 +23,7 @@ Apply this skill when:
 ## Installation
 
 ```bash
-pip install aeon
+uv pip install aeon
 ```
 
 ## Core Capabilities

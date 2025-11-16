@@ -194,4 +194,4 @@ Required dependencies (install if not available):
 - **docx**: `npm install -g docx` (for creating new documents)
 - **LibreOffice**: `sudo apt-get install libreoffice` (for PDF conversion)
 - **Poppler**: `sudo apt-get install poppler-utils` (for pdftoppm to convert PDF to images)
-- **defusedxml**: `pip install defusedxml` (for secure XML parsing)
+- **defusedxml**: `uv pip install defusedxml` (for secure XML parsing)

@@ -358,7 +358,7 @@ Install ETE toolkit:
 
 ```bash
 # Basic installation
-pip install ete3
+uv pip install ete3
 
 # With external dependencies for rendering (optional but recommended)
 # On macOS:
@@ -368,7 +368,7 @@ brew install qt@5
 sudo apt-get install python3-pyqt5 python3-pyqt5.qtsvg
 
 # For full features including GUI
-pip install ete3[gui]
+uv pip install ete3[gui]
 ```
 
 **First-time NCBI Taxonomy setup:**
@@ -536,10 +536,10 @@ Load these references when detailed information is needed:
 
 ```bash
 # If "ModuleNotFoundError: No module named 'ete3'"
-pip install ete3
+uv pip install ete3
 
 # For GUI and rendering issues
-pip install ete3[gui]
+uv pip install ete3[gui]
 ```
 
 **Rendering issues:**

@@ -115,22 +115,14 @@ Covers permissions, filesets, cross-group queries, delete operations, and other 
 
 ## Installation
 
-Install the OMERO Python bindings using pip or conda:
-
 ```bash
-# Using pip
-pip install omero-py
-
-# Using conda
-conda install -c conda-forge omero-py
+uv pip install omero-py
 ```
 
 **Requirements:**
 - Python 3.7+
 - Zeroc Ice 3.6+
 - Access to an OMERO server (host, port, credentials)
-
-**Best practice:** Use a Python virtual environment (venv, conda, or mamba) to isolate dependencies.
 
 ## Quick Start
 

@@ -54,7 +54,7 @@ Python client library that wraps Reactome API calls for easier programmatic acce
 
 **Installation:**
 ```bash
-pip install reactome2py
+uv pip install reactome2py
 ```
 
 **Note:** The reactome2py package (version 3.0.0, released January 2021) is functional but not actively maintained. For the most up-to-date functionality, consider using direct REST API calls.

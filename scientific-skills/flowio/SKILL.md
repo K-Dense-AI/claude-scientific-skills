@@ -26,7 +26,7 @@ This skill should be used when:
 ## Installation
 
 ```bash
-pip install flowio
+uv pip install flowio
 ```
 
 Requires Python 3.9 or later.

@@ -47,7 +47,7 @@ The Latch platform provides four main areas of functionality:
 
 ```bash
 # Install Latch SDK
-python3 -m pip install latch
+python3 -m uv pip install latch
 
 # Login to Latch
 latch login

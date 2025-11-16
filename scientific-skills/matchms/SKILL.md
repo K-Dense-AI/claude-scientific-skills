@@ -178,12 +178,12 @@ Consult `references/workflows.md` for detailed examples.
 ## Installation
 
 ```bash
-pip install matchms
+uv pip install matchms
 ```
 
 For molecular structure processing (SMILES, InChI):
 ```bash
-pip install matchms[chemistry]
+uv pip install matchms[chemistry]
 ```
 
 ## Reference Documentation

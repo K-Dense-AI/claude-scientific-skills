@@ -28,7 +28,7 @@ This skill should be used when:
 **Python SDK Installation:**
 ```python
 # Stable release
-pip install benchling-sdk
+uv pip install benchling-sdk
 # or with Poetry
 poetry add benchling-sdk
 ```
