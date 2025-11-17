@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.1.1"
+    "version": "2.2.0"
   },
   "plugins": [
     {
@@ -52,6 +52,7 @@
         "./scientific-skills/networkx",
         "./scientific-skills/paper-2-web",
         "./scientific-skills/pathml",
+        "./scientific-skills/perplexity-search",
         "./scientific-skills/polars",
         "./scientific-skills/pydeseq2",
         "./scientific-skills/pydicom",
