@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "plugins": [
     {
@@ -103,6 +103,7 @@
         "./scientific-skills/hmdb-database",
         "./scientific-skills/kegg-database",
         "./scientific-skills/metabolomics-workbench-database",
+        "./scientific-skills/openalex-database",
         "./scientific-skills/opentargets-database",
         "./scientific-skills/pdb-database",
         "./scientific-skills/pubchem-database",

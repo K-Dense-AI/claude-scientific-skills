@@ -1,9 +1,9 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-119-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-120-brightgreen.svg)](#whats-included)
 
-A comprehensive collection of **119+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **120+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 These skills enable Claude to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
@@ -32,9 +32,9 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **119+ scientific skills** organized into the following categories:
+This repository provides **120+ scientific skills** organized into the following categories:
 
-- **25+ Scientific Databases** - Direct API access to PubMed, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
+- **26+ Scientific Databases** - Direct API access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
 - **50+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, and others
 - **15+ Scientific Integrations** - Benchling, DNAnexus, LatchBio, OMERO, Protocols.io, and more
 - **20+ Analysis & Communication Tools** - Literature review, scientific writing, peer review, document processing
@@ -78,8 +78,8 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **119+ Skills** - Extensive coverage across all major scientific domains
-- **25+ Databases** - Direct access to PubMed, ChEMBL, UniProt, COSMIC, and more
+- **120+ Skills** - Extensive coverage across all major scientific domains
+- **26+ Databases** - Direct access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, and more
 - **50+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, and others
 
 ### 🔧 **Easy Integration**
@@ -335,7 +335,7 @@ networks, and search GEO for similar patterns.
 
 ## 📚 Available Skills
 
-This repository contains **119+ scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
+This repository contains **120+ scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
 
 ### Skill Categories
 
@@ -404,14 +404,14 @@ This repository contains **119+ scientific skills** organized across multiple do
 #### 🧬 **Protein Engineering & Design** (1 skill)
 - Protein language models: ESM
 
-#### 📚 **Scientific Communication** (8+ skills)
-- Literature: PubMed, Literature Review
+#### 📚 **Scientific Communication** (9+ skills)
+- Literature: OpenAlex, PubMed, Literature Review
 - Web search: Perplexity Search (AI-powered search with real-time information)
 - Writing: Scientific Writing, Peer Review
 - Document processing: DOCX, PDF, PPTX, XLSX, MarkItDown
 - Publishing: Paper-2-Web
 
-#### 🔬 **Scientific Databases** (25+ skills)
+#### 🔬 **Scientific Databases** (26+ skills)
 - Protein: UniProt, PDB, AlphaFold DB
 - Chemical: PubChem, ChEMBL, DrugBank, ZINC, HMDB
 - Genomic: Ensembl, NCBI Gene, GEO, ENA, GWAS Catalog
