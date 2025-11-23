@@ -189,12 +189,14 @@ c = ChEMBL()
 ```
 
 **Key Methods:**
-- `get_compound_by_chemblId(chembl_id)`: Compound details
-- `get_target_by_chemblId(chembl_id)`: Target information
+- `get_molecule_form(chembl_id)`: Compound details
+- `get_target(chembl_id)`: Target information
+- `get_similarity(chembl_id)`: Get similar compounds for given 
 - `get_assays()`: Bioassay data
 
 **Use cases:**
 - Drug discovery data
+- Find similar compounds  
 - Bioactivity information
 - Target-compound relationships
 
