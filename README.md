@@ -1,9 +1,9 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-120-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-121-brightgreen.svg)](#whats-included)
 
-A comprehensive collection of **120+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **121+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 These skills enable Claude to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
@@ -32,7 +32,7 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **120+ scientific skills** organized into the following categories:
+This repository provides **121+ scientific skills** organized into the following categories:
 
 - **26+ Scientific Databases** - Direct API access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
 - **50+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, and others
@@ -78,7 +78,7 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **120+ Skills** - Extensive coverage across all major scientific domains
+- **121+ Skills** - Extensive coverage across all major scientific domains
 - **26+ Databases** - Direct access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, and more
 - **50+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, and others
 
@@ -401,8 +401,9 @@ This repository contains **120+ scientific skills** organized across multiple do
 - Multi-omics: BIOMNI, Denario, HypoGeniC
 - Data management: LaminDB
 
-#### 🧬 **Protein Engineering & Design** (1 skill)
+#### 🧬 **Protein Engineering & Design** (2 skills)
 - Protein language models: ESM
+- Cloud laboratory platform: Adaptyv (automated protein testing and validation)
 
 #### 📚 **Scientific Communication** (9+ skills)
 - Literature: OpenAlex, PubMed, Literature Review
