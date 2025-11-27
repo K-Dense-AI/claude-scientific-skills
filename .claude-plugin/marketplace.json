@@ -54,6 +54,7 @@
         "./scientific-skills/paper-2-web",
         "./scientific-skills/pathml",
         "./scientific-skills/perplexity-search",
+        "./scientific-skills/plotly",
         "./scientific-skills/polars",
         "./scientific-skills/pydeseq2",
         "./scientific-skills/pydicom",
