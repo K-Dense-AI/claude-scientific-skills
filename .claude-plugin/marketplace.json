@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.4.0"
+    "version": "2.5.0"
   },
   "plugins": [
     {
@@ -38,6 +38,7 @@
         "./scientific-skills/flowio",
         "./scientific-skills/fluidsim",
         "./scientific-skills/geniml",
+        "./scientific-skills/geopandas",
         "./scientific-skills/gget",
         "./scientific-skills/gtars",
         "./scientific-skills/hypogenic",
