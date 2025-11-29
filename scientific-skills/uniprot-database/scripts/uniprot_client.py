@@ -22,6 +22,7 @@ Usage examples:
 """
 
 import requests
+import sys
 import time
 import json
 from typing import List, Dict, Optional, Generator
@@ -229,28 +230,112 @@ def get_id_mapping_databases() -> Dict:
     return response.json()
 
 
-# Example usage
+def main():
+    """Command-line interface for UniProt database queries."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Query UniProt database using REST API',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Search for proteins
+  %(prog)s --search "insulin AND organism_name:human" --format json
+
+  # Get a specific protein
+  %(prog)s --get P01308 --format fasta
+
+  # Map IDs from UniProt to PDB
+  %(prog)s --map P01308,P04637 --from UniProtKB_AC-ID --to PDB
+
+  # Stream large results
+  %(prog)s --stream "taxonomy_id:9606 AND reviewed:true" --format fasta
+
+  # List available fields
+  %(prog)s --list-fields
+
+  # List mapping databases
+  %(prog)s --list-databases
+        """
+    )
+
+    # Main operation arguments (mutually exclusive)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--search', '-s', help='Search query string')
+    group.add_argument('--get', '-g', help='Get protein by accession number')
+    group.add_argument('--map', '-m', help='Map IDs (comma-separated)')
+    group.add_argument('--stream', help='Stream large result sets')
+    group.add_argument('--list-fields', action='store_true',
+                      help='List all available query fields')
+    group.add_argument('--list-databases', action='store_true',
+                      help='List all ID mapping databases')
+
+    # Format options
+    parser.add_argument('--format', '-f', default='json',
+                       help='Output format (json, tsv, xlsx, xml, fasta, txt, rdf)')
+
+    # Search-specific options
+    parser.add_argument('--fields', help='Comma-separated list of fields to return')
+    parser.add_argument('--size', type=int, default=25,
+                       help='Number of results (default: 25, max: 500)')
+
+    # Mapping-specific options
+    parser.add_argument('--from', dest='from_db',
+                       help='Source database for ID mapping')
+    parser.add_argument('--to', dest='to_db',
+                       help='Target database for ID mapping')
+
+    args = parser.parse_args()
+
+    try:
+        if args.list_fields:
+            fields = get_available_fields()
+            print(json.dumps(fields, indent=2))
+
+        elif args.list_databases:
+            databases = get_id_mapping_databases()
+            print(json.dumps(databases, indent=2))
+
+        elif args.search:
+            fields_list = args.fields.split(',') if args.fields else None
+            results = search_proteins(
+                args.search,
+                format=args.format,
+                fields=fields_list,
+                size=args.size
+            )
+            if args.format == 'json':
+                print(json.dumps(results, indent=2))
+            else:
+                print(results)
+
+        elif args.get:
+            protein = get_protein(args.get, format=args.format)
+            if args.format == 'json':
+                print(json.dumps(protein, indent=2))
+            else:
+                print(protein)
+
+        elif args.map:
+            if not args.from_db or not args.to_db:
+                parser.error("--map requires --from and --to arguments")
+
+            ids = [id.strip() for id in args.map.split(',')]
+            mapping = map_ids(ids, args.from_db, args.to_db, format=args.format)
+            if args.format == 'json':
+                print(json.dumps(mapping, indent=2))
+            else:
+                print(mapping)
+
+        elif args.stream:
+            fields_list = args.fields.split(',') if args.fields else None
+            for chunk in stream_results(args.stream, format=args.format, fields=fields_list):
+                print(chunk, end='')
+
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
 if __name__ == "__main__":
-    # Example 1: Search for human insulin proteins
-    print("Searching for human insulin proteins...")
-    results = search_proteins(
-        "insulin AND organism_name:human AND reviewed:true",
-        format="json",
-        fields=["accession", "id", "gene_names", "protein_name"],
-        size=5
-    )
-    print(json.dumps(results, indent=2))
-
-    # Example 2: Get a specific protein in FASTA format
-    print("\nRetrieving protein P01308 (human insulin)...")
-    protein = get_protein("P01308", format="fasta")
-    print(protein)
-
-    # Example 3: Map UniProt IDs to PDB IDs
-    print("\nMapping UniProt IDs to PDB...")
-    mapping = map_ids(
-        ["P01308", "P04637"],
-        from_db="UniProtKB_AC-ID",
-        to_db="PDB"
-    )
-    print(json.dumps(mapping, indent=2))
+    main()
