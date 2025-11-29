@@ -225,35 +225,83 @@ class TrademarkClient:
 
 def main():
     """Command-line interface for trademark search."""
-    if len(sys.argv) < 2:
-        print("Usage:")
-        print("  python trademark_client.py <serial_or_registration_number>")
-        print("  python trademark_client.py --status <number>")
-        print("  python trademark_client.py --health <number>")
-        print("  python trademark_client.py --goods <number>")
-        sys.exit(1)
+    import argparse
 
-    client = TrademarkClient()
+    parser = argparse.ArgumentParser(
+        description='Query USPTO Trademark Status & Document Retrieval (TSDR) API',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Get trademark by serial number
+  %(prog)s --serial 87654321
+
+  # Get trademark by registration number
+  %(prog)s --registration 5678901
+
+  # Get status summary
+  %(prog)s --status 87654321
+
+  # Check trademark health
+  %(prog)s --health 87654321
+
+  # Get goods and services
+  %(prog)s --goods 87654321
+
+  # Get owner information
+  %(prog)s --owner 87654321
+
+  # Get prosecution history
+  %(prog)s --prosecution 87654321
+
+Environment:
+  Set USPTO_API_KEY environment variable with your API key from:
+  https://account.uspto.gov/api-manager/
+        """
+    )
+
+    # Main operation arguments (mutually exclusive)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--serial', '-s', help='Get trademark by serial number')
+    group.add_argument('--registration', '-r', help='Get trademark by registration number')
+    group.add_argument('--status', help='Get status summary (serial or registration number)')
+    group.add_argument('--health', help='Check trademark health (serial or registration number)')
+    group.add_argument('--goods', '-g', help='Get goods and services (serial or registration number)')
+    group.add_argument('--owner', '-o', help='Get owner information (serial or registration number)')
+    group.add_argument('--prosecution', '-p', help='Get prosecution history (serial or registration number)')
+
+    # API key option
+    parser.add_argument('--api-key', '-k', help='USPTO API key (overrides USPTO_API_KEY env var)')
+
+    args = parser.parse_args()
 
     try:
-        if sys.argv[1] == "--status":
-            result = client.get_trademark_status(sys.argv[2])
-        elif sys.argv[1] == "--health":
-            result = client.check_trademark_health(sys.argv[2])
-        elif sys.argv[1] == "--goods":
-            result = client.get_goods_and_services(sys.argv[2])
-        else:
-            # Get full trademark data
-            result = client.get_trademark_by_serial(sys.argv[1])
-            if not result:
-                result = client.get_trademark_by_registration(sys.argv[1])
+        client = TrademarkClient(api_key=args.api_key)
+
+        if args.serial:
+            result = client.get_trademark_by_serial(args.serial)
+        elif args.registration:
+            result = client.get_trademark_by_registration(args.registration)
+        elif args.status:
+            result = client.get_trademark_status(args.status)
+        elif args.health:
+            result = client.check_trademark_health(args.health)
+        elif args.goods:
+            result = client.get_goods_and_services(args.goods)
+        elif args.owner:
+            result = client.get_owner_info(args.owner)
+        elif args.prosecution:
+            result = client.get_prosecution_history(args.prosecution)
 
         if result:
             print(json.dumps(result, indent=2))
         else:
-            print(f"Trademark {sys.argv[1]} not found", file=sys.stderr)
+            number = (args.serial or args.registration or args.status or
+                     args.health or args.goods or args.owner or args.prosecution)
+            print(f"Trademark {number} not found", file=sys.stderr)
             sys.exit(1)
 
+    except ValueError as e:
+        parser.error(str(e))
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
