@@ -25,6 +25,7 @@ This document provides comprehensive, practical examples demonstrating how to co
 17. [Clinical Research & Real-World Evidence](#clinical-research--real-world-evidence)
 18. [Experimental Physics & Data Analysis](#experimental-physics--data-analysis)
 19. [Chemical Engineering & Process Optimization](#chemical-engineering--process-optimization)
+20. [Scientific Illustration & Visual Communication](#scientific-illustration--visual-communication)
 
 ---
 
@@ -2486,6 +2487,152 @@ Expected Output:
 - Economic feasibility analysis
 - Safety assessment
 - Comprehensive chemical engineering design report
+```
+
+---
+
+## Scientific Illustration & Visual Communication
+
+### Example 20: Creating Publication-Ready Scientific Figures
+
+**Objective**: Generate and refine scientific illustrations, diagrams, and graphical abstracts for publications and presentations.
+
+**Skills Used**:
+- `generate-image` - AI image generation and editing
+- `matplotlib` - Data visualization
+- `scientific-visualization` - Best practices
+- `scientific-writing` - Figure caption creation
+- `reportlab` - PDF report generation
+
+**Workflow**:
+
+```bash
+Step 1: Plan visual communication strategy
+- Identify key concepts that need visual representation:
+  * Experimental workflow diagrams
+  * Molecular structures and interactions
+  * Data visualization (handled by matplotlib)
+  * Conceptual illustrations for mechanisms
+  * Graphical abstract for paper summary
+- Determine appropriate style for target journal/audience
+- Sketch rough layouts for each figure
+
+Step 2: Generate experimental workflow diagram
+- Use generate-image skill with detailed prompt:
+  "Scientific illustration showing a step-by-step experimental 
+  workflow for CRISPR gene editing: (1) guide RNA design at computer,
+  (2) cell culture in petri dish, (3) electroporation device,
+  (4) selection with antibiotics, (5) sequencing validation.
+  Clean, professional style with numbered steps, white background,
+  suitable for scientific publication."
+- Save as workflow_diagram.png
+- Review and iterate on prompt if needed
+
+Step 3: Create molecular interaction schematic
+- Generate detailed molecular visualization:
+  "Scientific diagram of protein-ligand binding mechanism:
+  show receptor protein (blue ribbon structure) with binding pocket,
+  small molecule ligand (ball-and-stick, orange) approaching,
+  key hydrogen bonds indicated with dashed lines, water molecules
+  in binding site. Professional biochemistry illustration style,
+  clean white background, publication quality."
+- Generate multiple versions with different angles/styles
+- Select best representation
+
+Step 4: Edit existing figures for consistency
+- Load existing figure that needs modification:
+  python scripts/generate_image.py "Change the background to white
+  and make the protein blue instead of green" --input figure1.png
+- Standardize color schemes across all figures
+- Edit to match journal style guidelines:
+  python scripts/generate_image.py "Remove the title text and
+  increase contrast for print publication" --input diagram.png
+
+Step 5: Generate graphical abstract
+- Create comprehensive visual summary:
+  "Graphical abstract for cancer immunotherapy paper: left side
+  shows tumor cells (irregular shapes, red) being attacked by
+  T cells (round, blue). Center shows the drug molecule structure.
+  Right side shows healthy tissue (green). Arrow flow from left
+  to right indicating treatment progression. Modern, clean style
+  with minimal text, high contrast, suitable for journal TOC."
+- Ensure dimensions meet journal requirements
+- Iterate to highlight key findings
+
+Step 6: Create conceptual mechanism illustrations
+- Generate mechanism diagrams:
+  "Scientific illustration of enzyme catalysis mechanism:
+  Show substrate entering active site (step 1), transition state
+  formation with electron movement arrows (step 2), product
+  release (step 3). Use standard biochemistry notation,
+  curved arrows for electron movement, clear labeling."
+- Generate alternative representations for supplementary materials
+
+Step 7: Produce presentation-ready figures
+- Create high-impact visuals for talks:
+  "Eye-catching scientific illustration of DNA double helix
+  unwinding during replication, with DNA polymerase (large
+  green structure) adding nucleotides. Dynamic composition,
+  vibrant but professional colors, dark background for
+  presentation slides."
+- Adjust style for poster vs slide format
+- Create versions at different resolutions
+
+Step 8: Generate figure panels for multi-part figures
+- Create consistent series of related images:
+  "Panel A: Normal cell with intact membrane (green outline)
+  Panel B: Cell under oxidative stress with damaged membrane
+  Panel C: Cell treated with antioxidant, membrane recovering
+  Consistent style across all panels, same scale, white background,
+  scientific illustration style suitable for publication."
+- Ensure visual consistency across panels
+- Annotate with panel labels
+
+Step 9: Edit for accessibility
+- Modify figures for colorblind accessibility:
+  python scripts/generate_image.py "Change the red and green
+  elements to blue and orange for colorblind accessibility,
+  maintain all other aspects" --input figure_v1.png
+- Add patterns or textures for additional differentiation
+- Verify contrast meets accessibility standards
+
+Step 10: Create supplementary visual materials
+- Generate additional context figures:
+  "Anatomical diagram showing location of pancreatic islets
+  within the pancreas, cross-section view with labeled structures:
+  alpha cells, beta cells, blood vessels. Medical illustration
+  style, educational, suitable for supplementary materials."
+- Create protocol flowcharts and decision trees
+- Generate equipment setup diagrams
+
+Step 11: Compile figure legends and captions
+- Use scientific-writing skill to create descriptions:
+  * Figure number and title
+  * Detailed description of what is shown
+  * Explanation of symbols, colors, and abbreviations
+  * Scale bars and measurement units
+  * Statistical information if applicable
+- Format according to journal guidelines
+
+Step 12: Assemble final publication package
+- Organize all figures in publication order
+- Create high-resolution exports (300+ DPI for print)
+- Generate both RGB (web) and CMYK (print) versions
+- Compile into PDF using ReportLab:
+  * Title page with graphical abstract
+  * All figures with captions
+  * Supplementary figures section
+- Create separate folder with individual figure files
+- Document all generation prompts for reproducibility
+
+Expected Output:
+- Complete set of publication-ready scientific illustrations
+- Graphical abstract for table of contents
+- Mechanism diagrams and workflow figures
+- Edited versions meeting journal style guidelines
+- Accessibility-compliant figure versions
+- Figure package with captions and metadata
+- Documentation of prompts used for reproducibility
 ```
 
 ---
