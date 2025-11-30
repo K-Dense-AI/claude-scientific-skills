@@ -213,30 +213,62 @@ class PEDSHelper:
 
 def main():
     """Command-line interface for PEDS data."""
-    if len(sys.argv) < 2:
-        print("Usage:")
-        print("  python peds_client.py <application_number>")
-        print("  python peds_client.py --patent <patent_number>")
-        print("  python peds_client.py --status <application_number>")
-        print("  python peds_client.py --analyze <application_number>")
-        sys.exit(1)
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Query USPTO Patent Examination Data System (PEDS)',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Get application data by application number
+  %(prog)s --application 16123456
+
+  # Get patent data by patent number
+  %(prog)s --patent 11234567
+
+  # Get status summary
+  %(prog)s --status 16123456
+
+  # Analyze prosecution history
+  %(prog)s --analyze 16123456
+
+  # Get transaction history
+  %(prog)s --transactions 16123456
+
+  # Get office actions
+  %(prog)s --office-actions 16123456
+        """
+    )
 
     if not HAS_USPTO_LIB:
-        print("Error: uspto-opendata-python library not installed")
-        print("Install with: pip install uspto-opendata-python")
-        sys.exit(1)
+        parser.error("uspto-opendata-python library not installed. Install with: pip install uspto-opendata-python")
 
-    helper = PEDSHelper()
+    # Main operation arguments (mutually exclusive)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--application', '-a', help='Get application by application number')
+    group.add_argument('--patent', '-p', help='Get patent by patent number')
+    group.add_argument('--status', '-s', help='Get status summary for application')
+    group.add_argument('--analyze', help='Analyze prosecution history for application')
+    group.add_argument('--transactions', '-t', help='Get transaction history for application')
+    group.add_argument('--office-actions', '-o', help='Get office actions for application')
+
+    args = parser.parse_args()
 
     try:
-        if sys.argv[1] == "--patent":
-            result = helper.get_patent(sys.argv[2])
-        elif sys.argv[1] == "--status":
-            result = helper.get_status_summary(sys.argv[2])
-        elif sys.argv[1] == "--analyze":
-            result = helper.analyze_prosecution(sys.argv[2])
-        else:
-            result = helper.get_application(sys.argv[1])
+        helper = PEDSHelper()
+
+        if args.application:
+            result = helper.get_application(args.application)
+        elif args.patent:
+            result = helper.get_patent(args.patent)
+        elif args.status:
+            result = helper.get_status_summary(args.status)
+        elif args.analyze:
+            result = helper.analyze_prosecution(args.analyze)
+        elif args.transactions:
+            result = helper.get_transaction_history(args.transactions)
+        elif args.office_actions:
+            result = helper.get_office_actions(args.office_actions)
 
         if result:
             print(json.dumps(result, indent=2))
