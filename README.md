@@ -1,9 +1,9 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-123-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-124-brightgreen.svg)](#whats-included)
 
-A comprehensive collection of **123+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **124+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 These skills enable Claude to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
@@ -32,7 +32,7 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **123+ scientific skills** organized into the following categories:
+This repository provides **124+ scientific skills** organized into the following categories:
 
 - **26+ Scientific Databases** - Direct API access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
 - **52+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, GeoPandas, and others
@@ -78,7 +78,7 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **123+ Skills** - Extensive coverage across all major scientific domains
+- **124+ Skills** - Extensive coverage across all major scientific domains
 - **26+ Databases** - Direct access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, and more
 - **52+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, GeoPandas, and others
 

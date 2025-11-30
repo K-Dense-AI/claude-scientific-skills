@@ -69,6 +69,7 @@
         "./scientific-skills/pysam",
         "./scientific-skills/pytdc",
         "./scientific-skills/pytorch-lightning",
+        "./scientific-skills/qutip",
         "./scientific-skills/rdkit",
         "./scientific-skills/reportlab",
         "./scientific-skills/scanpy",
