@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.5.1"
+    "version": "2.6.0"
   },
   "plugins": [
     {
@@ -71,6 +71,7 @@
         "./scientific-skills/pysam",
         "./scientific-skills/pytdc",
         "./scientific-skills/pytorch-lightning",
+        "./scientific-skills/qiskit",
         "./scientific-skills/qutip",
         "./scientific-skills/rdkit",
         "./scientific-skills/reportlab",
