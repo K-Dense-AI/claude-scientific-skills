@@ -25,6 +25,7 @@
         "./scientific-skills/biopython",
         "./scientific-skills/bioservices",
         "./scientific-skills/cellxgene-census",
+        "./scientific-skills/cirq",
         "./scientific-skills/cobrapy",
         "./scientific-skills/dask",
         "./scientific-skills/datacommons-client",
