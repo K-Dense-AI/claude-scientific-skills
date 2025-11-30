@@ -1,9 +1,9 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-126-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-127-brightgreen.svg)](#whats-included)
 
-A comprehensive collection of **126+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **127+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 These skills enable Claude to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
@@ -32,10 +32,10 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **126+ scientific skills** organized into the following categories:
+This repository provides **127+ scientific skills** organized into the following categories:
 
 - **26+ Scientific Databases** - Direct API access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
-- **53+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, PennyLane, and others
+- **54+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, PennyLane, Qiskit, and others
 - **15+ Scientific Integrations** - Benchling, DNAnexus, LatchBio, OMERO, Protocols.io, and more
 - **20+ Analysis & Communication Tools** - Literature review, scientific writing, peer review, document processing
 
@@ -78,9 +78,9 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **126+ Skills** - Extensive coverage across all major scientific domains
+- **127+ Skills** - Extensive coverage across all major scientific domains
 - **26+ Databases** - Direct access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, and more
-- **53+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, PennyLane, and others
+- **54+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, PennyLane, Qiskit, and others
 
 ### 🔧 **Easy Integration**
 - **One-Click Setup** - Install via Claude Code or MCP server
@@ -374,11 +374,11 @@ This repository contains **122+ scientific skills** organized across multiple do
 - Dimensionality reduction: UMAP-learn
 - Statistical modeling: statsmodels
 
-#### 🔮 **Materials Science, Chemistry & Physics** (4 skills)
+#### 🔮 **Materials Science, Chemistry & Physics** (7 skills)
 - Materials: Pymatgen
 - Metabolic modeling: COBRApy
 - Astronomy: Astropy
-- Quantum computing: Cirq
+- Quantum computing: Cirq, PennyLane, Qiskit, QuTiP
 
 #### ⚙️ **Engineering & Simulation** (3 skills)
 - Computational fluid dynamics: FluidSim
