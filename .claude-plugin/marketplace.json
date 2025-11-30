@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.6.0"
+    "version": "2.7.0"
   },
   "plugins": [
     {
@@ -105,6 +105,7 @@
         "./scientific-skills/ensembl-database",
         "./scientific-skills/fda-database",
         "./scientific-skills/gene-database",
+        "./scientific-skills/generate-image",
         "./scientific-skills/geo-database",
         "./scientific-skills/gwas-database",
         "./scientific-skills/hmdb-database",
