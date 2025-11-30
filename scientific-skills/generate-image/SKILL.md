@@ -1,6 +1,6 @@
 ---
 name: generate-image
-description: Generate or edit scientific illustrations, schematics and images. Also use if the user mentions specific models like "Flux" or "Nano Banana".
+description: Generate or edit images using AI models (FLUX, Gemini). Use for scientific illustrations, diagrams, schematics, infographics, concept visualizations, and artistic images. Supports image editing to modify existing images (change colors, add/remove elements, style transfer). Useful for figures, posters, and visual explanations.
 ---
 
 # Generate Image
