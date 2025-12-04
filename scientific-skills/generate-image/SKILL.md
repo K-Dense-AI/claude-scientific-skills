@@ -43,12 +43,12 @@ The script will automatically detect the `.env` file and provide clear error mes
 - `black-forest-labs/flux.2-pro` - Fast, high quality, supports generation + editing
 
 **Generation only**:
-- `black-forest-labs/flux.2-dev` - Development version, generation only
+- `black-forest-labs/flux.2-flex` - Fast and cheap, but not as high quality as pro
 
 Select based on:
-- **Quality**: Use gemini-3-pro or flux.2-pro
-- **Editing**: Use gemini-3-pro or flux.2-pro (both support image editing)
-- **Cost**: Use flux.2-dev for generation only
+- **Quality**: Use gemini-3-pro or flux.2-flex
+- **Editing**: Use gemini-3-pro or flux.2-flex (both support image editing)
+- **Cost**: Use flux.2-flex for generation only
 
 ## Common Usage Patterns
 

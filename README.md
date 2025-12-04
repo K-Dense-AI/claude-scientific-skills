@@ -413,7 +413,7 @@ This repository contains **123+ scientific skills** organized across multiple do
 - Writing: Scientific Writing, Peer Review
 - Document processing: DOCX, PDF, PPTX, XLSX, MarkItDown
 - Publishing: Paper-2-Web
-- Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3 Pro)
+- Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3 Pro (Nano Banana Pro))
 
 #### 🔬 **Scientific Databases** (27+ skills)
 - Protein: UniProt, PDB, AlphaFold DB

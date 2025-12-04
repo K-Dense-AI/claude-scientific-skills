@@ -5,7 +5,7 @@ Generate and edit images using OpenRouter API with various image generation mode
 Supports models like:
 - google/gemini-3-pro-image-preview (generation and editing)
 - black-forest-labs/flux.2-pro (generation and editing)
-- black-forest-labs/flux.2-dev (generation)
+- black-forest-labs/flux.2-flex (generation)
 - And more image generation models available on OpenRouter
 
 For image editing, provide an input image along with an editing prompt.
@@ -230,7 +230,7 @@ Examples:
 Popular image models:
   - google/gemini-3-pro-image-preview (default, high quality, generation + editing)
   - black-forest-labs/flux.2-pro (fast, high quality, generation + editing)
-  - black-forest-labs/flux.2-dev (development version)
+  - black-forest-labs/flux.2-flex (development version)
         """
     )
 
