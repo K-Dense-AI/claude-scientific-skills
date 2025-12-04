@@ -415,7 +415,7 @@ This repository contains **123+ scientific skills** organized across multiple do
 - Publishing: Paper-2-Web
 - Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3 Pro)
 
-#### 🔬 **Scientific Databases** (26+ skills)
+#### 🔬 **Scientific Databases** (27+ skills)
 - Protein: UniProt, PDB, AlphaFold DB
 - Chemical: PubChem, ChEMBL, DrugBank, ZINC, HMDB
 - Genomic: Ensembl, NCBI Gene, GEO, ENA, GWAS Catalog
@@ -423,6 +423,7 @@ This repository contains **123+ scientific skills** organized across multiple do
 - Pathways: KEGG, Reactome, STRING
 - Targets: Open Targets
 - Metabolomics: Metabolomics Workbench
+- Enzymes: BRENDA
 - Patents: USPTO
 
 #### 🔧 **Infrastructure & Platforms** (5+ skills)
