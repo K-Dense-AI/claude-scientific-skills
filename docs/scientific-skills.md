@@ -182,8 +182,5 @@
 - **Statistical Analysis** - Comprehensive statistical testing, power analysis, and experimental design
 
 ### Document Processing
-- **DOCX** - Comprehensive document creation, editing, and analysis with support for tracked changes, comments, formatting preservation, and text extraction
-- **PDF** - PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms
-- **PPTX** - Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes
 - **XLSX** - Spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization
 
