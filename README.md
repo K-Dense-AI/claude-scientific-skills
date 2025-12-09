@@ -1,5 +1,8 @@
 # Claude Scientific Skills
 
+[![Run in Smithery](https://smithery.ai/badge/skills/k-dense-ai)](https://smithery.ai/skills?ns=k-dense-ai&utm_source=github&utm_medium=badge)
+
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Skills](https://img.shields.io/badge/Skills-125-brightgreen.svg)](#whats-included)
 
