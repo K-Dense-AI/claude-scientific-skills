@@ -1,317 +1,228 @@
 #!/usr/bin/env python3
 """
-Batch conversion utility for MarkItDown.
+Batch convert multiple files to Markdown using MarkItDown.
 
-Converts all supported files in a directory to Markdown format.
+This script demonstrates how to efficiently convert multiple files
+in a directory to Markdown format.
 """
 
-import os
-import sys
-from pathlib import Path
-from markitdown import MarkItDown
-from typing import Optional, List
 import argparse
+from pathlib import Path
+from typing import List, Optional
+from markitdown import MarkItDown
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import sys
 
 
-# Supported file extensions
-SUPPORTED_EXTENSIONS = {
-    '.pdf', '.docx', '.pptx', '.xlsx', '.xls',
-    '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff',
-    '.wav', '.mp3', '.flac', '.ogg', '.aiff',
-    '.html', '.htm', '.epub',
-    '.csv', '.json', '.xml',
-    '.zip'
-}
-
-
-def setup_markitdown(
-    use_llm: bool = False,
-    llm_model: str = "gpt-4o",
-    use_azure_di: bool = False,
-    azure_endpoint: Optional[str] = None,
-    azure_key: Optional[str] = None
-) -> MarkItDown:
-    """
-    Setup MarkItDown instance with optional advanced features.
-
-    Args:
-        use_llm: Enable LLM-powered image descriptions
-        llm_model: LLM model to use (default: gpt-4o)
-        use_azure_di: Enable Azure Document Intelligence
-        azure_endpoint: Azure Document Intelligence endpoint
-        azure_key: Azure Document Intelligence API key
-
-    Returns:
-        Configured MarkItDown instance
-    """
-    kwargs = {}
-
-    if use_llm:
-        try:
-            from openai import OpenAI
-            client = OpenAI()
-            kwargs['llm_client'] = client
-            kwargs['llm_model'] = llm_model
-            print(f"✓ LLM integration enabled ({llm_model})")
-        except ImportError:
-            print("✗ Warning: OpenAI not installed, LLM features disabled")
-            print("  Install with: pip install openai")
-
-    if use_azure_di:
-        if azure_endpoint and azure_key:
-            kwargs['docintel_endpoint'] = azure_endpoint
-            kwargs['docintel_key'] = azure_key
-            print("✓ Azure Document Intelligence enabled")
-        else:
-            print("✗ Warning: Azure credentials not provided, Azure DI disabled")
-
-    return MarkItDown(**kwargs)
-
-
-def convert_file(
-    md: MarkItDown,
-    input_path: Path,
-    output_dir: Path,
-    verbose: bool = False
-) -> bool:
+def convert_file(md: MarkItDown, file_path: Path, output_dir: Path, verbose: bool = False) -> tuple[bool, str, str]:
     """
     Convert a single file to Markdown.
-
+    
     Args:
         md: MarkItDown instance
-        input_path: Path to input file
+        file_path: Path to input file
         output_dir: Directory for output files
-        verbose: Print detailed progress
-
+        verbose: Print detailed messages
+        
     Returns:
-        True if successful, False otherwise
+        Tuple of (success, input_path, message)
     """
     try:
         if verbose:
-            print(f"  Processing: {input_path.name}")
-
-        # Convert file
-        result = md.convert(str(input_path))
-
-        # Create output filename
-        output_filename = input_path.stem + '.md'
-        output_path = output_dir / output_filename
-
-        # Write output
-        with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(result.text_content)
-
-        if verbose:
-            print(f"  ✓ Converted: {input_path.name} → {output_filename}")
-
-        return True
-
+            print(f"Converting: {file_path}")
+        
+        result = md.convert(str(file_path))
+        
+        # Create output path
+        output_file = output_dir / f"{file_path.stem}.md"
+        
+        # Write content with metadata header
+        content = f"# {result.title or file_path.stem}\n\n"
+        content += f"**Source**: {file_path.name}\n"
+        content += f"**Format**: {file_path.suffix}\n\n"
+        content += "---\n\n"
+        content += result.text_content
+        
+        output_file.write_text(content, encoding='utf-8')
+        
+        return True, str(file_path), f"✓ Converted to {output_file.name}"
+        
     except Exception as e:
-        print(f"  ✗ Error converting {input_path.name}: {e}")
-        return False
-
-
-def find_files(input_dir: Path, recursive: bool = False) -> List[Path]:
-    """
-    Find all supported files in directory.
-
-    Args:
-        input_dir: Directory to search
-        recursive: Search subdirectories
-
-    Returns:
-        List of file paths
-    """
-    files = []
-
-    if recursive:
-        for ext in SUPPORTED_EXTENSIONS:
-            files.extend(input_dir.rglob(f"*{ext}"))
-    else:
-        for ext in SUPPORTED_EXTENSIONS:
-            files.extend(input_dir.glob(f"*{ext}"))
-
-    return sorted(files)
+        return False, str(file_path), f"✗ Error: {str(e)}"
 
 
 def batch_convert(
-    input_dir: str,
-    output_dir: str,
+    input_dir: Path,
+    output_dir: Path,
+    extensions: Optional[List[str]] = None,
     recursive: bool = False,
-    use_llm: bool = False,
-    llm_model: str = "gpt-4o",
-    use_azure_di: bool = False,
-    azure_endpoint: Optional[str] = None,
-    azure_key: Optional[str] = None,
-    verbose: bool = False
-) -> None:
+    workers: int = 4,
+    verbose: bool = False,
+    enable_plugins: bool = False
+) -> dict:
     """
-    Batch convert all supported files in a directory.
-
+    Batch convert files in a directory.
+    
     Args:
-        input_dir: Input directory containing files
-        output_dir: Output directory for Markdown files
+        input_dir: Input directory
+        output_dir: Output directory
+        extensions: List of file extensions to convert (e.g., ['.pdf', '.docx'])
         recursive: Search subdirectories
-        use_llm: Enable LLM-powered descriptions
-        llm_model: LLM model to use
-        use_azure_di: Enable Azure Document Intelligence
-        azure_endpoint: Azure DI endpoint
-        azure_key: Azure DI API key
-        verbose: Print detailed progress
+        workers: Number of parallel workers
+        verbose: Print detailed messages
+        enable_plugins: Enable MarkItDown plugins
+        
+    Returns:
+        Dictionary with conversion statistics
     """
-    input_path = Path(input_dir)
-    output_path = Path(output_dir)
-
-    # Validate input directory
-    if not input_path.exists():
-        print(f"✗ Error: Input directory '{input_dir}' does not exist")
-        sys.exit(1)
-
-    if not input_path.is_dir():
-        print(f"✗ Error: '{input_dir}' is not a directory")
-        sys.exit(1)
-
     # Create output directory
-    output_path.mkdir(parents=True, exist_ok=True)
-
-    # Setup MarkItDown
-    print("Setting up MarkItDown...")
-    md = setup_markitdown(
-        use_llm=use_llm,
-        llm_model=llm_model,
-        use_azure_di=use_azure_di,
-        azure_endpoint=azure_endpoint,
-        azure_key=azure_key
-    )
-
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Default extensions if not specified
+    if extensions is None:
+        extensions = ['.pdf', '.docx', '.pptx', '.xlsx', '.html', '.jpg', '.png']
+    
     # Find files
-    print(f"\nScanning directory: {input_dir}")
+    files = []
     if recursive:
-        print("  (including subdirectories)")
-
-    files = find_files(input_path, recursive)
-
+        for ext in extensions:
+            files.extend(input_dir.rglob(f"*{ext}"))
+    else:
+        for ext in extensions:
+            files.extend(input_dir.glob(f"*{ext}"))
+    
     if not files:
-        print("✗ No supported files found")
-        print(f"  Supported extensions: {', '.join(sorted(SUPPORTED_EXTENSIONS))}")
-        sys.exit(0)
-
-    print(f"✓ Found {len(files)} file(s) to convert\n")
-
-    # Convert files
-    successful = 0
-    failed = 0
-
-    for file_path in files:
-        if convert_file(md, file_path, output_path, verbose):
-            successful += 1
-        else:
-            failed += 1
-
-    # Summary
-    print(f"\n{'='*60}")
-    print(f"Conversion complete!")
-    print(f"  Successful: {successful}")
-    print(f"  Failed:     {failed}")
-    print(f"  Output:     {output_dir}")
-    print(f"{'='*60}")
+        print(f"No files found with extensions: {', '.join(extensions)}")
+        return {'total': 0, 'success': 0, 'failed': 0}
+    
+    print(f"Found {len(files)} file(s) to convert")
+    
+    # Create MarkItDown instance
+    md = MarkItDown(enable_plugins=enable_plugins)
+    
+    # Convert files in parallel
+    results = {
+        'total': len(files),
+        'success': 0,
+        'failed': 0,
+        'details': []
+    }
+    
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(convert_file, md, file_path, output_dir, verbose): file_path
+            for file_path in files
+        }
+        
+        for future in as_completed(futures):
+            success, path, message = future.result()
+            
+            if success:
+                results['success'] += 1
+            else:
+                results['failed'] += 1
+            
+            results['details'].append({
+                'file': path,
+                'success': success,
+                'message': message
+            })
+            
+            print(message)
+    
+    return results
 
 
 def main():
-    """Main entry point."""
     parser = argparse.ArgumentParser(
         description="Batch convert files to Markdown using MarkItDown",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Basic usage
-  python batch_convert.py documents/ output/
-
-  # Recursive conversion
-  python batch_convert.py documents/ output/ --recursive
-
-  # With LLM-powered image descriptions
-  python batch_convert.py documents/ output/ --llm
-
-  # With Azure Document Intelligence
-  python batch_convert.py documents/ output/ --azure \\
-      --azure-endpoint https://example.cognitiveservices.azure.com/ \\
-      --azure-key YOUR-KEY
-
-  # All features enabled
-  python batch_convert.py documents/ output/ --llm --azure \\
-      --azure-endpoint $AZURE_ENDPOINT --azure-key $AZURE_KEY
-
-Supported file types:
-  Documents: PDF, DOCX, PPTX, XLSX, XLS
-  Images:    JPG, PNG, GIF, BMP, TIFF
-  Audio:     WAV, MP3, FLAC, OGG, AIFF
-  Web:       HTML, EPUB
-  Data:      CSV, JSON, XML
-  Archives:  ZIP
+  # Convert all PDFs in a directory
+  python batch_convert.py papers/ output/ --extensions .pdf
+  
+  # Convert multiple formats recursively
+  python batch_convert.py documents/ markdown/ --extensions .pdf .docx .pptx -r
+  
+  # Use 8 parallel workers
+  python batch_convert.py input/ output/ --workers 8
+  
+  # Enable plugins
+  python batch_convert.py input/ output/ --plugins
         """
     )
-
+    
+    parser.add_argument('input_dir', type=Path, help='Input directory')
+    parser.add_argument('output_dir', type=Path, help='Output directory')
     parser.add_argument(
-        'input_dir',
-        help='Input directory containing files to convert'
+        '--extensions', '-e',
+        nargs='+',
+        help='File extensions to convert (e.g., .pdf .docx)'
     )
     parser.add_argument(
-        'output_dir',
-        help='Output directory for Markdown files'
-    )
-    parser.add_argument(
-        '-r', '--recursive',
+        '--recursive', '-r',
         action='store_true',
-        help='Recursively search subdirectories'
+        help='Search subdirectories recursively'
     )
     parser.add_argument(
-        '--llm',
+        '--workers', '-w',
+        type=int,
+        default=4,
+        help='Number of parallel workers (default: 4)'
+    )
+    parser.add_argument(
+        '--verbose', '-v',
         action='store_true',
-        help='Enable LLM-powered image descriptions (requires OpenAI API key)'
+        help='Verbose output'
     )
     parser.add_argument(
-        '--llm-model',
-        default='gpt-4o',
-        help='LLM model to use (default: gpt-4o)'
-    )
-    parser.add_argument(
-        '--azure',
+        '--plugins', '-p',
         action='store_true',
-        help='Enable Azure Document Intelligence for PDFs'
+        help='Enable MarkItDown plugins'
     )
-    parser.add_argument(
-        '--azure-endpoint',
-        help='Azure Document Intelligence endpoint URL'
-    )
-    parser.add_argument(
-        '--azure-key',
-        help='Azure Document Intelligence API key'
-    )
-    parser.add_argument(
-        '-v', '--verbose',
-        action='store_true',
-        help='Print detailed progress'
-    )
-
+    
     args = parser.parse_args()
-
-    # Environment variable fallbacks for Azure
-    azure_endpoint = args.azure_endpoint or os.getenv('AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT')
-    azure_key = args.azure_key or os.getenv('AZURE_DOCUMENT_INTELLIGENCE_KEY')
-
-    batch_convert(
+    
+    # Validate input directory
+    if not args.input_dir.exists():
+        print(f"Error: Input directory '{args.input_dir}' does not exist")
+        sys.exit(1)
+    
+    if not args.input_dir.is_dir():
+        print(f"Error: '{args.input_dir}' is not a directory")
+        sys.exit(1)
+    
+    # Run batch conversion
+    results = batch_convert(
         input_dir=args.input_dir,
         output_dir=args.output_dir,
+        extensions=args.extensions,
         recursive=args.recursive,
-        use_llm=args.llm,
-        llm_model=args.llm_model,
-        use_azure_di=args.azure,
-        azure_endpoint=azure_endpoint,
-        azure_key=azure_key,
-        verbose=args.verbose
+        workers=args.workers,
+        verbose=args.verbose,
+        enable_plugins=args.plugins
     )
+    
+    # Print summary
+    print("\n" + "="*50)
+    print("CONVERSION SUMMARY")
+    print("="*50)
+    print(f"Total files:     {results['total']}")
+    print(f"Successful:      {results['success']}")
+    print(f"Failed:          {results['failed']}")
+    print(f"Success rate:    {results['success']/results['total']*100:.1f}%" if results['total'] > 0 else "N/A")
+    
+    # Show failed files if any
+    if results['failed'] > 0:
+        print("\nFailed conversions:")
+        for detail in results['details']:
+            if not detail['success']:
+                print(f"  - {detail['file']}: {detail['message']}")
+    
+    sys.exit(0 if results['failed'] == 0 else 1)
 
 
 if __name__ == '__main__':
     main()
+

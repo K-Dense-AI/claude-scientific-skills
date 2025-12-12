@@ -4,6 +4,8 @@
 
 This reference provides patterns and frameworks for designing experiments across scientific domains. Use these patterns to develop rigorous tests for generated hypotheses.
 
+**Note on Report Structure:** When generating hypothesis reports, mention only the key experimental approach (e.g., "in vivo knockout study" or "prospective cohort design") in the main text hypothesis boxes. Include comprehensive experimental protocols with full methods, controls, sample sizes, statistical approaches, feasibility assessments, and resource requirements in **Appendix B: Detailed Experimental Designs**.
+
 ## Design Selection Framework
 
 Choose experimental approaches based on:
