@@ -4,6 +4,8 @@
 
 Use these criteria to assess the quality and rigor of generated hypotheses. A robust hypothesis should score well across multiple dimensions.
 
+**Note on Report Structure:** When generating hypothesis reports, provide a brief quality assessment summary in the main text (comparative table with ratings), and include detailed evaluation with strengths, weaknesses, and comprehensive analysis in **Appendix C: Quality Assessment**.
+
 ## Core Criteria
 
 ### 1. Testability

@@ -367,6 +367,36 @@ Use WebSearch for:
 - What analogies exist in other systems?
 - What methods are commonly used?
 
+### Citation Organization for Hypothesis Reports
+
+**For report structure:** Organize citations for two audiences:
+
+**Main Text (15-20 key citations):**
+- Most influential papers (highly cited, seminal studies)
+- Recent definitive evidence (last 2-3 years)
+- Key papers directly supporting each hypothesis (3-5 per hypothesis)
+- Major reviews synthesizing the field
+
+**Appendix A: Comprehensive Literature Review (40-60+ citations):**
+- **Historical context:** Foundational papers establishing field
+- **Current understanding:** Recent reviews and meta-analyses
+- **Hypothesis-specific evidence:** 8-15 papers per hypothesis covering:
+  - Direct supporting evidence
+  - Analogous mechanisms in related systems
+  - Methodological precedents
+  - Theoretical framework papers
+- **Conflicting findings:** Papers representing different viewpoints
+- **Knowledge gaps:** Papers identifying limitations or unanswered questions
+
+**Target citation density:** Aim for 50+ total references to provide comprehensive support for all claims and demonstrate thorough literature grounding.
+
+**Grouping strategy for Appendix A:**
+1. Background and context papers
+2. Current understanding and established mechanisms
+3. Evidence supporting each hypothesis (separate subsections)
+4. Contradictory or alternative findings
+5. Methodological and technical papers
+
 ## Practical Search Workflow
 
 ### Step-by-Step Process
