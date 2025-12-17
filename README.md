@@ -357,7 +357,7 @@ This repository contains **125+ scientific skills** organized across multiple do
 
 #### 🏥 **Clinical Research & Precision Medicine** (8+ skills)
 - Clinical databases: ClinicalTrials.gov, ClinVar, ClinPGx, COSMIC, FDA Databases
-- Healthcare AI: PyHealth, NeuroKit2
+- Healthcare AI: PyHealth, NeuroKit2, Neuropixels-Analysis
 - Variant analysis: Ensembl, NCBI Gene
 
 #### 🖼️ **Medical Imaging & Digital Pathology** (3 skills)
