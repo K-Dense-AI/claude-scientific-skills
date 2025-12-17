@@ -19,7 +19,7 @@ import spikeinterface.full as si
 import numpy as np
 
 
-def load_recording(data_path: str, stream_name: str = 'imec0.ap') -> si.BaseRecording:
+def load_recording(data_path: str, stream_id: str = 'imec0.ap') -> si.BaseRecording:
     """Load a SpikeGLX or Open Ephys recording."""
 
     data_path = Path(data_path)
@@ -29,7 +29,7 @@ def load_recording(data_path: str, stream_name: str = 'imec0.ap') -> si.BaseReco
         # SpikeGLX format
         streams, _ = si.get_neo_streams('spikeglx', data_path)
         print(f"Available streams: {streams}")
-        recording = si.read_spikeglx(data_path, stream_name=stream_name)
+        recording = si.read_spikeglx(data_path, stream_id=stream_id)
     elif any(data_path.rglob('*.oebin')):
         # Open Ephys format
         recording = si.read_openephys(data_path)
@@ -184,7 +184,7 @@ def run_spike_sorting(
     sorting = si.run_sorter(
         sorter,
         recording,
-        output_folder=sorter_folder,
+        folder=sorter_folder,
         verbose=True
     )
 
