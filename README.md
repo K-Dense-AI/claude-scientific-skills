@@ -357,12 +357,15 @@ This repository contains **125+ scientific skills** organized across multiple do
 
 #### 🏥 **Clinical Research & Precision Medicine** (8+ skills)
 - Clinical databases: ClinicalTrials.gov, ClinVar, ClinPGx, COSMIC, FDA Databases
-- Healthcare AI: PyHealth, NeuroKit2, Neuropixels-Analysis
+- Healthcare AI: PyHealth, NeuroKit2
 - Variant analysis: Ensembl, NCBI Gene
 
 #### 🖼️ **Medical Imaging & Digital Pathology** (3 skills)
 - DICOM processing: pydicom
 - Whole slide imaging: histolab, PathML
+
+#### 🧠 **Neuroscience & Electrophysiology** (1 skill)
+- Neural recordings: Neuropixels-Analysis (extracellular spikes, silicon probes, spike sorting)
 
 #### 🤖 **Machine Learning & AI** (15+ skills)
 - Deep learning: PyTorch Lightning, Transformers, Stable Baselines3, PufferLib
