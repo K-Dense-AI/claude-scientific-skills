@@ -272,6 +272,33 @@ with open('papers.csv', 'w', newline='', encoding='utf-8') as f:
         ])
 ```
 
+
+### 13. BibTeX Generation
+
+**Use for**: Creating bibliography files from lists of papers. 
+
+```python
+from scripts.bibtex_converter import titles_to_bib, titles_authors_to_bib
+
+# From titles only
+titles = [
+    "Attention Is All You Need",
+    "Deep Residual Learning for Image Recognition"
+]
+bib = titles_to_bib(titles, client)
+
+# From title + author (more precise)
+papers = [
+    ("Recurrent Convolutional Neural Network Regression", "Zhou"),
+    ("Deep Pain: Exploiting Long Short-Term Memory", "Rodriguez")
+]
+bib_precise = titles_authors_to_bib(papers, client)
+
+# Save to file
+with open('references.bib', 'w') as f:
+    f.write(bib_precise)
+```
+
 ## Critical Best Practices
 
 ### Always Use Email for Polite Pool
@@ -451,6 +478,16 @@ High-level helper functions for common operations:
 - `analyze_research_output()` - Comprehensive analysis
 
 Use for common research queries with simplified interfaces.
+
+### bibtex_converter.py
+Tools for fetching references in BibTeX format directly, it converts results, use this when work requires referencing material for research:
+- `titles_to_bib()` - Convert list of titles to BibTeX
+- `titles_authors_to_bib()` - Convert list of (title, author) tuples to BibTeX
+- Automatic citation key generation
+- Handling of various publication types (articles, conference proceedings, etc.)
+
+**This is very usefull and should be used often**, use for generating bibliography files from paper lists.
+Use this when the user provide a specific set of papers, or the task at hand requires referencing specific set of papers that we know the title of.
 
 ## Troubleshooting
 
