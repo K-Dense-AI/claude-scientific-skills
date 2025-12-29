@@ -1,28 +1,29 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-125-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-138-brightgreen.svg)](#whats-included)
 
 > 💼 For substantially more advanced capabilities, compute infrastructure, and enterprise-ready offerings, check out [k-dense.ai](https://k-dense.ai/).
 
-A comprehensive collection of **125+ ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **138 ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 These skills enable Claude to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
 - 🧪 Cheminformatics & Drug Discovery - Molecular property prediction, virtual screening, ADMET analysis, molecular docking, lead optimization
 - 🔬 Proteomics & Mass Spectrometry - LC-MS/MS processing, peptide identification, spectral matching, protein quantification
-- 🏥 Clinical Research & Precision Medicine - Clinical trials, pharmacogenomics, variant interpretation, drug safety, precision therapeutics
+- 🏥 Clinical Research & Precision Medicine - Clinical trials, pharmacogenomics, variant interpretation, drug safety, clinical decision support, treatment planning
 - 🧠 Healthcare AI & Clinical ML - EHR analysis, physiological signal processing, medical imaging, clinical prediction models
 - 🖼️ Medical Imaging & Digital Pathology - DICOM processing, whole slide image analysis, computational pathology, radiology workflows
 - 🤖 Machine Learning & AI - Deep learning, reinforcement learning, time series analysis, model interpretability, Bayesian methods
 - 🔮 Materials Science & Chemistry - Crystal structure analysis, phase diagrams, metabolic modeling, computational chemistry
 - 🌌 Physics & Astronomy - Astronomical data analysis, coordinate transformations, cosmological calculations, symbolic mathematics, physics computations
 - ⚙️ Engineering & Simulation - Discrete-event simulation, multi-objective optimization, metabolic engineering, systems modeling, process optimization
-- 📊 Data Analysis & Visualization - Statistical analysis, network analysis, time series, publication-quality figures, large-scale data processing
+- 📊 Data Analysis & Visualization - Statistical analysis, network analysis, time series, publication-quality figures, large-scale data processing, EDA
 - 🧪 Laboratory Automation - Liquid handling protocols, lab equipment control, workflow automation, LIMS integration
-- 📚 Scientific Communication - Literature review, peer review, scientific writing, document processing, publication workflows
+- 📚 Scientific Communication - Literature review, peer review, scientific writing, document processing, posters, slides, schematics, citation management
 - 🔬 Multi-omics & Systems Biology - Multi-modal data integration, pathway analysis, network biology, systems-level insights
 - 🧬 Protein Engineering & Design - Protein language models, structure prediction, sequence design, function annotation
+- 🎓 Research Methodology - Hypothesis generation, scientific brainstorming, critical thinking, grant writing, scholar evaluation
 
 **Transform Claude Code into an 'AI Scientist' on your desktop!**
 
@@ -32,12 +33,13 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **125+ scientific skills** organized into the following categories:
+This repository provides **138 scientific skills** organized into the following categories:
 
-- **26+ Scientific Databases** - Direct API access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
-- **54+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, PennyLane, Qiskit, and others
+- **28+ Scientific Databases** - Direct API access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
+- **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, BioServices, PennyLane, Qiskit, and others
 - **15+ Scientific Integrations** - Benchling, DNAnexus, LatchBio, OMERO, Protocols.io, and more
-- **20+ Analysis & Communication Tools** - Literature review, scientific writing, peer review, document processing
+- **30+ Analysis & Communication Tools** - Literature review, scientific writing, peer review, document processing, posters, slides, schematics, and more
+- **10+ Research & Clinical Tools** - Hypothesis generation, grant writing, clinical decision support, treatment plans, regulatory compliance
 
 Each skill includes:
 - ✅ Comprehensive documentation (`SKILL.md`)
@@ -78,9 +80,9 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **125+ Skills** - Extensive coverage across all major scientific domains
-- **26+ Databases** - Direct access to OpenAlex, PubMed, ChEMBL, UniProt, COSMIC, and more
-- **54+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, PennyLane, Qiskit, and others
+- **138 Skills** - Extensive coverage across all major scientific domains
+- **28+ Databases** - Direct access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, and more
+- **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioServices, PennyLane, Qiskit, and others
 
 ### 🔧 **Easy Integration**
 - **One-Click Setup** - Install via Claude Code or MCP server
@@ -335,12 +337,12 @@ networks, and search GEO for similar patterns.
 
 ## 📚 Available Skills
 
-This repository contains **125+ scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
+This repository contains **138 scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
 
 ### Skill Categories
 
-#### 🧬 **Bioinformatics & Genomics** (15+ skills)
-- Sequence analysis: BioPython, pysam, scikit-bio
+#### 🧬 **Bioinformatics & Genomics** (16+ skills)
+- Sequence analysis: BioPython, pysam, scikit-bio, BioServices
 - Single-cell analysis: Scanpy, AnnData, scvi-tools, Arboreto, Cellxgene Census
 - Genomic tools: gget, geniml, gtars, deepTools, FlowIO, Zarr
 - Phylogenetics: ETE Toolkit
@@ -355,9 +357,10 @@ This repository contains **125+ scientific skills** organized across multiple do
 #### 🔬 **Proteomics & Mass Spectrometry** (2 skills)
 - Spectral processing: matchms, pyOpenMS
 
-#### 🏥 **Clinical Research & Precision Medicine** (8+ skills)
+#### 🏥 **Clinical Research & Precision Medicine** (12+ skills)
 - Clinical databases: ClinicalTrials.gov, ClinVar, ClinPGx, COSMIC, FDA Databases
-- Healthcare AI: PyHealth, NeuroKit2
+- Healthcare AI: PyHealth, NeuroKit2, Clinical Decision Support
+- Clinical documentation: Clinical Reports, Treatment Plans
 - Variant analysis: Ensembl, NCBI Gene
 
 #### 🖼️ **Medical Imaging & Digital Pathology** (3 skills)
@@ -388,13 +391,15 @@ This repository contains **125+ scientific skills** organized across multiple do
 - Discrete-event simulation: SimPy
 - Data processing: Dask, Polars, Vaex
 
-#### 📊 **Data Analysis & Visualization** (10+ skills)
-- Visualization: Matplotlib, Seaborn, Plotly
+#### 📊 **Data Analysis & Visualization** (14+ skills)
+- Visualization: Matplotlib, Seaborn, Plotly, Scientific Visualization
 - Geospatial analysis: GeoPandas
 - Network analysis: NetworkX
 - Symbolic math: SymPy
 - PDF generation: ReportLab
 - Data access: Data Commons
+- Exploratory data analysis: EDA workflows
+- Statistical analysis: Statistical Analysis workflows
 
 #### 🧪 **Laboratory Automation** (3 skills)
 - Liquid handling: PyLabRobot
@@ -410,18 +415,22 @@ This repository contains **125+ scientific skills** organized across multiple do
 - Protein language models: ESM
 - Cloud laboratory platform: Adaptyv (automated protein testing and validation)
 
-#### 📚 **Scientific Communication** (10+ skills)
-- Literature: OpenAlex, PubMed, Literature Review
+#### 📚 **Scientific Communication** (20+ skills)
+- Literature: OpenAlex, PubMed, bioRxiv, Literature Review
 - Web search: Perplexity Search (AI-powered search with real-time information)
 - Writing: Scientific Writing, Peer Review
-- Document processing: XLSX, MarkItDown
-- Publishing: Paper-2-Web
+- Document processing: XLSX, MarkItDown, Document Skills
+- Publishing: Paper-2-Web, Venue Templates
+- Presentations: Scientific Slides, LaTeX Posters, PPTX Posters
+- Diagrams: Scientific Schematics
+- Citations: Citation Management
 - Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3 Pro (Nano Banana Pro))
 
-#### 🔬 **Scientific Databases** (27+ skills)
+#### 🔬 **Scientific Databases** (28+ skills)
 - Protein: UniProt, PDB, AlphaFold DB
 - Chemical: PubChem, ChEMBL, DrugBank, ZINC, HMDB
 - Genomic: Ensembl, NCBI Gene, GEO, ENA, GWAS Catalog
+- Literature: bioRxiv (preprints)
 - Clinical: ClinVar, COSMIC, ClinicalTrials.gov, ClinPGx, FDA Databases
 - Pathways: KEGG, Reactome, STRING
 - Targets: Open Targets
@@ -429,12 +438,22 @@ This repository contains **125+ scientific skills** organized across multiple do
 - Enzymes: BRENDA
 - Patents: USPTO
 
-#### 🔧 **Infrastructure & Platforms** (5+ skills)
+#### 🔧 **Infrastructure & Platforms** (6+ skills)
 - Cloud compute: Modal
 - Genomics platforms: DNAnexus, LatchBio
 - Microscopy: OMERO
 - Automation: Opentrons
-- Tool discovery: ToolUniverse
+- Tool discovery: ToolUniverse, Get Available Resources
+
+#### 🎓 **Research Methodology & Planning** (8+ skills)
+- Ideation: Scientific Brainstorming, Hypothesis Generation
+- Critical analysis: Scientific Critical Thinking, Scholar Evaluation
+- Funding: Research Grants
+- Discovery: Research Lookup
+- Market analysis: Market Research Reports
+
+#### ⚖️ **Regulatory & Standards** (1 skill)
+- Medical device standards: ISO 13485 Certification
 
 > 📖 **For complete details on all skills**, see [docs/scientific-skills.md](docs/scientific-skills.md)
 
