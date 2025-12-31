@@ -1,6 +1,7 @@
 ---
 name: scientific-brainstorming
 description: "Research ideation partner. Generate hypotheses, explore interdisciplinary connections, challenge assumptions, develop methodologies, identify research gaps, for creative scientific problem-solving."
+license: MIT license
 metadata:
     skill-author: K-Dense Inc.
 ---

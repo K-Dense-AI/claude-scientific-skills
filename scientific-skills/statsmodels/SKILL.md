@@ -1,6 +1,7 @@
 ---
 name: statsmodels
 description: "Statistical modeling toolkit. OLS, GLM, logistic, ARIMA, time series, hypothesis tests, diagnostics, AIC/BIC, for rigorous statistical inference and econometric analysis."
+license: BSD-3-Clause license
 metadata:
     skill-author: K-Dense Inc.
 ---

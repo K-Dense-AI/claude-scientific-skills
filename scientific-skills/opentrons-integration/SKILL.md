@@ -1,6 +1,7 @@
 ---
 name: opentrons-integration
 description: "Lab automation platform for Flex/OT-2 robots. Write Protocol API v2 protocols, liquid handling, hardware modules (heater-shaker, thermocycler), labware management, for automated pipetting workflows."
+license: Unknown
 metadata:
     skill-author: K-Dense Inc.
 ---

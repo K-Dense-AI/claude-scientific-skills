@@ -1,6 +1,7 @@
 ---
 name: dask
 description: "Parallel/distributed computing. Scale pandas/NumPy beyond memory, parallel DataFrames/Arrays, multi-file processing, task graphs, for larger-than-RAM datasets and parallel workflows."
+license: BSD-3-Clause license
 metadata:
     skill-author: K-Dense Inc.
 ---

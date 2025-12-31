@@ -1,6 +1,7 @@
 ---
 name: matchms
 description: "Mass spectrometry analysis. Process mzML/MGF/MSP, spectral similarity (cosine, modified cosine), metadata harmonization, compound ID, for metabolomics and MS data processing."
+license: Apache-2.0 license
 metadata:
     skill-author: K-Dense Inc.
 ---

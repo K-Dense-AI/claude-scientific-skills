@@ -1,6 +1,7 @@
 ---
 name: scanpy
 description: "Single-cell RNA-seq analysis. Load .h5ad/10X data, QC, normalization, PCA/UMAP/t-SNE, Leiden clustering, marker genes, cell type annotation, trajectory, for scRNA-seq analysis."
+license: SD-3-Clause license
 metadata:
     skill-author: K-Dense Inc.
 ---

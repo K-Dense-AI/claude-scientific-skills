@@ -1,6 +1,7 @@
 ---
 name: datamol
 description: "Pythonic wrapper around RDKit with simplified interface and sensible defaults. Preferred for standard drug discovery: SMILES parsing, standardization, descriptors, fingerprints, clustering, 3D conformers, parallel processing. Returns native rdkit.Chem.Mol objects. For advanced control or custom parameters, use rdkit directly."
+license: Apache-2.0 license
 metadata:
     skill-author: K-Dense Inc.
 ---

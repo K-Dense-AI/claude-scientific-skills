@@ -1,6 +1,7 @@
 ---
 name: benchling-integration
 description: "Benchling R&D platform integration. Access registry (DNA, proteins), inventory, ELN entries, workflows via API, build Benchling Apps, query Data Warehouse, for lab data management automation."
+license: Unknown
 metadata:
     skill-author: K-Dense Inc.
 ---
