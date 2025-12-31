@@ -1,6 +1,7 @@
 ---
 name: qiskit
 description: Comprehensive quantum computing toolkit for building, optimizing, and executing quantum circuits. Use when working with quantum algorithms, simulations, or quantum hardware including (1) Building quantum circuits with gates and measurements, (2) Running quantum algorithms (VQE, QAOA, Grover), (3) Transpiling/optimizing circuits for hardware, (4) Executing on IBM Quantum or other providers, (5) Quantum chemistry and materials science, (6) Quantum machine learning, (7) Visualizing circuits and results, or (8) Any quantum computing development task.
+license: Apache-2.0 license
 metadata:
     skill-author: K-Dense Inc.
 ---

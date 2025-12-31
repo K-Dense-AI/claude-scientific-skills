@@ -1,6 +1,7 @@
 ---
 name: anndata
 description: This skill should be used when working with annotated data matrices in Python, particularly for single-cell genomics analysis, managing experimental measurements with metadata, or handling large-scale biological datasets. Use when tasks involve AnnData objects, h5ad files, single-cell RNA-seq data, or integration with scanpy/scverse tools.
+license: BSD-3-Clause license
 metadata:
     skill-author: K-Dense Inc.
 ---

@@ -1,6 +1,7 @@
 ---
 name: pyopenms
 description: Python interface to OpenMS for mass spectrometry data analysis. Use for LC-MS/MS proteomics and metabolomics workflows including file handling (mzML, mzXML, mzTab, FASTA, pepXML, protXML, mzIdentML), signal processing, feature detection, peptide identification, and quantitative analysis. Apply when working with mass spectrometry data, analyzing proteomics experiments, or processing metabolomics datasets.
+license: 3 clause BSD license
 metadata:
     skill-author: K-Dense Inc.
 ---

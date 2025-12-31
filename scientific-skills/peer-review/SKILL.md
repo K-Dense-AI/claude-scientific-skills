@@ -2,6 +2,7 @@
 name: peer-review
 description: "Systematic peer review toolkit. Evaluate methodology, statistics, design, reproducibility, ethics, figure integrity, reporting standards, for manuscript and grant review across disciplines."
 allowed-tools: [Read, Write, Edit, Bash]
+license: MIT license
 metadata:
     skill-author: K-Dense Inc.
 ---

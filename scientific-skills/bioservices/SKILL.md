@@ -1,6 +1,7 @@
 ---
 name: bioservices
 description: "Primary Python tool for 40+ bioinformatics services. Preferred for multi-database workflows: UniProt, KEGG, ChEMBL, PubChem, Reactome, QuickGO. Unified API for queries, ID mapping, pathway analysis. For direct REST control, use individual database skills (uniprot-database, kegg-database)."
+license: GPLv3 license
 metadata:
     skill-author: K-Dense Inc.
 ---
