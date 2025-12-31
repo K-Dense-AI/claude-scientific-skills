@@ -1,6 +1,8 @@
 ---
 name: hmdb-database
 description: "Access Human Metabolome Database (220K+ metabolites). Search by name/ID/structure, retrieve chemical properties, biomarker data, NMR/MS spectra, pathways, for metabolomics and identification."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # HMDB Database

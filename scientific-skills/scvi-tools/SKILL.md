@@ -1,6 +1,8 @@
 ---
 name: scvi-tools
 description: This skill should be used when working with single-cell omics data analysis using scvi-tools, including scRNA-seq, scATAC-seq, CITE-seq, spatial transcriptomics, and other single-cell modalities. Use this skill for probabilistic modeling, batch correction, dimensionality reduction, differential expression, cell type annotation, multimodal integration, and spatial analysis tasks.
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # scvi-tools

@@ -1,6 +1,8 @@
 ---
 name: cirq
 description: Quantum computing framework for building, simulating, optimizing, and executing quantum circuits. Use this skill when working with quantum algorithms, quantum circuit design, quantum simulation (noiseless or noisy), running on quantum hardware (Google, IonQ, AQT, Pasqal), circuit optimization and compilation, noise modeling and characterization, or quantum experiments and benchmarking (VQE, QAOA, QPE, randomized benchmarking).
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Cirq - Quantum Computing with Python

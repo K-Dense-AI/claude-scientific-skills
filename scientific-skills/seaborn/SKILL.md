@@ -1,6 +1,8 @@
 ---
 name: seaborn
 description: "Statistical visualization. Scatter, box, violin, heatmaps, pair plots, regression, correlation matrices, KDE, faceted plots, for exploratory analysis and publication figures."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Seaborn Statistical Visualization

@@ -1,6 +1,8 @@
 ---
 name: pysam
 description: "Genomic file toolkit. Read/write SAM/BAM/CRAM alignments, VCF/BCF variants, FASTA/FASTQ sequences, extract regions, calculate coverage, for NGS data processing pipelines."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Pysam

@@ -1,6 +1,8 @@
 ---
 name: cellxgene-census
 description: "Query CZ CELLxGENE Census (61M+ cells). Filter by cell type/tissue/disease, retrieve expression data, integrate with scanpy/PyTorch, for population-scale single-cell analysis."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # CZ CELLxGENE Census

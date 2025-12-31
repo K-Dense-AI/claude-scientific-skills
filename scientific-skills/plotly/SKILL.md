@@ -1,6 +1,8 @@
 ---
 name: plotly
 description: Interactive scientific and statistical data visualization library for Python. Use when creating charts, plots, or visualizations including scatter plots, line charts, bar charts, heatmaps, 3D plots, geographic maps, statistical distributions, financial charts, and dashboards. Supports both quick visualizations (Plotly Express) and fine-grained customization (graph objects). Outputs interactive HTML or static images (PNG, PDF, SVG).
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Plotly

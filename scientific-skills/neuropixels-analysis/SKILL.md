@@ -1,6 +1,9 @@
 ---
 name: neuropixels-analysis
 description: "Neuropixels neural recording analysis. Load SpikeGLX/OpenEphys data, preprocess, motion correction, Kilosort4 spike sorting, quality metrics, Allen/IBL curation, AI-assisted visual analysis, for Neuropixels 1.0/2.0 extracellular electrophysiology. Use when working with neural recordings, spike sorting, extracellular electrophysiology, or when the user mentions Neuropixels, SpikeGLX, Open Ephys, Kilosort, quality metrics, or unit curation."
+license: MIT License
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Neuropixels Data Analysis
@@ -280,16 +283,16 @@ Comprehensive visualization guide for publication-quality figures.
 
 | Topic | Reference |
 |-------|-----------|
-| Full workflow | [reference/standard_workflow.md](reference/standard_workflow.md) |
-| API reference | [reference/api_reference.md](reference/api_reference.md) |
-| Plotting guide | [reference/plotting_guide.md](reference/plotting_guide.md) |
-| Preprocessing | [PREPROCESSING.md](PREPROCESSING.md) |
-| Spike sorting | [SPIKE_SORTING.md](SPIKE_SORTING.md) |
-| Motion correction | [MOTION_CORRECTION.md](MOTION_CORRECTION.md) |
-| Quality metrics | [QUALITY_METRICS.md](QUALITY_METRICS.md) |
-| Automated curation | [AUTOMATED_CURATION.md](AUTOMATED_CURATION.md) |
-| AI-assisted curation | [AI_CURATION.md](AI_CURATION.md) |
-| Waveform analysis | [ANALYSIS.md](ANALYSIS.md) |
+| Full workflow | [references/standard_workflow.md](reference/standard_workflow.md) |
+| API reference | [references/api_reference.md](reference/api_reference.md) |
+| Plotting guide | [references/plotting_guide.md](reference/plotting_guide.md) |
+| Preprocessing | [references/PREPROCESSING.md](reference/PREPROCESSING.md) |
+| Spike sorting | [references/SPIKE_SORTING.md](reference/SPIKE_SORTING.md) |
+| Motion correction | [references/MOTION_CORRECTION.md](reference/MOTION_CORRECTION.md) |
+| Quality metrics | [references/QUALITY_METRICS.md](reference/QUALITY_METRICS.md) |
+| Automated curation | [references/AUTOMATED_CURATION.md](reference/AUTOMATED_CURATION.md) |
+| AI-assisted curation | [references/AI_CURATION.md](reference/AI_CURATION.md) |
+| Waveform analysis | [references/ANALYSIS.md](reference/ANALYSIS.md) |
 
 ## Installation
 

@@ -1,6 +1,8 @@
 ---
 name: dnanexus-integration
 description: "DNAnexus cloud genomics platform. Build apps/applets, manage data (upload/download), dxpy Python SDK, run workflows, FASTQ/BAM/VCF, for genomics pipeline development and execution."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # DNAnexus Integration
