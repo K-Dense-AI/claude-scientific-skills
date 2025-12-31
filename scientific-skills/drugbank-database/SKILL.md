@@ -1,6 +1,8 @@
 ---
 name: drugbank-database
 description: Access and analyze comprehensive drug information from the DrugBank database including drug properties, interactions, targets, pathways, chemical structures, and pharmacology data. This skill should be used when working with pharmaceutical data, drug discovery research, pharmacology studies, drug-drug interaction analysis, target identification, chemical similarity searches, ADMET predictions, or any task requiring detailed drug and drug target information from DrugBank.
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # DrugBank Database

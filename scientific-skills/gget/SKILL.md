@@ -1,6 +1,8 @@
 ---
 name: gget
 description: "CLI/Python toolkit for rapid bioinformatics queries. Preferred for quick BLAST searches. Access to 20+ databases: gene info (Ensembl/UniProt), AlphaFold, ARCHS4, Enrichr, OpenTargets, COSMIC, genome downloads. For advanced BLAST/batch processing, use biopython. For multi-database integration, use bioservices."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # gget

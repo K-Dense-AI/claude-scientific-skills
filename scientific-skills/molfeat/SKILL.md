@@ -1,6 +1,8 @@
 ---
 name: molfeat
 description: "Molecular featurization for ML (100+ featurizers). ECFP, MACCS, descriptors, pretrained models (ChemBERTa), convert SMILES to features, for QSAR and molecular ML."
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Molfeat - Molecular Featurization Hub

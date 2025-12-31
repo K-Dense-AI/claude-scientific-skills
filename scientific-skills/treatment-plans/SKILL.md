@@ -2,6 +2,8 @@
 name: treatment-plans
 description: "Generate concise (3-4 page), focused medical treatment plans in LaTeX/PDF format for all clinical specialties. Supports general medical treatment, rehabilitation therapy, mental health care, chronic disease management, perioperative care, and pain management. Includes SMART goal frameworks, evidence-based interventions with minimal text citations, regulatory compliance (HIPAA), and professional formatting. Prioritizes brevity and clinical actionability."
 allowed-tools: [Read, Write, Edit, Bash]
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Treatment Plan Writing

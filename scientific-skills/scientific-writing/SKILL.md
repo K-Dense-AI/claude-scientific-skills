@@ -2,6 +2,8 @@
 name: scientific-writing
 description: "Core skill for the deep research and writing tool. Write scientific manuscripts in full paragraphs (never bullet points). Use two-stage process: (1) create section outlines with key points using research-lookup, (2) convert to flowing prose. IMRAD structure, citations (APA/AMA/Vancouver), figures/tables, reporting guidelines (CONSORT/STROBE/PRISMA), for research papers and journal submissions."
 allowed-tools: [Read, Write, Edit, Bash]
+metadata:
+    skill-author: K-Dense Inc.
 ---
 
 # Scientific Writing
