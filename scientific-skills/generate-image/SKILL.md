@@ -2,6 +2,7 @@
 name: generate-image
 description: Generate or edit images using AI models (FLUX, Gemini). Use for general-purpose image generation including photos, illustrations, artwork, visual assets, concept art, and any image that isn't a technical diagram or schematic. For flowcharts, circuits, pathways, and technical diagrams, use the scientific-schematics skill instead.
 license: MIT license
+compatibility: Requires an OpenRouter API key
 metadata:
     skill-author: K-Dense Inc.
 ---
