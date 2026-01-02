@@ -544,13 +544,16 @@ Your contributions help make scientific computing more accessible and enable res
 ### General Questions
 
 **Q: Is this free to use?**  
-A: Yes! This project is MIT licensed, allowing free use for any purpose including commercial projects.
+A: Yes! This repository is MIT licensed. However, each individual skill has its own license specified in the `license` metadata field within its `SKILL.md` file—be sure to review and comply with those terms.
 
 **Q: Why are all skills grouped into one plugin instead of separate plugins?**  
 A: We believe good science in the age of AI is inherently interdisciplinary. Bundling all skills into a single plugin makes it trivial for you (and Claude) to bridge across fields—e.g., combining genomics, cheminformatics, clinical data, and machine learning in one workflow—without worrying about which individual skills to install or wire together.
 
 **Q: Can I use this for commercial projects?**  
-A: Absolutely! The MIT License allows both commercial and noncommercial use without restrictions.
+A: The repository itself is MIT licensed, which allows commercial use. However, individual skills may have different licenses—check the `license` field in each skill's `SKILL.md` file to ensure compliance with your intended use.
+
+**Q: Do all skills have the same license?**  
+A: No. Each skill has its own license specified in the `license` metadata field within its `SKILL.md` file. These licenses may differ from the repository's MIT License. Users are responsible for reviewing and adhering to the license terms of each individual skill they use.
 
 **Q: How often is this updated?**  
 A: We regularly update skills to reflect the latest versions of packages and APIs. Major updates are announced in release notes.
@@ -653,6 +656,10 @@ This project is licensed under the **MIT License**.
 - ⚠️ **No warranty** - provided "as is" without warranty of any kind
 
 See [LICENSE.md](LICENSE.md) for full terms.
+
+### Individual Skill Licenses
+
+> ⚠️ **Important**: Each skill has its own license specified in the `license` metadata field within its `SKILL.md` file. These licenses may differ from the repository's MIT License and may include additional terms or restrictions. **Users are responsible for reviewing and adhering to the license terms of each individual skill they use.**
 
 ## Star History
 
