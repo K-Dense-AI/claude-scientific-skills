@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Skills](https://img.shields.io/badge/Skills-138-brightgreen.svg)](#whats-included)
 
-> 💼 For substantially more advanced capabilities, compute infrastructure, and enterprise-ready offerings, check out [k-dense.ai](https://k-dense.ai/).
+> 💼 For substantially more advanced capabilities including end-to-end research workflows built on top of Claude Scientific Skills, compute infrastructure, and publication quality outputs, check out [k-dense.ai](https://k-dense.ai/) and sign up for K-Dense Web. One of the world's most advanced AI co-scientists. It's free to get started!
 
 A comprehensive collection of **138 ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
