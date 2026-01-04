@@ -1,7 +1,7 @@
 ---
 name: vaex
 description: Use this skill for processing and analyzing large tabular datasets (billions of rows) that exceed available RAM. Vaex excels at out-of-core DataFrame operations, lazy evaluation, fast aggregations, efficient visualization of big data, and machine learning on large datasets. Apply when users need to work with large CSV/HDF5/Arrow/Parquet files, perform fast statistics on massive datasets, create visualizations of big data, or build ML pipelines that don't fit in memory.
-license: MIT license
+license: MIT License
 metadata:
     skill-author: K-Dense Inc.
 ---

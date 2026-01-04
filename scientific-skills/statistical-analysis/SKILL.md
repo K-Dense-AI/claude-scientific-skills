@@ -1,7 +1,7 @@
 ---
 name: statistical-analysis
 description: "Statistical analysis toolkit. Hypothesis tests (t-test, ANOVA, chi-square), regression, correlation, Bayesian stats, power analysis, assumption checks, APA reporting, for academic research."
-license: MIT license
+license: MIT License
 metadata:
     skill-author: K-Dense Inc.
 ---

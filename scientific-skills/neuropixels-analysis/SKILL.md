@@ -1,7 +1,7 @@
 ---
 name: neuropixels-analysis
 description: "Neuropixels neural recording analysis. Load SpikeGLX/OpenEphys data, preprocess, motion correction, Kilosort4 spike sorting, quality metrics, Allen/IBL curation, AI-assisted visual analysis, for Neuropixels 1.0/2.0 extracellular electrophysiology. Use when working with neural recordings, spike sorting, extracellular electrophysiology, or when the user mentions Neuropixels, SpikeGLX, Open Ephys, Kilosort, quality metrics, or unit curation."
-license: MIT license
+license: MIT License
 metadata:
     skill-author: K-Dense Inc.
 ---

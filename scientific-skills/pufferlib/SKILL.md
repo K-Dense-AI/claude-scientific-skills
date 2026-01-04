@@ -1,7 +1,7 @@
 ---
 name: pufferlib
 description: This skill should be used when working with reinforcement learning tasks including high-performance RL training, custom environment development, vectorized parallel simulation, multi-agent systems, or integration with existing RL environments (Gymnasium, PettingZoo, Atari, Procgen, etc.). Use this skill for implementing PPO training, creating PufferEnv environments, optimizing RL performance, or developing policies with CNNs/LSTMs.
-license: MIT license
+license: MIT License
 metadata:
     skill-author: K-Dense Inc.
 ---

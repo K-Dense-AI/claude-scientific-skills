@@ -1,7 +1,7 @@
 ---
 name: hypogenic
 description: Automated hypothesis generation and testing using large language models. Use this skill when generating scientific hypotheses from datasets, combining literature insights with empirical data, testing hypotheses against observational data, or conducting systematic hypothesis exploration for research discovery in domains like deception detection, AI content detection, mental health analysis, or other empirical research tasks.
-license: MIT license
+license: MIT License
 metadata:
     skill-author: K-Dense Inc.
 ---
