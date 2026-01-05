@@ -1,6 +1,6 @@
 ---
 name: research-lookup
-description: "Look up current research information using Perplexity's Sonar Pro Search or Sonar Reasoning Pro models through OpenRouter. Automatically selects the best model based on query complexity. Search academic papers, recent studies, technical documentation, and general research information with citations."
+description: Look up current research information using Perplexity Sonar Pro Search or Sonar Reasoning Pro models through OpenRouter. Automatically selects the best model based on query complexity. Search academic papers, recent studies, technical documentation, and general research information with citations.
 allowed-tools: [Read, Write, Edit, Bash]
 license: MIT license
 metadata:
