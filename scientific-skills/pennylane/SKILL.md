@@ -1,6 +1,6 @@
 ---
 name: pennylane
-description: Cross-platform Python library for quantum computing, quantum machine learning, and quantum chemistry. Enables building and training quantum circuits with automatic differentiation, seamless integration with PyTorch/JAX/TensorFlow, and device-independent execution across simulators and quantum hardware (IBM, Amazon Braket, Google, Rigetti, IonQ, etc.). Use when working with quantum circuits, variational quantum algorithms (VQE, QAOA), quantum neural networks, hybrid quantum-classical models, molecular simulations, quantum chemistry calculations, or any quantum computing tasks requiring gradient-based optimization, hardware-agnostic programming, or quantum machine learning workflows.
+description: Hardware-agnostic quantum ML framework with automatic differentiation. Use when training quantum circuits via gradients, building hybrid quantum-classical models, or needing device portability across IBM/Google/Rigetti/IonQ. Best for variational algorithms (VQE, QAOA), quantum neural networks, and integration with PyTorch/JAX/TensorFlow. For hardware-specific optimizations use qiskit (IBM) or cirq (Google); for open quantum systems use qutip.
 license: Apache-2.0 license
 metadata:
     skill-author: K-Dense Inc.

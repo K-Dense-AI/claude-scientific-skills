@@ -1,6 +1,6 @@
 ---
 name: pylabrobot
-description: Laboratory automation toolkit for controlling liquid handlers, plate readers, pumps, heater shakers, incubators, centrifuges, and analytical equipment. Use this skill when automating laboratory workflows, programming liquid handling robots (Hamilton STAR, Opentrons OT-2, Tecan EVO), integrating lab equipment, managing deck layouts and resources (plates, tips, containers), reading plates, or creating reproducible laboratory protocols. Applicable for both simulated protocols and physical hardware control.
+description: Vendor-agnostic lab automation framework. Use when controlling multiple equipment types (Hamilton, Tecan, Opentrons, plate readers, pumps) or needing unified programming across different vendors. Best for complex workflows, multi-vendor setups, simulation. For Opentrons-only protocols with official API, opentrons-integration may be simpler.
 license: MIT license
 metadata:
     skill-author: K-Dense Inc.
