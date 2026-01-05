@@ -1,6 +1,6 @@
 ---
 name: ensembl-database
-description: "Query Ensembl genome database REST API for 250+ species. Gene lookups, sequence retrieval, variant analysis, comparative genomics, orthologs, VEP predictions, for genomic research."
+description: Query Ensembl genome database REST API for 250+ species. Gene lookups, sequence retrieval, variant analysis, comparative genomics, orthologs, VEP predictions, for genomic research.
 license: Unknown
 metadata:
     skill-author: K-Dense Inc.
