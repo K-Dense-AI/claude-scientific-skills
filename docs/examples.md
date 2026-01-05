@@ -26,6 +26,9 @@ This document provides comprehensive, practical examples demonstrating how to co
 18. [Experimental Physics & Data Analysis](#experimental-physics--data-analysis)
 19. [Chemical Engineering & Process Optimization](#chemical-engineering--process-optimization)
 20. [Scientific Illustration & Visual Communication](#scientific-illustration--visual-communication)
+21. [Quantum Computing for Chemistry](#quantum-computing-for-chemistry)
+22. [Research Grant Writing](#research-grant-writing)
+23. [Flow Cytometry & Immunophenotyping](#flow-cytometry--immunophenotyping)
 
 ---
 
@@ -40,12 +43,16 @@ This document provides comprehensive, practical examples demonstrating how to co
 - `pubchem-database` - Search compound libraries
 - `rdkit` - Analyze molecular properties
 - `datamol` - Generate analogs
+- `medchem` - Medicinal chemistry filters
+- `molfeat` - Molecular featurization
 - `diffdock` - Molecular docking
 - `alphafold-database` - Retrieve protein structure
 - `pubmed-database` - Literature review
 - `cosmic-database` - Query mutations
 - `deepchem` - Property prediction
+- `torchdrug` - Graph neural networks for molecules
 - `scientific-visualization` - Create figures
+- `clinical-reports` - Generate PDF reports
 
 **Workflow**:
 
@@ -135,7 +142,10 @@ Expected Output:
 - `clinicaltrials-database` - Check ongoing trials
 - `fda-database` - Drug approvals and safety
 - `networkx` - Network analysis
+- `bioservices` - Biological database queries
 - `literature-review` - Systematic review
+- `openalex-database` - Academic literature search
+- `biorxiv-database` - Preprint search
 
 **Workflow**:
 
@@ -213,15 +223,17 @@ Expected Output:
 **Skills Used**:
 - `pysam` - Parse VCF files
 - `ensembl-database` - Variant annotation
+- `gget` - Unified gene/protein data retrieval
 - `clinvar-database` - Clinical significance
 - `cosmic-database` - Somatic mutations
 - `gene-database` - Gene information
 - `uniprot-database` - Protein impact
+- `clinpgx-database` - Pharmacogenomics data
 - `drugbank-database` - Drug-gene associations
 - `clinicaltrials-database` - Matching trials
 - `opentargets-database` - Target validation
 - `pubmed-database` - Literature evidence
-- `reportlab` - Generate clinical report
+- `clinical-reports` - Generate clinical report PDF
 
 **Workflow**:
 
@@ -297,7 +309,7 @@ Step 12: Generate clinical genomics report
 - Clinical trial options with eligibility information
 - Prognostic implications based on mutation profile
 - References to guidelines (NCCN, ESMO, AMP/ASCO/CAP)
-- Generate professional PDF using ReportLab
+- Generate professional PDF using clinical-reports skill
 
 Expected Output:
 - Annotated variant list with clinical significance
@@ -318,11 +330,14 @@ Expected Output:
 - `scanpy` - Clustering and visualization
 - `scikit-learn` - Machine learning classification
 - `gene-database` - Gene annotation
+- `gget` - Gene data retrieval
 - `reactome-database` - Pathway analysis
 - `opentargets-database` - Drug targets
 - `pubmed-database` - Literature validation
 - `matplotlib` - Visualization
 - `seaborn` - Heatmaps
+- `plotly` - Interactive visualization
+- `scikit-survival` - Survival analysis
 
 **Workflow**:
 
@@ -412,11 +427,14 @@ Expected Output:
 - `scvi-tools` - Batch correction and integration
 - `cellxgene-census` - Reference data
 - `gene-database` - Cell type markers
+- `gget` - Gene data retrieval
 - `anndata` - Data structure
 - `arboreto` - Gene regulatory networks
 - `pytorch-lightning` - Deep learning
 - `matplotlib` - Visualization
+- `plotly` - Interactive visualization
 - `statistical-analysis` - Hypothesis testing
+- `geniml` - Genomic ML embeddings
 
 **Workflow**:
 
@@ -526,12 +544,14 @@ Expected Output:
 - `pdb-database` - Experimental structures
 - `uniprot-database` - Protein information
 - `biopython` - Structure analysis
-- `pyrosetta` - Protein design (if available)
+- `esm` - Protein language models and embeddings
 - `rdkit` - Chemical library generation
+- `datamol` - Molecule manipulation
 - `diffdock` - Molecular docking
 - `zinc-database` - Screening library
 - `deepchem` - Property prediction
-- `pymol` - Visualization (external)
+- `scientific-visualization` - Structure visualization
+- `medchem` - Medicinal chemistry filters
 
 **Workflow**:
 
@@ -638,7 +658,9 @@ Expected Output:
 
 **Skills Used**:
 - `rdkit` - Molecular descriptors
+- `medchem` - Toxicophore detection
 - `deepchem` - Toxicity prediction
+- `pytdc` - Therapeutics data commons
 - `chembl-database` - Toxicity data
 - `pubchem-database` - Bioassay data
 - `drugbank-database` - Known drug toxicities
@@ -646,6 +668,7 @@ Expected Output:
 - `hmdb-database` - Metabolite prediction
 - `scikit-learn` - Classification models
 - `shap` - Model interpretability
+- `clinical-reports` - Safety assessment reports
 
 **Workflow**:
 
@@ -769,12 +792,15 @@ Expected Output:
 - `clinicaltrials-database` - Trial registry
 - `fda-database` - Drug approvals
 - `pubmed-database` - Published results
+- `openalex-database` - Academic literature
 - `drugbank-database` - Approved drugs
 - `opentargets-database` - Target validation
 - `polars` - Data manipulation
 - `matplotlib` - Visualization
 - `seaborn` - Statistical plots
-- `reportlab` - Report generation
+- `plotly` - Interactive plots
+- `clinical-reports` - Report generation
+- `market-research-reports` - Competitive intelligence
 
 **Workflow**:
 
@@ -872,7 +898,7 @@ Step 12: Generate competitive intelligence report
   * Differentiation strategies
   * Partnership opportunities
   * Regulatory pathway considerations
-- Export as professional PDF with citations and data tables
+- Export as professional PDF with citations and data tables using clinical-reports skill
 
 Expected Output:
 - Comprehensive trial database for indication
@@ -894,14 +920,17 @@ Expected Output:
 **Skills Used**:
 - `pydeseq2` - RNA-seq analysis
 - `pyopenms` - Mass spectrometry
+- `matchms` - Mass spectra matching
 - `hmdb-database` - Metabolite identification
 - `metabolomics-workbench-database` - Public datasets
 - `kegg-database` - Pathway mapping
 - `reactome-database` - Pathway analysis
 - `string-database` - Protein interactions
+- `cobrapy` - Constraint-based metabolic modeling
 - `statsmodels` - Multi-omics correlation
 - `networkx` - Network analysis
 - `pymc` - Bayesian modeling
+- `plotly` - Interactive network visualization
 
 **Workflow**:
 
@@ -1011,15 +1040,16 @@ Expected Output:
 **Objective**: Discover novel solid electrolyte materials for lithium-ion batteries using computational screening.
 
 **Skills Used**:
-- `pymatgen` - Materials analysis
-- `matminer` - Feature engineering
+- `pymatgen` - Materials analysis and feature engineering
 - `scikit-learn` - Machine learning
 - `pymoo` - Multi-objective optimization
-- `ase` - Atomic simulation
 - `sympy` - Symbolic math
 - `vaex` - Large dataset handling
+- `dask` - Parallel computing
 - `matplotlib` - Visualization
+- `plotly` - Interactive visualization
 - `scientific-writing` - Report generation
+- `scientific-visualization` - Publication figures
 
 **Workflow**:
 
@@ -1052,8 +1082,8 @@ Step 4: Calculate material properties with Pymatgen
 - Ionic radii and bond lengths
 - Coordination environments
 
-Step 5: Feature engineering with matminer
-- Calculate compositional features:
+Step 5: Feature engineering with Pymatgen
+- Calculate compositional features using Pymatgen's featurizers:
   * Elemental property statistics (electronegativity, ionic radius)
   * Valence electron concentrations
   * Stoichiometric attributes
@@ -1095,7 +1125,7 @@ Step 9: Analyze Pareto optimal materials
 
 Step 10: Validate predictions with DFT calculations
 - Select top 10 candidates for detailed study
-- Set up DFT calculations (VASP-like, if available via ASE)
+- Set up DFT calculations using Pymatgen's interface
 - Calculate:
   * Accurate formation energies
   * Li⁺ migration barriers (NEB calculations)
@@ -1142,13 +1172,14 @@ Expected Output:
 **Skills Used**:
 - `histolab` - Whole slide image processing
 - `pathml` - Computational pathology
-- `pytorch-lightning` - Deep learning
-- `torchvision` - Image models
+- `pytorch-lightning` - Deep learning and image models
 - `scikit-learn` - Model evaluation
 - `pydicom` - DICOM handling
 - `omero-integration` - Image management
 - `matplotlib` - Visualization
+- `plotly` - Interactive visualization
 - `shap` - Model interpretability
+- `clinical-reports` - Clinical validation reports
 
 **Workflow**:
 
@@ -1264,11 +1295,14 @@ Expected Output:
 - `pylabrobot` - Lab automation
 - `opentrons-integration` - Opentrons protocol
 - `benchling-integration` - Sample tracking
+- `labarchive-integration` - Electronic lab notebook
 - `protocolsio-integration` - Protocol documentation
 - `simpy` - Process simulation
 - `polars` - Data processing
 - `matplotlib` - Plate visualization
-- `reportlab` - Report generation
+- `plotly` - Interactive plate heatmaps
+- `rdkit` - PAINS filtering for hits
+- `clinical-reports` - Screening report generation
 
 **Workflow**:
 
@@ -1406,11 +1440,14 @@ Expected Output:
 - `gwas-database` - Public GWAS data
 - `ensembl-database` - Plant genomics
 - `gene-database` - Gene annotation
-- `scanpy` - Population structure (adapted for genetic data)
+- `gget` - Gene data retrieval
+- `scanpy` - Population structure analysis
 - `scikit-learn` - PCA and clustering
 - `statsmodels` - Association testing
+- `statistical-analysis` - Hypothesis testing
 - `matplotlib` - Manhattan plots
 - `seaborn` - Visualization
+- `plotly` - Interactive visualizations
 
 **Workflow**:
 
@@ -1535,14 +1572,16 @@ Expected Output:
 
 **Skills Used**:
 - `neurokit2` - Neurophysiological signal processing
-- `nilearn` (external) - Neuroimaging analysis
+- `neuropixels-analysis` - Neural data analysis
 - `scikit-learn` - Classification and clustering
 - `networkx` - Graph theory analysis
 - `statsmodels` - Statistical testing
+- `statistical-analysis` - Hypothesis testing
 - `torch_geometric` - Graph neural networks
 - `pymc` - Bayesian modeling
 - `matplotlib` - Brain visualization
 - `seaborn` - Connectivity matrices
+- `plotly` - Interactive brain networks
 
 **Workflow**:
 
@@ -1675,13 +1714,16 @@ Expected Output:
 - `biopython` - Sequence processing
 - `pysam` - BAM file handling
 - `ena-database` - Sequence data
+- `geo-database` - Public datasets
 - `uniprot-database` - Protein annotation
 - `kegg-database` - Pathway analysis
 - `etetoolkit` - Phylogenetic trees
 - `scikit-bio` - Microbial ecology
 - `networkx` - Co-occurrence networks
 - `statsmodels` - Diversity statistics
+- `statistical-analysis` - Hypothesis testing
 - `matplotlib` - Visualization
+- `plotly` - Interactive plots
 
 **Workflow**:
 
@@ -1826,7 +1868,10 @@ Expected Output:
 - `scikit-learn` - Resistance prediction
 - `networkx` - Transmission networks
 - `statsmodels` - Trend analysis
+- `statistical-analysis` - Hypothesis testing
 - `matplotlib` - Epidemiological plots
+- `plotly` - Interactive dashboards
+- `clinical-reports` - Surveillance reports
 
 **Workflow**:
 
@@ -1969,6 +2014,7 @@ Expected Output:
 - `pydeseq2` - RNA-seq DE analysis
 - `pysam` - Variant calling
 - `ensembl-database` - Gene annotation
+- `gget` - Gene data retrieval
 - `cosmic-database` - Cancer mutations
 - `string-database` - Protein interactions
 - `reactome-database` - Pathway analysis
@@ -1976,8 +2022,11 @@ Expected Output:
 - `scikit-learn` - Clustering and classification
 - `torch_geometric` - Graph neural networks
 - `umap-learn` - Dimensionality reduction
-- `statsmodels` - Survival analysis
+- `scikit-survival` - Survival analysis
+- `statsmodels` - Statistical modeling
 - `pymoo` - Multi-objective optimization
+- `pyhealth` - Healthcare ML models
+- `clinical-reports` - Integrative genomics report
 
 **Workflow**:
 
@@ -2147,7 +2196,7 @@ Expected Output:
 **Skills Used**:
 - `astropy` - Units and constants
 - `sympy` - Symbolic mathematics
-- `scipy` - Statistical analysis
+- `statistical-analysis` - Statistical analysis
 - `scikit-learn` - Classification
 - `stable-baselines3` - Reinforcement learning for optimization
 - `matplotlib` - Visualization
@@ -2155,6 +2204,7 @@ Expected Output:
 - `statsmodels` - Hypothesis testing
 - `dask` - Large-scale data processing
 - `vaex` - Out-of-core dataframes
+- `plotly` - Interactive visualization
 
 **Workflow**:
 
@@ -2296,14 +2346,17 @@ Expected Output:
 
 **Skills Used**:
 - `sympy` - Symbolic equations and reaction kinetics
-- `scipy` - Numerical integration and optimization
+- `statistical-analysis` - Numerical analysis
 - `pymoo` - Multi-objective optimization
 - `simpy` - Process simulation
 - `pymc` - Bayesian parameter estimation
 - `scikit-learn` - Process modeling
 - `stable-baselines3` - Real-time control optimization
 - `matplotlib` - Process diagrams
-- `reportlab` - Engineering reports
+- `plotly` - Interactive process visualization
+- `fluidsim` - Fluid dynamics simulation
+- `scientific-writing` - Engineering reports
+- `document-skills` - Technical documentation
 
 **Workflow**:
 
@@ -2500,9 +2553,14 @@ Expected Output:
 **Skills Used**:
 - `generate-image` - AI image generation and editing
 - `matplotlib` - Data visualization
+- `plotly` - Interactive visualization
 - `scientific-visualization` - Best practices
+- `scientific-schematics` - Scientific diagrams
 - `scientific-writing` - Figure caption creation
-- `reportlab` - PDF report generation
+- `scientific-slides` - Presentation materials
+- `latex-posters` - Conference posters
+- `pptx-posters` - PowerPoint posters
+- `document-skills` - PDF report generation
 
 **Workflow**:
 
@@ -2618,7 +2676,7 @@ Step 12: Assemble final publication package
 - Organize all figures in publication order
 - Create high-resolution exports (300+ DPI for print)
 - Generate both RGB (web) and CMYK (print) versions
-- Compile into PDF using ReportLab:
+- Compile into PDF using document-skills:
   * Title page with graphical abstract
   * All figures with captions
   * Supplementary figures section
@@ -2637,6 +2695,332 @@ Expected Output:
 
 ---
 
+## Quantum Computing for Chemistry
+
+### Example 21: Variational Quantum Eigensolver for Molecular Ground States
+
+**Objective**: Use quantum computing to calculate molecular electronic structure and ground state energies for drug design applications.
+
+**Skills Used**:
+- `qiskit` - IBM quantum computing framework
+- `pennylane` - Quantum machine learning
+- `cirq` - Google quantum circuits
+- `qutip` - Quantum dynamics simulation
+- `rdkit` - Molecular structure input
+- `sympy` - Symbolic Hamiltonian construction
+- `matplotlib` - Energy landscape visualization
+- `scientific-visualization` - Publication figures
+- `scientific-writing` - Quantum chemistry reports
+
+**Workflow**:
+
+```bash
+Step 1: Define molecular system
+- Load molecular structure with RDKit (small drug molecule)
+- Extract atomic coordinates and nuclear charges
+- Define basis set (STO-3G, 6-31G for small molecules)
+- Calculate number of qubits needed (2 qubits per orbital)
+
+Step 2: Construct molecular Hamiltonian
+- Use Qiskit Nature to generate fermionic Hamiltonian
+- Apply Jordan-Wigner transformation to qubit Hamiltonian
+- Use SymPy to symbolically verify Hamiltonian terms
+- Calculate number of Pauli terms
+
+Step 3: Design variational ansatz with Qiskit
+- Choose ansatz type: UCCSD, hardware-efficient, or custom
+- Define circuit depth and entanglement structure
+- Calculate circuit parameters (variational angles)
+- Estimate circuit resources (gates, depth)
+
+Step 4: Implement VQE algorithm
+- Initialize variational parameters randomly
+- Define cost function: <ψ(θ)|H|ψ(θ)>
+- Choose classical optimizer (COBYLA, SPSA, L-BFGS-B)
+- Set convergence criteria
+
+Step 5: Run quantum simulation with PennyLane
+- Configure quantum device (simulator or real hardware)
+- Execute variational circuits
+- Measure expectation values of Hamiltonian terms
+- Update parameters iteratively
+
+Step 6: Error mitigation
+- Implement readout error mitigation
+- Apply zero-noise extrapolation
+- Use measurement error correction
+- Estimate uncertainty in energy values
+
+Step 7: Quantum dynamics with QuTiP
+- Simulate molecular dynamics on quantum computer
+- Calculate time evolution of molecular system
+- Study non-adiabatic transitions
+- Visualize wavefunction dynamics
+
+Step 8: Compare with classical methods
+- Run classical HF and DFT calculations for reference
+- Compare VQE results with CCSD(T) (gold standard)
+- Analyze quantum advantage for this system
+- Quantify accuracy vs computational cost
+
+Step 9: Scale to larger molecules
+- Design circuits for larger drug candidates
+- Estimate resources for pharmaceutical applications
+- Identify molecules where quantum advantage is expected
+- Plan for near-term quantum hardware capabilities
+
+Step 10: Generate quantum chemistry report
+- Energy convergence plots
+- Circuit diagrams and ansatz visualizations
+- Comparison with classical methods
+- Resource estimates for target molecules
+- Discussion of quantum advantage timeline
+- Publication-quality figures
+- Export comprehensive report
+
+Expected Output:
+- Molecular ground state energies from VQE
+- Optimized variational circuits
+- Comparison with classical chemistry methods
+- Resource estimates for drug molecules
+- Quantum chemistry analysis report
+```
+
+---
+
+## Research Grant Writing
+
+### Example 22: NIH R01 Grant Proposal Development
+
+**Objective**: Develop a comprehensive research grant proposal with literature review, specific aims, and budget justification.
+
+**Skills Used**:
+- `research-grants` - Grant writing templates and guidelines
+- `literature-review` - Systematic literature analysis
+- `pubmed-database` - Literature search
+- `openalex-database` - Citation analysis
+- `clinicaltrials-database` - Preliminary data context
+- `hypothesis-generation` - Scientific hypothesis development
+- `scientific-writing` - Technical writing
+- `scientific-critical-thinking` - Research design
+- `citation-management` - Reference formatting
+- `document-skills` - PDF generation
+
+**Workflow**:
+
+```bash
+Step 1: Define research question and significance
+- Use hypothesis-generation skill to refine research questions
+- Identify knowledge gaps in the field
+- Articulate significance and innovation
+- Define measurable outcomes
+
+Step 2: Comprehensive literature review
+- Search PubMed for relevant publications (last 10 years)
+- Query OpenAlex for citation networks
+- Identify key papers and review articles
+- Use literature-review skill to synthesize findings
+- Identify gaps that proposal will address
+
+Step 3: Develop specific aims
+- Aim 1: Mechanistic studies (hypothesis-driven)
+- Aim 2: Translational applications
+- Aim 3: Validation and clinical relevance
+- Ensure aims are interdependent but not contingent
+- Define success criteria for each aim
+
+Step 4: Design research approach
+- Use scientific-critical-thinking for experimental design
+- Define methods for each specific aim
+- Include positive and negative controls
+- Plan statistical analysis approach
+- Identify potential pitfalls and alternatives
+
+Step 5: Preliminary data compilation
+- Gather existing data supporting hypothesis
+- Search ClinicalTrials.gov for relevant prior work
+- Create figures showing preliminary results
+- Quantify feasibility evidence
+
+Step 6: Innovation and significance sections
+- Articulate what is novel about approach
+- Compare to existing methods/knowledge
+- Explain expected impact on field
+- Address NIH mission alignment
+
+Step 7: Timeline and milestones
+- Create Gantt chart for 5-year project
+- Define quarterly milestones
+- Identify go/no-go decision points
+- Plan for personnel and resource allocation
+
+Step 8: Budget development
+- Calculate personnel costs (PI, postdocs, students)
+- Equipment and supplies estimates
+- Core facility usage costs
+- Travel and publication costs
+- Indirect cost calculation
+
+Step 9: Rigor and reproducibility
+- Address biological variables (sex, age, strain)
+- Statistical power calculations
+- Data management and sharing plan
+- Authentication of key resources
+
+Step 10: Format and compile
+- Use research-grants templates for NIH format
+- Apply citation-management for references
+- Create biosketch and facilities sections
+- Generate PDF with proper formatting
+- Check page limits and formatting requirements
+
+Step 11: Review and revision
+- Use peer-review skill principles for self-assessment
+- Check for logical flow and clarity
+- Verify alignment with FOA requirements
+- Ensure responsive to review criteria
+
+Step 12: Final deliverables
+- Specific Aims page (1 page)
+- Research Strategy (12 pages)
+- Bibliography
+- Budget and justification
+- Biosketches
+- Letters of support
+- Data management plan
+- Human subjects/vertebrate animals sections (if applicable)
+
+Expected Output:
+- Complete NIH R01 grant proposal
+- Literature review summary
+- Budget spreadsheet with justification
+- Timeline and milestone chart
+- All required supplementary documents
+- Properly formatted PDF ready for submission
+```
+
+---
+
+## Flow Cytometry & Immunophenotyping
+
+### Example 23: Multi-Parameter Flow Cytometry Analysis Pipeline
+
+**Objective**: Analyze high-dimensional flow cytometry data to characterize immune cell populations in clinical samples.
+
+**Skills Used**:
+- `flowio` - FCS file parsing
+- `scanpy` - High-dimensional analysis
+- `scikit-learn` - Clustering and classification
+- `umap-learn` - Dimensionality reduction
+- `statistical-analysis` - Population statistics
+- `matplotlib` - Flow cytometry plots
+- `plotly` - Interactive gating
+- `clinical-reports` - Clinical flow reports
+- `exploratory-data-analysis` - Data exploration
+
+**Workflow**:
+
+```bash
+Step 1: Load and parse FCS files
+- Use flowio to read FCS 3.0/3.1 files
+- Extract channel names and metadata
+- Load compensation matrix from file
+- Parse keywords (patient ID, tube, date)
+
+Step 2: Quality control
+- Check for acquisition anomalies (time vs events)
+- Identify clogging or fluidics issues
+- Remove doublets (FSC-A vs FSC-H)
+- Gate viable cells (exclude debris)
+- Document QC metrics per sample
+
+Step 3: Compensation and transformation
+- Apply compensation matrix
+- Transform data (biexponential/logicle)
+- Verify compensation with single-stain controls
+- Visualize spillover reduction
+
+Step 4: Traditional gating strategy
+- Sequential manual gating approach:
+  * Lymphocytes (FSC vs SSC)
+  * Single cells (FSC-A vs FSC-H)
+  * Live cells (viability dye negative)
+  * CD3+ T cells, CD19+ B cells, etc.
+- Calculate population frequencies
+- Export gated populations
+
+Step 5: High-dimensional analysis with Scanpy
+- Convert flow data to AnnData format
+- Apply variance-stabilizing transformation
+- Calculate highly variable markers
+- Build neighbor graph
+
+Step 6: Dimensionality reduction
+- Run UMAP with umap-learn for visualization
+- Optimize UMAP parameters (n_neighbors, min_dist)
+- Create 2D embeddings colored by:
+  * Marker expression
+  * Sample/patient
+  * Clinical group
+
+Step 7: Automated clustering
+- Apply Leiden or FlowSOM clustering
+- Determine optimal cluster resolution
+- Assign cell type labels based on marker profiles
+- Validate clusters against manual gating
+
+Step 8: Differential abundance analysis
+- Compare population frequencies between groups
+- Use statistical-analysis for hypothesis testing
+- Calculate fold changes and p-values
+- Apply multiple testing correction
+- Identify significantly altered populations
+
+Step 9: Biomarker discovery
+- Train classifiers to predict clinical outcome
+- Use scikit-learn Random Forest or SVM
+- Calculate feature importance (which populations matter)
+- Cross-validate prediction accuracy
+- Identify candidate biomarkers
+
+Step 10: Quality metrics and batch effects
+- Calculate CV for control samples
+- Detect batch effects across acquisition dates
+- Apply batch correction if needed
+- Generate Levey-Jennings plots for QC
+
+Step 11: Visualization suite
+- Traditional flow plots:
+  * Bivariate dot plots with quadrant gates
+  * Histogram overlays
+  * Contour plots
+- High-dimensional plots:
+  * UMAP colored by population
+  * Heatmaps of marker expression
+  * Violin plots for marker distributions
+- Interactive plots with Plotly
+
+Step 12: Generate clinical flow cytometry report
+- Sample information and QC summary
+- Gating strategy diagrams
+- Population frequency tables
+- Reference range comparisons
+- Statistical comparisons between groups
+- Interpretation and clinical significance
+- Export as PDF for clinical review
+
+Expected Output:
+- Parsed and compensated flow cytometry data
+- Traditional and automated gating results
+- High-dimensional clustering and UMAP
+- Differential abundance statistics
+- Biomarker candidates for clinical outcome
+- Publication-quality flow plots
+- Clinical flow cytometry report
+```
+
+---
+
 ## Summary
 
 These examples demonstrate:
@@ -2646,6 +3030,44 @@ These examples demonstrate:
 3. **Real-world relevance**: Examples address actual research questions and clinical needs
 4. **End-to-end workflows**: From data acquisition to publication-ready reports
 5. **Best practices**: QC, statistical rigor, visualization, interpretation, and documentation
+
+### Skills Coverage Summary
+
+The examples in this document cover the following skill categories:
+
+**Databases & Data Sources:**
+- Biological: `chembl-database`, `pubchem-database`, `drugbank-database`, `uniprot-database`, `gene-database`, `ensembl-database`, `clinvar-database`, `cosmic-database`, `string-database`, `kegg-database`, `reactome-database`, `hmdb-database`, `pdb-database`, `alphafold-database`, `zinc-database`, `gwas-database`, `geo-database`, `ena-database`, `cellxgene-census`, `metabolomics-workbench-database`, `brenda-database`, `clinpgx-database`
+- Clinical: `clinicaltrials-database`, `fda-database`
+- Literature: `pubmed-database`, `openalex-database`, `biorxiv-database`
+
+**Analysis Packages:**
+- Chemistry: `rdkit`, `datamol`, `medchem`, `molfeat`, `deepchem`, `torchdrug`, `pytdc`, `diffdock`, `pyopenms`, `matchms`, `cobrapy`
+- Genomics: `biopython`, `pysam`, `pydeseq2`, `scanpy`, `scvi-tools`, `anndata`, `gget`, `geniml`, `deeptools`, `etetoolkit`, `scikit-bio`
+- Proteins: `esm`, `bioservices`
+- Machine Learning: `scikit-learn`, `pytorch-lightning`, `torch_geometric`, `transformers`, `stable-baselines3`, `shap`
+- Statistics: `statsmodels`, `statistical-analysis`, `pymc`, `scikit-survival`
+- Visualization: `matplotlib`, `seaborn`, `plotly`, `scientific-visualization`
+- Data Processing: `polars`, `dask`, `vaex`, `networkx`
+- Materials: `pymatgen`
+- Physics: `astropy`, `sympy`, `fluidsim`
+- Quantum: `qiskit`, `pennylane`, `cirq`, `qutip`
+- Neuroscience: `neurokit2`, `neuropixels-analysis`
+- Pathology: `histolab`, `pathml`, `pydicom`
+- Flow Cytometry: `flowio`
+- Dimensionality Reduction: `umap-learn`, `arboreto`
+- Lab Automation: `pylabrobot`, `opentrons-integration`, `benchling-integration`, `labarchive-integration`, `protocolsio-integration`
+- Simulation: `simpy`, `pymoo`
+
+**Writing & Reporting:**
+- `scientific-writing`, `scientific-visualization`, `scientific-schematics`, `scientific-slides`
+- `clinical-reports`, `clinical-decision-support`
+- `literature-review`, `hypothesis-generation`, `scientific-critical-thinking`
+- `research-grants`, `peer-review`
+- `document-skills`, `latex-posters`, `pptx-posters`
+- `citation-management`, `market-research-reports`
+
+**Image & Media:**
+- `generate-image`, `omero-integration`
 
 ### How to Use These Examples
 
