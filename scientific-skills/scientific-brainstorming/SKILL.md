@@ -1,6 +1,6 @@
 ---
 name: scientific-brainstorming
-description: "Research ideation partner. Generate hypotheses, explore interdisciplinary connections, challenge assumptions, develop methodologies, identify research gaps, for creative scientific problem-solving."
+description: Creative research ideation and exploration. Use for open-ended brainstorming sessions, exploring interdisciplinary connections, challenging assumptions, or identifying research gaps. Best for early-stage research planning when you don't have specific observations yet. For formulating testable hypotheses from data use hypothesis-generation.
 license: MIT license
 metadata:
     skill-author: K-Dense Inc.

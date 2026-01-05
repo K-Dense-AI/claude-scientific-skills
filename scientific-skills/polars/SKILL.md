@@ -1,6 +1,6 @@
 ---
 name: polars
-description: "Fast DataFrame library (Apache Arrow). Select, filter, group_by, joins, lazy evaluation, CSV/Parquet I/O, expression API, for high-performance data analysis workflows."
+description: Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution, Apache Arrow backend. Best for 1-100GB datasets, ETL pipelines, faster pandas replacement. For larger-than-RAM data use dask or vaex.
 license: https://github.com/pola-rs/polars/blob/main/LICENSE
 metadata:
     skill-author: K-Dense Inc.
