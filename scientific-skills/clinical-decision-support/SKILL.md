@@ -20,6 +20,8 @@ All documents are generated as publication-ready LaTeX/PDF files optimized for p
 
 **Note:** For individual patient treatment plans at the bedside, use the `treatment-plans` skill instead. This skill focuses on group-level analyses and evidence synthesis for pharmaceutical/research settings.
 
+**Writing Style:** For publication-ready documents targeting medical journals, consult the **venue-templates** skill's `medical_journal_styles.md` for guidance on structured abstracts, evidence language, and CONSORT/STROBE compliance.
+
 ## Capabilities
 
 ### Document Types
