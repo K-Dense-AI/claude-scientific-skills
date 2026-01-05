@@ -245,6 +245,74 @@ All searches must be documented for reproducibility:
 
 ## Advanced Search Techniques
 
+### Prioritizing High-Impact Papers (CRITICAL)
+
+**Always prioritize papers based on citation count, venue quality, and author reputation.** Quality matters more than quantity.
+
+#### Citation Metrics in Database Searches
+
+Use citation counts to identify influential work:
+
+| Paper Age | Citations | Classification |
+|-----------|-----------|----------------|
+| 0-3 years | 20+ | Noteworthy |
+| 0-3 years | 100+ | Highly Influential |
+| 3-7 years | 100+ | Significant |
+| 3-7 years | 500+ | Landmark |
+| 7+ years | 500+ | Seminal |
+| 7+ years | 1000+ | Foundational |
+
+**Database-Specific Citation Features:**
+- **Google Scholar:** Sort by citation count, use "Cited by" feature
+- **Semantic Scholar:** "Highly Influential Citations" metric, citation velocity
+- **OpenAlex:** Citation counts, citation context analysis
+- **PubMed:** Use "Cited by" in PMC, check citation counts via Google Scholar
+
+#### Filtering by Journal Quality
+
+Prioritize papers from higher-tier venues:
+
+**Tier 1 (Always Prefer):**
+- Nature, Science, Cell, NEJM, Lancet, JAMA, PNAS
+- Nature Medicine, Nature Biotechnology, Nature Methods
+- Search tip: `source:Nature` or `journal:Nature` in Google Scholar
+
+**Tier 2 (High Priority):**
+- High-impact specialized journals (Impact Factor >10)
+- Top conferences: NeurIPS, ICML, ICLR, CVPR, ACL
+
+**Tier 3 (Include When Relevant):**
+- Respected field-specific journals (IF 5-10)
+
+**PubMed Journal Filtering:**
+```
+"Nature"[Journal] OR "Science"[Journal] OR "Cell"[Journal]
+```
+
+**Google Scholar Journal Filtering:**
+```
+source:Nature source:Science source:Cell
+```
+
+#### Leveraging "Cited by" Features
+
+**Finding Influential Work:**
+1. Start with a known key paper
+2. Click "Cited by" to find papers that cite it
+3. Sort citing papers by their citation count
+4. Highly-cited citing papers indicate important follow-up work
+
+**Identifying Seminal Papers:**
+1. Search your topic broadly
+2. Note which papers appear repeatedly in reference lists
+3. Papers cited by many of your results are likely seminal
+4. Check citation counts to confirm influence
+
+**Semantic Scholar Features:**
+- "Highly Influential Citations" shows citations that significantly built on the paper
+- "Citation Velocity" shows recent citation growth
+- Paper recommendations based on citation networks
+
 ### Citation Chaining
 
 #### Forward Citation Search
@@ -252,6 +320,7 @@ Find papers that cite a key paper:
 - Use Google Scholar "Cited by" feature
 - Use OpenAlex or Semantic Scholar APIs
 - Identifies newer research building on seminal work
+- **Tip:** Sort by citation count to find the most influential follow-up work
 
 #### Backward Citation Search
 Review references in key papers:
