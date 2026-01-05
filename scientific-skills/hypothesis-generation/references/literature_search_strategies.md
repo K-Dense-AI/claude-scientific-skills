@@ -274,12 +274,95 @@ Use WebSearch for:
 - If studying plant-microbe symbiosis: search `nitrogen fixation rhizobia legumes`
 - If studying drug resistance: search `antibiotic resistance evolution mechanisms`
 
+## Evaluating Paper Impact and Quality
+
+### Citation Count Significance
+
+Citation counts indicate influence and importance in the field. Interpret citations relative to paper age and field norms:
+
+| Paper Age | Citations | Interpretation |
+|-----------|-----------|----------------|
+| 0-3 years | 20+ | Noteworthy - gaining traction |
+| 0-3 years | 100+ | Highly Influential - significant impact already |
+| 3-7 years | 100+ | Significant - established contribution |
+| 3-7 years | 500+ | Landmark - major contribution to field |
+| 7+ years | 500+ | Seminal - widely recognized important work |
+| 7+ years | 1000+ | Foundational - field-defining paper |
+
+**Field-specific considerations:**
+- Biomedical/clinical: Higher citation norms (NEJM papers often 1000+)
+- Computer Science: Conference citations matter more than journals
+- Mathematics/Physics: Lower citation norms, longer citation half-lives
+- Social Sciences: Moderate citation norms, high book citation rates
+
+### Journal Impact Factor Guidance
+
+**Tier 1 - Premier Venues (Always Prefer):**
+- **General Science:** Nature (IF ~65), Science (IF ~55), Cell (IF ~65), PNAS (IF ~12)
+- **Medicine:** NEJM (IF ~175), Lancet (IF ~170), JAMA (IF ~120), BMJ (IF ~93)
+- **Field Flagships:** Nature Medicine, Nature Biotechnology, Nature Methods, Nature Genetics
+
+**Tier 2 - High-Impact Specialized (Strong Preference):**
+- Impact Factor >10
+- Examples: JAMA Internal Medicine, Annals of Internal Medicine, Circulation, Blood
+- Top ML/AI conferences: NeurIPS, ICML, ICLR (equivalent to IF 15-25)
+
+**Tier 3 - Respected Specialized (Include When Relevant):**
+- Impact Factor 5-10
+- Established society journals
+- Well-indexed specialty journals
+
+**Tier 4 - Other Peer-Reviewed (Use Sparingly):**
+- Impact Factor <5
+- Only cite if directly relevant AND no better source exists
+
+### Author Track Record Evaluation
+
+Prefer papers from established researchers:
+
+**Strong Author Indicators:**
+- **High h-index:** >40 in established fields, >20 for early-career stars
+- **Multiple Tier-1 publications:** Track record in Nature/Science/Cell family
+- **Institutional affiliation:** Leading research universities and institutes
+- **Recognition:** Awards, fellowships, editorial positions
+- **First/last authorship:** On multiple highly-cited papers
+
+**How to Check Author Reputation:**
+1. Google Scholar profile: Check h-index, i10-index, total citations
+2. PubMed: Search author name, review publication venues
+3. Institutional page: Check position, awards, grants
+4. ORCID profile: Full publication history
+
+### Conference Ranking Awareness (Computer Science/AI)
+
+For ML/AI and computer science topics, conference rankings matter:
+
+**A* (Flagship) - Equivalent to Nature/Science:**
+- NeurIPS (Neural Information Processing Systems)
+- ICML (International Conference on Machine Learning)
+- ICLR (International Conference on Learning Representations)
+- CVPR (Computer Vision and Pattern Recognition)
+- ACL (Association for Computational Linguistics)
+
+**A (Excellent) - Equivalent to Tier-2 Journals:**
+- AAAI, IJCAI (AI general)
+- EMNLP, NAACL (NLP)
+- ECCV, ICCV (Computer Vision)
+- SIGKDD, WWW (Data Mining)
+
+**B (Good) - Equivalent to Tier-3 Journals:**
+- COLING, CoNLL (NLP)
+- WACV, BMVC (Computer Vision)
+- Most ACM/IEEE specialized conferences
+
 ## Evaluating Source Quality
 
 ### Primary Research Quality Indicators
 
 **Strong quality signals:**
-- Published in reputable journals
+- Published in Tier-1 or Tier-2 venues
+- High citation count for paper age
+- Written by established researchers with strong track records
 - Large sample sizes (for statistical power)
 - Pre-registered studies (reduces bias)
 - Appropriate controls and methods

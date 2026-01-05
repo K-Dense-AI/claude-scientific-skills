@@ -123,13 +123,34 @@ IMPORTANT INSTRUCTIONS:
 6. Include key findings, methodologies, and implications when relevant
 7. Note any controversies, limitations, or conflicting evidence
 
+PAPER QUALITY AND POPULARITY PRIORITIZATION (CRITICAL):
+8. ALWAYS prioritize HIGHLY-CITED papers over obscure publications:
+   - Recent papers (0-3 years): prefer 20+ citations, highlight 100+ as highly influential
+   - Mid-age papers (3-7 years): prefer 100+ citations, highlight 500+ as landmark
+   - Older papers (7+ years): prefer 500+ citations, highlight 1000+ as foundational
+9. ALWAYS prioritize papers from TOP-TIER VENUES:
+   - Tier 1 (highest priority): Nature, Science, Cell, NEJM, Lancet, JAMA, PNAS, Nature Medicine, Nature Biotechnology
+   - Tier 2 (high priority): High-impact specialized journals (IF>10), top conferences (NeurIPS, ICML, ICLR for AI/ML)
+   - Tier 3: Respected specialized journals (IF 5-10)
+   - Only cite lower-tier venues if directly relevant AND no better source exists
+10. PREFER papers from ESTABLISHED, REPUTABLE AUTHORS:
+    - Senior researchers with high h-index and multiple high-impact publications
+    - Leading research groups at recognized institutions
+    - Authors with recognized expertise (awards, editorial positions)
+11. For EACH citation, include when available:
+    - Approximate citation count (e.g., "cited 500+ times")
+    - Journal/venue tier indicator
+    - Notable author credentials if relevant
+12. PRIORITIZE papers that DIRECTLY address the research question over tangentially related work
+
 RESPONSE FORMAT:
 - Start with a brief summary (2-3 sentences)
 - Present key findings and studies in organized sections
+- Rank papers by impact: most influential/cited first
 - End with future directions or research gaps if applicable
-- Include 5-8 high-quality citations at the end
+- Include 5-8 high-quality citations, emphasizing Tier-1 venues and highly-cited papers
 
-Remember: This is for academic research purposes. Prioritize accuracy, completeness, and proper attribution."""
+Remember: Quality over quantity. Prioritize influential, highly-cited papers from prestigious venues and established researchers."""
 
     def lookup(self, query: str) -> Dict[str, Any]:
         """Perform a research lookup for the given query."""
@@ -145,7 +166,22 @@ Remember: This is for academic research purposes. Prioritize accuracy, completen
         messages = [
             {
                 "role": "system", 
-                "content": "You are an academic research assistant. Focus exclusively on scholarly sources: peer-reviewed journals, academic papers, research institutions, and reputable scientific publications. Prioritize recent academic literature (2020-2026) and provide complete citations with DOIs. Use academic/scholarly search mode."
+                "content": """You are an academic research assistant specializing in finding HIGH-IMPACT, INFLUENTIAL research.
+
+QUALITY PRIORITIZATION (CRITICAL):
+- ALWAYS prefer highly-cited papers over obscure publications
+- ALWAYS prioritize Tier-1 venues: Nature, Science, Cell, NEJM, Lancet, JAMA, PNAS, and their family journals
+- ALWAYS prefer papers from established researchers with strong publication records
+- Include citation counts when known (e.g., "cited 500+ times")
+- Quality matters more than quantity - 5 excellent papers beats 10 mediocre ones
+
+VENUE HIERARCHY:
+1. Nature/Science/Cell family, NEJM, Lancet, JAMA (highest priority)
+2. High-impact specialized journals (IF>10), top ML conferences (NeurIPS, ICML, ICLR)
+3. Respected field-specific journals (IF 5-10)
+4. Other peer-reviewed sources (only if no better option exists)
+
+Focus exclusively on scholarly sources: peer-reviewed journals, academic papers, research institutions. Prioritize recent academic literature (2020-2026) and provide complete citations with DOIs. Always indicate paper impact through citation counts and venue prestige."""
             },
             {"role": "user", "content": research_prompt}
         ]
@@ -316,6 +352,7 @@ Remember: This is for academic research purposes. Prioritize accuracy, completen
 def main():
     """Command-line interface for testing the research lookup tool."""
     import argparse
+    import sys
 
     parser = argparse.ArgumentParser(description="Research Information Lookup Tool")
     parser.add_argument("query", nargs="?", help="Research query to look up")
@@ -323,82 +360,113 @@ def main():
     parser.add_argument("--batch", nargs="+", help="Run multiple queries")
     parser.add_argument("--force-model", choices=["pro", "reasoning"], 
                         help="Force specific model: 'pro' for fast lookup, 'reasoning' for deep analysis")
+    parser.add_argument("-o", "--output", help="Write output to file instead of stdout")
+    parser.add_argument("--json", action="store_true", help="Output results as JSON")
 
     args = parser.parse_args()
+    
+    # Set up output destination
+    output_file = None
+    if args.output:
+        output_file = open(args.output, 'w', encoding='utf-8')
+    
+    def write_output(text):
+        """Write to file or stdout."""
+        if output_file:
+            output_file.write(text + '\n')
+        else:
+            print(text)
 
     # Check for API key
     if not os.getenv("OPENROUTER_API_KEY"):
-        print("Error: OPENROUTER_API_KEY environment variable not set")
-        print("Please set it in your .env file or export it:")
-        print("  export OPENROUTER_API_KEY='your_openrouter_api_key'")
+        print("Error: OPENROUTER_API_KEY environment variable not set", file=sys.stderr)
+        print("Please set it in your .env file or export it:", file=sys.stderr)
+        print("  export OPENROUTER_API_KEY='your_openrouter_api_key'", file=sys.stderr)
+        if output_file:
+            output_file.close()
         return 1
 
     try:
         research = ResearchLookup(force_model=args.force_model)
 
         if args.model_info:
-            print("Available models from OpenRouter:")
+            write_output("Available models from OpenRouter:")
             models = research.get_model_info()
             if "data" in models:
                 for model in models["data"]:
                     if "perplexity" in model["id"].lower():
-                        print(f"  - {model['id']}: {model.get('name', 'N/A')}")
+                        write_output(f"  - {model['id']}: {model.get('name', 'N/A')}")
+            if output_file:
+                output_file.close()
             return 0
 
         if not args.query and not args.batch:
-            print("Error: No query provided. Use --model-info to see available models.")
+            print("Error: No query provided. Use --model-info to see available models.", file=sys.stderr)
+            if output_file:
+                output_file.close()
             return 1
 
         if args.batch:
-            print(f"Running batch research for {len(args.batch)} queries...")
+            print(f"Running batch research for {len(args.batch)} queries...", file=sys.stderr)
             results = research.batch_lookup(args.batch)
         else:
-            print(f"Researching: {args.query}")
+            print(f"Researching: {args.query}", file=sys.stderr)
             results = [research.lookup(args.query)]
 
-        # Display results
+        # Output as JSON if requested
+        if args.json:
+            write_output(json.dumps(results, indent=2, ensure_ascii=False))
+            if output_file:
+                output_file.close()
+            return 0
+
+        # Display results in human-readable format
         for i, result in enumerate(results):
             if result["success"]:
-                print(f"\n{'='*80}")
-                print(f"Query {i+1}: {result['query']}")
-                print(f"Timestamp: {result['timestamp']}")
-                print(f"Model: {result['model']}")
-                print(f"{'='*80}")
-                print(result["response"])
+                write_output(f"\n{'='*80}")
+                write_output(f"Query {i+1}: {result['query']}")
+                write_output(f"Timestamp: {result['timestamp']}")
+                write_output(f"Model: {result['model']}")
+                write_output(f"{'='*80}")
+                write_output(result["response"])
 
                 # Display API-provided sources first (most reliable)
                 sources = result.get("sources", [])
                 if sources:
-                    print(f"\n📚 Sources ({len(sources)}):")
+                    write_output(f"\n📚 Sources ({len(sources)}):")
                     for j, source in enumerate(sources):
                         title = source.get("title", "Untitled")
                         url = source.get("url", "")
                         date = source.get("date", "")
                         date_str = f" ({date})" if date else ""
-                        print(f"  [{j+1}] {title}{date_str}")
+                        write_output(f"  [{j+1}] {title}{date_str}")
                         if url:
-                            print(f"      {url}")
+                            write_output(f"      {url}")
 
                 # Display additional text-extracted citations
                 citations = result.get("citations", [])
                 text_citations = [c for c in citations if c.get("type") in ("doi", "url")]
                 if text_citations:
-                    print(f"\n🔗 Additional References ({len(text_citations)}):")
+                    write_output(f"\n🔗 Additional References ({len(text_citations)}):")
                     for j, citation in enumerate(text_citations):
                         if citation.get("type") == "doi":
-                            print(f"  [{j+1}] DOI: {citation.get('doi', '')} - {citation.get('url', '')}")
+                            write_output(f"  [{j+1}] DOI: {citation.get('doi', '')} - {citation.get('url', '')}")
                         elif citation.get("type") == "url":
-                            print(f"  [{j+1}] {citation.get('url', '')}")
+                            write_output(f"  [{j+1}] {citation.get('url', '')}")
 
                 if result.get("usage"):
-                    print(f"\nUsage: {result['usage']}")
+                    write_output(f"\nUsage: {result['usage']}")
             else:
-                print(f"\nError in query {i+1}: {result['error']}")
+                write_output(f"\nError in query {i+1}: {result['error']}")
 
+        if output_file:
+            output_file.close()
         return 0
 
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print(f"Error: {str(e)}", file=sys.stderr)
+        if output_file:
+            output_file.close()
         return 1
 
 
