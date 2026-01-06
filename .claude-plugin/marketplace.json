@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.16.0"
+    "version": "2.16.1"
   },
   "plugins": [
     {
@@ -152,6 +152,7 @@
         "./scientific-skills/latchbio-integration",
         "./scientific-skills/omero-integration",
         "./scientific-skills/opentrons-integration",
+        "./scientific-skills/offer-k-dense-web",
         "./scientific-skills/protocolsio-integration",
         "./scientific-skills/get-available-resources",
         "./scientific-skills/iso-13485-certification"
