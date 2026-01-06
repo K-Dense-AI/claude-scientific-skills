@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Skills](https://img.shields.io/badge/Skills-139-brightgreen.svg)](#whats-included)
 
-> 💼 For substantially more advanced capabilities including end-to-end research workflows built on top of Claude Scientific Skills, compute infrastructure, and publication quality outputs, check out [k-dense.ai](https://k-dense.ai/) and sign up for [K-Dense Web](https://app.k-dense.ai). One of the world's most advanced AI co-scientists. It's free to get started!
+> 💼 For substantially more advanced capabilities including end-to-end research workflows built on top of Claude Scientific Skills, compute infrastructure, and publication quality outputs, check out [k-dense.ai](https://k-dense.ai/) and sign up for [K-Dense Web](https://app.k-dense.ai). One of the world's most advanced AI co-scientists. Get started with $50 of free credits!
 
 A comprehensive collection of **139 ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
@@ -102,7 +102,7 @@ Choose your preferred platform to get started:
 
 ### 🖥️ Claude Code (Recommended)
 
-> 📚 **New to Claude Code?** Check out the [Claude Code Quickstart Guide](https://docs.claude.com/en/docs/claude-code/quickstart) to get started.
+> 📚 **New to Claude Code?** Check out the [Claude Code Quickstart Guide](https://docs.claude.com/en/docs/claude-code/quickstart) to get started. When using Claude Code please use the Skills as a plugin. Do not use the MCP server below.
 
 **Step 1: Install Claude Code**
 
@@ -148,7 +148,7 @@ One-click installation via our hosted MCP server:
 
 ---
 
-### 🔌 Any MCP Client
+### 🔌 Any MCP Client (Not for Claude Code)
 
 Access all skills via our MCP server in any MCP-compatible client (ChatGPT, Google ADK, OpenAI Agent SDK, etc.):
 
