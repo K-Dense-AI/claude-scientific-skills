@@ -3,7 +3,26 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Skills](https://img.shields.io/badge/Skills-139-brightgreen.svg)](#whats-included)
 
-> 💼 For substantially more advanced capabilities including end-to-end research workflows built on top of Claude Scientific Skills, compute infrastructure, and publication quality outputs, check out [k-dense.ai](https://k-dense.ai/) and sign up for [K-Dense Web](https://app.k-dense.ai). One of the world's most advanced AI co-scientists. Get started with $50 of free credits!
+> ### 🚀 Want 10x the power? Skip the setup entirely.
+>
+> **[K-Dense Web](https://app.k-dense.ai)** is the full AI co-scientist experience—everything in this repo, plus:
+>
+> | Feature | This Repo | K-Dense Web |
+> |---------|-----------|-------------|
+> | Scientific Skills | ✅ 139 skills | ✅ **200+ skills** (exclusive access) |
+> | Setup Required | Manual installation | **Zero setup** — works instantly |
+> | Compute | Your machine | **Cloud GPUs & HPC** included |
+> | Workflows | Basic prompts | **End-to-end research pipelines** |
+> | Outputs | Code & analysis | **Publication-ready** figures, reports & papers |
+> | Integrations | Local tools | **Lab systems, ELNs, cloud storage** |
+>
+> **Researchers at Stanford, MIT, and leading pharma companies use K-Dense Web to accelerate discoveries.**
+>
+> 🎁 **Get $50 in free credits** — no credit card required.
+>
+> <a href="https://app.k-dense.ai"><img src="https://img.shields.io/badge/Try_K--Dense_Web-Start_Free-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTJoMTQiLz48cGF0aCBkPSJtMTIgNSA3IDctNyA3Ii8+PC9zdmc+" alt="Try K-Dense Web"></a>
+>
+> *Learn more at [k-dense.ai](https://k-dense.ai)*
 
 A comprehensive collection of **139 ready-to-use scientific skills** for Claude, created by the K-Dense team. Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
