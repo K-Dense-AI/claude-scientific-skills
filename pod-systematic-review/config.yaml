@@ -1,0 +1,347 @@
+# Systematic Review Configuration
+# Postoperative Delirium in Elderly Patients Undergoing Joint Arthroplasty
+
+review:
+  title: "Risk Factors for Postoperative Delirium in Elderly Patients Undergoing Total Hip/Knee Arthroplasty"
+  protocol_id: "POD-THA-TKA-2026"
+  version: "1.0"
+  date: "2026-01-07"
+
+reviewers:
+  - id: "R1"
+    name: "Reviewer One"
+    role: "primary"
+  - id: "R2"
+    name: "Reviewer Two"
+    role: "primary"
+  - id: "R3"
+    name: "Reviewer Three"
+    role: "adjudicator"
+
+# Population, Intervention, Comparison, Outcome, Study design (PICOS)
+picos:
+  population:
+    description: "Elderly patients aged ≥65 years undergoing total hip or knee arthroplasty (primary or revision)"
+    age_threshold: 65
+    procedures:
+      - "total hip arthroplasty"
+      - "total knee arthroplasty"
+      - "hip replacement"
+      - "knee replacement"
+      - "THA"
+      - "TKA"
+      - "primary arthroplasty"
+      - "revision arthroplasty"
+    mixed_age_rule: "Include if elderly subgroup ≥50% OR subgroup results reported separately"
+
+  outcome:
+    primary: "Postoperative delirium (POD) incidence"
+    requirements:
+      - "POD diagnostic method reported (e.g., DSM-5, DSM-IV, CAM, CAM-ICU, chart review)"
+      - "Statistical association with ≥1 risk factor"
+      - "Effect size reported: OR, RR, or HR with 95% CI (if available)"
+
+  exposures:
+    categories:
+      - "Demographics: age, sex, education level"
+      - "Comorbidities: cardiovascular, respiratory, metabolic, neurological"
+      - "Pre-operative cognition: MMSE, MoCA, cognitive impairment"
+      - "Medications: psychotropics, sedatives, anticholinergics, polypharmacy"
+      - "Surgery factors: procedure type, duration, blood loss, transfusion"
+      - "Anesthesia: general vs regional, depth, duration"
+      - "Postoperative: ICU admission, pain management, complications"
+
+  study_designs:
+    include:
+      - "prospective cohort"
+      - "retrospective cohort"
+      - "case-control"
+      - "secondary analysis of RCTs"
+    exclude:
+      - "case reports"
+      - "case series (n<10)"
+      - "narrative reviews"
+      - "systematic reviews (but check references)"
+      - "editorials"
+      - "opinion pieces"
+      - "conference abstracts without full text"
+
+inclusion_criteria:
+  - "Age ≥65 years OR mixed population with elderly ≥50% OR separate elderly subgroup analysis"
+  - "Primary or revision total hip or knee arthroplasty"
+  - "POD as outcome with diagnostic method specified"
+  - "At least one risk factor/predictor examined with statistical analysis"
+  - "Cohort, case-control, or secondary RCT analysis"
+  - "English or Chinese language"
+  - "Peer-reviewed journal article"
+
+exclusion_criteria:
+  - "Age <65 and no elderly subgroup data"
+  - "Other surgical procedures (not hip/knee arthroplasty)"
+  - "No POD outcome or diagnostic method not reported"
+  - "No risk factor analysis"
+  - "Inappropriate study design (case report, review, opinion)"
+  - "Grey literature (theses, reports, preprints)"
+  - "Languages other than English or Chinese"
+  - "Insufficient data for analysis"
+
+# Search strategy per database
+search_strategies:
+  pubmed:
+    date_range: "1990/01/01 to 2026/01/07"
+    query: |
+      (("postoperative delirium"[Title/Abstract] OR "perioperative delirium"[Title/Abstract] OR
+        "acute confusion"[Title/Abstract] OR "confusion state"[Title/Abstract] OR
+        "delirium"[MeSH Terms] OR "postoperative complications"[MeSH Terms]) AND
+       ("arthroplasty"[Title/Abstract] OR "arthroplasty, replacement"[MeSH Terms] OR
+        "hip replacement"[Title/Abstract] OR "knee replacement"[Title/Abstract] OR
+        "joint replacement"[Title/Abstract] OR "total hip arthroplasty"[Title/Abstract] OR
+        "total knee arthroplasty"[Title/Abstract] OR "THA"[Title/Abstract] OR "TKA"[Title/Abstract]) AND
+       ("elderly"[Title/Abstract] OR "older adults"[Title/Abstract] OR "aged"[MeSH Terms] OR
+        "geriatric"[Title/Abstract] OR "senior"[Title/Abstract]) AND
+       ("risk factor"[Title/Abstract] OR "risk factors"[Title/Abstract] OR
+        "predictor"[Title/Abstract] OR "predictors"[Title/Abstract] OR
+        "determinant"[Title/Abstract] OR "determinants"[Title/Abstract] OR
+        "prognostic"[Title/Abstract] OR "associated factors"[Title/Abstract] OR
+        "correlate"[Title/Abstract] OR "correlates"[Title/Abstract]))
+      AND (English[Language] OR Chinese[Language])
+    notes: "Field tags: [Title/Abstract], [MeSH Terms], [Language]"
+
+  embase:
+    # Manual search - import results
+    query: |
+      ('postoperative delirium'/exp OR 'postoperative delirium':ab,ti OR
+       'perioperative delirium':ab,ti OR 'acute confusion':ab,ti) AND
+      ('hip arthroplasty'/exp OR 'knee arthroplasty'/exp OR 'joint replacement':ab,ti OR
+       'arthroplasty':ab,ti OR 'total hip replacement':ab,ti OR 'total knee replacement':ab,ti) AND
+      ('elderly'/exp OR 'aged'/exp OR 'elderly':ab,ti OR 'older adult':ab,ti OR 'geriatric':ab,ti) AND
+      ('risk factor'/exp OR 'risk factor':ab,ti OR 'predictor':ab,ti OR 'determinant':ab,ti)
+      AND ([english]/lim OR [chinese]/lim)
+    notes: "Embase.com syntax - manual search, import RIS"
+
+  cinahl:
+    query: |
+      (TI "postoperative delirium" OR AB "postoperative delirium" OR
+       TI "perioperative delirium" OR AB "perioperative delirium" OR MH "Delirium") AND
+      (TI arthroplasty OR AB arthroplasty OR MH "Arthroplasty, Replacement+" OR
+       TI "hip replacement" OR AB "hip replacement" OR TI "knee replacement" OR AB "knee replacement") AND
+      (TI elderly OR AB elderly OR MH "Aged+" OR TI "older adult" OR AB "older adult") AND
+      (TI "risk factor*" OR AB "risk factor*" OR TI predictor* OR AB predictor*)
+    notes: "CINAHL (EBSCO) - manual search, import RIS"
+
+  web_of_science:
+    query: |
+      TS=("postoperative delirium" OR "perioperative delirium" OR "acute confusion") AND
+      TS=(arthroplasty OR "hip replacement" OR "knee replacement" OR "joint replacement") AND
+      TS=(elderly OR "older adult*" OR aged OR geriatric) AND
+      TS=("risk factor*" OR predictor* OR determinant*)
+    notes: "Web of Science Core Collection - manual search, export BibTeX"
+
+  cochrane:
+    query: |
+      ("postoperative delirium" OR "perioperative delirium"):ti,ab,kw AND
+      (arthroplasty OR "hip replacement" OR "knee replacement"):ti,ab,kw AND
+      (elderly OR "older adult" OR aged):ti,ab,kw
+    notes: "Cochrane Library - manual search, export RIS"
+
+# File import settings
+import:
+  formats:
+    - "ris"
+    - "bibtex"
+    - "csv"
+  csv_columns:
+    title: "Title"
+    authors: "Authors"
+    year: "Year"
+    journal: "Journal"
+    abstract: "Abstract"
+    doi: "DOI"
+    pmid: "PMID"
+
+# Deduplication settings
+deduplication:
+  strict_match:
+    - "doi"
+    - "pmid"
+  fuzzy_match:
+    title_threshold: 0.90  # Levenshtein similarity for title
+    author_threshold: 0.85
+    year_tolerance: 0  # Exact year match for fuzzy dedup
+
+# Screening settings
+screening:
+  phases:
+    - name: "title_abstract"
+      description: "Title and abstract screening"
+      show_fulltext: false
+    - name: "fulltext"
+      description: "Full-text screening"
+      show_fulltext: true
+
+  decisions:
+    - value: "include"
+      label: "Include"
+      color: "green"
+    - value: "exclude"
+      label: "Exclude"
+      color: "red"
+    - value: "unclear"
+      label: "Unclear"
+      color: "orange"
+
+  exclusion_reasons:
+    - code: "E1"
+      reason: "Wrong population (age <65, no elderly subgroup)"
+    - code: "E2"
+      reason: "Wrong intervention (not THA/TKA)"
+    - code: "E3"
+      reason: "No POD outcome"
+    - code: "E4"
+      reason: "No diagnostic method for POD"
+    - code: "E5"
+      reason: "No risk factor analysis"
+    - code: "E6"
+      reason: "Wrong study design"
+    - code: "E7"
+      reason: "Wrong language"
+    - code: "E8"
+      reason: "Grey literature"
+    - code: "E9"
+      reason: "Insufficient data"
+    - code: "E10"
+      reason: "Duplicate"
+    - code: "E11"
+      reason: "Full text not available"
+    - code: "E12"
+      reason: "Other (specify in notes)"
+
+# Data extraction schema
+extraction:
+  study_characteristics:
+    - "study_id"
+    - "first_author"
+    - "publication_year"
+    - "country"
+    - "setting"  # single center, multicenter
+    - "study_design"  # prospective cohort, retrospective cohort, case-control, RCT secondary
+    - "recruitment_period"
+    - "sample_size"
+    - "mean_age"
+    - "sd_age"
+    - "age_range"
+    - "female_n"
+    - "female_percent"
+    - "surgery_type"  # THA, TKA, mixed
+    - "primary_revision"  # primary, revision, mixed
+
+  outcome:
+    - "pod_definition"  # DSM-5, DSM-IV, CAM, CAM-ICU, ICD codes, chart review
+    - "pod_assessment_tool"
+    - "pod_assessment_timing"  # POD1-7, etc.
+    - "pod_incidence_n"
+    - "pod_incidence_percent"
+    - "total_n"
+
+  risk_factors:
+    - "factor_name"
+    - "factor_category"  # demographic, comorbidity, medication, surgery, anesthesia, postop
+    - "comparison"  # exposed vs unexposed, per unit increase, etc.
+    - "effect_type"  # OR, RR, HR
+    - "effect_size"
+    - "ci_lower"
+    - "ci_upper"
+    - "p_value"
+    - "adjustment"  # crude, adjusted
+    - "covariates"  # list covariates if adjusted
+    - "subgroup"  # if applicable
+
+# Risk of bias assessment
+risk_of_bias:
+  nos:  # Newcastle-Ottawa Scale for cohort/case-control
+    domains:
+      selection:
+        - "Representativeness of exposed cohort"
+        - "Selection of non-exposed cohort"
+        - "Ascertainment of exposure"
+        - "Outcome not present at start"
+      comparability:
+        - "Comparability of cohorts (design/analysis)"
+      outcome:
+        - "Assessment of outcome"
+        - "Follow-up duration adequate"
+        - "Follow-up completeness"
+    star_scoring:
+      max_stars: 9
+      thresholds:
+        good: 7
+        fair: 4
+        poor: 0
+
+  rob2:  # For RCT secondary analyses
+    domains:
+      - "Randomization process"
+      - "Deviations from intended interventions"
+      - "Missing outcome data"
+      - "Measurement of outcome"
+      - "Selection of reported result"
+    judgments:
+      - "Low risk"
+      - "Some concerns"
+      - "High risk"
+
+# Meta-analysis settings
+meta_analysis:
+  methods:
+    pooling: "random_effects"  # DerSimonian-Laird
+    heterogeneity:
+      - "Q_test"
+      - "I_squared"
+      - "tau_squared"
+
+  publication_bias:
+    min_studies: 10
+    tests:
+      - "egger_test"
+      - "funnel_plot"
+
+  sensitivity_analysis:
+    - name: "leave_one_out"
+      description: "Leave-one-out analysis"
+    - name: "exclude_high_rob"
+      description: "Exclude high risk of bias studies"
+    - name: "exclude_unclear_rob"
+      description: "Exclude unclear risk of bias studies"
+
+  subgroup_analysis:
+    - variable: "surgery_type"
+      levels: ["THA", "TKA", "mixed"]
+    - variable: "study_design"
+      levels: ["prospective", "retrospective"]
+    - variable: "region"
+      levels: ["Asia", "Europe", "North America", "Other"]
+    - variable: "pod_diagnostic"
+      levels: ["DSM", "CAM", "ICD", "chart_review"]
+    - variable: "effect_adjustment"
+      levels: ["crude", "adjusted"]
+
+# Output settings
+output:
+  formats:
+    export: ["ris", "bibtex", "csv", "json"]
+    figures: ["png", "svg", "pdf"]
+
+  prisma:
+    generate_flowchart: true
+    generate_checklist: true
+
+  tables:
+    study_characteristics: true
+    risk_of_bias_summary: true
+    extraction_summary: true
+    meta_analysis_summary: true
+
+  figures:
+    forest_plots: true
+    funnel_plots: true
+    rob_summary_plot: true
