@@ -31,11 +31,11 @@ class PatentSearchClient:
         Initialize client with API key.
 
         Args:
-            api_key: USPTO API key (if not provided, uses USPTO_API_KEY env var)
+            api_key: PatentsView API key (if not provided, uses PATENTSVIEW_API_KEY env var)
         """
-        self.api_key = api_key or os.getenv("USPTO_API_KEY")
+        self.api_key = api_key or os.getenv("PATENTSVIEW_API_KEY")
         if not self.api_key:
-            raise ValueError("API key required. Set USPTO_API_KEY environment variable or pass to constructor.")
+            raise ValueError("API key required. Set PATENTSVIEW_API_KEY environment variable or pass to constructor.")
 
         self.headers = {
             "X-Api-Key": self.api_key,
@@ -101,15 +101,15 @@ class PatentSearchClient:
         """
         if fields is None:
             fields = [
-                "patent_number", "patent_title", "patent_date",
-                "patent_abstract", "assignee_organization",
-                "inventor_name", "cpc_subclass_id"
+                "patent_id", "patent_title", "patent_date",
+                "patent_abstract", "assignees",
+                "inventors"
             ]
 
         if sort is None:
             sort = [{"patent_date": "desc"}]
 
-        options = {"page": page, "per_page": min(per_page, 1000)}
+        options = {"size": 100}
 
         return self._request("patent", query, fields, sort, options)
 
