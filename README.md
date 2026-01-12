@@ -1,9 +1,9 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-139-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-140-brightgreen.svg)](#whats-included)
 
-A comprehensive collection of **139 ready-to-use scientific skills** for Claude, created by [K-Dense](https://k-dense.ai). Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **140 ready-to-use scientific skills** for Claude, created by [K-Dense](https://k-dense.ai). Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 **Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://app.k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
 
@@ -21,7 +21,7 @@ Want 10x the power with zero setup? **[K-Dense Web](https://app.k-dense.ai)** is
 
 | Feature | This Repo | K-Dense Web |
 |---------|-----------|-------------|
-| Scientific Skills | 139 skills | **200+ skills** (exclusive access) |
+| Scientific Skills | 140 skills | **200+ skills** (exclusive access) |
 | Setup Required | Manual installation | **Zero setup** — works instantly |
 | Compute | Your machine | **Cloud GPUs & HPC** included |
 | Workflows | Basic prompts | **End-to-end research pipelines** |
@@ -64,7 +64,7 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **139 scientific skills** organized into the following categories:
+This repository provides **140 scientific skills** organized into the following categories:
 
 - **28+ Scientific Databases** - Direct API access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, BioServices, PennyLane, Qiskit, and others
@@ -111,7 +111,7 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **139 Skills** - Extensive coverage across all major scientific domains
+- **140 Skills** - Extensive coverage across all major scientific domains
 - **28+ Databases** - Direct access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, and more
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioServices, PennyLane, Qiskit, and others
 
@@ -368,7 +368,7 @@ networks, and search GEO for similar patterns.
 
 ## 📚 Available Skills
 
-This repository contains **139 scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
+This repository contains **140 scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
 
 ### Skill Categories
 
@@ -378,10 +378,11 @@ This repository contains **139 scientific skills** organized across multiple dom
 - Genomic tools: gget, geniml, gtars, deepTools, FlowIO, Zarr
 - Phylogenetics: ETE Toolkit
 
-#### 🧪 **Cheminformatics & Drug Discovery** (10+ skills)
+#### 🧪 **Cheminformatics & Drug Discovery** (11+ skills)
 - Molecular manipulation: RDKit, Datamol, Molfeat
 - Deep learning: DeepChem, TorchDrug
 - Docking & screening: DiffDock
+- Cloud quantum chemistry: Rowan (pKa, docking, cofolding)
 - Drug-likeness: MedChem
 - Benchmarks: PyTDC
 
