@@ -149,19 +149,42 @@ irm https://claude.ai/install.ps1 | iex
 
 **Step 2: Register the Marketplace**
 
+In Claude Code, run the following command:
 ```bash
 /plugin marketplace add K-Dense-AI/claude-scientific-skills
 ```
 
-**Step 3: Install Skills**
+**Step 3: Install the Plugin**
 
-1. Open Claude Code
+**Option A: Direct Install (Fastest)**
+```bash
+/plugin install scientific-skills@claude-scientific-skills
+```
+
+**Option B: Interactive Install**
+1. Run `/plugin` in Claude Code
 2. Select **Browse and install plugins**
-3. Choose **claude-scientific-skills**
+3. Choose **claude-scientific-skills** marketplace
 4. Select **scientific-skills**
 5. Click **Install now**
 
-**That's it!** Claude will automatically use the appropriate skills when you describe your scientific tasks. Make sure to keep the skill up to date!
+**That's it!** Claude will automatically use the appropriate skills when you describe your scientific tasks.
+
+**Managing Your Plugin:**
+```bash
+# Check installed plugins
+/plugin → Manage Plugins
+
+# Update the plugin to the latest version
+/plugin update scientific-skills@claude-scientific-skills
+
+# Enable/disable the plugin
+/plugin enable scientific-skills@claude-scientific-skills
+/plugin disable scientific-skills@claude-scientific-skills
+
+# Uninstall if needed
+/plugin uninstall scientific-skills@claude-scientific-skills
+```
 
 ---
 
@@ -552,7 +575,9 @@ Your contributions help make scientific computing more accessible and enable res
 
 **Problem: Skills not loading in Claude Code**
 - Solution: Ensure you've installed the latest version of Claude Code
-- Try reinstalling the plugin: `/plugin marketplace add K-Dense-AI/claude-scientific-skills`
+- Verify the plugin is installed: `/plugin → Manage Plugins`
+- Try reinstalling: `/plugin uninstall scientific-skills@claude-scientific-skills` then `/plugin install scientific-skills@claude-scientific-skills`
+- Re-add the marketplace if needed: `/plugin marketplace add K-Dense-AI/claude-scientific-skills`
 
 **Problem: Missing Python dependencies**
 - Solution: Check the specific `SKILL.md` file for required packages
