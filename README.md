@@ -34,7 +34,7 @@ Want 10x the power with zero setup? **[K-Dense Web](https://app.k-dense.ai)** is
 
 <a href="https://app.k-dense.ai"><img src="https://img.shields.io/badge/Try_K--Dense_Web-Start_Free-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTJoMTQiLz48cGF0aCBkPSJtMTIgNSA3IDctNyA3Ii8+PC9zdmc+" alt="Try K-Dense Web"></a>
 
-*Learn more at [k-dense.ai](https://k-dense.ai)*
+*Learn more at [k-dense.ai](https://k-dense.ai)* | *[Read our detailed comparison →](https://k-dense.ai/blog/k-dense-web-vs-claude-scientific-skills)*
 
 ---
 
@@ -550,8 +550,8 @@ We welcome contributions to expand and improve this scientific skills repository
 
 ### Contribution Guidelines
 
+✅ **Adhere to the [Agent Skills Specification](https://agentskills.io/specification)** — Every skill must follow the official spec (valid `SKILL.md` frontmatter, naming conventions, directory structure)  
 ✅ Maintain consistency with existing skill documentation format  
-✅ Include practical, working examples in all contributions  
 ✅ Ensure all code examples are tested and functional  
 ✅ Follow scientific best practices in examples and workflows  
 ✅ Update relevant documentation when adding new capabilities  
