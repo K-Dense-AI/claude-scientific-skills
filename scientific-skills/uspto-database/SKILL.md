@@ -66,12 +66,16 @@ The USPTO provides multiple specialized APIs for different data needs:
 
 ### API Key Registration
 
-All USPTO APIs require an API key. Register at:
+USPTO APIs require an API key. Register at:
 **https://account.uspto.gov/api-manager/**
+
+API key for **PatentSearch API** is provided by PatentsView. Register at:
+**https://patentsview.org/api-v01-information-page**
 
 Set the API key as an environment variable:
 ```bash
 export USPTO_API_KEY="your_api_key_here"
+export PATENTSVIEW_API_KEY="you_api_key_here"
 ```
 
 ### Helper Scripts
@@ -98,7 +102,7 @@ client = PatentSearchClient()
 
 # Search for machine learning patents
 results = client.search_patents({
-    "patent_abstract": {"_text_all": ["machine", "learning"]}
+    "_text_all": {"patent_abstract": "machine learning"}
 })
 
 for patent in results['patents']:
