@@ -238,14 +238,21 @@ print(f"Found {len(results)} high-confidence human proteins")
 
 **Download by Species:**
 
+> ⚠️ **Security Note**: The example below uses `shell=True` for simplicity. In production environments, prefer using `subprocess.run()` with a list of arguments to prevent command injection vulnerabilities. See [Python subprocess security](https://docs.python.org/3/library/subprocess.html#security-considerations).
+
 ```python
 import subprocess
+import shlex
 
 def download_proteome(taxonomy_id, output_dir="./proteomes"):
     """Download all AlphaFold predictions for a species"""
+    # Validate taxonomy_id is an integer to prevent injection
+    if not isinstance(taxonomy_id, int):
+        raise ValueError("taxonomy_id must be an integer")
+    
     pattern = f"gs://public-datasets-deepmind-alphafold-v4/proteomes/proteome-tax_id-{taxonomy_id}-*_v4.tar"
-    cmd = f"gsutil -m cp {pattern} {output_dir}/"
-    subprocess.run(cmd, shell=True, check=True)
+    # Use list form instead of shell=True for security
+    subprocess.run(["gsutil", "-m", "cp", pattern, f"{output_dir}/"], check=True)
 
 # Download E. coli proteome (tax ID: 83333)
 download_proteome(83333)

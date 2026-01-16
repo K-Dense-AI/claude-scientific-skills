@@ -1,14 +1,14 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-139-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-140-brightgreen.svg)](#whats-included)
 
-A comprehensive collection of **139 ready-to-use scientific skills** for Claude, created by [K-Dense](https://k-dense.ai). Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **140 ready-to-use scientific skills** for Claude, created by [K-Dense](https://k-dense.ai). Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
-**Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://app.k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
+**Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
 
 <p align="center">
-  <a href="https://app.k-dense.ai">
+  <a href="https://k-dense.ai">
     <img src="docs/k-dense-web.gif" alt="K-Dense Web Demo" width="800"/>
   </a>
 </p>
@@ -17,11 +17,11 @@ A comprehensive collection of **139 ready-to-use scientific skills** for Claude,
 
 ## K-Dense Web - The Full Experience
 
-Want 10x the power with zero setup? **[K-Dense Web](https://app.k-dense.ai)** is the complete AI co-scientist platform—everything in this repo, plus:
+Want 10x the power with zero setup? **[K-Dense Web](https://k-dense.ai)** is the complete AI co-scientist platform—everything in this repo, plus:
 
 | Feature | This Repo | K-Dense Web |
 |---------|-----------|-------------|
-| Scientific Skills | 139 skills | **200+ skills** (exclusive access) |
+| Scientific Skills | 140 skills | **200+ skills** (exclusive access) |
 | Setup Required | Manual installation | **Zero setup** — works instantly |
 | Compute | Your machine | **Cloud GPUs & HPC** included |
 | Workflows | Basic prompts | **End-to-end research pipelines** |
@@ -32,9 +32,9 @@ Want 10x the power with zero setup? **[K-Dense Web](https://app.k-dense.ai)** is
 
 **Get $50 in free credits** — no credit card required.
 
-<a href="https://app.k-dense.ai"><img src="https://img.shields.io/badge/Try_K--Dense_Web-Start_Free-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTJoMTQiLz48cGF0aCBkPSJtMTIgNSA3IDctNyA3Ii8+PC9zdmc+" alt="Try K-Dense Web"></a>
+<a href="https://k-dense.ai"><img src="https://img.shields.io/badge/Try_K--Dense_Web-Start_Free-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTJoMTQiLz48cGF0aCBkPSJtMTIgNSA3IDctNyA3Ii8+PC9zdmc+" alt="Try K-Dense Web"></a>
 
-*Learn more at [k-dense.ai](https://k-dense.ai)*
+*Learn more at [k-dense.ai](https://k-dense.ai)* | *[Read our detailed comparison →](https://k-dense.ai/blog/k-dense-web-vs-claude-scientific-skills)*
 
 ---
 
@@ -64,7 +64,7 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 
 ## 📦 What's Included
 
-This repository provides **139 scientific skills** organized into the following categories:
+This repository provides **140 scientific skills** organized into the following categories:
 
 - **28+ Scientific Databases** - Direct API access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, and more
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, BioServices, PennyLane, Qiskit, and others
@@ -88,7 +88,7 @@ Each skill includes:
 - [Getting Started](#getting-started)
   - [Claude Code](#claude-code-recommended)
   - [Cursor IDE](#cursor-ide)
-  - [Any MCP Client](#any-mcp-client)
+  - [Any MCP Client](#any-mcp-client-not-for-claude-code)
 - [Support Open Source](#heart-support-the-open-source-community)
 - [Prerequisites](#prerequisites)
 - [Quick Examples](#quick-examples)
@@ -112,7 +112,7 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **139 Skills** - Extensive coverage across all major scientific domains
+- **140 Skills** - Extensive coverage across all major scientific domains
 - **28+ Databases** - Direct access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, and more
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioServices, PennyLane, Qiskit, and others
 
@@ -150,19 +150,42 @@ irm https://claude.ai/install.ps1 | iex
 
 **Step 2: Register the Marketplace**
 
+In Claude Code, run the following command:
 ```bash
 /plugin marketplace add K-Dense-AI/claude-scientific-skills
 ```
 
-**Step 3: Install Skills**
+**Step 3: Install the Plugin**
 
-1. Open Claude Code
+**Option A: Direct Install (Fastest)**
+```bash
+/plugin install scientific-skills@claude-scientific-skills
+```
+
+**Option B: Interactive Install**
+1. Run `/plugin` in Claude Code
 2. Select **Browse and install plugins**
-3. Choose **claude-scientific-skills**
+3. Choose **claude-scientific-skills** marketplace
 4. Select **scientific-skills**
 5. Click **Install now**
 
-**That's it!** Claude will automatically use the appropriate skills when you describe your scientific tasks. Make sure to keep the skill up to date!
+**That's it!** Claude will automatically use the appropriate skills when you describe your scientific tasks.
+
+**Managing Your Plugin:**
+```bash
+# Check installed plugins
+/plugin → Manage Plugins
+
+# Update the plugin to the latest version
+/plugin update scientific-skills@claude-scientific-skills
+
+# Enable/disable the plugin
+/plugin enable scientific-skills@claude-scientific-skills
+/plugin disable scientific-skills@claude-scientific-skills
+
+# Uninstall if needed
+/plugin uninstall scientific-skills@claude-scientific-skills
+```
 
 ---
 
@@ -384,7 +407,7 @@ networks, and search GEO for similar patterns.
 
 ## 📚 Available Skills
 
-This repository contains **139 scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
+This repository contains **140 scientific skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
 
 ### Skill Categories
 
@@ -394,10 +417,11 @@ This repository contains **139 scientific skills** organized across multiple dom
 - Genomic tools: gget, geniml, gtars, deepTools, FlowIO, Zarr
 - Phylogenetics: ETE Toolkit
 
-#### 🧪 **Cheminformatics & Drug Discovery** (10+ skills)
+#### 🧪 **Cheminformatics & Drug Discovery** (11+ skills)
 - Molecular manipulation: RDKit, Datamol, Molfeat
 - Deep learning: DeepChem, TorchDrug
 - Docking & screening: DiffDock
+- Cloud quantum chemistry: Rowan (pKa, docking, cofolding)
 - Drug-likeness: MedChem
 - Benchmarks: PyTDC
 
@@ -542,8 +566,8 @@ We welcome contributions to expand and improve this scientific skills repository
 
 ### Contribution Guidelines
 
+✅ **Adhere to the [Agent Skills Specification](https://agentskills.io/specification)** — Every skill must follow the official spec (valid `SKILL.md` frontmatter, naming conventions, directory structure)  
 ✅ Maintain consistency with existing skill documentation format  
-✅ Include practical, working examples in all contributions  
 ✅ Ensure all code examples are tested and functional  
 ✅ Follow scientific best practices in examples and workflows  
 ✅ Update relevant documentation when adding new capabilities  
@@ -571,7 +595,9 @@ This project builds on 50+ amazing open source projects. If you find value in th
 
 **Problem: Skills not loading in Claude Code**
 - Solution: Ensure you've installed the latest version of Claude Code
-- Try reinstalling the plugin: `/plugin marketplace add K-Dense-AI/claude-scientific-skills`
+- Verify the plugin is installed: `/plugin → Manage Plugins`
+- Try reinstalling: `/plugin uninstall scientific-skills@claude-scientific-skills` then `/plugin install scientific-skills@claude-scientific-skills`
+- Re-add the marketplace if needed: `/plugin marketplace add K-Dense-AI/claude-scientific-skills`
 
 **Problem: Missing Python dependencies**
 - Solution: Check the specific `SKILL.md` file for required packages

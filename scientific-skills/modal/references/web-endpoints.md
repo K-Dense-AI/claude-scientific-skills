@@ -131,6 +131,8 @@ def flask_app():
 
 For frameworks with custom network binding:
 
+> ⚠️ **Security Note**: The example below uses `shell=True` for simplicity. In production environments, prefer using `subprocess.Popen()` with a list of arguments to prevent command injection vulnerabilities.
+
 ```python
 @app.function()
 @modal.concurrent(max_inputs=100)
@@ -138,7 +140,8 @@ For frameworks with custom network binding:
 def my_server():
     import subprocess
     # Must bind to 0.0.0.0, not 127.0.0.1
-    subprocess.Popen("python -m http.server -d / 8000", shell=True)
+    # Use list form instead of shell=True for security
+    subprocess.Popen(["python", "-m", "http.server", "-d", "/", "8000"])
 ```
 
 ## Streaming Responses
