@@ -89,6 +89,7 @@ Each skill includes:
   - [Claude Code](#claude-code-recommended)
   - [Cursor IDE](#cursor-ide)
   - [Any MCP Client](#any-mcp-client)
+- [Support Open Source](#heart-support-the-open-source-community)
 - [Prerequisites](#prerequisites)
 - [Quick Examples](#quick-examples)
 - [Use Cases](#use-cases)
@@ -190,6 +191,21 @@ https://mcp.k-dense.ai/claude-scientific-skills/mcp
 
 **Option 2: Self-Hosted** (More Control)
 🔗 **[claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp)** - Deploy your own MCP server
+
+---
+
+## :heart: Support the Open Source Community
+
+Claude Scientific Skills is powered by **50+ incredible open source projects** maintained by dedicated developers and research communities worldwide. Projects like Biopython, Scanpy, RDKit, scikit-learn, PyTorch Lightning, and many others form the foundation of these skills.
+
+**If you find value in this repository, please consider supporting the projects that make it possible:**
+
+- :star: **Star their repositories** on GitHub
+- :moneybag: **Sponsor maintainers** via GitHub Sponsors or NumFOCUS
+- :memo: **Cite projects** in your publications
+- :computer: **Contribute** code, docs, or bug reports
+
+:point_right: **[View the full list of projects to support](docs/open-source-sponsors.md)**
 
 ---
 
@@ -542,6 +558,10 @@ Contributors are recognized in our community and may be featured in:
 - K-Dense community highlights
 
 Your contributions help make scientific computing more accessible and enable researchers to leverage AI tools more effectively!
+
+### Support Open Source
+
+This project builds on 50+ amazing open source projects. If you find value in these skills, please consider [supporting the projects we depend on](docs/open-source-sponsors.md).
 
 ---
 
