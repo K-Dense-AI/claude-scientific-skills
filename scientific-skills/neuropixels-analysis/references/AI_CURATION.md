@@ -67,7 +67,7 @@ result = npa.analyze_unit_visually(
     analyzer,
     unit_id=0,
     api_client=client,
-    model='claude-3-5-sonnet-20241022',
+    model='claude-opus-4.5',
     task='quality_assessment'
 )
 
@@ -287,7 +287,7 @@ Currently supported APIs:
 
 | Provider | Client | Model Examples |
 |----------|--------|----------------|
-| Anthropic | `anthropic.Anthropic()` | claude-3-5-sonnet-20241022 |
+| Anthropic | `anthropic.Anthropic()` | claude-opus-4.5 |
 | OpenAI | `openai.OpenAI()` | gpt-4-vision-preview |
 | Google | `google.generativeai` | gemini-pro-vision |
 

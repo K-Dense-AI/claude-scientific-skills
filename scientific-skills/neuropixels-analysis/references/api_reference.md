@@ -284,7 +284,7 @@ npa.analyze_unit_visually(
     analyzer: SortingAnalyzer,
     unit_id: int,
     api_client: Any = None,
-    model: str = 'claude-3-5-sonnet-20241022',
+    model: str = 'claude-opus-4.5',
     task: str = 'quality_assessment',
     custom_prompt: str = None,
 ) -> dict
@@ -304,7 +304,7 @@ npa.batch_visual_curation(
     analyzer: SortingAnalyzer,
     unit_ids: list = None,
     api_client: Any = None,
-    model: str = 'claude-3-5-sonnet-20241022',
+    model: str = 'claude-opus-4.5',
     output_dir: str = None,
     progress_callback: callable = None,
 ) -> dict
