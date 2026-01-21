@@ -23,7 +23,7 @@ md = MarkItDown(
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `llm_client` | OpenAI client | `None` | OpenAI-compatible client for AI image descriptions |
-| `llm_model` | str | `None` | Model name (e.g., "anthropic/claude-sonnet-4.5") for image descriptions |
+| `llm_model` | str | `None` | Model name (e.g., "anthropic/claude-opus-4.5") for image descriptions |
 | `llm_prompt` | str | `None` | Custom prompt for image description |
 | `docintel_endpoint` | str | `None` | Azure Document Intelligence endpoint |
 | `enable_plugins` | bool | `False` | Enable 3rd-party plugins |
@@ -235,7 +235,7 @@ client = OpenAI(
 # Create MarkItDown with AI support
 md = MarkItDown(
     llm_client=client,
-    llm_model="anthropic/claude-sonnet-4.5",  # recommended for scientific vision
+    llm_model="anthropic/claude-opus-4.5",  # recommended for scientific vision
     llm_prompt="Describe this image in detail for scientific documentation"
 )
 
@@ -246,11 +246,8 @@ result = md.convert("presentation.pptx")
 ### Available Models via OpenRouter
 
 Popular models with vision support:
-- `anthropic/claude-sonnet-4.5` - **Recommended for scientific vision**
-- `anthropic/claude-opus-4.5` - Advanced vision model
-- `openai/gpt-4o` - GPT-4 Omni
-- `openai/gpt-4-vision` - GPT-4 Vision
-- `google/gemini-pro-vision` - Gemini Pro Vision
+- `anthropic/claude-opus-4.5` - **Recommended for scientific vision**
+- `google/gemini-3-pro-preview` - Gemini Pro Vision
 
 See https://openrouter.ai/models for the complete list.
 
@@ -269,7 +266,7 @@ Be precise and technical.
 
 md = MarkItDown(
     llm_client=client,
-    llm_model="anthropic/claude-sonnet-4.5",
+    llm_model="anthropic/claude-opus-4.5",
     llm_prompt=scientific_prompt
 )
 ```
