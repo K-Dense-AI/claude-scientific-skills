@@ -480,7 +480,7 @@ This repository contains **140 scientific skills** organized across multiple dom
 
 #### 🔬 **Multi-omics & Systems Biology** (5+ skills)
 - Pathway analysis: KEGG, Reactome, STRING
-- Multi-omics: BIOMNI, Denario, HypoGeniC
+- Multi-omics: Denario, HypoGeniC
 - Data management: LaminDB
 
 #### 🧬 **Protein Engineering & Design** (2 skills)
