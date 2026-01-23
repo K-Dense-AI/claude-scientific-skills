@@ -85,6 +85,7 @@ The `idc-index` package provides multiple metadata index tables, accessible via 
 | `clinical_index` | 1 row = 1 clinical data column | fetch_index() | Dictionary mapping clinical table columns to collections |
 | `sm_index` | 1 row = 1 slide microscopy series | fetch_index() | Slide Microscopy (pathology) series metadata |
 | `sm_instance_index` | 1 row = 1 slide microscopy instance | fetch_index() | Instance-level (SOPInstanceUID) metadata for slide microscopy |
+| `seg_index` | 1 row = 1 DICOM Segmentation series | fetch_index() | Segmentation metadata: algorithm, segment count, reference to source image series |
 
 **Auto** = loaded automatically when `IDCClient()` is instantiated
 **fetch_index()** = requires `client.fetch_index("table_name")` to load
@@ -103,6 +104,8 @@ The `idc-index` package provides multiple metadata index tables, accessible via 
 | `source_DOI` | index, analysis_results_index | Link by publication DOI |
 | `crdc_series_uuid` | index, prior_versions_index | Link by CRDC unique identifier |
 | `Modality` | index, prior_versions_index | Filter by imaging modality |
+| `SeriesInstanceUID` | index, seg_index | Link segmentation series to its index metadata |
+| `segmented_SeriesInstanceUID` | seg_index → index | Link segmentation to its source image series (join seg_index.segmented_SeriesInstanceUID = index.SeriesInstanceUID) |
 
 **Note:** `Subjects`, `Updated`, and `Description` appear in multiple tables but have different meanings (counts vs identifiers, different update contexts).
 
@@ -127,6 +130,22 @@ result = client.sql_query("""
     SELECT i.collection_id, i.PatientID, s.ObjectiveLensPower, s.min_PixelSpacing_2sf
     FROM index i
     JOIN sm_index s ON i.SeriesInstanceUID = s.SeriesInstanceUID
+    LIMIT 10
+""")
+
+# Join seg_index with index to find segmentations and their source images
+client.fetch_index("seg_index")
+result = client.sql_query("""
+    SELECT
+        s.SeriesInstanceUID as seg_series,
+        s.AlgorithmName,
+        s.total_segments,
+        src.collection_id,
+        src.Modality as source_modality,
+        src.BodyPartExamined
+    FROM seg_index s
+    JOIN index src ON s.segmented_SeriesInstanceUID = src.SeriesInstanceUID
+    WHERE s.AlgorithmType = 'AUTOMATIC'
     LIMIT 10
 """)
 ```
@@ -262,7 +281,7 @@ pip install --upgrade idc-index
 
 **Important:** New IDC data release will always trigger a new version of `idc-index`. Always use `--upgrade` flag while installing, unless an older version is needed for reproducibility.
 
-**Tested with:** idc-index 0.11.5 (IDC data version v23)
+**Tested with:** idc-index 0.11.7 (IDC data version v23)
 
 **Optional (for data analysis):**
 ```bash
@@ -1005,6 +1024,45 @@ client.sql_query("""
     SELECT analysis_result_id, analysis_result_title
     FROM analysis_results_index
     WHERE Collections LIKE '%tcga_luad%'
+""")
+
+# Use seg_index for detailed DICOM Segmentation metadata
+client.fetch_index("seg_index")
+
+# Get segmentation statistics by algorithm
+client.sql_query("""
+    SELECT AlgorithmName, AlgorithmType, COUNT(*) as seg_count
+    FROM seg_index
+    WHERE AlgorithmName IS NOT NULL
+    GROUP BY AlgorithmName, AlgorithmType
+    ORDER BY seg_count DESC
+    LIMIT 10
+""")
+
+# Find segmentations for specific source images (e.g., chest CT)
+client.sql_query("""
+    SELECT
+        s.SeriesInstanceUID as seg_series,
+        s.AlgorithmName,
+        s.total_segments,
+        s.segmented_SeriesInstanceUID as source_series
+    FROM seg_index s
+    JOIN index src ON s.segmented_SeriesInstanceUID = src.SeriesInstanceUID
+    WHERE src.Modality = 'CT' AND src.BodyPartExamined = 'CHEST'
+    LIMIT 10
+""")
+
+# Find TotalSegmentator results with source image context
+client.sql_query("""
+    SELECT
+        seg_info.collection_id,
+        COUNT(DISTINCT s.SeriesInstanceUID) as seg_count,
+        SUM(s.total_segments) as total_segments
+    FROM seg_index s
+    JOIN index seg_info ON s.SeriesInstanceUID = seg_info.SeriesInstanceUID
+    WHERE s.AlgorithmName LIKE '%TotalSegmentator%'
+    GROUP BY seg_info.collection_id
+    ORDER BY seg_count DESC
 """)
 ```
 
