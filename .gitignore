@@ -13,3 +13,6 @@ main.py
 __pycache__/
 # Local MCP config with API keys (do not commit)
 restore-mcp-config.sh
+
+# Script with API keys (do not commit)
+add-mcp-reasoner.sh
