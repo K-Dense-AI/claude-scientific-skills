@@ -11,3 +11,5 @@ uv.lock
 main.py
 
 __pycache__/
+# Local MCP config with API keys (do not commit)
+restore-mcp-config.sh
