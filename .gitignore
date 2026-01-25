@@ -16,3 +16,6 @@ restore-mcp-config.sh
 
 # Script with API keys (do not commit)
 add-mcp-reasoner.sh
+
+# Script with API keys (do not commit)
+configure-all-5-mcps.sh
