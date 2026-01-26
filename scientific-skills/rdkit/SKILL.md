@@ -231,25 +231,30 @@ is_drug_like = mw and logp and hbd and hba
 **Fingerprint Types:**
 
 ```python
-from rdkit.Chem import AllChem, RDKFingerprint
-from rdkit.Chem.AtomPairs import Pairs, Torsions
+from rdkit.Chem import rdFingerprintGenerator
 from rdkit.Chem import MACCSkeys
 
 # RDKit topological fingerprint
-fp = Chem.RDKFingerprint(mol)
+rdk_gen = rdFingerprintGenerator.GetRDKitFPGenerator(minPath=1, maxPath=7, fpSize=2048)
+fp = rdk_gen.GetFingerprint(mol)
 
 # Morgan fingerprints (circular fingerprints, similar to ECFP)
-fp = AllChem.GetMorganFingerprint(mol, radius=2)
-fp_bits = AllChem.GetMorganFingerprintAsBitVect(mol, radius=2, nBits=2048)
+# Modern API using rdFingerprintGenerator
+morgan_gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
+fp = morgan_gen.GetFingerprint(mol)
+# Count-based fingerprint
+fp_count = morgan_gen.GetCountFingerprint(mol)
 
 # MACCS keys (166-bit structural key)
 fp = MACCSkeys.GenMACCSKeys(mol)
 
 # Atom pair fingerprints
-fp = Pairs.GetAtomPairFingerprint(mol)
+ap_gen = rdFingerprintGenerator.GetAtomPairGenerator()
+fp = ap_gen.GetFingerprint(mol)
 
 # Topological torsion fingerprints
-fp = Torsions.GetTopologicalTorsionFingerprint(mol)
+tt_gen = rdFingerprintGenerator.GetTopologicalTorsionGenerator()
+fp = tt_gen.GetFingerprint(mol)
 
 # Avalon fingerprints (if available)
 from rdkit.Avalon import pyAvalonTools
@@ -260,14 +265,19 @@ fp = pyAvalonTools.GetAvalonFP(mol)
 
 ```python
 from rdkit import DataStructs
+from rdkit.Chem import rdFingerprintGenerator
+
+# Generate fingerprints using generator
+mfpgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
+fp1 = mfpgen.GetFingerprint(mol1)
+fp2 = mfpgen.GetFingerprint(mol2)
 
 # Calculate Tanimoto similarity
-fp1 = AllChem.GetMorganFingerprintAsBitVect(mol1, radius=2)
-fp2 = AllChem.GetMorganFingerprintAsBitVect(mol2, radius=2)
 similarity = DataStructs.TanimotoSimilarity(fp1, fp2)
 
 # Calculate similarity for multiple molecules
-similarities = DataStructs.BulkTanimotoSimilarity(fp1, [fp2, fp3, fp4])
+fps = [mfpgen.GetFingerprint(m) for m in [mol2, mol3, mol4]]
+similarities = DataStructs.BulkTanimotoSimilarity(fp1, fps)
 
 # Other similarity metrics
 dice = DataStructs.DiceSimilarity(fp1, fp2)
@@ -282,7 +292,8 @@ from rdkit.ML.Cluster import Butina
 
 # Calculate distance matrix
 dists = []
-fps = [AllChem.GetMorganFingerprintAsBitVect(mol, 2) for mol in mols]
+mfpgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
+fps = [mfpgen.GetFingerprint(mol) for mol in mols]
 for i in range(len(fps)):
     sims = DataStructs.BulkTanimotoSimilarity(fps[i], fps[:i])
     dists.extend([1-sim for sim in sims])
