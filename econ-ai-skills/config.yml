@@ -1,0 +1,47 @@
+# Econ AI Skills Configuration
+# This file defines which skills to sync from the awesome-econ-ai-stuff repository
+
+source:
+  repository: meleantonio/awesome-econ-ai-stuff
+  branch: main
+  skills_path: _skills
+
+# Installation settings
+install:
+  target_dir: ./skills
+  backup_existing: true
+  overwrite: true
+
+# Skill categories to sync (set to true/false to enable/disable)
+categories:
+  ideation: true
+  literature: true
+  theory: true
+  analysis: true
+  data: true
+  writing: true
+  communication: true
+
+# Individual skills to include (if empty, all skills from enabled categories are synced)
+# Set to a list of skill names to only sync specific skills
+include_skills: []
+
+# Skills to exclude from sync (takes precedence over include_skills)
+exclude_skills: []
+
+# Sync schedule (for reference - actual schedule is in GitHub Actions workflow)
+schedule:
+  # Run daily at 6:00 AM UTC
+  cron: "0 6 * * *"
+
+# Notifications
+notifications:
+  # Create GitHub issue on sync failure
+  create_issue_on_failure: true
+  # Create PR for new skills instead of direct commit
+  create_pr_for_new_skills: true
+
+# Logging
+logging:
+  level: INFO
+  file: sync.log

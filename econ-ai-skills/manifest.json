@@ -1,0 +1,84 @@
+{
+  "last_sync": "2026-01-26T20:37:58.861653",
+  "source": {
+    "repository": "meleantonio/awesome-econ-ai-stuff",
+    "branch": "main",
+    "skills_path": "_skills"
+  },
+  "skills": {
+    "analysis": {
+      "python-panel-data": {
+        "hash": "2e84f3ab3bb4fc2600c59c87e39c10f76979f26a2398f86f48323f15d9856210",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861663"
+      },
+      "r-econometrics": {
+        "hash": "6d52ccaa5125dd2320d85571168ee0fccfdfeb533dd182b575bbaf25391865d6",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861665"
+      },
+      "stata-regression": {
+        "hash": "effdb799b4397d4ca9ff6156816cf46a8fbbcc3f20fdbe18ee171b9462baca71",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861667"
+      }
+    },
+    "communication": {
+      "beamer-presentation": {
+        "hash": "d87e02759c467189235eb32d077e4e06f0188c859c3fb78c019b8d08914c68aa",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861669"
+      },
+      "econ-visualization": {
+        "hash": "69242c9ce5e7f523ff070bad6af2335689c86f7f95166fe07885db545ae49111",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861670"
+      }
+    },
+    "data": {
+      "api-data-fetcher": {
+        "hash": "914f9253502b1ed341207dc4bd923d44a1f80d6dcd0011e3a1acd746ef032644",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861672"
+      },
+      "stata-data-cleaning": {
+        "hash": "32abec5b70d0b49feb9550a9a6ffc63ece4b05a41c206dfd5c107830f0df6c54",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861674"
+      }
+    },
+    "ideation": {
+      "research-ideation": {
+        "hash": "8dd8bac7a643486f124141049fce4dd949c2eb72dba91aaa12f0eeb59cc80c34",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861678"
+      }
+    },
+    "literature": {
+      "lit-review-assistant": {
+        "hash": "a1e7fd861a0e3e5c0f4ed42405dd8988985db961f0115702265c8a240a66f24e",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861681"
+      }
+    },
+    "theory": {
+      "latex-econ-model": {
+        "hash": "3739b55578c5dd48f095f1785a07a644ab45b17accd74f934bc2d0e14dd630cd",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861683"
+      }
+    },
+    "writing": {
+      "academic-paper-writer": {
+        "hash": "8ead215dcea41d3d8e8fd9e17914a0e0b11328640ab2bea7f6ec81f0c6706601",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861684"
+      },
+      "latex-tables": {
+        "hash": "3d6cc7fda1ec97b49328c6b3ee6d3b8ed6e267707c1e6a6d9efdfec22c0b34fe",
+        "last_action": "added",
+        "last_sync": "2026-01-26T20:37:58.861686"
+      }
+    }
+  }
+}
