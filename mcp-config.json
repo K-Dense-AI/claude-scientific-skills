@@ -1,0 +1,33 @@
+{
+  "skill_sources": [
+    {
+      "type": "github",
+      "owner": "anthropics",
+      "repo": "anthropic-skills",
+      "description": "Official Anthropic Skills"
+    },
+    {
+      "type": "github",
+      "owner": "K-Dense-AI",
+      "repo": "claude-scientific-skills",
+      "description": "K-Dense Scientific Skills Collection"
+    },
+    {
+      "type": "local",
+      "path": "/home/user/claude-scientific-skills",
+      "description": "Local Scientific Skills Repository"
+    }
+  ],
+  "embedding": {
+    "model": "text-embedding-3-small",
+    "dimensions": 1536
+  },
+  "content": {
+    "max_file_size_kb": 500,
+    "allowed_extensions": [".md", ".txt", ".py", ".json", ".yaml", ".yml"]
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8765
+  }
+}
