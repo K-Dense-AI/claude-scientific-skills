@@ -135,6 +135,12 @@ LAYOUT:
 - Balanced composition
 - Appropriate use of whitespace
 - No clutter or unnecessary decorative elements
+
+IMPORTANT - NO FIGURE NUMBERS:
+- Do NOT include "Figure 1:", "Fig. 1", or any figure numbering in the image
+- Do NOT add captions or titles like "Figure: ..." at the top or bottom
+- Figure numbers and captions are added separately in the document/LaTeX
+- The diagram should contain only the visual content itself
 """
     
     def __init__(self, api_key: Optional[str] = None, verbose: bool = False):

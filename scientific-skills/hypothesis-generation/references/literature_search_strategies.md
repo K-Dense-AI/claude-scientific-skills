@@ -370,6 +370,8 @@ For ML/AI and computer science topics, conference rankings matter:
 - Transparent data and methods
 
 **Red flags:**
+- Published in predatory or low-impact journals
+- Written by authors with no established track record
 - No peer review (use cautiously)
 - Conflicts of interest not disclosed
 - Methods not clearly described
@@ -379,6 +381,7 @@ For ML/AI and computer science topics, conference rankings matter:
 ### Review Quality Indicators
 
 **Systematic reviews (highest quality):**
+- Published in Tier-1/2 venues (Cochrane, Nature Reviews, Annual Reviews)
 - Pre-defined search strategy
 - Explicit inclusion/exclusion criteria
 - Quality assessment of included studies
@@ -389,6 +392,7 @@ For ML/AI and computer science topics, conference rankings matter:
 - May have selection bias
 - Useful for context and framing
 - Check author expertise and citations
+- Prefer reviews in Tier-1/2 journals by field leaders
 
 ## Time Management in Literature Search
 
