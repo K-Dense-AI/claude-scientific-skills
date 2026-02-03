@@ -96,6 +96,7 @@ DPI = 2400 / 8 = 300 ✓ (acceptable)
 - Include units in parentheses: "Temperature (°C)"
 - Spell out abbreviations in figure caption
 - Avoid rotated text when possible (exception: y-axis labels)
+- **No figure numbers in diagram** - do not include "Figure 1:", "Fig. 1", etc. (these are added by LaTeX/document)
 
 ### 5. Line Weights and Strokes
 
