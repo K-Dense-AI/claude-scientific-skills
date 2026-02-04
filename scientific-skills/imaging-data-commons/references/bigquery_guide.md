@@ -24,6 +24,7 @@ Use BigQuery instead of `idc-index` when you need:
 - Complex joins across clinical data tables
 - DICOM sequence attributes (nested structures)
 - Queries on fields not in the idc-index mini-index
+- Private DICOM elements (vendor-specific tags in OtherElements column)
 
 ## Accessing IDC in BigQuery
 
@@ -164,6 +165,190 @@ WHERE src.collection_id = 'qin_prostate_repeatability'
 LIMIT 10
 ```
 
+## Private DICOM Elements
+
+Private DICOM elements are vendor-specific attributes not defined in the DICOM standard. They often contain essential acquisition parameters (like diffusion b-values, gradient directions, or scanner-specific settings) that are critical for image interpretation and analysis.
+
+### Understanding Private Elements
+
+**How private elements work:**
+- Private elements use odd-numbered group numbers (e.g., 0019, 0043, 2001)
+- Each vendor reserves blocks of 256 elements using Private Creator identifiers at positions (gggg,0010-00FF)
+- For example, GE uses Private Creator "GEMS_PARM_01" at (0043,0010) to reserve elements (0043,1000-10FF)
+
+**Standard vs. private tags:** Some parameters exist in both forms:
+| Parameter | Standard Tag | GE | Siemens | Philips |
+|-----------|--------------|-----|---------|---------|
+| Diffusion b-value | (0018,9087) | (0043,1039) | (0019,100C) | (2001,1003) |
+| Private Creator | - | GEMS_PARM_01 | SIEMENS CSA HEADER | Philips Imaging |
+
+Older scanners typically populate only private tags; newer scanners may use standard tags. Always check both.
+
+**Challenges with private elements:**
+- Require manufacturer DICOM Conformance Statements to interpret
+- Tag meanings can change between software versions
+- May be removed during de-identification for HIPAA compliance
+- Value encoding varies (string vs. numeric, different units)
+
+### Accessing Private Elements in BigQuery
+
+Private elements are stored in the `OtherElements` column of `dicom_all` as an array of structs with `Tag` and `Data` fields.
+
+**Tag notation:** DICOM notation (0043,1039) becomes BigQuery format `Tag_00431039`.
+
+### Private Element Query Patterns
+
+#### Discover Available Private Tags
+
+List all non-empty private tags for a collection:
+
+```sql
+SELECT
+  other_elements.Tag,
+  COUNT(*) AS instance_count,
+  ARRAY_AGG(DISTINCT other_elements.Data[SAFE_OFFSET(0)] IGNORE NULLS LIMIT 5) AS sample_values
+FROM `bigquery-public-data.idc_current.dicom_all`,
+  UNNEST(OtherElements) AS other_elements
+WHERE collection_id = 'qin_prostate_repeatability'
+  AND Modality = 'MR'
+  AND ARRAY_LENGTH(other_elements.Data) > 0
+  AND other_elements.Data[SAFE_OFFSET(0)] IS NOT NULL
+  AND other_elements.Data[SAFE_OFFSET(0)] != ''
+GROUP BY other_elements.Tag
+ORDER BY instance_count DESC
+```
+
+For a specific series:
+
+```sql
+SELECT
+  other_elements.Tag,
+  ARRAY_AGG(DISTINCT other_elements.Data[SAFE_OFFSET(0)] IGNORE NULLS) AS values
+FROM `bigquery-public-data.idc_current.dicom_all`,
+  UNNEST(OtherElements) AS other_elements
+WHERE SeriesInstanceUID = '1.3.6.1.4.1.14519.5.2.1.7311.5101.206828891270520544417996275680'
+  AND ARRAY_LENGTH(other_elements.Data) > 0
+  AND other_elements.Data[SAFE_OFFSET(0)] IS NOT NULL
+  AND other_elements.Data[SAFE_OFFSET(0)] != ''
+GROUP BY other_elements.Tag
+```
+
+To identify the Private Creator for a tag, look for the reservation element in the same group. For example, if you find `Tag_00431039`, the Private Creator is at `Tag_00430010` (the tag that reserves block 10xx in group 0043).
+
+#### Identify Equipment Manufacturer
+
+Determine what equipment produced the data to find the correct DICOM Conformance Statement:
+
+```sql
+SELECT DISTINCT Manufacturer, ManufacturerModelName
+FROM `bigquery-public-data.idc_current.dicom_all`
+WHERE collection_id = 'qin_prostate_repeatability'
+  AND Modality = 'MR'
+```
+
+#### Access Private Element Values
+
+Use `UNNEST` to access individual private elements:
+
+```sql
+SELECT
+  SeriesInstanceUID,
+  SeriesDescription,
+  other_elements.Data[SAFE_OFFSET(0)] AS b_value
+FROM `bigquery-public-data.idc_current.dicom_all`,
+  UNNEST(OtherElements) AS other_elements
+WHERE collection_id = 'qin_prostate_repeatability'
+  AND other_elements.Tag = 'Tag_00431039'
+LIMIT 10
+```
+
+#### Aggregate Values by Series
+
+Collect all unique values across slices in a series:
+
+```sql
+SELECT
+  SeriesInstanceUID,
+  ANY_VALUE(SeriesDescription) AS SeriesDescription,
+  ARRAY_AGG(DISTINCT other_elements.Data[SAFE_OFFSET(0)]) AS b_values
+FROM `bigquery-public-data.idc_current.dicom_all`,
+  UNNEST(OtherElements) AS other_elements
+WHERE collection_id = 'qin_prostate_repeatability'
+  AND other_elements.Tag = 'Tag_00431039'
+GROUP BY SeriesInstanceUID
+```
+
+#### Combine Standard and Private Filters
+
+Filter using both standard DICOM attributes and private element values:
+
+```sql
+SELECT
+  PatientID,
+  SeriesInstanceUID,
+  ANY_VALUE(SeriesDescription) AS SeriesDescription,
+  ARRAY_AGG(DISTINCT other_elements.Data[SAFE_OFFSET(0)]) AS b_values,
+  COUNT(DISTINCT SOPInstanceUID) AS n_slices
+FROM `bigquery-public-data.idc_current.dicom_all`,
+  UNNEST(OtherElements) AS other_elements
+WHERE collection_id = 'qin_prostate_repeatability'
+  AND Modality = 'MR'
+  AND other_elements.Tag = 'Tag_00431039'
+  AND ImageType[SAFE_OFFSET(0)] = 'ORIGINAL'
+  AND other_elements.Data[SAFE_OFFSET(0)] = '1400'
+GROUP BY PatientID, SeriesInstanceUID
+ORDER BY PatientID
+```
+
+#### Cross-Collection Analysis
+
+Survey usage of a private tag across all IDC collections:
+
+```sql
+SELECT
+  collection_id,
+  ARRAY_TO_STRING(ARRAY_AGG(DISTINCT other_elements.Data[SAFE_OFFSET(0)] IGNORE NULLS), ', ') AS values_found,
+  ARRAY_AGG(DISTINCT Manufacturer IGNORE NULLS) AS manufacturers
+FROM `bigquery-public-data.idc_current.dicom_all`,
+  UNNEST(OtherElements) AS other_elements
+WHERE other_elements.Tag = 'Tag_00431039'
+  AND other_elements.Data[SAFE_OFFSET(0)] IS NOT NULL
+  AND other_elements.Data[SAFE_OFFSET(0)] != ''
+GROUP BY collection_id
+ORDER BY collection_id
+```
+
+### Workflow: Finding and Using Private Tags
+
+1. **Discover available private tags** in your collection using the discovery query above
+2. **Identify the manufacturer** to know which conformance statement to consult
+3. **Find the DICOM Conformance Statement** from the manufacturer's website (see Resources below)
+4. **Search the conformance statement** for the parameter you need (e.g., "b_value", "gradient") to understand what each tag contains
+5. **Convert tag to BigQuery format:** (gggg,eeee) → `Tag_ggggeeee`
+6. **Query and verify** results visually in the IDC Viewer
+
+### Data Quality Notes
+
+- Some collections show unrealistic values (e.g., b-value "1000000600") indicating encoding issues or different conventions
+- IDC data is de-identified; private tags containing PHI may have been removed or modified
+- The same tag may have different meanings across software versions
+- Always verify query results visually using the [IDC Viewer](https://viewer.imaging.datacommons.cancer.gov/) before large-scale analysis
+
+### Private Element Resources
+
+**Manufacturer DICOM Conformance Statements:**
+- [GE Healthcare MR](https://www.gehealthcare.com/products/interoperability/dicom/magnetic-resonance-imaging-dicom-conformance-statements)
+- [Siemens MR](https://www.siemens-healthineers.com/services/it-standards/dicom-conformance-statements-magnetic-resonance)
+- [Siemens CT](https://www.siemens-healthineers.com/services/it-standards/dicom-conformance-statements-computed-tomography)
+
+**DICOM Standard:**
+- [Part 5 Section 7.8 - Private Data Elements](https://dicom.nema.org/medical/dicom/current/output/chtml/part05/sect_7.8.html)
+- [Part 15 Appendix E - De-identification Profiles](https://dicom.nema.org/medical/dicom/current/output/chtml/part15/chapter_e.html)
+
+**Community Resources:**
+- [NAMIC Wiki: DWI/DTI DICOM](https://www.na-mic.org/wiki/NAMIC_Wiki:DTI:DICOM_for_DWI_and_DTI) - comprehensive vendor comparison for diffusion imaging
+- [StandardizeBValue](https://github.com/nslay/StandardizeBValue) - tool to extract vendor b-values to standard tags
+
 ## Using Query Results with idc-index
 
 Combine BigQuery for complex queries with idc-index for downloads (no GCP auth needed for downloads):
@@ -220,19 +405,76 @@ print(f"Query will scan {query_job.total_bytes_processed / 1e9:.2f} GB")
 
 ## Clinical Data
 
-Clinical data is in separate datasets with collection-specific tables. Not all collections have clinical data (started in IDC v11).
+Clinical data is in separate datasets with collection-specific tables. All clinical data available via `idc-index` is also available in BigQuery, with the same content and structure. Use BigQuery when you need complex cross-collection queries or joins that aren't possible with the local `idc-index` tables.
+
+**Datasets:**
+- `bigquery-public-data.idc_current_clinical` - current release (for exploration)
+- `bigquery-public-data.idc_v{version}_clinical` - versioned datasets (for reproducibility)
+
+Currently there are ~130 clinical tables representing ~70 collections. Not all collections have clinical data (started in IDC v11).
+
+### Clinical Table Naming
+
+Most collections use a single table: `<collection_id>_clinical`
+
+**Exception:** ACRIN collections use multiple tables for different data types (e.g., `acrin_6698_A0`, `acrin_6698_A1`, etc.).
+
+### Metadata Tables
+
+Two metadata tables help navigate clinical data:
+
+**table_metadata** - Collection-level information:
+```sql
+SELECT
+  collection_id,
+  table_name,
+  table_description
+FROM `bigquery-public-data.idc_current_clinical.table_metadata`
+WHERE collection_id = 'nlst'
+```
+
+**column_metadata** - Attribute-level details with value mappings:
+```sql
+SELECT
+  collection_id,
+  table_name,
+  column,
+  column_label,
+  data_type,
+  values
+FROM `bigquery-public-data.idc_current_clinical.column_metadata`
+WHERE collection_id = 'nlst'
+  AND column_label LIKE '%stage%'
+```
+
+The `values` field contains observed attribute values with their descriptions (same as in `idc-index` clinical_index).
+
+### Common Clinical Queries
 
 **List available clinical tables:**
 ```sql
 SELECT table_name
 FROM `bigquery-public-data.idc_current_clinical.INFORMATION_SCHEMA.TABLES`
+WHERE table_name NOT IN ('table_metadata', 'column_metadata')
+```
+
+**Find collections with specific clinical attributes:**
+```sql
+SELECT DISTINCT collection_id, table_name, column, column_label
+FROM `bigquery-public-data.idc_current_clinical.column_metadata`
+WHERE LOWER(column_label) LIKE '%chemotherapy%'
 ```
 
 **Query clinical data for a collection:**
 ```sql
--- Example: TCGA-LUAD clinical data
-SELECT *
-FROM `bigquery-public-data.idc_current_clinical.tcga_luad_clinical`
+-- Example: NLST cancer staging data
+SELECT
+  dicom_patient_id,
+  clinical_stag,
+  path_stag,
+  de_stag
+FROM `bigquery-public-data.idc_current_clinical.nlst_canc`
+WHERE clinical_stag IS NOT NULL
 LIMIT 10
 ```
 
@@ -240,19 +482,44 @@ LIMIT 10
 ```sql
 SELECT
   d.PatientID,
-  d.SeriesInstanceUID,
+  d.StudyInstanceUID,
   d.Modality,
-  c.age_at_diagnosis,
-  c.pathologic_stage
+  c.clinical_stag,
+  c.path_stag
 FROM `bigquery-public-data.idc_current.dicom_all` d
-JOIN `bigquery-public-data.idc_current_clinical.tcga_luad_clinical` c
+JOIN `bigquery-public-data.idc_current_clinical.nlst_canc` c
   ON d.PatientID = c.dicom_patient_id
-WHERE d.collection_id = 'tcga_luad'
+WHERE d.collection_id = 'nlst'
   AND d.Modality = 'CT'
+  AND c.clinical_stag = '400'  -- Stage IV
 LIMIT 20
 ```
 
-**Note:** Clinical table schemas vary by collection. Check column names with `INFORMATION_SCHEMA.COLUMNS` before querying.
+**Cross-collection clinical search:**
+```sql
+-- Find all collections with staging information
+SELECT
+  cm.collection_id,
+  cm.table_name,
+  cm.column,
+  cm.column_label
+FROM `bigquery-public-data.idc_current_clinical.column_metadata` cm
+WHERE LOWER(cm.column_label) LIKE '%stage%'
+ORDER BY cm.collection_id
+```
+
+### Key Column: dicom_patient_id
+
+Every clinical table includes `dicom_patient_id`, which matches the DICOM `PatientID` attribute in imaging tables. This is the join key between clinical and imaging data.
+
+**Note:** Clinical table schemas vary significantly by collection. Always check available columns first:
+```sql
+SELECT column_name, data_type
+FROM `bigquery-public-data.idc_current_clinical.INFORMATION_SCHEMA.COLUMNS`
+WHERE table_name = 'nlst_canc'
+```
+
+See `references/clinical_data_guide.md` for detailed workflows using `idc-index`, which provides the same clinical data without requiring BigQuery authentication.
 
 ## Important Notes
 
