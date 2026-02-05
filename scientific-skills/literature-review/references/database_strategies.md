@@ -325,27 +325,32 @@ Find papers that cite a key paper:
 #### Backward Citation Search
 Review references in key papers:
 - Extract references from included papers
-- Search for highly cited references
+- Search for highly cited references (500+ citations for older papers)
 - Identifies foundational research
+- **Tip:** Focus on references that appear in multiple papers' bibliographies
 
 ### Snowball Sampling
-1. Start with 3-5 highly relevant papers
+1. Start with 3-5 highly relevant papers **from Tier-1 venues**
 2. Extract all their references
 3. Check which references are cited by multiple papers
-4. Review those high-overlap references
+4. Review those high-overlap references - these are likely seminal
 5. Repeat for newly identified key papers
+6. **Prioritize papers with high citation counts** at each step
 
 ### Author Search
-Follow prolific authors in the field:
+Follow prolific and reputable authors in the field:
 - Search by author name across databases
-- Check author profiles (ORCID, Google Scholar)
+- Check author profiles (ORCID, Google Scholar) for h-index and publication venues
 - Review recent publications and preprints
+- **Prefer authors with multiple Tier-1 publications** and high h-index (>40)
+- Look for senior authors who are recognized field leaders
 
 ### Related Article Features
 Many databases suggest related articles:
 - PubMed "Similar articles"
 - Semantic Scholar "Recommended papers"
 - Use to discover papers missed by keyword search
+- **Filter recommendations by citation count and venue quality**
 
 ---
 

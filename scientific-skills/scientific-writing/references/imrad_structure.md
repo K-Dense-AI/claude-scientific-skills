@@ -51,56 +51,84 @@ Attract readers and accurately represent the paper's content.
 ### Purpose
 Provide a complete, standalone summary enabling readers to decide if the full paper is relevant to them.
 
-### Structure
-Most journals now require **structured abstracts** with labeled sections:
+### Format: Flowing Paragraphs (Default)
 
-**Background/Objective**: Why was the study needed? What was the aim?
-- 1-2 sentences
-- State the research problem and objective
+**⚠️ CRITICAL: Write abstracts as flowing paragraphs, NOT with labeled sections.**
 
-**Methods**: How was it done?
-- 2-4 sentences
-- Study design, participants, key procedures, analysis methods
+Most scientific papers use **unstructured abstracts** written as one or two cohesive paragraphs. This is the standard format for the majority of journals including Nature, Science, Cell, PNAS, and most field-specific journals.
 
-**Results**: What was found?
-- 3-5 sentences
-- Main findings with key statistics
-- Present the most important numerical data
+❌ **WRONG - Structured abstract with labels:**
+```
+Background: Hospital-acquired infections remain a major cause of morbidity.
+Methods: We conducted a 12-month before-after study...
+Results: Post-intervention, surface contamination decreased by 47%...
+Conclusions: UV-C disinfection significantly reduced infection rates.
+```
 
-**Conclusions**: What does it mean?
-- 1-2 sentences
-- Interpretation and implications
-- Avoid overstating or adding new information
+✅ **CORRECT - Flowing paragraph style:**
+```
+Hospital-acquired infections remain a major cause of morbidity, yet optimal 
+disinfection strategies remain unclear. We conducted a 12-month before-after 
+study in a 500-bed teaching hospital to evaluate UV-C disinfection added to 
+standard cleaning protocols. Environmental surfaces were cultured monthly and 
+infection rates tracked via surveillance data. Post-intervention, surface 
+contamination decreased by 47% (95% CI: 38-56%, p<0.001), and catheter-associated 
+urinary tract infections declined from 3.2 to 1.8 per 1000 catheter-days (RR=0.56, 
+95% CI: 0.38-0.83, p=0.004). No adverse effects were observed. These findings 
+demonstrate that UV-C disinfection significantly reduces environmental contamination 
+and infection rates, suggesting it may be a valuable addition to hospital infection 
+control programs.
+```
+
+### Abstract Structure (as unified paragraph)
+
+While written as flowing prose, the abstract should cover these elements in order:
+
+1. **Context and problem** (1-2 sentences): Why the research matters, what gap exists
+2. **Study description** (1-2 sentences): What was done and how (study design, methods)
+3. **Key findings** (2-4 sentences): Main results with specific quantitative data
+4. **Significance** (1-2 sentences): Interpretation, implications, and conclusions
 
 ### Length
-- Typically 100-250 words (check journal requirements)
-- Some journals allow up to 300 words
+- Typically 150-300 words (check journal requirements)
+- Some journals allow up to 350 words
 
 ### Key Rules
 - Write the abstract **last** (after completing all other sections)
+- **Write as flowing paragraph(s)** - no labeled sections
 - Make it fully understandable without reading the paper
 - Do not cite references in the abstract
 - Avoid abbreviations or define them at first use
 - Use past tense for methods and results, present tense for conclusions
 - Include key quantitative results with statistical measures
+- Use transitions to connect sentences naturally
 
-### Example Structure
+### When to Use Structured Abstracts (Exception)
+
+Only use labeled sections (Background/Objective, Methods, Results, Conclusions) when:
+- The journal **explicitly requires** structured abstracts in their author guidelines
+- Common in some medical journals (JAMA, BMJ, Annals of Internal Medicine)
+- Always check journal requirements before formatting
+
+Even for structured abstracts, write each section as complete sentences, not fragments.
+
+### Example: Flowing Paragraph Abstract
+
 ```
-Background: Hospital-acquired infections remain a major cause of morbidity. This study
-evaluated the effectiveness of a new disinfection protocol in reducing infection rates.
-
-Methods: We conducted a 12-month before-after study in a 500-bed teaching hospital.
-Environmental surfaces were cultured monthly, and infection rates were tracked via
-surveillance data. The intervention involved UV-C disinfection added to standard cleaning.
-
-Results: Post-intervention, surface contamination decreased by 47% (95% CI: 38-56%,
-p<0.001), and catheter-associated urinary tract infections declined from 3.2 to 1.8
-per 1000 catheter-days (RR=0.56, 95% CI: 0.38-0.83, p=0.004). No adverse effects were
-observed.
-
-Conclusions: UV-C disinfection significantly reduced environmental contamination and
-infection rates. This intervention may be a valuable addition to hospital infection
-control programs.
+Transcriptomic aging clocks offer unique advantages for assessing biological age by 
+capturing dynamic cellular states and acute responses to perturbations. Using the 
+ARCHS4 database containing uniformly processed RNA-seq data from over 1.2 million 
+human samples, we developed deep neural network models to predict chronological age 
+from gene expression profiles. Our best-performing model achieved a mean absolute 
+error of 4.2 years (R² = 0.89) on held-out test data, substantially outperforming 
+traditional machine learning approaches including elastic net regression (MAE = 6.8 
+years) and random forests (MAE = 5.9 years). Feature importance analysis identified 
+genes enriched in senescence, inflammation, and mitochondrial function pathways as 
+the strongest predictors. Cross-tissue validation revealed that lung and blood 
+samples yielded the most accurate predictions, while liver showed the highest 
+variance. These findings establish deep learning as a powerful approach for 
+transcriptomic age prediction and identify candidate biomarkers for biological 
+aging assessment.
 ```
 
 ## Introduction
