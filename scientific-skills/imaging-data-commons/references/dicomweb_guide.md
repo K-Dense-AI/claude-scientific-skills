@@ -20,9 +20,12 @@ For most use cases, `idc-index` is simpler and recommended. Use DICOMweb when yo
 https://proxy.imaging.datacommons.cancer.gov/current/viewer-only-no-downloads-see-tinyurl-dot-com-slash-3j3d9jyp/dicomWeb
 ```
 
+- **100% data coverage** - Contains all IDC data from all storage buckets
 - Points to the latest IDC version automatically
-- Daily quota applies (suitable for testing and moderate use)
+- **Updates immediately** on new IDC releases
+- Per-IP daily quota (suitable for testing and moderate use)
 - No authentication required
+- Read-only access
 - Note: "viewer-only-no-downloads" in URL is legacy naming with no functional meaning
 
 ### Google Healthcare API (Requires Authentication)
@@ -39,7 +42,81 @@ client = IDCClient()
 print(client.get_idc_version())  # e.g., "23" for v23
 ```
 
-The Google Healthcare endpoint requires authentication and provides higher quotas. See [Authentication](#authentication-for-google-healthcare-api) section below.
+- **~96% data coverage** - Only replicates data from `idc-open-data` bucket (missing ~4% from other buckets)
+- **Updates 1-2 weeks after** IDC releases
+- Requires authentication and provides higher quotas
+- Better performance (no proxy routing)
+- Each release gets a new versioned store
+
+See [Content Coverage Differences](#content-coverage-differences) and [Authentication](#authentication-for-google-healthcare-api) sections below.
+
+## Content Coverage Differences
+
+**Important:** The two DICOMweb endpoints have different data coverage. The IDC public proxy contains MORE data than the authenticated Google Healthcare endpoint.
+
+### Coverage Summary
+
+| Endpoint | Coverage | Missing Data |
+|----------|----------|--------------|
+| **IDC Public Proxy** | 100% | None |
+| **Google Healthcare API** | ~96% | ~4% (two buckets not replicated) |
+
+### What's Missing from Google Healthcare?
+
+The Google Healthcare DICOM store **only replicates data from the `idc-open-data` S3 bucket**. It does not include data from two additional buckets:
+
+- `idc-open-data-cr`
+- `idc-open-data-two`
+
+These missing buckets typically contain several thousand series each, representing approximately 4% of total IDC data. The exact counts vary by IDC version.
+
+See `cloud_storage_guide.md` for details on bucket organization, file structure, and direct access methods.
+
+### Update Timing
+
+- **IDC Public Proxy**: Updates immediately when new IDC versions are released
+- **Google Healthcare**: Updates 1-2 weeks after each new IDC version release
+
+Between releases, both endpoints remain current. The 1-2 week delay only occurs during the transition period after a new IDC version is published.
+
+**Warning from IDC documentation:** *"Google-hosted DICOM store may not contain the latest version of IDC data!"* - Check during the weeks following a new release.
+
+### Choosing the Right Endpoint
+
+**Use IDC Public Proxy when:**
+- You need complete data coverage (100%)
+- You need the absolute latest data immediately after a new version release
+- You don't want to set up GCP authentication
+- Your usage fits within per-IP quotas (can request increases via support@canceridc.dev)
+- You're accessing slide microscopy images frame-by-frame
+
+**Use Google Healthcare API when:**
+- The ~4% missing data doesn't affect your use case
+- You need higher quotas for heavy usage
+- You want better performance (direct access, no proxy routing)
+
+### Checking Your Data Availability
+
+Before choosing an endpoint, verify whether your data might be in the missing buckets:
+
+```python
+from idc_index import IDCClient
+
+client = IDCClient()
+
+# Check which buckets contain your collection's data
+results = client.sql_query("""
+    SELECT series_aws_url, COUNT(*) as series_count
+    FROM index
+    WHERE collection_id = 'your_collection_id'
+    GROUP BY series_aws_url
+""")
+
+print(results)
+
+# Look for URLs containing 'idc-open-data-cr' or 'idc-open-data-two'
+# If present, that data won't be available in Google Healthcare endpoint
+```
 
 ## Implementation Details
 
@@ -289,8 +366,12 @@ response = requests.get(
 - **Solution:** Add delays between requests, reduce `limit` values, or use authenticated endpoint for higher quotas
 
 ### Issue: 204 No Content for valid UIDs
-- **Cause:** UID may be from an older IDC version not in current data
-- **Solution:** Verify UID exists using `idc-index` query first. The proxy points to the latest IDC version.
+- **Cause:** UID may be from an older IDC version not in current data, or data is in buckets not replicated by Google Healthcare
+- **Solution:**
+  - Verify UID exists using `idc-index` query first
+  - Check if data is in `idc-open-data-cr` or `idc-open-data-two` buckets (not available in Google Healthcare endpoint)
+  - Switch to IDC public proxy for 100% coverage
+  - During new version releases, Google Healthcare may lag 1-2 weeks behind
 
 ### Issue: Large metadata responses slow to parse
 - **Cause:** Series with many instances returns large JSON
@@ -302,7 +383,17 @@ response = requests.get(
 
 ## Resources
 
+**IDC Documentation:**
+- [IDC DICOM Stores](https://learn.canceridc.dev/data/organization-of-data/dicom-stores) - Data coverage and bucket details
+- [IDC DICOMweb Access](https://learn.canceridc.dev/data/downloading-data/dicomweb-access) - Endpoint usage and differences
+- [IDC Proxy Policy](https://learn.canceridc.dev/portal/proxy-policy) - Quota policies and usage restrictions
+- [IDC User Guide](https://learn.canceridc.dev/) - Complete documentation
+
+**DICOMweb Standards and Tools:**
 - [Google Healthcare DICOM Conformance Statement](https://docs.cloud.google.com/healthcare-api/docs/dicom)
 - [DICOMweb Standard](https://www.dicomstandard.org/using/dicomweb)
 - [dicomweb-client Python library](https://dicomweb-client.readthedocs.io/)
-- [IDC Documentation](https://learn.canceridc.dev/)
+
+**Related Guides:**
+- `cloud_storage_guide.md` - Direct bucket access, file organization, CRDC UUIDs, and versioning
+- `bigquery_guide.md` - Advanced metadata queries with full DICOM attributes
