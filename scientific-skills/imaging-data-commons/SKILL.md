@@ -3,7 +3,10 @@ name: imaging-data-commons
 description: Query and download public cancer imaging data from NCI Imaging Data Commons using idc-index. Use for accessing large-scale radiology (CT, MR, PET) and pathology datasets for AI training or research. No authentication required. Query by metadata, visualize in browser, check licenses.
 license: This skill is provided under the MIT License. IDC data itself has individual licensing (mostly CC-BY, some CC-NC) that must be respected when using the data.
 metadata:
+    version: 1.2.0
     skill-author: Andrey Fedorov, @fedorov
+    idc-index: "0.11.7"
+    repository: https://github.com/ImagingDataCommons/idc-claude-skill
 ---
 
 # Imaging Data Commons
@@ -252,6 +255,8 @@ tables = client.sql_query("SELECT DISTINCT table_name, column_label FROM clinica
 clinical_df = client.get_clinical_table("table_name")
 ```
 
+See `references/clinical_data_guide.md` for detailed workflows including value mapping patterns and joining clinical data with imaging.
+
 ## Data Access Options
 
 | Method | Auth Required | Best For |
@@ -260,6 +265,21 @@ clinical_df = client.get_clinical_table("table_name")
 | IDC Portal | No | Interactive exploration, manual selection, browser-based download |
 | BigQuery | Yes (GCP account) | Complex queries, full DICOM metadata |
 | DICOMweb proxy | No | Tool integration via DICOMweb API |
+| Cloud storage (S3/GCS) | No | Direct file access, bulk downloads, custom pipelines |
+
+**Cloud storage organization**
+
+IDC maintains all DICOM files in public cloud storage buckets mirrored between AWS S3 and Google Cloud Storage. Files are organized by CRDC UUIDs (not DICOM UIDs) to support versioning.
+
+| Bucket (AWS / GCS) | License | Content |
+|--------------------|---------|---------|
+| `idc-open-data` / `idc-open-data` | No commercial restriction | >90% of IDC data |
+| `idc-open-data-two` / `idc-open-idc1` | No commercial restriction | Collections with potential head scans |
+| `idc-open-data-cr` / `idc-open-cr` | Commercial use restricted (CC BY-NC) | ~4% of data |
+
+Files are stored as `<crdc_series_uuid>/<crdc_instance_uuid>.dcm`. Access is free (no egress fees) via AWS CLI, gsutil, or s5cmd with anonymous access. Use `series_aws_url` column from the index for S3 URLs; GCS uses the same path structure.
+
+See `references/cloud_storage_guide.md` for bucket details, access commands, UUID mapping, and versioning.
 
 **DICOMweb access**
 
@@ -675,14 +695,15 @@ for i in range(0, len(results), batch_size):
 
 ### 7. Advanced Queries with BigQuery
 
-For queries requiring full DICOM metadata, complex JOINs, or clinical data tables, use Google BigQuery. Requires GCP account with billing enabled.
+For queries requiring full DICOM metadata, complex JOINs, clinical data tables, or private DICOM elements, use Google BigQuery. Requires GCP account with billing enabled.
 
 **Quick reference:**
 - Dataset: `bigquery-public-data.idc_current.*`
 - Main table: `dicom_all` (combined metadata)
 - Full metadata: `dicom_metadata` (all DICOM tags)
+- Private elements: `OtherElements` column (vendor-specific tags like diffusion b-values)
 
-See `references/bigquery_guide.md` for setup, table schemas, query patterns, and cost optimization.
+See `references/bigquery_guide.md` for setup, table schemas, query patterns, private element access, and cost optimization.
 
 ### 8. Tool Selection Guide
 
@@ -1103,6 +1124,8 @@ client.sql_query("""
 """)
 ```
 
+See `references/clinical_data_guide.md` for complete patterns including value mapping and patient cohort selection.
+
 ## Related Skills
 
 The following skills complement IDC workflows for downstream analysis and visualization:
@@ -1136,6 +1159,9 @@ columns = [(c['name'], c['type'], c.get('description', '')) for c in schema['col
 
 ### Reference Documentation
 
+- **clinical_data_guide.md** - Clinical/tabular data navigation, value mapping, and joining with imaging data
+- **cloud_storage_guide.md** - Direct cloud bucket access (S3/GCS), file organization, CRDC UUIDs, versioning, and reproducibility
+- **cli_guide.md** - Complete idc-index command-line interface reference (`idc download`, `idc download-from-manifest`, `idc download-from-selection`)
 - **bigquery_guide.md** - Advanced BigQuery usage guide for complex metadata queries
 - **dicomweb_guide.md** - DICOMweb endpoint URLs, code examples, and Google Healthcare API implementation details
 - **[indices_reference](https://idc-index.readthedocs.io/en/latest/indices_reference.html)** - External documentation for index tables (may be ahead of the installed version)
@@ -1148,3 +1174,9 @@ columns = [(c['name'], c['type'], c.get('description', '')) for c in schema['col
 - **User Forum**: https://discourse.canceridc.dev/
 - **idc-index GitHub**: https://github.com/ImagingDataCommons/idc-index
 - **Citation**: Fedorov, A., et al. "National Cancer Institute Imaging Data Commons: Toward Transparency, Reproducibility, and Scalability in Imaging Artificial Intelligence." RadioGraphics 43.12 (2023). https://doi.org/10.1148/rg.230180
+
+### Skill Updates
+
+This skill version is available in skill metadata. To check for updates:
+- Visit the [releases page](https://github.com/ImagingDataCommons/idc-claude-skill/releases)
+- Watch the repository on GitHub (Watch → Custom → Releases)
