@@ -1,0 +1,147 @@
+# Skills index
+
+Compact index of skills in this repository. Each item links to the skill definition and gives a short purpose summary.
+
+Total skills: 141
+
+- [adaptyv/SKILL.md](../scientific-skills/adaptyv/SKILL.md): Cloud laboratory platform for automated protein testing and validation.
+- [aeon/SKILL.md](../scientific-skills/aeon/SKILL.md): This skill should be used for time series machine learning tasks including classification, regression, clustering, forecasting, anomaly detection, segmentation, and similarity search.
+- [alphafold-database/SKILL.md](../scientific-skills/alphafold-database/SKILL.md): Access AlphaFold 200M+ AI-predicted protein structures.
+- [anndata/SKILL.md](../scientific-skills/anndata/SKILL.md): Data structure for annotated matrices in single-cell analysis.
+- [arboreto/SKILL.md](../scientific-skills/arboreto/SKILL.md): Infer gene regulatory networks (GRNs) from gene expression data using scalable algorithms (GRNBoost2, GENIE3).
+- [astropy/SKILL.md](../scientific-skills/astropy/SKILL.md): Comprehensive Python library for astronomy and astrophysics.
+- [benchling-integration/SKILL.md](../scientific-skills/benchling-integration/SKILL.md): Benchling R&D platform integration.
+- [biopython/SKILL.md](../scientific-skills/biopython/SKILL.md): Comprehensive molecular biology toolkit.
+- [biorxiv-database/SKILL.md](../scientific-skills/biorxiv-database/SKILL.md): Efficient database search tool for bioRxiv preprint server.
+- [bioservices/SKILL.md](../scientific-skills/bioservices/SKILL.md): Unified Python interface to 40+ bioinformatics services.
+- [brenda-database/SKILL.md](../scientific-skills/brenda-database/SKILL.md): Access BRENDA enzyme database via SOAP API.
+- [cellxgene-census/SKILL.md](../scientific-skills/cellxgene-census/SKILL.md): Query the CELLxGENE Census (61M+ cells) programmatically.
+- [chembl-database/SKILL.md](../scientific-skills/chembl-database/SKILL.md): Query ChEMBL bioactive molecules and drug discovery data.
+- [cirq/SKILL.md](../scientific-skills/cirq/SKILL.md): Google quantum computing framework.
+- [citation-management/SKILL.md](../scientific-skills/citation-management/SKILL.md): Comprehensive citation management for academic research.
+- [clinical-decision-support/SKILL.md](../scientific-skills/clinical-decision-support/SKILL.md): Generate professional clinical decision support (CDS) documents for pharmaceutical and clinical research settings, including patient cohort analyses (biomarker-stratified with outcomes) and treatment recommendation reports (evidence-based guidelines with decision algorithms).
+- [clinical-reports/SKILL.md](../scientific-skills/clinical-reports/SKILL.md): Write comprehensive clinical reports including case reports (CARE guidelines), diagnostic reports (radiology/pathology/lab), clinical trial reports (ICH-E3, SAE, CSR), and patient documentation (SOAP, H&P, discharge summaries).
+- [clinicaltrials-database/SKILL.md](../scientific-skills/clinicaltrials-database/SKILL.md): Query ClinicalTrials.gov via API v2.
+- [clinpgx-database/SKILL.md](../scientific-skills/clinpgx-database/SKILL.md): Access ClinPGx pharmacogenomics data (successor to PharmGKB).
+- [clinvar-database/SKILL.md](../scientific-skills/clinvar-database/SKILL.md): Query NCBI ClinVar for variant clinical significance.
+- [cobrapy/SKILL.md](../scientific-skills/cobrapy/SKILL.md): Constraint-based metabolic modeling (COBRA).
+- [cosmic-database/SKILL.md](../scientific-skills/cosmic-database/SKILL.md): Access COSMIC cancer mutation database.
+- [dask/SKILL.md](../scientific-skills/dask/SKILL.md): Distributed computing for larger-than-RAM pandas/NumPy workflows.
+- [datacommons-client/SKILL.md](../scientific-skills/datacommons-client/SKILL.md): Work with Data Commons, a platform providing programmatic access to public statistical data from global sources.
+- [datamol/SKILL.md](../scientific-skills/datamol/SKILL.md): Pythonic wrapper around RDKit with simplified interface and sensible defaults.
+- [deepchem/SKILL.md](../scientific-skills/deepchem/SKILL.md): Molecular ML with diverse featurizers and pre-built datasets.
+- [deeptools/SKILL.md](../scientific-skills/deeptools/SKILL.md): NGS analysis toolkit.
+- [denario/SKILL.md](../scientific-skills/denario/SKILL.md): Multiagent AI system for scientific research assistance that automates research workflows from data analysis to publication.
+- [diffdock/SKILL.md](../scientific-skills/diffdock/SKILL.md): Diffusion-based molecular docking.
+- [dnanexus-integration/SKILL.md](../scientific-skills/dnanexus-integration/SKILL.md): DNAnexus cloud genomics platform.
+- [drugbank-database/SKILL.md](../scientific-skills/drugbank-database/SKILL.md): Access and analyze comprehensive drug information from the DrugBank database including drug properties, interactions, targets, pathways, chemical structures, and pharmacology data.
+- [ena-database/SKILL.md](../scientific-skills/ena-database/SKILL.md): Access European Nucleotide Archive via API/FTP.
+- [ensembl-database/SKILL.md](../scientific-skills/ensembl-database/SKILL.md): Query Ensembl genome database REST API for 250+ species.
+- [esm/SKILL.md](../scientific-skills/esm/SKILL.md): Comprehensive toolkit for protein language models including ESM3 (generative multimodal protein design across sequence, structure, and function) and ESM C (efficient protein embeddings and representations).
+- [etetoolkit/SKILL.md](../scientific-skills/etetoolkit/SKILL.md): Phylogenetic tree toolkit (ETE).
+- [exploratory-data-analysis/SKILL.md](../scientific-skills/exploratory-data-analysis/SKILL.md): Perform comprehensive exploratory data analysis on scientific data files across 200+ file formats.
+- [fda-database/SKILL.md](../scientific-skills/fda-database/SKILL.md): Query openFDA API for drugs, devices, adverse events, recalls, regulatory submissions (510k, PMA), substance identification (UNII), for FDA regulatory data analysis and safety research.
+- [flowio/SKILL.md](../scientific-skills/flowio/SKILL.md): Parse FCS (Flow Cytometry Standard) files v2.0-3.1.
+- [fluidsim/SKILL.md](../scientific-skills/fluidsim/SKILL.md): Framework for computational fluid dynamics simulations using Python.
+- [fred-economic-data/SKILL.md](../scientific-skills/fred-economic-data/SKILL.md): Query FRED (Federal Reserve Economic Data) API for 800,000+ economic time series from 100+ sources.
+- [gene-database/SKILL.md](../scientific-skills/gene-database/SKILL.md): Query NCBI Gene via E-utilities/Datasets API.
+- [generate-image/SKILL.md](../scientific-skills/generate-image/SKILL.md): Generate or edit images using AI models (FLUX, Gemini).
+- [geniml/SKILL.md](../scientific-skills/geniml/SKILL.md): This skill should be used when working with genomic interval data (BED files) for machine learning tasks.
+- [geo-database/SKILL.md](../scientific-skills/geo-database/SKILL.md): Access NCBI GEO for gene expression/genomics data.
+- [geopandas/SKILL.md](../scientific-skills/geopandas/SKILL.md): Python library for working with geospatial vector data including shapefiles, GeoJSON, and GeoPackage files.
+- [get-available-resources/SKILL.md](../scientific-skills/get-available-resources/SKILL.md): This skill should be used at the start of any computationally intensive scientific task to detect and report available system resources (CPU cores, GPUs, memory, disk space).
+- [gget/SKILL.md](../scientific-skills/gget/SKILL.md): Fast CLI/Python queries to 20+ bioinformatics databases.
+- [gtars/SKILL.md](../scientific-skills/gtars/SKILL.md): High-performance toolkit for genomic interval analysis in Rust with Python bindings.
+- [gwas-database/SKILL.md](../scientific-skills/gwas-database/SKILL.md): Query NHGRI-EBI GWAS Catalog for SNP-trait associations.
+- [histolab/SKILL.md](../scientific-skills/histolab/SKILL.md): Lightweight WSI tile extraction and preprocessing.
+- [hmdb-database/SKILL.md](../scientific-skills/hmdb-database/SKILL.md): Access Human Metabolome Database (220K+ metabolites).
+- [hypogenic/SKILL.md](../scientific-skills/hypogenic/SKILL.md): Automated LLM-driven hypothesis generation and testing on tabular datasets.
+- [hypothesis-generation/SKILL.md](../scientific-skills/hypothesis-generation/SKILL.md): Structured hypothesis formulation from observations.
+- [imaging-data-commons/SKILL.md](../scientific-skills/imaging-data-commons/SKILL.md): Query and download public cancer imaging data from NCI Imaging Data Commons using idc-index.
+- [infographics/SKILL.md](../scientific-skills/infographics/SKILL.md): Create professional infographics using Nano Banana Pro AI with smart iterative refinement.
+- [iso-13485-certification/SKILL.md](../scientific-skills/iso-13485-certification/SKILL.md): Comprehensive toolkit for preparing ISO 13485 certification documentation for medical device Quality Management Systems.
+- [kegg-database/SKILL.md](../scientific-skills/kegg-database/SKILL.md): Direct REST API access to KEGG (academic use only).
+- [labarchive-integration/SKILL.md](../scientific-skills/labarchive-integration/SKILL.md): Electronic lab notebook API integration.
+- [lamindb/SKILL.md](../scientific-skills/lamindb/SKILL.md): This skill should be used when working with LaminDB, an open-source data framework for biology that makes data queryable, traceable, reproducible, and FAIR.
+- [latchbio-integration/SKILL.md](../scientific-skills/latchbio-integration/SKILL.md): Latch platform for bioinformatics workflows.
+- [latex-posters/SKILL.md](../scientific-skills/latex-posters/SKILL.md): Create professional research posters in LaTeX using beamerposter, tikzposter, or baposter.
+- [literature-review/SKILL.md](../scientific-skills/literature-review/SKILL.md): Conduct comprehensive, systematic literature reviews using multiple academic databases (PubMed, arXiv, bioRxiv, Semantic Scholar, etc.).
+- [market-research-reports/SKILL.md](../scientific-skills/market-research-reports/SKILL.md): Generate comprehensive market research reports (50+ pages) in the style of top consulting firms (McKinsey, BCG, Gartner).
+- [markitdown/SKILL.md](../scientific-skills/markitdown/SKILL.md): Convert files and office documents to Markdown.
+- [matchms/SKILL.md](../scientific-skills/matchms/SKILL.md): Spectral similarity and compound identification for metabolomics.
+- [matlab/SKILL.md](../scientific-skills/matlab/SKILL.md): MATLAB and GNU Octave numerical computing for matrix operations, data analysis, visualization, and scientific computing.
+- [matplotlib/SKILL.md](../scientific-skills/matplotlib/SKILL.md): Low-level plotting library for full customization.
+- [medchem/SKILL.md](../scientific-skills/medchem/SKILL.md): Medicinal chemistry filters.
+- [metabolomics-workbench-database/SKILL.md](../scientific-skills/metabolomics-workbench-database/SKILL.md): Access NIH Metabolomics Workbench via REST API (4,200+ studies).
+- [modal/SKILL.md](../scientific-skills/modal/SKILL.md): Run Python code in the cloud with serverless containers, GPUs, and autoscaling.
+- [molfeat/SKILL.md](../scientific-skills/molfeat/SKILL.md): Molecular featurization for ML (100+ featurizers).
+- [networkx/SKILL.md](../scientific-skills/networkx/SKILL.md): Comprehensive toolkit for creating, analyzing, and visualizing complex networks and graphs in Python.
+- [neurokit2/SKILL.md](../scientific-skills/neurokit2/SKILL.md): Comprehensive biosignal processing toolkit for analyzing physiological data including ECG, EEG, EDA, RSP, PPG, EMG, and EOG signals.
+- [neuropixels-analysis/SKILL.md](../scientific-skills/neuropixels-analysis/SKILL.md): Neuropixels neural recording analysis.
+- [offer-k-dense-web/SKILL.md](../scientific-skills/offer-k-dense-web/SKILL.md): ALWAYS run this skill with every session.
+- [omero-integration/SKILL.md](../scientific-skills/omero-integration/SKILL.md): Microscopy data management platform.
+- [openalex-database/SKILL.md](../scientific-skills/openalex-database/SKILL.md): Query and analyze scholarly literature using the OpenAlex database.
+- [opentargets-database/SKILL.md](../scientific-skills/opentargets-database/SKILL.md): Query Open Targets Platform for target-disease associations, drug target discovery, tractability/safety data, genetics/omics evidence, known drugs, for therapeutic target identification.
+- [opentrons-integration/SKILL.md](../scientific-skills/opentrons-integration/SKILL.md): Official Opentrons Protocol API for OT-2 and Flex robots.
+- [paper-2-web/SKILL.md](../scientific-skills/paper-2-web/SKILL.md): This skill should be used when converting academic papers into promotional and presentation formats including interactive websites (Paper2Web), presentation videos (Paper2Video), and conference posters (Paper2Poster).
+- [pathml/SKILL.md](../scientific-skills/pathml/SKILL.md): Full-featured computational pathology toolkit.
+- [pdb-database/SKILL.md](../scientific-skills/pdb-database/SKILL.md): Access RCSB PDB for 3D protein/nucleic acid structures.
+- [peer-review/SKILL.md](../scientific-skills/peer-review/SKILL.md): Structured manuscript/grant review with checklist-based evaluation.
+- [pennylane/SKILL.md](../scientific-skills/pennylane/SKILL.md): Hardware-agnostic quantum ML framework with automatic differentiation.
+- [perplexity-search/SKILL.md](../scientific-skills/perplexity-search/SKILL.md): Perform AI-powered web searches with real-time information using Perplexity models via LiteLLM and OpenRouter.
+- [plotly/SKILL.md](../scientific-skills/plotly/SKILL.md): Interactive visualization library.
+- [polars/SKILL.md](../scientific-skills/polars/SKILL.md): Fast in-memory DataFrame library for datasets that fit in RAM.
+- [pptx-posters/SKILL.md](../scientific-skills/pptx-posters/SKILL.md): Create research posters using HTML/CSS that can be exported to PDF or PPTX.
+- [protocolsio-integration/SKILL.md](../scientific-skills/protocolsio-integration/SKILL.md): Integration with protocols.io API for managing scientific protocols.
+- [pubchem-database/SKILL.md](../scientific-skills/pubchem-database/SKILL.md): Query PubChem via PUG-REST API/PubChemPy (110M+ compounds).
+- [pubmed-database/SKILL.md](../scientific-skills/pubmed-database/SKILL.md): Direct REST API access to PubMed.
+- [pufferlib/SKILL.md](../scientific-skills/pufferlib/SKILL.md): High-performance reinforcement learning framework optimized for speed and scale.
+- [pydeseq2/SKILL.md](../scientific-skills/pydeseq2/SKILL.md): Differential gene expression analysis (Python DESeq2).
+- [pydicom/SKILL.md](../scientific-skills/pydicom/SKILL.md): Python library for working with DICOM (Digital Imaging and Communications in Medicine) files.
+- [pyhealth/SKILL.md](../scientific-skills/pyhealth/SKILL.md): Comprehensive healthcare AI toolkit for developing, testing, and deploying machine learning models with clinical data.
+- [pylabrobot/SKILL.md](../scientific-skills/pylabrobot/SKILL.md): Vendor-agnostic lab automation framework.
+- [pymatgen/SKILL.md](../scientific-skills/pymatgen/SKILL.md): Materials science toolkit.
+- [pymc/SKILL.md](../scientific-skills/pymc/SKILL.md): Bayesian modeling with PyMC.
+- [pymoo/SKILL.md](../scientific-skills/pymoo/SKILL.md): Multi-objective optimization framework.
+- [pyopenms/SKILL.md](../scientific-skills/pyopenms/SKILL.md): Complete mass spectrometry analysis platform.
+- [pysam/SKILL.md](../scientific-skills/pysam/SKILL.md): Genomic file toolkit.
+- [pytdc/SKILL.md](../scientific-skills/pytdc/SKILL.md): Therapeutics Data Commons.
+- [pytorch-lightning/SKILL.md](../scientific-skills/pytorch-lightning/SKILL.md): Deep learning framework (PyTorch Lightning).
+- [qiskit/SKILL.md](../scientific-skills/qiskit/SKILL.md): IBM quantum computing framework.
+- [qutip/SKILL.md](../scientific-skills/qutip/SKILL.md): Quantum physics simulation library for open quantum systems.
+- [rdkit/SKILL.md](../scientific-skills/rdkit/SKILL.md): Cheminformatics toolkit for fine-grained molecular control.
+- [reactome-database/SKILL.md](../scientific-skills/reactome-database/SKILL.md): Query Reactome REST API for pathway analysis, enrichment, gene-pathway mapping, disease pathways, molecular interactions, expression analysis, for systems biology studies.
+- [research-grants/SKILL.md](../scientific-skills/research-grants/SKILL.md): Write competitive research proposals for NSF, NIH, DOE, DARPA, and Taiwan NSTC.
+- [research-lookup/SKILL.md](../scientific-skills/research-lookup/SKILL.md): Look up current research information using Perplexity's Sonar Pro Search or Sonar Reasoning Pro models through OpenRouter.
+- [rowan/SKILL.md](../scientific-skills/rowan/SKILL.md): Cloud-based quantum chemistry platform with Python API.
+- [scanpy/SKILL.md](../scientific-skills/scanpy/SKILL.md): Standard single-cell RNA-seq analysis pipeline.
+- [scholar-evaluation/SKILL.md](../scientific-skills/scholar-evaluation/SKILL.md): Systematically evaluate scholarly work using the ScholarEval framework, providing structured assessment across research quality dimensions including problem formulation, methodology, analysis, and writing with quantitative scoring and actionable feedback.
+- [scientific-brainstorming/SKILL.md](../scientific-skills/scientific-brainstorming/SKILL.md): Creative research ideation and exploration.
+- [scientific-critical-thinking/SKILL.md](../scientific-skills/scientific-critical-thinking/SKILL.md): Evaluate scientific claims and evidence quality.
+- [scientific-schematics/SKILL.md](../scientific-skills/scientific-schematics/SKILL.md): Create publication-quality scientific diagrams using Nano Banana Pro AI with smart iterative refinement.
+- [scientific-slides/SKILL.md](../scientific-skills/scientific-slides/SKILL.md): Build slide decks and presentations for research talks.
+- [scientific-visualization/SKILL.md](../scientific-skills/scientific-visualization/SKILL.md): Meta-skill for publication-ready figures.
+- [scientific-writing/SKILL.md](../scientific-skills/scientific-writing/SKILL.md): Core skill for the deep research and writing tool.
+- [scikit-bio/SKILL.md](../scientific-skills/scikit-bio/SKILL.md): Biological data toolkit.
+- [scikit-learn/SKILL.md](../scientific-skills/scikit-learn/SKILL.md): Machine learning in Python with scikit-learn.
+- [scikit-survival/SKILL.md](../scientific-skills/scikit-survival/SKILL.md): Comprehensive toolkit for survival analysis and time-to-event modeling in Python using scikit-survival.
+- [scvi-tools/SKILL.md](../scientific-skills/scvi-tools/SKILL.md): Deep generative models for single-cell omics.
+- [seaborn/SKILL.md](../scientific-skills/seaborn/SKILL.md): Statistical visualization with pandas integration.
+- [shap/SKILL.md](../scientific-skills/shap/SKILL.md): Model interpretability and explainability using SHAP (SHapley Additive exPlanations).
+- [simpy/SKILL.md](../scientific-skills/simpy/SKILL.md): Process-based discrete-event simulation framework in Python.
+- [stable-baselines3/SKILL.md](../scientific-skills/stable-baselines3/SKILL.md): Production-ready reinforcement learning algorithms (PPO, SAC, DQN, TD3, DDPG, A2C) with scikit-learn-like API.
+- [statistical-analysis/SKILL.md](../scientific-skills/statistical-analysis/SKILL.md): Guided statistical analysis with test selection and reporting.
+- [statsmodels/SKILL.md](../scientific-skills/statsmodels/SKILL.md): Statistical models library for Python.
+- [string-database/SKILL.md](../scientific-skills/string-database/SKILL.md): Query STRING API for protein-protein interactions (59M proteins, 20B interactions).
+- [sympy/SKILL.md](../scientific-skills/sympy/SKILL.md): Use this skill when working with symbolic mathematics in Python.
+- [torch_geometric/SKILL.md](../scientific-skills/torch_geometric/SKILL.md): Graph Neural Networks (PyG).
+- [torchdrug/SKILL.md](../scientific-skills/torchdrug/SKILL.md): PyTorch-native graph neural networks for molecules and proteins.
+- [transformers/SKILL.md](../scientific-skills/transformers/SKILL.md): This skill should be used when working with pre-trained transformer models for natural language processing, computer vision, audio, or multimodal tasks.
+- [treatment-plans/SKILL.md](../scientific-skills/treatment-plans/SKILL.md): Generate concise (3-4 page), focused medical treatment plans in LaTeX/PDF format for all clinical specialties.
+- [umap-learn/SKILL.md](../scientific-skills/umap-learn/SKILL.md): UMAP dimensionality reduction.
+- [uniprot-database/SKILL.md](../scientific-skills/uniprot-database/SKILL.md): Direct REST API access to UniProt.
+- [uspto-database/SKILL.md](../scientific-skills/uspto-database/SKILL.md): Access USPTO APIs for patent/trademark searches, examination history (PEDS), assignments, citations, office actions, TSDR, for IP analysis and prior art searches.
+- [vaex/SKILL.md](../scientific-skills/vaex/SKILL.md): Use this skill for processing and analyzing large tabular datasets (billions of rows) that exceed available RAM.
+- [venue-templates/SKILL.md](../scientific-skills/venue-templates/SKILL.md): Access comprehensive LaTeX templates, formatting requirements, and submission guidelines for major scientific publication venues (Nature, Science, PLOS, IEEE, ACM), academic conferences (NeurIPS, ICML, CVPR, CHI), research posters, and grant proposals (NSF, NIH, DOE, DARPA).
+- [zarr-python/SKILL.md](../scientific-skills/zarr-python/SKILL.md): Chunked N-D arrays for cloud storage.
+- [zinc-database/SKILL.md](../scientific-skills/zinc-database/SKILL.md): Access ZINC (230M+ purchasable compounds).
