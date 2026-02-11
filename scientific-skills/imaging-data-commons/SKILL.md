@@ -3,7 +3,7 @@ name: imaging-data-commons
 description: Query and download public cancer imaging data from NCI Imaging Data Commons using idc-index. Use for accessing large-scale radiology (CT, MR, PET) and pathology datasets for AI training or research. No authentication required. Query by metadata, visualize in browser, check licenses.
 license: This skill is provided under the MIT License. IDC data itself has individual licensing (mostly CC-BY, some CC-NC) that must be respected when using the data.
 metadata:
-    version: 1.3.0
+    version: 1.3.1
     skill-author: Andrey Fedorov, @fedorov
     idc-index: "0.11.9"
     idc-data-version: "v23"
@@ -20,20 +20,35 @@ Use the `idc-index` Python package to query and download public cancer imaging d
 
 **Primary tool:** `idc-index` ([GitHub](https://github.com/imagingdatacommons/idc-index))
 
-**Verify version and check current data scale:**
+**CRITICAL - Check package version and upgrade if needed (run this FIRST):**
+
+```python
+import idc_index
+
+REQUIRED_VERSION = "0.11.9"  # Must match metadata.idc-index in this file
+installed = idc_index.__version__
+
+if installed < REQUIRED_VERSION:
+    print(f"Upgrading idc-index from {installed} to {REQUIRED_VERSION}...")
+    import subprocess
+    subprocess.run(["pip3", "install", "--upgrade", "--break-system-packages", "idc-index"], check=True)
+    print("Upgrade complete. Restart Python to use new version.")
+else:
+    print(f"idc-index {installed} meets requirement ({REQUIRED_VERSION})")
+```
+
+**Verify IDC data version and check current data scale:**
 
 ```python
 from idc_index import IDCClient
 client = IDCClient()
 
-# IMPORTANT: Always verify you're using the latest IDC data version
-idc_version = client.get_idc_version()
-print(f"IDC data version: {idc_version}")  # Should be "v23"
-# If version is older than v23, upgrade: pip install --upgrade idc-index
+# Verify IDC data version (should be "v23")
+print(f"IDC data version: {client.get_idc_version()}")
 
 # Get collection count and total series
 stats = client.sql_query("""
-    SELECT   
+    SELECT
         COUNT(DISTINCT collection_id) as collections,
         COUNT(DISTINCT analysis_result_id) as analysis_results,
         COUNT(DISTINCT PatientID) as patients,
