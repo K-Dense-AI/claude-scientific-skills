@@ -217,6 +217,25 @@ https://mcp.k-dense.ai/claude-scientific-skills/mcp
 
 ---
 
+### 🔀 Other AI Coding Agents (via SkillKit)
+
+Use these skills with Codex, Gemini CLI, OpenCode, Windsurf, Goose, Kiro, and [30+ other agents](https://github.com/rohitg00/skillkit#supported-agents) via [SkillKit](https://github.com/rohitg00/skillkit):
+
+```bash
+npm install -g skillkit
+
+skillkit install claude-scientific-skills
+
+# Translate to your agent's format
+skillkit translate claude-scientific-skills --agent codex
+skillkit translate claude-scientific-skills --agent gemini-cli
+skillkit translate claude-scientific-skills --agent windsurf
+```
+
+SkillKit reads the existing `SKILL.md` files and converts them to each agent's native format — no changes to the skills needed.
+
+---
+
 ## ❤️ Support the Open Source Community
 
 Claude Scientific Skills is powered by **50+ incredible open source projects** maintained by dedicated developers and research communities worldwide. Projects like Biopython, Scanpy, RDKit, scikit-learn, PyTorch Lightning, and many others form the foundation of these skills.
