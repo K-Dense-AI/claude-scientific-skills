@@ -1,9 +1,11 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-140-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-142-brightgreen.svg)](#whats-included)
+[![Agent Skills](https://img.shields.io/badge/Standard-Agent_Skills-blueviolet.svg)](https://agentskills.io/)
+[![Works with](https://img.shields.io/badge/Works_with-Cursor_|_Claude_Code_|_Codex-blue.svg)](#getting-started)
 
-A comprehensive collection of **140 ready-to-use scientific skills** for Claude, created by [K-Dense](https://k-dense.ai). Transform Claude into your AI research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **140+ ready-to-use scientific and research skills** for any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, created by [K-Dense](https://k-dense.ai). Works with **Cursor, Claude Code, Codex, and more**. Transform your AI agent into a research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 **Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
 
@@ -38,7 +40,7 @@ Want 10x the power with zero setup? **[K-Dense Web](https://k-dense.ai)** is the
 
 ---
 
-These skills enable Claude to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
+These skills enable your AI agent to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
 - 🧪 Cheminformatics & Drug Discovery - Molecular property prediction, virtual screening, ADMET analysis, molecular docking, lead optimization
 - 🔬 Proteomics & Mass Spectrometry - LC-MS/MS processing, peptide identification, spectral matching, protein quantification
@@ -56,9 +58,11 @@ These skills enable Claude to seamlessly work with specialized scientific librar
 - 🧬 Protein Engineering & Design - Protein language models, structure prediction, sequence design, function annotation
 - 🎓 Research Methodology - Hypothesis generation, scientific brainstorming, critical thinking, grant writing, scholar evaluation
 
-**Transform Claude Code into an 'AI Scientist' on your desktop!**
+**Transform your AI coding agent into an 'AI Scientist' on your desktop!**
 
 > ⭐ **If you find this repository useful**, please consider giving it a star! It helps others discover these tools and encourages us to continue maintaining and expanding this collection.
+
+> 🎬 **New to Claude Scientific Skills?** Watch our [Getting Started with Claude Scientific Skills](https://youtu.be/ZxbnDaD_FVg) video for a quick walkthrough.
 
 ---
 
@@ -86,9 +90,6 @@ Each skill includes:
 - [What's Included](#whats-included)
 - [Why Use This?](#why-use-this)
 - [Getting Started](#getting-started)
-  - [Claude Code](#claude-code-recommended)
-  - [Cursor IDE](#cursor-ide)
-  - [Any MCP Client](#any-mcp-client-not-for-claude-code)
 - [Support Open Source](#-support-the-open-source-community)
 - [Prerequisites](#prerequisites)
 - [Quick Examples](#quick-examples)
@@ -117,8 +118,8 @@ Each skill includes:
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioServices, PennyLane, Qiskit, and others
 
 ### 🔧 **Easy Integration**
-- **One-Click Setup** - Install via Claude Code or MCP server
-- **Automatic Discovery** - Claude automatically finds and uses relevant skills
+- **Simple Setup** - Copy skills to your skills directory and start working
+- **Automatic Discovery** - Your agent automatically finds and uses relevant skills
 - **Well Documented** - Each skill includes examples, use cases, and best practices
 
 ### 🌟 **Maintained & Supported**
@@ -130,90 +131,53 @@ Each skill includes:
 
 ## 🎯 Getting Started
 
-Choose your preferred platform to get started:
+Claude Scientific Skills follows the open [Agent Skills](https://agentskills.io/) standard. Simply copy the skill folders into your skills directory and your AI agent will automatically discover and use them.
 
-### 🖥️ Claude Code (Recommended)
+### Step 1: Clone the Repository
 
-> 📚 **New to Claude Code?** Check out the [Claude Code Quickstart Guide](https://docs.claude.com/en/docs/claude-code/quickstart) to get started. When using Claude Code please use the Skills as a plugin. Do not use the MCP server below.
-
-**Step 1: Install Claude Code**
-
-**macOS:**
 ```bash
-curl -fsSL https://claude.ai/install.sh | bash
+git clone https://github.com/K-Dense-AI/claude-scientific-skills.git
 ```
 
-**Windows:**
-```powershell
-irm https://claude.ai/install.ps1 | iex
-```
+### Step 2: Copy Skills to Your Skills Directory
 
-**Step 2: Register the Marketplace**
+Copy the individual skill folders from `scientific-skills/` to one of the supported skill directories below. You can install skills **globally** (available across all projects) or **per-project** (available only in that project).
 
-In Claude Code, run the following command:
+**Global installation** (recommended — skills available everywhere):
+
+| Tool | Directory |
+|------|-----------|
+| Cursor | `~/.cursor/skills/` |
+| Claude Code | `~/.claude/skills/` |
+| Codex | `~/.codex/skills/` |
+
+**Project-level installation** (skills scoped to a single project):
+
+| Tool | Directory |
+|------|-----------|
+| Cursor | `.cursor/skills/` (in your project root) |
+| Claude Code | `.claude/skills/` (in your project root) |
+| Codex | `.codex/skills/` (in your project root) |
+
+> **Note:** Cursor also reads from `.claude/skills/` and `.codex/skills/` directories, and vice versa, so skills are cross-compatible between tools.
+
+**Example — global install for Cursor:**
 ```bash
-/plugin marketplace add K-Dense-AI/claude-scientific-skills
+cp -r claude-scientific-skills/scientific-skills/* ~/.cursor/skills/
 ```
 
-**Step 3: Install the Plugin**
-
-**Option A: Direct Install (Fastest)**
+**Example — global install for Claude Code:**
 ```bash
-/plugin install scientific-skills@claude-scientific-skills
+cp -r claude-scientific-skills/scientific-skills/* ~/.claude/skills/
 ```
 
-**Option B: Interactive Install**
-1. Run `/plugin` in Claude Code
-2. Select **Browse and install plugins**
-3. Choose **claude-scientific-skills** marketplace
-4. Select **scientific-skills**
-5. Click **Install now**
-
-**That's it!** Claude will automatically use the appropriate skills when you describe your scientific tasks.
-
-**Managing Your Plugin:**
+**Example — project-level install:**
 ```bash
-# Check installed plugins
-/plugin → Manage Plugins
-
-# Update the plugin to the latest version
-/plugin update scientific-skills@claude-scientific-skills
-
-# Enable/disable the plugin
-/plugin enable scientific-skills@claude-scientific-skills
-/plugin disable scientific-skills@claude-scientific-skills
-
-# Uninstall if needed
-/plugin uninstall scientific-skills@claude-scientific-skills
+mkdir -p .cursor/skills
+cp -r /path/to/claude-scientific-skills/scientific-skills/* .cursor/skills/
 ```
 
----
-
-### ⌨️ Cursor IDE
-
-One-click installation via our hosted MCP server:
-
-<a href="https://cursor.com/en-US/install-mcp?name=claude-scientific-skills&config=eyJ1cmwiOiJodHRwczovL21jcC5rLWRlbnNlLmFpL2NsYXVkZS1zY2llbnRpZmljLXNraWxscy9tY3AifQ%3D%3D">
-  <picture>
-    <source srcset="https://cursor.com/deeplink/mcp-install-light.svg" media="(prefers-color-scheme: dark)">
-    <source srcset="https://cursor.com/deeplink/mcp-install-dark.svg" media="(prefers-color-scheme: light)">
-    <img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Install MCP Server" style="height:2.7em;"/>
-  </picture>
-</a>
-
----
-
-### 🔌 Any MCP Client (Not for Claude Code)
-
-Access all skills via our MCP server in any MCP-compatible client (ChatGPT, Google ADK, OpenAI Agent SDK, etc.):
-
-**Option 1: Hosted MCP Server** (Easiest)
-```
-https://mcp.k-dense.ai/claude-scientific-skills/mcp
-```
-
-**Option 2: Self-Hosted** (More Control)
-🔗 **[claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp)** - Deploy your own MCP server
+**That's it!** Your AI agent will automatically discover the skills and use them when relevant to your scientific tasks. You can also invoke any skill manually by mentioning the skill name in your prompt.
 
 ---
 
@@ -236,7 +200,7 @@ Claude Scientific Skills is powered by **50+ incredible open source projects** m
 
 - **Python**: 3.9+ (3.12+ recommended for best compatibility)
 - **uv**: Python package manager (required for installing skill dependencies)
-- **Client**: Claude Code, Cursor, or any MCP-compatible client
+- **Client**: Any agent that supports the [Agent Skills](https://agentskills.io/) standard (Cursor, Claude Code, Codex, etc.)
 - **System**: macOS, Linux, or Windows with WSL2
 - **Dependencies**: Automatically handled by individual skills (check `SKILL.md` files for specific requirements)
 
@@ -270,7 +234,7 @@ For more installation options and details, visit the [official uv documentation]
 
 ## 💡 Quick Examples
 
-Once you've installed the skills, you can ask Claude to execute complex multi-step scientific workflows. Here are some example prompts:
+Once you've installed the skills, you can ask your AI agent to execute complex multi-step scientific workflows. Here are some example prompts:
 
 ### 🧪 Drug Discovery Pipeline
 **Goal**: Find novel EGFR inhibitors for lung cancer treatment
@@ -340,10 +304,10 @@ MedChem/molfeat.
 Use available skills you have access to whenever possible. Parse VCF with pysam, annotate variants with Ensembl VEP, query ClinVar for pathogenicity, 
 check COSMIC for cancer mutations, retrieve gene info from NCBI Gene, analyze protein impact 
 with UniProt, search PubMed for case reports, check ClinPGx for pharmacogenomics, generate 
-clinical report with ReportLab, and find matching trials on ClinicalTrials.gov.
+clinical report with document processing tools, and find matching trials on ClinicalTrials.gov.
 ```
 
-**Skills Used**: pysam, Ensembl, ClinVar, COSMIC, NCBI Gene, UniProt, PubMed, ClinPGx, ReportLab, ClinicalTrials.gov
+**Skills Used**: pysam, Ensembl, ClinVar, COSMIC, NCBI Gene, UniProt, PubMed, ClinPGx, Document Skills, ClinicalTrials.gov
 
 ---
 
@@ -396,7 +360,7 @@ networks, and search GEO for similar patterns.
 - **Statistical Analysis**: Perform hypothesis testing, power analysis, and experimental design
 - **Publication Figures**: Create publication-quality visualizations with matplotlib and seaborn
 - **Network Visualization**: Visualize biological networks with NetworkX
-- **Report Generation**: Generate comprehensive PDF reports with ReportLab
+- **Report Generation**: Generate comprehensive PDF reports with Document Skills
 
 ### 🧪 Laboratory Automation
 - **Protocol Design**: Create Opentrons protocols for automated liquid handling
@@ -468,7 +432,7 @@ This repository contains **140 scientific skills** organized across multiple dom
 - Geospatial analysis: GeoPandas
 - Network analysis: NetworkX
 - Symbolic math: SymPy
-- PDF generation: ReportLab
+- Document processing: Document Skills (PDF, DOCX, PPTX, XLSX)
 - Data access: Data Commons
 - Exploratory data analysis: EDA workflows
 - Statistical analysis: Statistical Analysis workflows
@@ -515,7 +479,7 @@ This repository contains **140 scientific skills** organized across multiple dom
 - Genomics platforms: DNAnexus, LatchBio
 - Microscopy: OMERO
 - Automation: Opentrons
-- Tool discovery: ToolUniverse, Get Available Resources
+- Resource detection: Get Available Resources
 
 #### 🎓 **Research Methodology & Planning** (8+ skills)
 - Ideation: Scientific Brainstorming, Hypothesis Generation
@@ -593,11 +557,11 @@ This project builds on 50+ amazing open source projects. If you find value in th
 
 ### Common Issues
 
-**Problem: Skills not loading in Claude Code**
-- Solution: Ensure you've installed the latest version of Claude Code
-- Verify the plugin is installed: `/plugin → Manage Plugins`
-- Try reinstalling: `/plugin uninstall scientific-skills@claude-scientific-skills` then `/plugin install scientific-skills@claude-scientific-skills`
-- Re-add the marketplace if needed: `/plugin marketplace add K-Dense-AI/claude-scientific-skills`
+**Problem: Skills not loading**
+- Verify skill folders are in the correct directory (see [Getting Started](#getting-started))
+- Each skill folder must contain a `SKILL.md` file
+- Restart your agent/IDE after copying skills
+- In Cursor, check Settings → Rules to confirm skills are discovered
 
 **Problem: Missing Python dependencies**
 - Solution: Check the specific `SKILL.md` file for required packages
@@ -624,8 +588,8 @@ This project builds on 50+ amazing open source projects. If you find value in th
 **Q: Is this free to use?**  
 A: Yes! This repository is MIT licensed. However, each individual skill has its own license specified in the `license` metadata field within its `SKILL.md` file—be sure to review and comply with those terms.
 
-**Q: Why are all skills grouped into one plugin instead of separate plugins?**  
-A: We believe good science in the age of AI is inherently interdisciplinary. Bundling all skills into a single plugin makes it trivial for you (and Claude) to bridge across fields—e.g., combining genomics, cheminformatics, clinical data, and machine learning in one workflow—without worrying about which individual skills to install or wire together.
+**Q: Why are all skills grouped together instead of separate packages?**  
+A: We believe good science in the age of AI is inherently interdisciplinary. Bundling all skills together makes it trivial for you (and your agent) to bridge across fields—e.g., combining genomics, cheminformatics, clinical data, and machine learning in one workflow—without worrying about which individual skills to install or wire together.
 
 **Q: Can I use this for commercial projects?**  
 A: The repository itself is MIT licensed, which allows commercial use. However, individual skills may have different licenses—check the `license` field in each skill's `SKILL.md` file to ensure compliance with your intended use.
@@ -637,7 +601,7 @@ A: No. Each skill has its own license specified in the `license` metadata field 
 A: We regularly update skills to reflect the latest versions of packages and APIs. Major updates are announced in release notes.
 
 **Q: Can I use this with other AI models?**  
-A: The skills are optimized for Claude but can be adapted for other models with MCP support. The MCP server works with any MCP-compatible client.
+A: The skills follow the open [Agent Skills](https://agentskills.io/) standard and work with any compatible agent, including Cursor, Claude Code, and Codex.
 
 ### Installation & Setup
 
@@ -668,7 +632,7 @@ Need help? Here's how to get support:
 - 🐛 **Bug Reports**: [Open an issue](https://github.com/K-Dense-AI/claude-scientific-skills/issues)
 - 💡 **Feature Requests**: [Submit a feature request](https://github.com/K-Dense-AI/claude-scientific-skills/issues/new)
 - 💼 **Enterprise Support**: Contact [K-Dense](https://k-dense.ai/) for commercial support
-- 🌐 **MCP Support**: Visit the [claude-skills-mcp](https://github.com/K-Dense-AI/claude-skills-mcp) repository or use our hosted MCP server
+- 🌐 **Community**: [Join our Slack](https://join.slack.com/t/k-densecommunity/shared_invite/zt-3iajtyls1-EwmkwIZk0g_o74311Tkf5g)
 
 ---
 
@@ -676,7 +640,7 @@ Need help? Here's how to get support:
 
 **We'd love to have you join us!** 🚀
 
-Connect with other scientists, researchers, and AI enthusiasts using Claude for scientific computing. Share your discoveries, ask questions, get help with your projects, and collaborate with the community!
+Connect with other scientists, researchers, and AI enthusiasts using AI agents for scientific computing. Share your discoveries, ask questions, get help with your projects, and collaborate with the community!
 
 🌟 **[Join our Slack Community](https://join.slack.com/t/k-densecommunity/shared_invite/zt-3iajtyls1-EwmkwIZk0g_o74311Tkf5g)** 🌟
 
@@ -692,10 +656,10 @@ If you use Claude Scientific Skills in your research or project, please cite it 
 
 ### BibTeX
 ```bibtex
-@software{claude_scientific_skills_2025,
+@software{claude_scientific_skills_2026,
   author = {{K-Dense Inc.}},
   title = {Claude Scientific Skills: A Comprehensive Collection of Scientific Tools for Claude AI},
-  year = {2025},
+  year = {2026},
   url = {https://github.com/K-Dense-AI/claude-scientific-skills},
   note = {skills covering databases, packages, integrations, and analysis tools}
 }
@@ -703,17 +667,17 @@ If you use Claude Scientific Skills in your research or project, please cite it 
 
 ### APA
 ```
-K-Dense Inc. (2025). Claude Scientific Skills: A comprehensive collection of scientific tools for Claude AI [Computer software]. https://github.com/K-Dense-AI/claude-scientific-skills
+K-Dense Inc. (2026). Claude Scientific Skills: A comprehensive collection of scientific tools for Claude AI [Computer software]. https://github.com/K-Dense-AI/claude-scientific-skills
 ```
 
 ### MLA
 ```
-K-Dense Inc. Claude Scientific Skills: A Comprehensive Collection of Scientific Tools for Claude AI. 2025, github.com/K-Dense-AI/claude-scientific-skills.
+K-Dense Inc. Claude Scientific Skills: A Comprehensive Collection of Scientific Tools for Claude AI. 2026, github.com/K-Dense-AI/claude-scientific-skills.
 ```
 
 ### Plain Text
 ```
-Claude Scientific Skills by K-Dense Inc. (2025)
+Claude Scientific Skills by K-Dense Inc. (2026)
 Available at: https://github.com/K-Dense-AI/claude-scientific-skills
 ```
 
@@ -725,7 +689,7 @@ We appreciate acknowledgment in publications, presentations, or projects that be
 
 This project is licensed under the **MIT License**.
 
-**Copyright © 2025 K-Dense Inc.** ([k-dense.ai](https://k-dense.ai/))
+**Copyright © 2026 K-Dense Inc.** ([k-dense.ai](https://k-dense.ai/))
 
 ### Key Points:
 - ✅ **Free for any use** (commercial and noncommercial)
