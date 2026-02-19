@@ -1,8 +1,8 @@
-# Issue-00000001: Add Markdown and Mermaid Writing Skill
+# Issue-00000050: Add Markdown and Mermaid Writing Skill
 
 | Field | Value |
 | ---------------------- | ------------------------------------------------------------------------------------------------- |
-| **Issue** | `#00000001` |
+| **Issue** | `#50` |
 | **Type** | ✨ Feature |
 | **Severity** | 🟡 Medium |
 | **Priority** | P1 |
@@ -12,7 +12,7 @@
 | **Status** | Open |
 | **Users affected** | All scientific skill users producing documentation, reports, or diagrams |
 | **Revenue impact** | Indirect — improves skill quality, adoption, and downstream reproducibility |
-| **Resolved in** | [PR-00000001](../pr/pr-00000001-markdown-mermaid-skill.md) |
+| **Resolved in** | [PR-00000050](../pr/pr-00000050-markdown-mermaid-skill.md) |
 | **Time to resolution** | TBD |
 
 ---

@@ -1,13 +1,14 @@
-# PR-00000001: feat(scientific-communication): add markdown-mermaid-writing skill
+# PR-00000050: feat(scientific-communication): add markdown-mermaid-writing skill
 
 | Field | Value |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **PR** | `#00000001` |
+| **PR** | `#50` (https://github.com/K-Dense-AI/claude-scientific-skills/pull/50) |
 | **Author** | Clayton Young (Boreal Bytes / Superior Byte Works, LLC) |
 | **Date** | 2026-02-19 |
 | **Status** | Open — Draft |
 | **Branch** | `feat/markdown-mermaid-writing-skill` → `main` |
-| **Related issues** | [#00000001](../issues/issue-00000001-markdown-mermaid-skill.md) |
+| **Related issues** | [#50](../issues/issue-00000050-markdown-mermaid-skill.md) |
+| **Kanban board** | [feat-00000050](../kanban/feat-00000050-markdown-mermaid-skill.md) |
 | **Deploy strategy** | Standard — documentation-only addition, no code execution changes |
 
 ---
@@ -37,8 +38,8 @@ The motivation: scientific outputs currently default to Python-generated or AI-g
 
 | File / Area | Change type | Description |
 | --------------------------------------------------- | ----------- | ---------------------------------------------------------------------- |
-| `docs/project/issues/issue-00000001-markdown-mermaid-skill.md` | Added | Feature request issue record |
-| `docs/project/pr/pr-00000001-markdown-mermaid-skill.md` | Added | This PR record |
+| `docs/project/issues/issue-00000050-markdown-mermaid-skill.md` | Added | Feature request issue record |
+| `docs/project/pr/pr-00000050-markdown-mermaid-skill.md` | Added | This PR record |
 | `scientific-skills/markdown-mermaid-writing/SKILL.md` | Added | Main skill documentation with YAML frontmatter and philosophy |
 | `scientific-skills/markdown-mermaid-writing/references/markdown_style_guide.md` | Added | Full markdown style guide (~730 lines) ported from opencode |
 | `scientific-skills/markdown-mermaid-writing/references/mermaid_style_guide.md` | Added | Full mermaid style guide (~454 lines) ported from opencode |
@@ -178,7 +179,7 @@ No ADR created — this is a documentation addition with no architectural tradeo
 
 ## 🔗 References
 
-- [Issue #00000001](../issues/issue-00000001-markdown-mermaid-skill.md) — Feature request
+- [Issue #50](../issues/issue-00000050-markdown-mermaid-skill.md) — Feature request
 - [opencode repository](https://github.com/SuperiorByteWorks-LLC/agent-project) — Source of ported style guides (Apache-2.0)
 - [K-Dense Discord thread](https://discord.com/channels/k-dense) — Originating conversation, 2026-02-19
 
