@@ -11,12 +11,12 @@ description: >
 allowed-tools: [Read, Write, Edit, Bash]
 license: Apache-2.0
 metadata:
-  skill-author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes)
+  skill-author: Clayton Young / Superior Byte Works, LLC (@borealBytes)
   skill-source: https://github.com/SuperiorByteWorks-LLC/agent-project
   skill-version: "1.0.0"
   skill-contributors:
     - name: Clayton Young
-      org: Superior Byte Works, LLC / Boreal Bytes
+      org: Superior Byte Works, LLC / @borealBytes
       role: Author and originator
     - name: K-Dense Team
       org: K-Dense Inc.
@@ -42,7 +42,7 @@ converted to a polished image later — but the text version remains the source 
 > describe relationships < tokens). Additionally mermaid can render along with markdown for
 > easy use almost anywhere by humans or AI."
 >
-> — Clayton Young (Boreal Bytes), K-Dense Discord, 2026-02-19
+> — Clayton Young (@borealBytes), K-Dense Discord, 2026-02-19
 
 ## When to Use This Skill
 
@@ -276,7 +276,7 @@ Each file contains: production-quality exemplar, tips specific to that type, and
 All style guides, diagram type guides, and document templates in this skill are ported from the `SuperiorByteWorks-LLC/agent-project` repository under the Apache-2.0 License.
 
 - **Source**: https://github.com/SuperiorByteWorks-LLC/agent-project
-- **Author**: Clayton Young / Superior Byte Works, LLC (Boreal Bytes)
+- **Author**: Clayton Young / Superior Byte Works, LLC (@borealBytes)
 - **License**: Apache-2.0
 
 This skill (as part of claude-scientific-skills) is distributed under the MIT License. The included Apache-2.0 content is compatible for downstream use with attribution retained, as preserved in the file headers throughout this skill.
