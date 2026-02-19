@@ -80,9 +80,9 @@ flowchart LR
     accTitle: Three-Phase Documentation Workflow
     accDescr: Phase 1 Mermaid in markdown is always required and is the source of truth. Phases 2 and 3 are optional downstream conversions for polished output.
 
-    p1["📄 Phase 1\nMermaid in Markdown\n(ALWAYS — source of truth)"]
-    p2["🐍 Phase 2\nPython Generated\n(optional — data charts)"]
-    p3["🎨 Phase 3\nAI Generated Visuals\n(optional — polish)"]
+    p1["📄 Phase 1<br/>Mermaid in Markdown<br/>(ALWAYS — source of truth)"]
+    p2["🐍 Phase 2<br/>Python Generated<br/>(optional — data charts)"]
+    p3["🎨 Phase 3<br/>AI Generated Visuals<br/>(optional — polish)"]
     out["📊 Final Deliverable"]
 
     p1 --> out

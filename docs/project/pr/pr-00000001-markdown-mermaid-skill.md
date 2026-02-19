@@ -84,7 +84,7 @@ flowchart TD
     accTitle: New Skill Position in Ecosystem
     accDescr: Shows markdown-mermaid-writing as the foundation layer that other skills build upon for documentation output
 
-    new["📄 markdown-mermaid-writing\n(this PR — new skill)"]
+    new["📄 markdown-mermaid-writing<br/>(this PR — new skill)"]
     writing["✍️ scientific-writing"]
     lit["📚 literature-review"]
     schematics["🎨 scientific-schematics"]
