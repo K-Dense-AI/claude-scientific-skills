@@ -1,4 +1,4 @@
-<!-- Source: https://github.com/borealBytes/opencode | License: Apache-2.0 | Author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes) -->
+<!-- Source: https://github.com/SuperiorByteWorks-LLC/agent-project | License: Apache-2.0 | Author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes) -->
 
 # Issue Documentation Template
 
