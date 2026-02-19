@@ -63,9 +63,9 @@ flowchart LR
     accTitle: Documentation Production Workflow
     accDescr: Mermaid in markdown is the required source phase. Python and AI-generated images are optional downstream phases for polished output only.
 
-    source["📄 Phase 1 — Mermaid in Markdown\n(ALWAYS — source of truth)"]
-    python["🐍 Phase 2 — Python Generated\n(optional — when charts needed)"]
-    ai["🎨 Phase 3 — AI Generated\n(optional — polished visuals)"]
+    source["📄 Phase 1 — Mermaid in Markdown<br/>(ALWAYS — source of truth)"]
+    python["🐍 Phase 2 — Python Generated<br/>(optional — when charts needed)"]
+    ai["🎨 Phase 3 — AI Generated<br/>(optional — polished visuals)"]
     final["📊 Final Output"]
 
     source --> python
