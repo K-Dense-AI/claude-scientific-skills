@@ -3,7 +3,7 @@
 | Field | Value |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | **PR** | `#50` (https://github.com/K-Dense-AI/claude-scientific-skills/pull/50) |
-| **Author** | Clayton Young (Boreal Bytes / Superior Byte Works, LLC) — [LinkedIn](https://www.linkedin.com/in/claytoneyoung/) · [Clayton@SuperiorByteWorks.com](mailto:Clayton@SuperiorByteWorks.com) |
+| **Author** | Clayton Young (borealBytes / Superior Byte Works, LLC) — [LinkedIn](https://www.linkedin.com/in/claytoneyoung/) · [Clayton@SuperiorByteWorks.com](mailto:Clayton@SuperiorByteWorks.com) |
 | **Date** | 2026-02-19 |
 | **Status** | Open — Draft |
 | **Branch** | `feat/markdown-mermaid-writing-skill` → `main` |
