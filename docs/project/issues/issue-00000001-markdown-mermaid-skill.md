@@ -116,7 +116,7 @@ flowchart LR
 
 ### Content sources
 
-All style guides and templates ported from the `borealBytes/opencode` repository under Apache-2.0 license with attribution retained[^3].
+All style guides and templates ported from the `SuperiorByteWorks-LLC/agent-project` repository under Apache-2.0 license with attribution retained[^3].
 
 | Source path | Destination |
 | ------------------------------------------- | ---------------------------------------------------- |
@@ -154,7 +154,7 @@ scientific-skills/markdown-mermaid-writing/
 
 [^2]: Orion Li (K-Dense), responding: "Thanks for letting us know! We'll make sure to include this into our sauce when we implement our upcoming reorganization of the skills." — K-Dense Discord, 2026-02-19.
 
-[^3]: Boreal Bytes / Superior Byte Works, LLC. `opencode` repository. https://github.com/borealBytes/opencode. Apache-2.0 License.
+[^3]: Boreal Bytes / Superior Byte Works, LLC. `opencode` repository. https://github.com/SuperiorByteWorks-LLC/agent-project. Apache-2.0 License.
 
 ---
 
