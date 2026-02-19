@@ -16,7 +16,7 @@
 
 ### What changed and why
 
-This PR adds a new skill — `markdown-mermaid-writing` — that establishes markdown with embedded Mermaid diagrams as the **default and canonical documentation format** for all scientific skills. The skill ports comprehensive style guides, 24 diagram type references, and 9 document templates from the `borealBytes/opencode` project, and codifies the "source format" philosophy proposed in the K-Dense Discord on 2026-02-19.
+This PR adds a new skill — `markdown-mermaid-writing` — that establishes markdown with embedded Mermaid diagrams as the **default and canonical documentation format** for all scientific skills. The skill ports comprehensive style guides, 24 diagram type references, and 9 document templates from the `SuperiorByteWorks-LLC/agent-project` project, and codifies the "source format" philosophy proposed in the K-Dense Discord on 2026-02-19.
 
 The motivation: scientific outputs currently default to Python-generated or AI-generated images for diagrams. This PR inverts that priority — text-based Mermaid diagrams are the source of truth, downstream image generation is secondary. This gives users version-controlled, token-efficient, universally renderable documentation by default.
 
@@ -179,7 +179,7 @@ No ADR created — this is a documentation addition with no architectural tradeo
 ## 🔗 References
 
 - [Issue #00000001](../issues/issue-00000001-markdown-mermaid-skill.md) — Feature request
-- [opencode repository](https://github.com/borealBytes/opencode) — Source of ported style guides (Apache-2.0)
+- [opencode repository](https://github.com/SuperiorByteWorks-LLC/agent-project) — Source of ported style guides (Apache-2.0)
 - [K-Dense Discord thread](https://discord.com/channels/k-dense) — Originating conversation, 2026-02-19
 
 ---
