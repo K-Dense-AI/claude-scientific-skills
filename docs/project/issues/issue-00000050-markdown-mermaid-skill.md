@@ -6,7 +6,7 @@
 | **Type** | ✨ Feature |
 | **Severity** | 🟡 Medium |
 | **Priority** | P1 |
-| **Reporter** | Clayton Young (Boreal Bytes / Superior Byte Works, LLC) |
+| **Reporter** | Clayton Young (borealBytes / Superior Byte Works, LLC) |
 | **Assignee** | Unassigned |
 | **Date reported** | 2026-02-19 |
 | **Status** | Open |
@@ -40,7 +40,7 @@ This feature request emerged from a discussion in the K-Dense Discord on 2026-02
 
 > "One note I might offer you all in the claude-scientific-skills that would make it even better is better directions for writing markdown. Specifically using mermaid diagrams extensively and using tables and those instead of python created diagrams when it makes sense. From my experience, the more you get your reports and files in .md in just regular text, which mermaid is as well as being a simple 'script language'. This just helps with any downstream rendering and especially AI generated images (using mermaid instead of just long form text to describe relationships < tokens). Additionally mermaid can render along with markdown for easy use almost anywhere by humans or AI."
 >
-> — Clayton Young (Boreal Bytes), K-Dense Discord, 2026-02-19
+> — Clayton Young (@borealBytes), K-Dense Discord, 2026-02-19
 
 The K-Dense team responded positively and confirmed this direction aligns with their upcoming reorganization plans[^2].
 
@@ -150,7 +150,7 @@ scientific-skills/markdown-mermaid-writing/
 
 ## 📝 References
 
-[^1]: K-Dense Discord thread, 2026-02-19. Discussion between Clayton Young (Boreal Bytes), Orion Li (K-Dense), and Timothy about AGENTS.md standards and scientific documentation.
+[^1]: K-Dense Discord thread, 2026-02-19. Discussion between Clayton Young (@borealBytes), Orion Li (K-Dense), and Timothy about AGENTS.md standards and scientific documentation.
 
 [^2]: Orion Li (K-Dense), responding: "Thanks for letting us know! We'll make sure to include this into our sauce when we implement our upcoming reorganization of the skills." — K-Dense Discord, 2026-02-19.
 
