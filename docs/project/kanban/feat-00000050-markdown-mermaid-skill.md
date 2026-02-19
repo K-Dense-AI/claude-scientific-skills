@@ -31,7 +31,7 @@ kanban
         task11@{ ticket: "50", title: "Renumber docs to #50 (upstream next number)" }
         task12@{ ticket: "50", title: "Create kanban board" }
 
-    column1[In Progress]
+    column1[In Review]
         task13@{ ticket: "50", title: "Push branch and open PR to K-Dense-AI/claude-scientific-skills" }
 
     column2[Backlog]
@@ -51,7 +51,7 @@ kanban
 | **Target repo** | `K-Dense-AI/claude-scientific-skills` |
 | **Fork** | `borealBytes/claude-scientific-skills` |
 | **Started** | 2026-02-19 |
-| **Status** | 🟡 In Progress — awaiting PR push and human review |
+| **Status** | 🟡 In Review — PR #50 open, awaiting K-Dense team review |
 
 ---
 
@@ -76,9 +76,7 @@ kanban
 
 ## 🔄 In progress
 
-| Task | Owner | Notes |
-| ---------------------------------------- | ----- | --------------------------------------------- |
-| Push branch + open PR to K-Dense-AI repo | Clay | Pending push of `feat/markdown-mermaid-writing-skill` |
+_Nothing currently in progress._
 
 ---
 
@@ -99,7 +97,7 @@ pie
     accDescr: Pie chart showing 13 tasks done out of 15 total tasks for PR 50
 
     "Done" : 13
-    "In Progress" : 1
+    "In Review" : 1
     "Backlog" : 2
 ```
 
