@@ -25,11 +25,11 @@ flowchart TD
     accTitle: CRISPR Editing Experimental Workflow
     accDescr: Five-stage experimental pipeline from gRNA design through data analysis, with quality checkpoints between each stage.
 
-    design["🧬 Stage 1\ngRNA Design\n(CRISPRscan + Cas-OFFinder)"]
-    synth["⚙️ Stage 2\nOligo Synthesis\n& Annealing"]
-    transfect["🔬 Stage 3\nCell Transfection\n(Lipofectamine 3000)"]
-    screen["🧪 Stage 4\nPrimary Screen\n(T7E1 assay)"]
-    ngs["📊 Stage 5\nNGS Validation\n(150 bp PE reads)"]
+    design["🧬 Stage 1<br/>gRNA Design<br/>(CRISPRscan + Cas-OFFinder)"]
+    synth["⚙️ Stage 2<br/>Oligo Synthesis<br/>& Annealing"]
+    transfect["🔬 Stage 3<br/>Cell Transfection<br/>(Lipofectamine 3000)"]
+    screen["🧪 Stage 4<br/>Primary Screen<br/>(T7E1 assay)"]
+    ngs["📊 Stage 5<br/>NGS Validation<br/>(150 bp PE reads)"]
 
     qc1{GC 40-65%?}
     qc2{Yield ≥ 2 µg?}
