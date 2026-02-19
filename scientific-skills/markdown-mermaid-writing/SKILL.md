@@ -12,7 +12,7 @@ allowed-tools: [Read, Write, Edit, Bash]
 license: Apache-2.0
 metadata:
   skill-author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes)
-  skill-source: https://github.com/borealBytes/opencode
+  skill-source: https://github.com/SuperiorByteWorks-LLC/agent-project
   skill-version: "1.0.0"
   skill-contributors:
     - name: Clayton Young
@@ -273,9 +273,9 @@ Each file contains: production-quality exemplar, tips specific to that type, and
 
 ## 📝 Attribution
 
-All style guides, diagram type guides, and document templates in this skill are ported from the `borealBytes/opencode` repository under the Apache-2.0 License.
+All style guides, diagram type guides, and document templates in this skill are ported from the `SuperiorByteWorks-LLC/agent-project` repository under the Apache-2.0 License.
 
-- **Source**: https://github.com/borealBytes/opencode
+- **Source**: https://github.com/SuperiorByteWorks-LLC/agent-project
 - **Author**: Clayton Young / Superior Byte Works, LLC (Boreal Bytes)
 - **License**: Apache-2.0
 
