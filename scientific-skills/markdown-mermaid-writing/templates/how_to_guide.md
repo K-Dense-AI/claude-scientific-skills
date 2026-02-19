@@ -1,4 +1,4 @@
-<!-- Source: https://github.com/borealBytes/opencode | License: Apache-2.0 | Author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes) -->
+<!-- Source: https://github.com/SuperiorByteWorks-LLC/agent-project | License: Apache-2.0 | Author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes) -->
 
 # How-To / Tutorial Guide Template
 
@@ -268,7 +268,7 @@ Key commands and values from this guide for future reference:
 ## 🔗 References
 
 - [Official documentation](https://example.com) — [Which section is most relevant]
-- [Source repository](https://github.com/borealBytes) — [For bug reports and contributions]
+- [Source repository](https://github.com/SuperiorByteWorks-LLC) — [For bug reports and contributions]
 
 ---
 
