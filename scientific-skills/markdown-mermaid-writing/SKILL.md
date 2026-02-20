@@ -199,6 +199,52 @@ The `.md` file with embedded Mermaid is what gets committed. If you also generat
 
 ---
 
+## ⚠️ Common pitfalls
+
+### Radar chart syntax (`radar-beta`)
+
+**WRONG:**
+```mermaid
+radar
+title Example
+x-axis ["A", "B", "C"]
+"Series" : [1, 2, 3]
+```
+
+**CORRECT:**
+```mermaid
+radar-beta
+title Example
+axis a["A"], b["B"], c["C"]
+curve series["Series"]{1, 2, 3}
+max 3
+```
+
+- **Use `radar-beta`** not `radar` (the bare keyword doesn't exist)
+- **Use `axis`** to define dimensions, **not** `x-axis`
+- **Use `curve`** to define data series, **not** quoted labels with colon
+- **No `accTitle`/`accDescr`** — radar-beta doesn't support accessibility annotations; always add a descriptive italic paragraph above the diagram
+
+### XY Chart vs Radar confusion
+
+| Diagram | Keyword | Axis syntax | Data syntax |
+| ------- | ------- | ----------- | ----------- |
+| **XY Chart** (bars/lines) | `xychart-beta` | `x-axis ["Label1", "Label2"]` | `bar [10, 20]` or `line [10, 20]` |
+| **Radar** (spider/web) | `radar-beta` | `axis id["Label"]` | `curve id["Label"]{10, 20}` |
+
+### Forgetting `accTitle`/`accDescr` on supported types
+
+Only some diagram types support `accTitle`/`accDescr`. For those that don't, always place a descriptive italic paragraph directly above the code block:
+
+> _Radar chart comparing three methods across five performance dimensions. Note: Radar charts do not support accTitle/accDescr._
+
+```mermaid
+radar-beta
+...
+```
+
+---
+
 ## 🔗 Integration with other skills
 
 ### With `scientific-schematics`
