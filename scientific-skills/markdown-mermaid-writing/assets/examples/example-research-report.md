@@ -185,16 +185,19 @@ Full GUIDE-seq data available in supplementary data package (GEO accession pendi
 
 ### Comparison with published benchmarks
 
-```mermaid
-radar
-    accTitle: CRISPR Method Comparison Radar
-    accDescr: Multi-dimensional radar chart comparing our protocol against published Cas9 and base editing benchmarks across five performance axes
+_Radar chart comparing three CRISPR delivery methods across five performance dimensions. Note: Radar charts do not support `accTitle`/`accDescr` — description provided above._
 
-    title Performance vs. Published Methods
-    x-axis ["Efficiency", "Specificity", "Delivery ease", "Cost", "Cell viability"]
-    "This study (RNP + Lipo)" : [78, 95, 80, 85, 90]
-    "Plasmid Cas9 (lit.)" : [55, 70, 90, 95, 75]
-    "Electroporation RNP (lit.)" : [88, 96, 50, 60, 65]
+```mermaid
+radar-beta
+title Performance vs. Published Methods
+axis eff["Efficiency"], spec["Specificity"], del["Delivery ease"], cost["Cost"], viab["Cell viability"]
+curve this_study["This study (RNP + Lipo)"]{78, 95, 80, 85, 90}
+curve plasmid["Plasmid Cas9 (lit.)"]{55, 70, 90, 95, 75}
+curve electroporation["Electroporation RNP (lit.)"]{88, 96, 50, 60, 65}
+max 100
+graticule polygon
+ticks 5
+showLegend true
 ```
 
 ---
