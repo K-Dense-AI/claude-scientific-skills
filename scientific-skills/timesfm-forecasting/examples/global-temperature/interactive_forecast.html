@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimesFM Interactive Forecast Animation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #9ca3af;
+            font-size: 1.1rem;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        #chart {
+            width: 100% !important;
+            height: 400px !important;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .slider-label span {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        
+        .slider-label .value {
+            font-weight: 600;
+            color: #60a5fa;
+            font-size: 1.1rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #374151;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(96, 165, 250, 0.5);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(96, 165, 250, 0.5);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #374151;
+            color: #e0e0e0;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TimesFM Zero-Shot Forecast Animation</h1>
+            <p class="subtitle">Watch the forecast evolve as more data is added</p>
+        </header>
+        
+        <div class="chart-container">
+            <canvas id="chart"></canvas>
+        </div>
+        
+        <div class="controls">
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Historical Data Points</span>
+                    <span class="value" id="points-value">12 / 36</span>
+                </div>
+                <input type="range" id="slider" min="0" max="24" value="0" step="1">
+                <div class="slider-label">
+                    <span id="date-start">2022-01</span>
+                    <span id="date-end">2022-12 → Forecast to 2023-12</span>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn-primary" id="play-btn">▶ Play</button>
+                <button class="btn-secondary" id="reset-btn">↺ Reset</button>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="label">Forecast Mean</div>
+                    <div class="value" id="stat-mean">0.86°C</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Forecast Max</div>
+                    <div class="value" id="stat-max">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Forecast Min</div>
+                    <div class="value" id="stat-min">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">80% CI Width</div>
+                    <div class="value" id="stat-ci">--</div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3b82f6;"></div>
+                    <span>Historical Data</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <span>Forecast</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(239, 68, 68, 0.2);"></div>
+                    <span>80% Confidence Interval</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: rgba(239, 68, 68, 0.1);"></div>
+                    <span>90% Confidence Interval</span>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>TimesFM 1.0 (200M) PyTorch • <a href="https://github.com/google-research/timesfm">Google Research</a></p>
+            <p style="margin-top: 5px;">Generated by <a href="https://github.com/K-Dense-AI/claude-scientific-skills">claude-scientific-skills</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Load animation data
+        let animationData = null;
+        let chart = null;
+        let isPlaying = false;
+        let playInterval = null;
+        let currentStep = 0;
+
+        // Fetch the JSON data
+        fetch('animation_data.json')
+            .then(response => response.json())
+            .then(data => {
+                animationData = data;
+                initChart();
+                updateChart(0);
+            })
+            .catch(err => {
+                console.error('Error loading animation data:', err);
+                document.querySelector('.chart-container').innerHTML = 
+                    '<p style="text-align: center; padding: 50px; color: #ef4444;">Error loading data. Make sure animation_data.json is in the same directory.</p>';
+            });
+
+        function initChart() {
+            const ctx = document.getElementById('chart').getContext('2d');
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Historical',
+                            data: [],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#3b82f6',
+                            fill: false,
+                            tension: 0.1,
+                        },
+                        {
+                            label: 'Forecast',
+                            data: [],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#ef4444',
+                            fill: false,
+                            tension: 0.1,
+                        },
+                        {
+                            label: '90% CI Lower',
+                            data: [],
+                            borderColor: 'transparent',
+                            backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                            fill: '+1',
+                            pointRadius: 0,
+                            tension: 0.1,
+                        },
+                        {
+                            label: '90% CI Upper',
+                            data: [],
+                            borderColor: 'transparent',
+                            backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.1,
+                        },
+                        {
+                            label: '80% CI Lower',
+                            data: [],
+                            borderColor: 'transparent',
+                            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                            fill: '+1',
+                            pointRadius: 0,
+                            tension: 0.1,
+                        },
+                        {
+                            label: '80% CI Upper',
+                            data: [],
+                            borderColor: 'transparent',
+                            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.1,
+                        },
+                        {
+                            label: 'Actual (Future)',
+                            data: [],
+                            borderColor: '#10b981',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            pointRadius: 2,
+                            pointBackgroundColor: '#10b981',
+                            fill: false,
+                            tension: 0.1,
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            padding: 12,
+                            displayColors: true,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                            },
+                            ticks: {
+                                color: '#9ca3af',
+                                maxRotation: 45,
+                                minRotation: 45,
+                            },
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                            },
+                            ticks: {
+                                color: '#9ca3af',
+                                callback: function(value) {
+                                    return value.toFixed(2) + '°C';
+                                }
+                            },
+                            min: 0.5,
+                            max: 1.6,
+                        },
+                    },
+                    animation: {
+                        duration: 200,
+                    },
+                },
+            });
+        }
+
+        function updateChart(stepIndex) {
+            if (!animationData || !chart) return;
+            
+            const step = animationData.animation_steps[stepIndex];
+            const actual = animationData.actual_data;
+            
+            // Build all dates
+            const allDates = [...step.historical_dates, ...step.forecast_dates];
+            
+            // Historical data (with nulls for forecast period)
+            const historicalData = [...step.historical_values, ...Array(step.forecast_dates.length).fill(null)];
+            
+            // Forecast data (with nulls for historical period)
+            const forecastData = [...Array(step.historical_dates.length).fill(null), ...step.point_forecast];
+            
+            // Confidence intervals
+            const q90Lower = [...Array(step.historical_dates.length).fill(null), ...step.q10];
+            const q90Upper = [...Array(step.historical_dates.length).fill(null), ...step.q90];
+            const q80Lower = [...Array(step.historical_dates.length).fill(null), ...step.q20];
+            const q80Upper = [...Array(step.historical_dates.length).fill(null), ...step.q80];
+            
+            // Actual future data (if available)
+            const actualFuture = [];
+            for (let i = 0; i < allDates.length; i++) {
+                const dateIdx = actual.dates.indexOf(allDates[i]);
+                if (dateIdx >= step.n_points) {
+                    actualFuture.push(actual.values[dateIdx]);
+                } else {
+                    actualFuture.push(null);
+                }
+            }
+            
+            // Update chart data
+            chart.data.labels = allDates;
+            chart.data.datasets[0].data = historicalData;
+            chart.data.datasets[1].data = forecastData;
+            chart.data.datasets[2].data = q90Lower;
+            chart.data.datasets[3].data = q90Upper;
+            chart.data.datasets[4].data = q80Lower;
+            chart.data.datasets[5].data = q80Upper;
+            chart.data.datasets[6].data = actualFuture;
+            chart.update('none');
+            
+            // Update UI
+            document.getElementById('slider').value = stepIndex;
+            document.getElementById('points-value').textContent = `${step.n_points} / 36`;
+            document.getElementById('date-end').textContent = `${step.last_historical_date} → Forecast to ${step.forecast_dates[step.forecast_dates.length - 1]}`;
+            
+            // Update stats
+            const mean = (step.point_forecast.reduce((a, b) => a + b, 0) / step.point_forecast.length).toFixed(3);
+            const max = Math.max(...step.point_forecast).toFixed(3);
+            const min = Math.min(...step.point_forecast).toFixed(3);
+            const ciWidth = ((step.q80[0] - step.q20[0]).toFixed(3));
+            
+            document.getElementById('stat-mean').textContent = mean + '°C';
+            document.getElementById('stat-max').textContent = max + '°C';
+            document.getElementById('stat-min').textContent = min + '°C';
+            document.getElementById('stat-ci').textContent = '±' + (ciWidth / 2).toFixed(2) + '°C';
+            
+            currentStep = stepIndex;
+        }
+
+        // Slider control
+        document.getElementById('slider').addEventListener('input', (e) => {
+            updateChart(parseInt(e.target.value));
+        });
+
+        // Play button
+        document.getElementById('play-btn').addEventListener('click', () => {
+            const btn = document.getElementById('play-btn');
+            
+            if (isPlaying) {
+                clearInterval(playInterval);
+                btn.textContent = '▶ Play';
+                isPlaying = false;
+            } else {
+                btn.textContent = '⏸ Pause';
+                isPlaying = true;
+                
+                if (currentStep >= animationData.animation_steps.length - 1) {
+                    currentStep = 0;
+                }
+                
+                playInterval = setInterval(() => {
+                    if (currentStep >= animationData.animation_steps.length - 1) {
+                        clearInterval(playInterval);
+                        document.getElementById('play-btn').textContent = '▶ Play';
+                        isPlaying = false;
+                    } else {
+                        currentStep++;
+                        updateChart(currentStep);
+                    }
+                }, 500);
+            }
+        });
+
+        // Reset button
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if (isPlaying) {
+                clearInterval(playInterval);
+                document.getElementById('play-btn').textContent = '▶ Play';
+                isPlaying = false;
+            }
+            updateChart(0);
+        });
+    </script>
+</body>
+</html>
