@@ -47,9 +47,13 @@ Use this skill when:
 Do **not** use this skill when:
 
 - You need classical statistical models with coefficient interpretation → use `statsmodels`
-- You need time series classification, clustering, or anomaly detection → use `aeon`
+- You need time series classification or clustering → use `aeon`
 - You need multivariate vector autoregression or Granger causality → use `statsmodels`
 - Your data is tabular (not temporal) → use `scikit-learn`
+
+> **Note on Anomaly Detection**: TimesFM does not have built-in anomaly detection, but you can
+> use the **quantile forecasts as prediction intervals** — values outside the 90% CI (q10–q90)
+> are statistically unusual. See the `examples/anomaly-detection/` directory for a full example.
 
 ## ⚠️ Mandatory Preflight: System Requirements Check
 
@@ -207,6 +211,61 @@ for i, col in enumerate(df.columns):
 ```
 
 ### Forecast with Covariates (XReg)
+
+TimesFM 2.5+ supports exogenous variables through `forecast_with_covariates()`. Requires `timesfm[xreg]`.
+
+```python
+# Requires: uv pip install timesfm[xreg]
+point, quantiles = model.forecast_with_covariates(
+    inputs=inputs,
+    dynamic_numerical_covariates={"price": price_arrays},
+    dynamic_categorical_covariates={"holiday": holiday_arrays},
+    static_categorical_covariates={"region": region_labels},
+    xreg_mode="xreg + timesfm",  # or "timesfm + xreg"
+)
+```
+
+| Covariate Type | Description | Example |
+| -------------- | ----------- | ------- |
+| `dynamic_numerical` | Time-varying numeric | price, temperature, promotion spend |
+| `dynamic_categorical` | Time-varying categorical | holiday flag, day of week |
+| `static_numerical` | Per-series numeric | store size, account age |
+| `static_categorical` | Per-series categorical | store type, region, product category |
+
+**XReg Modes:**
+- `"xreg + timesfm"` (default): TimesFM forecasts first, then XReg adjusts residuals
+- `"timesfm + xreg"`: XReg fits first, then TimesFM forecasts residuals
+
+> See `examples/covariates-forecasting/` for a complete example with synthetic retail data.
+
+### Anomaly Detection (via Quantile Intervals)
+
+TimesFM does not have built-in anomaly detection, but the **quantile forecasts naturally provide
+prediction intervals** that can detect anomalies:
+
+```python
+point, q = model.forecast(horizon=H, inputs=[values])
+
+# 90% prediction interval
+lower_90 = q[0, :, 1]  # 10th percentile
+upper_90 = q[0, :, 9]  # 90th percentile
+
+# Detect anomalies: values outside the 90% CI
+actual = test_values  # your holdout data
+anomalies = (actual < lower_90) | (actual > upper_90)
+
+# Severity levels
+is_warning = (actual < q[0, :, 2]) | (actual > q[0, :, 8])  # outside 80% CI
+is_critical = anomalies  # outside 90% CI
+```
+
+| Severity | Condition | Interpretation |
+| -------- | --------- | -------------- |
+| **Normal** | Inside 80% CI | Expected behavior |
+| **Warning** | Outside 80% CI | Unusual but possible |
+| **Critical** | Outside 90% CI | Statistically rare (< 10% probability) |
+
+> See `examples/anomaly-detection/` for a complete example with visualization.
 
 ```python
 # Requires: uv pip install timesfm[xreg]

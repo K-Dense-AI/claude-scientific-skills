@@ -1,0 +1,43 @@
+{
+  "description": "Synthetic retail sales data with covariates for TimesFM XReg demo",
+  "stores": {
+    "store_A": {
+      "type": "premium",
+      "region": "urban",
+      "base_sales": 1000
+    },
+    "store_B": {
+      "type": "standard",
+      "region": "suburban",
+      "base_sales": 750
+    },
+    "store_C": {
+      "type": "discount",
+      "region": "rural",
+      "base_sales": 500
+    }
+  },
+  "dimensions": {
+    "context_length": 48,
+    "horizon_length": 12,
+    "total_length": 60
+  },
+  "covariates": {
+    "dynamic_numerical": [
+      "price",
+      "promotion"
+    ],
+    "dynamic_categorical": [
+      "holiday",
+      "day_of_week"
+    ],
+    "static_categorical": [
+      "store_type",
+      "region"
+    ]
+  },
+  "xreg_modes": {
+    "xreg + timesfm": "Fit regression on residuals after TimesFM forecast",
+    "timesfm + xreg": "TimesFM forecasts residuals after regression fit"
+  }
+}
