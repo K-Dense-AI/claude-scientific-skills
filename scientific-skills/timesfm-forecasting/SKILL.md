@@ -534,9 +534,9 @@ Plot forecasts with prediction intervals as publication-quality figures.
 
 Run EDA on the time series before forecasting to understand trends, seasonality, and stationarity.
 
-### With `markdown-mermaid-writing`
 
-Document your forecasting pipeline using Mermaid diagrams for reproducible research reports.
+
+
 
 ## 📚 Available Scripts
 
