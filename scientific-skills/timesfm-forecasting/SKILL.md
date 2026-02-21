@@ -67,6 +67,10 @@ This script checks:
 4. **Python version** — requires 3.10+
 5. **Existing installation** — checks if `timesfm` and `torch` are installed
 
+> **Note:** Model weights are **NOT stored in this repository**. TimesFM weights (~800 MB)
+> download on-demand from HuggingFace on first use and cache in `~/.cache/huggingface/`.
+> The preflight checker ensures sufficient resources before any download begins.
+
 ```mermaid
 flowchart TD
     accTitle: Preflight System Check
