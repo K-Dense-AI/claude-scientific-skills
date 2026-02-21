@@ -1,0 +1,160 @@
+{
+  "method": "quantile_intervals",
+  "description": "Anomaly detection using TimesFM quantile forecasts as prediction intervals",
+  "thresholds": {
+    "warning": "Outside 80% CI (q20-q80)",
+    "critical": "Outside 90% CI (q10-q90)"
+  },
+  "anomalies": [
+    {
+      "month": "2024-01",
+      "actual": 1.9520000219345093,
+      "forecast": 1.1204800605773926,
+      "lower_80": 0.9561834335327148,
+      "upper_80": 1.19773530960083,
+      "lower_90": 1.1319338083267212,
+      "upper_90": 1.2482070922851562,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-02",
+      "actual": 1.350000023841858,
+      "forecast": 1.0831129550933838,
+      "lower_80": 0.9061079621315002,
+      "upper_80": 1.1693586111068726,
+      "lower_90": 1.1058242321014404,
+      "upper_90": 1.229236364364624,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-03",
+      "actual": 1.340000033378601,
+      "forecast": 1.0525826215744019,
+      "lower_80": 0.8687788844108582,
+      "upper_80": 1.14640212059021,
+      "lower_90": 1.0804548263549805,
+      "upper_90": 1.210077166557312,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-04",
+      "actual": 1.2599999904632568,
+      "forecast": 1.0186809301376343,
+      "lower_80": 0.8394415378570557,
+      "upper_80": 1.11386239528656,
+      "lower_90": 1.0469233989715576,
+      "upper_90": 1.18027925491333,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-05",
+      "actual": 1.149999976158142,
+      "forecast": 0.996323823928833,
+      "lower_80": 0.8218992948532104,
+      "upper_80": 1.082446813583374,
+      "lower_90": 1.0246795415878296,
+      "upper_90": 1.1515717506408691,
+      "severity": "WARNING",
+      "threshold": "80% CI",
+      "color": "orange"
+    },
+    {
+      "month": "2024-06",
+      "actual": 1.2000000476837158,
+      "forecast": 0.9761021733283997,
+      "lower_80": 0.8107370138168335,
+      "upper_80": 1.0650819540023804,
+      "lower_90": 1.0055618286132812,
+      "upper_90": 1.1297614574432373,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-07",
+      "actual": 1.2400000095367432,
+      "forecast": 0.966797411441803,
+      "lower_80": 0.8105956315994263,
+      "upper_80": 1.05680513381958,
+      "lower_90": 0.999349057674408,
+      "upper_90": 1.1205626726150513,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-08",
+      "actual": 2.0799999237060547,
+      "forecast": 0.9621630311012268,
+      "lower_80": 0.8031740784645081,
+      "upper_80": 1.0481219291687012,
+      "lower_90": 0.9949856996536255,
+      "upper_90": 1.1177691221237183,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-09",
+      "actual": 0.7680000066757202,
+      "forecast": 0.950423002243042,
+      "lower_80": 0.8004634380340576,
+      "upper_80": 1.0429224967956543,
+      "lower_90": 0.9896860718727112,
+      "upper_90": 1.112573504447937,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-10",
+      "actual": 1.2699999809265137,
+      "forecast": 0.9326475262641907,
+      "lower_80": 0.7854968309402466,
+      "upper_80": 1.024938702583313,
+      "lower_90": 0.9742559194564819,
+      "upper_90": 1.0930581092834473,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-11",
+      "actual": 1.2200000286102295,
+      "forecast": 0.9303779602050781,
+      "lower_80": 0.7851479053497314,
+      "upper_80": 1.0191327333450317,
+      "lower_90": 0.9675081968307495,
+      "upper_90": 1.084266185760498,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    },
+    {
+      "month": "2024-12",
+      "actual": 1.2000000476837158,
+      "forecast": 0.9362010955810547,
+      "lower_80": 0.7882705330848694,
+      "upper_80": 1.028489589691162,
+      "lower_90": 0.9734180569648743,
+      "upper_90": 1.0912758111953735,
+      "severity": "CRITICAL",
+      "threshold": "90% CI",
+      "color": "red"
+    }
+  ],
+  "summary": {
+    "total_points": 12,
+    "critical": 11,
+    "warning": 1,
+    "normal": 0
+  }
+}
