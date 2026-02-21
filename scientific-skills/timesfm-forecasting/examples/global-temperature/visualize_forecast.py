@@ -83,7 +83,7 @@ def main() -> None:
     ax.set_xlabel("Date", fontsize=12)
     ax.set_ylabel("Temperature Anomaly (°C)", fontsize=12)
     ax.set_title(
-        "TimesFM Forecast: Global Temperature Anomaly (2025)\nAbove 1951-1980 Baseline",
+        "TimesFM Zero-Shot Forecast Example\n36-month Temperature Anomaly → 12-month Forecast",
         fontsize=14,
         fontweight="bold",
     )
