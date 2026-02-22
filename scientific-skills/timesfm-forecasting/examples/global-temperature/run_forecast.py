@@ -94,7 +94,8 @@ output_df = pd.DataFrame(
 )
 
 # Save outputs
-output_dir = Path(__file__).parent
+output_dir = Path(__file__).parent / "output"
+output_dir.mkdir(exist_ok=True)
 output_df.to_csv(output_dir / "forecast_output.csv", index=False)
 
 # JSON output for the report

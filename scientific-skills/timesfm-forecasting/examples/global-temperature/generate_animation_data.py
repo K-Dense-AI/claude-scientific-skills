@@ -24,7 +24,7 @@ MAX_HORIZON = (
 )
 TOTAL_MONTHS = 48  # Total months from 2022-01 to 2025-12 (graph extent)
 INPUT_FILE = Path(__file__).parent / "temperature_anomaly.csv"
-OUTPUT_FILE = Path(__file__).parent / "animation_data.json"
+OUTPUT_FILE = Path(__file__).parent / "output" / "animation_data.json"
 
 
 def main() -> None:

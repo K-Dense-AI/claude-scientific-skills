@@ -23,8 +23,8 @@ import pandas as pd
 # Configuration
 EXAMPLE_DIR = Path(__file__).parent
 INPUT_FILE = EXAMPLE_DIR / "temperature_anomaly.csv"
-FORECAST_FILE = EXAMPLE_DIR / "forecast_output.json"
-OUTPUT_FILE = EXAMPLE_DIR / "forecast_visualization.png"
+FORECAST_FILE = EXAMPLE_DIR / "output" / "forecast_output.json"
+OUTPUT_FILE = EXAMPLE_DIR / "output" / "forecast_visualization.png"
 
 
 def main() -> None:
