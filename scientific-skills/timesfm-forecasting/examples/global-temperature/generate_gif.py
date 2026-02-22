@@ -18,8 +18,8 @@ from PIL import Image
 
 # Configuration
 EXAMPLE_DIR = Path(__file__).parent
-DATA_FILE = EXAMPLE_DIR / "animation_data.json"
-OUTPUT_FILE = EXAMPLE_DIR / "forecast_animation.gif"
+DATA_FILE = EXAMPLE_DIR / "output" / "animation_data.json"
+OUTPUT_FILE = EXAMPLE_DIR / "output" / "forecast_animation.gif"
 DURATION_MS = 500  # Time per frame in milliseconds
 
 
