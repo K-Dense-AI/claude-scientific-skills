@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.21.0"
+    "version": "2.22.0"
   },
   "plugins": [
     {
@@ -159,7 +159,8 @@
         "./scientific-skills/protocolsio-integration",
         "./scientific-skills/get-available-resources",
         "./scientific-skills/iso-13485-certification",
-        "./scientific-skills/edgartools"
+        "./scientific-skills/edgartools",
+        "./scientific-skills/usfiscaldata"
       ]
     }
   ]
