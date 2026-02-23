@@ -321,7 +321,7 @@ After every QTL analysis:
 
 ## Examples
 
-15 fully-worked examples in `examples/`:
+19 fully-worked examples in `examples/`:
 
 | Example | Directory | Demonstrates | Acceptance Criteria |
 |---------|-----------|--------------|---------------------|
@@ -340,6 +340,10 @@ After every QTL analysis:
 | **SNP-Filtering** | `examples/snp-filtering/` | Quality control filtering | MAF>0.05, HWE p>1e-6 |
 | **Phenotype-Plots** | `examples/phenotype-plots/` | Phenotype visualization | Boxplots, histograms, correlation |
 | **Imputation** | `examples/imputation/` | Genotype imputation | Reference panel matching |
+| **Haplotype-Analysis** | `examples/haplotype-analysis/` | Haplotype blocks with dendrogram | 5 blocks, LD heatmap |
+| **Qmapper-Ideogram** | `examples/qmapper-ideogram/` | Chromosome ideogram visualization | 5 chromosomes, SNP mapping |
+| **Deep-Clustering** | `examples/deep-clustering/` | Autoencoder population clustering | ARI=1.0, latent space visualization |
+| **Backcross-Selection** | `examples/backcross-selection/` | Marker-assisted backcross breeding | BC1-BC6, similarity tracking |
 
 ## Validation Commands
 
