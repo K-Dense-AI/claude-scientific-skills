@@ -9,7 +9,7 @@ description: >
   intervals. Includes a preflight system checker script that MUST be run before first use
   to verify the machine can load the model. For classical statistical time series models
   (ARIMA, SARIMAX, VAR) use statsmodels; for time series classification/clustering use aeon.
-allowed-tools: [Read, Write, Edit, Bash]
+allowed-tools: Read Write Edit Bash
 license: Apache-2.0 license
 metadata:
   skill-author: Clayton Young / Superior Byte Works, LLC (@borealBytes)
