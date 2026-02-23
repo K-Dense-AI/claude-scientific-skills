@@ -11,12 +11,12 @@ description: >
 allowed-tools: [Read, Write, Edit, Bash]
 license: Apache-2.0
 metadata:
-  skill-author: Clayton Young / Superior Byte Works, LLC (Boreal Bytes)
-  skill-source: https://github.com/borealBytes/opencode
+  skill-author: Clayton Young / Superior Byte Works, LLC (@borealBytes)
+  skill-source: https://github.com/SuperiorByteWorks-LLC/agent-project
   skill-version: "1.0.0"
   skill-contributors:
     - name: Clayton Young
-      org: Superior Byte Works, LLC / Boreal Bytes
+      org: Superior Byte Works, LLC / @borealBytes
       role: Author and originator
     - name: K-Dense Team
       org: K-Dense Inc.
@@ -42,7 +42,7 @@ converted to a polished image later — but the text version remains the source 
 > describe relationships < tokens). Additionally mermaid can render along with markdown for
 > easy use almost anywhere by humans or AI."
 >
-> — Clayton Young (Boreal Bytes), K-Dense Discord, 2026-02-19
+> — Clayton Young (@borealBytes), K-Dense Discord, 2026-02-19
 
 ## When to Use This Skill
 
@@ -80,9 +80,9 @@ flowchart LR
     accTitle: Three-Phase Documentation Workflow
     accDescr: Phase 1 Mermaid in markdown is always required and is the source of truth. Phases 2 and 3 are optional downstream conversions for polished output.
 
-    p1["📄 Phase 1\nMermaid in Markdown\n(ALWAYS — source of truth)"]
-    p2["🐍 Phase 2\nPython Generated\n(optional — data charts)"]
-    p3["🎨 Phase 3\nAI Generated Visuals\n(optional — polish)"]
+    p1["📄 Phase 1<br/>Mermaid in Markdown<br/>(ALWAYS — source of truth)"]
+    p2["🐍 Phase 2<br/>Python Generated<br/>(optional — data charts)"]
+    p3["🎨 Phase 3<br/>AI Generated Visuals<br/>(optional — polish)"]
     out["📊 Final Deliverable"]
 
     p1 --> out
@@ -199,6 +199,52 @@ The `.md` file with embedded Mermaid is what gets committed. If you also generat
 
 ---
 
+## ⚠️ Common pitfalls
+
+### Radar chart syntax (`radar-beta`)
+
+**WRONG:**
+```mermaid
+radar
+title Example
+x-axis ["A", "B", "C"]
+"Series" : [1, 2, 3]
+```
+
+**CORRECT:**
+```mermaid
+radar-beta
+title Example
+axis a["A"], b["B"], c["C"]
+curve series["Series"]{1, 2, 3}
+max 3
+```
+
+- **Use `radar-beta`** not `radar` (the bare keyword doesn't exist)
+- **Use `axis`** to define dimensions, **not** `x-axis`
+- **Use `curve`** to define data series, **not** quoted labels with colon
+- **No `accTitle`/`accDescr`** — radar-beta doesn't support accessibility annotations; always add a descriptive italic paragraph above the diagram
+
+### XY Chart vs Radar confusion
+
+| Diagram | Keyword | Axis syntax | Data syntax |
+| ------- | ------- | ----------- | ----------- |
+| **XY Chart** (bars/lines) | `xychart-beta` | `x-axis ["Label1", "Label2"]` | `bar [10, 20]` or `line [10, 20]` |
+| **Radar** (spider/web) | `radar-beta` | `axis id["Label"]` | `curve id["Label"]{10, 20}` |
+
+### Forgetting `accTitle`/`accDescr` on supported types
+
+Only some diagram types support `accTitle`/`accDescr`. For those that don't, always place a descriptive italic paragraph directly above the code block:
+
+> _Radar chart comparing three methods across five performance dimensions. Note: Radar charts do not support accTitle/accDescr._
+
+```mermaid
+radar-beta
+...
+```
+
+---
+
 ## 🔗 Integration with other skills
 
 ### With `scientific-schematics`
@@ -273,10 +319,10 @@ Each file contains: production-quality exemplar, tips specific to that type, and
 
 ## 📝 Attribution
 
-All style guides, diagram type guides, and document templates in this skill are ported from the `borealBytes/opencode` repository under the Apache-2.0 License.
+All style guides, diagram type guides, and document templates in this skill are ported from the `SuperiorByteWorks-LLC/agent-project` repository under the Apache-2.0 License.
 
-- **Source**: https://github.com/borealBytes/opencode
-- **Author**: Clayton Young / Superior Byte Works, LLC (Boreal Bytes)
+- **Source**: https://github.com/SuperiorByteWorks-LLC/agent-project
+- **Author**: Clayton Young / Superior Byte Works, LLC (@borealBytes)
 - **License**: Apache-2.0
 
 This skill (as part of claude-scientific-skills) is distributed under the MIT License. The included Apache-2.0 content is compatible for downstream use with attribution retained, as preserved in the file headers throughout this skill.

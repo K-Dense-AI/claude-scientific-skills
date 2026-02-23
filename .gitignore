@@ -10,4 +10,4 @@ uv.lock
 .python-version
 main.py
 
-__pycache__/
+__pycache__/.sisyphus/
