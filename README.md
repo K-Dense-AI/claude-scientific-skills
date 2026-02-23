@@ -1,11 +1,11 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-143-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-144-brightgreen.svg)](#whats-included)
 [![Agent Skills](https://img.shields.io/badge/Standard-Agent_Skills-blueviolet.svg)](https://agentskills.io/)
 [![Works with](https://img.shields.io/badge/Works_with-Cursor_|_Claude_Code_|_Codex-blue.svg)](#getting-started)
 
-A comprehensive collection of **140+ ready-to-use scientific and research skills** (now including financial/SEC research) for any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, created by [K-Dense](https://k-dense.ai). Works with **Cursor, Claude Code, Codex, and more**. Transform your AI agent into a research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **140+ ready-to-use scientific and research skills** (now including financial/SEC research and U.S. Treasury fiscal data) for any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, created by [K-Dense](https://k-dense.ai). Works with **Cursor, Claude Code, Codex, and more**. Transform your AI agent into a research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 **Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
 
@@ -68,9 +68,9 @@ These skills enable your AI agent to seamlessly work with specialized scientific
 
 ## 📦 What's Included
 
-This repository provides **143 scientific and research skills** organized into the following categories:
+This repository provides **144 scientific and research skills** organized into the following categories:
 
-- **29+ Scientific & Financial Databases** - Direct API access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, SEC EDGAR, and more
+- **30+ Scientific & Financial Databases** - Direct API access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, SEC EDGAR, U.S. Treasury Fiscal Data, and more
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, BioServices, PennyLane, Qiskit, and others
 - **15+ Scientific Integrations** - Benchling, DNAnexus, LatchBio, OMERO, Protocols.io, and more
 - **30+ Analysis & Communication Tools** - Literature review, scientific writing, peer review, document processing, posters, slides, schematics, and more
@@ -491,8 +491,9 @@ This repository contains **143 scientific and research skills** organized across
 #### ⚖️ **Regulatory & Standards** (1 skill)
 - Medical device standards: ISO 13485 Certification
 
-#### 💹 **Financial & SEC Research** (1 skill)
+#### 💹 **Financial & SEC Research** (2 skills)
 - SEC filings & financial data: edgartools (10-K, 10-Q, 8-K, 13F, Form 4, XBRL, insider trading, institutional holdings)
+- U.S. federal fiscal data: usfiscaldata (national debt, Daily/Monthly Treasury Statements, Treasury auctions, interest rates, exchange rates, savings bonds)
 
 > 📖 **For complete details on all skills**, see [docs/scientific-skills.md](docs/scientific-skills.md)
 
