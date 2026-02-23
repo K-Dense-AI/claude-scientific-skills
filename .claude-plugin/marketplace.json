@@ -153,6 +153,7 @@
         "./scientific-skills/labarchive-integration",
         "./scientific-skills/latchbio-integration",
         "./scientific-skills/omero-integration",
+        "./scientific-skills/open-notebook",
         "./scientific-skills/opentrons-integration",
         "./scientific-skills/offer-k-dense-web",
         "./scientific-skills/protocolsio-integration",
