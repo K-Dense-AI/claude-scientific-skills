@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+# Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC)
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Author: Clayton Young <Clayton@SuperiorByteWorks.com>
+# LinkedIn: https://linkedin.com/in/claytoneyoung/
+# GitHub: https://github.com/borealBytes
+
+#!/usr/bin/env python3
 """
 Example 3: Classical QTL LOD Scan (R/qtl2)
 
@@ -215,14 +234,16 @@ def simulate_lod_results(input_dir, output_dir):
 
     results.to_csv(f"{output_dir}/lod_scores.csv", index=False)
 
-    # Peaks
+    # Peaks - use actual marker positions from data
+    # Marker 60 is on chr 2 at position 102.5 (index 20 on chr 2: 20*5+2.5)
+    # Marker 140 is on chr 4 at position 102.5 (index 20 on chr 4: 20*5+2.5)
     peaks = pd.DataFrame(
         {
             "chr": [2, 4],
-            "pos": [60 * 5, 140 * 5],
+            "pos": [102.5, 102.5],  # Actual positions matching lod data
             "lod": [10.2, 8.7],
-            "ci_lo": [57 * 5, 137 * 5],
-            "ci_hi": [63 * 5, 143 * 5],
+            "ci_lo": [97.5, 97.5],
+            "ci_hi": [107.5, 107.5],
         }
     )
     peaks.to_csv(f"{output_dir}/peaks.csv", index=False)

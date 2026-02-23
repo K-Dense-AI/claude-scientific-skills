@@ -8,7 +8,7 @@ This example demonstrates a complete GWAS workflow using GEMMA for Linear Mixed 
 ### Input
 | File | Description | Preview |
 |------|-------------|---------|
-| `phenotype_example.csv` | 20 samples with quantitative phenotype | ![Phenotype](output/phenotype_example.csv) |
+| `phenotype_example.csv` | 20 samples with quantitative phenotype | Text preview below |
 | `genotypes.raw` | PLINK-format genotype matrix (synthetic) | Binary format |
 
 **Phenotype Preview:**

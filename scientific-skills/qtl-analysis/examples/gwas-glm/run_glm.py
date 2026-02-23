@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+# Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC)
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Author: Clayton Young <Clayton@SuperiorByteWorks.com>
+# LinkedIn: https://linkedin.com/in/claytoneyoung/
+# GitHub: https://github.com/borealBytes
+
+#!/usr/bin/env python3
 """
 Example: GWAS with Generalized Linear Model (GLM)
 
@@ -267,9 +286,14 @@ def main():
     print(f"Samples: {len(sample_ids)}")
     print(f"SNPs tested: {len(snp_ids)}")
     print(f"Significant (p < 5e-8): {len(sig_snps)}")
-    print(
-        f"Genomic inflation λ: {results_df['P'].apply(lambda p: -np.log10(p) if p > 0 else 0).median() / 0.455:.3f}"
-    )
+    import numpy as np
+    pvals = results_df['P'].values
+    pvals_valid = pvals[pvals > 0]
+    if len(pvals_valid) > 0:
+        genomic_inflation = np.median(-np.log10(pvals_valid)) / 0.455
+        print(f"Genomic inflation λ: {genomic_inflation:.3f}")
+    else:
+        print(f"Genomic inflation λ: N/A (no valid p-values)")
     print(f"\nOutputs:")
     print(f"  - {output_dir}/glm_gwas_results.csv")
     print(f"  - {output_dir}/glm_manhattan.png")

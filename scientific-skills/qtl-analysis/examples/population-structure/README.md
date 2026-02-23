@@ -8,7 +8,7 @@ This example demonstrates population structure analysis using PCA and kinship es
 ### Input
 | File | Description | Preview |
 |------|-------------|---------|
-| `population_info_example.csv` | Sample population assignments | ![Pop Info](output/population_info_example.csv) |
+| `population_info_example.csv` | Sample population assignments | Text preview below |
 | `genotypes.raw` | Genotype matrix (synthetic) | Binary format |
 
 **Population Info Preview:**

@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+# Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC)
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Author: Clayton Young <Clayton@SuperiorByteWorks.com>
+# LinkedIn: https://linkedin.com/in/claytoneyoung/
+# GitHub: https://github.com/borealBytes
+
+#!/usr/bin/env python3
 """
 Example: K-means Clustering for Population Structure
 
@@ -242,6 +261,7 @@ def main():
     print(f"Clusters (K): 3")
     print(f"Agreement with truth: {ari:.1%}")
 
+    import numpy as np
     for k in range(3):
         n = np.sum(cluster_labels == k)
         print(f"  Cluster {k + 1}: {n} individuals")

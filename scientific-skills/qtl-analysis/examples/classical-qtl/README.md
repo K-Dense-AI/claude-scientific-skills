@@ -8,7 +8,7 @@ This example demonstrates traditional QTL mapping using R/qtl2 for an F2 intercr
 ### Input
 | File | Description | Preview |
 |------|-------------|---------|
-| `genotype_example.csv` | Marker genotypes (S/H/B coding) | ![Genotypes](output/genotype_example.csv) |
+| `genotype_example.csv` | Marker genotypes (S/H/B coding) | Text preview below |
 
 **Genotype Preview:**
 ```csv

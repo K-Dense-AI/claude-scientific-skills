@@ -8,7 +8,7 @@ This example demonstrates cis-eQTL mapping using tensorQTL for gene expression a
 ### Input
 | File | Description | Preview |
 |------|-------------|---------|
-| `expression_example.csv` | Gene expression values for 20 samples | ![Expression](output/expression_example.csv) |
+| `expression_example.csv` | Gene expression values for 20 samples | Text preview below |
 | `genotypes.bed` | PLINK genotype data (synthetic) | Binary format |
 
 **Expression Preview:**

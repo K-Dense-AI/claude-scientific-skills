@@ -9,7 +9,9 @@ description: >
   and breeding applications.
 license: Apache-2.0
 metadata:
-  author: Clayton Young (@borealBytes)
+  author: Clayton Young (borealBytes / Superior Byte Works, LLC)
+  contact: Clayton@SuperiorByteWorks.com
+  linkedin: https://linkedin.com/in/claytoneyoung/
   version: "1.0.0"
   category: genomics
   tools: [tensorQTL, GEMMA, PLINK, R/qtl2, pyQTL]
@@ -319,14 +321,25 @@ After every QTL analysis:
 
 ## Examples
 
-Four fully-worked examples in `examples/`:
+15 fully-worked examples in `examples/`:
 
 | Example | Directory | Demonstrates | Acceptance Criteria |
 |---------|-----------|--------------|---------------------|
-| **GWAS-LMM** | `examples/gwas-lmm/` | GEMMA GWAS → Manhattan + QQ | 3/3 causal loci recovered, λ=1.02 |
-| **eQTL-cis** | `examples/eqtl-cis/` | tensorQTL cis-eQTL | 10 significant eQTLs, GPU <30s |
-| **Classical-QTL** | `examples/classical-qtl/` | R/qtl2 LOD scan | 2 QTLs detected, CIs overlap true positions |
-| **Pop-structure** | `examples/population-structure/` | PCA + admixture | 3 populations separated, admixture matches structure |
+| **GWAS-LMM** | `examples/gwas-lmm/` | GEMMA LMM-GWAS → Manhattan + QQ | λ=1.02, significant hits found |
+| **GWAS-GLM** | `examples/gwas-glm/` | PLINK GLM-GWAS (logistic) | Binary phenotype, Manhattan plot |
+| **eQTL-cis** | `examples/eqtl-cis/` | tensorQTL cis-eQTL | 10 significant eQTLs, LocusZoom plot |
+| **Classical-QTL** | `examples/classical-qtl/` | R/qtl2 LOD scan | 2 QTLs detected, LOD>threshold |
+| **LD-Decay** | `examples/ld-decay/` | Linkage disequilibrium decay | LD decay curve by distance |
+| **Population-Structure** | `examples/population-structure/` | PCA + kinship matrix | 3 populations separated, heatmap |
+| **Admixture** | `examples/admixture/` | Population admixture analysis | Ancestry proportions, bar chart |
+| **K-means-Clustering** | `examples/kmeans-clustering/` | K-means population clustering | 3 clusters, elbow plot, ARI=1.0 |
+| **Genomic-Prediction** | `examples/genomic-prediction/` | GBLUP/ridge regression | Prediction accuracy >0.7 |
+| **Marker-Selection** | `examples/marker-selection/` | Marker-assisted selection | Selected markers ranked |
+| **BLUP** | `examples/blup/` | Best Linear Unbiased Prediction | BLUEs and BLUPs calculated |
+| **VCF-Validation** | `examples/vcf-validation/` | VCF/BCF validation | No validation errors |
+| **SNP-Filtering** | `examples/snp-filtering/` | Quality control filtering | MAF>0.05, HWE p>1e-6 |
+| **Phenotype-Plots** | `examples/phenotype-plots/` | Phenotype visualization | Boxplots, histograms, correlation |
+| **Imputation** | `examples/imputation/` | Genotype imputation | Reference panel matching |
 
 ## Validation Commands
 
