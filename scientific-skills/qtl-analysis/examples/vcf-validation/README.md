@@ -1,0 +1,30 @@
+# Vcf validation Example
+
+## Overview
+
+This example demonstrates vcf validation analysis using open-source tools.
+
+## Workflow
+
+```mermaid
+flowchart TD
+    A[Load Data] --> B[Process]
+    B --> C[Analyze]
+    C --> D[Visualize]
+    D --> E[Results]
+```
+
+## Running the Example
+
+```bash
+cd examples/vcf-validation
+python run_*.py
+```
+
+## Output
+
+Results saved to `output/` directory.
+
+## QTLmax Equivalent
+
+See QTLmax guide for vcf validation procedure.

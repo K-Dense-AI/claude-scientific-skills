@@ -80,7 +80,7 @@ def generate_blup_data(n_individuals=100):
         for year in years:
             # Location and year effects
             loc_effect = {'LocA': 2, 'LocB': 0, 'LocC': -1}[loc]
-            year_effect = {2021: -0.5, 2022: 0, 2023': 0.5}[year]
+            year_effect = {2021: -0.5, 2022: 0, 2023: 0.5}[year]
             
             # Each individual has 1-3 replicates per environment
             for ind_id in np.random.choice(n_individuals, n_individuals//2, replace=False):
