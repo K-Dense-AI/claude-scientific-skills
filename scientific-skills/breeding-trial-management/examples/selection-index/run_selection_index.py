@@ -5,6 +5,7 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -45,7 +46,16 @@ def main():
     weights.columns = ["trait", "weight"]
     weights.to_csv(out / "selection_index_weights.csv", index=False)
 
-    print("Saved selection index scores, top selections, and trait weights")
+    plot_df = trait_data.head(15).iloc[::-1]
+    plt.figure(figsize=(8, 6))
+    plt.barh(plot_df["genotype"], plot_df["selection_index"], color="#2b8cbe")
+    plt.xlabel("Selection Index")
+    plt.title("Top 15 Selection Index Scores")
+    plt.tight_layout()
+    plt.savefig(out / "selection_index_top15.png", dpi=150)
+    plt.close()
+
+    print("Saved selection index scores, top selections, weights, and plot")
 
 
 if __name__ == "__main__":

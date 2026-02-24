@@ -4,6 +4,7 @@
 
 from pathlib import Path
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -32,7 +33,22 @@ def main():
         "Download manually to comply with each source's terms and license.\n",
         encoding="utf-8",
     )
-    print("Saved real_dataset_catalog.csv and download_instructions.txt")
+
+    plt.figure(figsize=(7, 4))
+    y = range(len(catalog))
+    plt.barh(y, [1] * len(catalog), color="#4c78a8")
+    plt.yticks(y, list(catalog["dataset"]))
+    plt.xticks([])
+    for i, note in enumerate(catalog["notes"]):
+        plt.text(0.02, i, note, va="center", fontsize=8)
+    plt.title("Optional Real Dataset Catalog")
+    plt.tight_layout()
+    plt.savefig(out / "real_dataset_catalog_overview.png", dpi=150)
+    plt.close()
+
+    print(
+        "Saved real_dataset_catalog.csv, download_instructions.txt, and real_dataset_catalog_overview.png"
+    )
 
 
 if __name__ == "__main__":

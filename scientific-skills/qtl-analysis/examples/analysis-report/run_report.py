@@ -4,6 +4,7 @@
 
 from pathlib import Path
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def pick_metric(path: Path, col: str):
@@ -63,9 +64,28 @@ Generated from example outputs.
 - Kinship and relatedness
 """
 
+    metrics = pd.DataFrame(
+        {
+            "metric": ["multi_trait_hits", "lambda_after_gc"],
+            "value": [
+                float(qtl_count) if qtl_count != "N/A" else 0.0,
+                float(lambda_after) if lambda_after != "N/A" else 0.0,
+            ],
+        }
+    )
+    plt.figure(figsize=(6, 4))
+    plt.bar(metrics["metric"], metrics["value"], color=["#1f77b4", "#2ca02c"])
+    plt.title("QTL Report Key Metrics")
+    plt.ylabel("Value")
+    plt.tight_layout()
+    plt.savefig(out / "analysis_report_metrics.png", dpi=150)
+    plt.close()
+
     (out / "analysis_report.html").write_text(html.strip() + "\n", encoding="utf-8")
     (out / "analysis_report.md").write_text(md, encoding="utf-8")
-    print("Saved analysis_report.html and analysis_report.md")
+    print(
+        "Saved analysis_report.html, analysis_report.md, and analysis_report_metrics.png"
+    )
 
 
 if __name__ == "__main__":

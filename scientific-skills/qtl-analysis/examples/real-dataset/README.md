@@ -13,6 +13,7 @@ python download_real_dataset.py
 ## Output
 - `output/real_dataset_catalog.csv`
 - `output/download_instructions.txt`
+- `output/real_dataset_catalog_overview.png`
 
 ## Note
 Synthetic data remains the default path. Real datasets are optional extras.

@@ -16,6 +16,7 @@
 ### Output
 - `output/analysis_report.html`
 - `output/analysis_report.md`
+- `output/analysis_report_metrics.png`
 
 ## Run
 ```bash
