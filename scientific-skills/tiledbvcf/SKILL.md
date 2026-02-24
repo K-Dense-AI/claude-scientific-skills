@@ -116,14 +116,6 @@ Create TileDB-VCF datasets and incrementally ingest variant data from multiple V
 - Resume interrupted ingestion processes
 - Validate data integrity during ingestion
 
-**Reference:** See `references/ingestion.md` for detailed documentation on:
-- Dataset creation parameters and optimization
-- Parallel ingestion strategies
-- Memory management during large ingestions
-- Handling malformed or problematic VCF files
-- Custom array schemas and configurations
-- Performance tuning for different data types
-- Cloud storage considerations
 
 ### 2. Efficient Querying and Filtering
 
@@ -138,14 +130,6 @@ Query variant data with high performance across genomic regions, samples, and va
 - Stream large query results
 - Perform aggregations across samples or regions
 
-**Reference:** See `references/querying.md` for detailed documentation on:
-- Query optimization strategies
-- Available attributes and their formats
-- Region specification formats
-- Sample filtering patterns
-- Memory-efficient streaming queries
-- Parallel query execution
-- Cloud query optimization
 
 ### 3. Data Export and Interoperability
 
@@ -160,14 +144,6 @@ Export data in various formats for downstream analysis or integration with other
 - Compressed output formats
 - Streaming exports for large datasets
 
-**Reference:** See `references/export.md` for detailed documentation on:
-- Export format specifications
-- Field selection and customization
-- Compression and optimization options
-- Metadata preservation strategies
-- Integration with downstream tools
-- Cloud export patterns
-- Performance optimization for large exports
 
 ### 4. Population Genomics Workflows
 
@@ -182,14 +158,6 @@ TileDB-VCF excels at large-scale population genomics analyses requiring efficien
 - Variant annotation and filtering
 - Cross-population comparative analysis
 
-**Reference:** See `references/population_genomics.md` for detailed examples of:
-- GWAS data preparation pipelines
-- Population structure analysis workflows
-- Quality control strategies for large cohorts
-- Allele frequency computation patterns
-- Integration with analysis tools (PLINK, SAIGE, etc.)
-- Multi-population comparison workflows
-- Performance optimization for population-scale data
 
 ## Key Concepts
 
@@ -335,19 +303,9 @@ config = tiledbvcf.ReadConfig(
 
 ## Resources
 
-### references/
-
-Detailed documentation for each major capability:
-
-- **population_genomics.md** - Practical examples of population genomics workflows, including GWAS preparation, quality control, allele frequency analysis, and integration with analysis tools
-
 ## Getting Help
 
 ### Open Source TileDB-VCF Resources
-
-For detailed information on population genomics workflows, refer to:
-
-- Population genomics workflows → `population_genomics.md`
 
 **Open Source Documentation:**
 - TileDB Academy: https://cloud.tiledb.com/academy/
