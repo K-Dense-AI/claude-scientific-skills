@@ -339,17 +339,14 @@ config = tiledbvcf.ReadConfig(
 
 Detailed documentation for each major capability:
 
-- **querying.md** - Complete guide to efficient variant queries, including region specification, attribute selection, filtering strategies, and performance optimization
-
 - **population_genomics.md** - Practical examples of population genomics workflows, including GWAS preparation, quality control, allele frequency analysis, and integration with analysis tools
 
 ## Getting Help
 
 ### Open Source TileDB-VCF Resources
 
-For detailed information on specific operations, refer to the appropriate reference document:
+For detailed information on population genomics workflows, refer to:
 
-- Querying variant data efficiently → `querying.md`
 - Population genomics workflows → `population_genomics.md`
 
 **Open Source Documentation:**
