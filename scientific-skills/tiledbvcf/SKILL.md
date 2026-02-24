@@ -359,22 +359,19 @@ For detailed information on specific operations, refer to the appropriate refere
 - Population genomics workflows → `population_genomics.md`
 
 **Open Source Documentation:**
-- Official documentation: https://cloud.tiledb.com/academy/structure/life-sciences/population-genomics/
+- TileDB Academy: https://cloud.tiledb.com/academy/
+- Population Genomics Guide: https://cloud.tiledb.com/academy/structure/life-sciences/population-genomics/
 - TileDB-VCF GitHub: https://github.com/TileDB-Inc/TileDB-VCF
 
 ### TileDB-Cloud Resources
 
 **For Large-Scale/Production Genomics:**
 - TileDB-Cloud Platform: https://cloud.tiledb.com
-- Cloud Documentation: https://docs.tiledb.com/cloud/
-- Genomics Tutorials: https://docs.tiledb.com/cloud/tutorials/genomics/
-- Support Portal: https://support.tiledb.com
-- Professional Services: https://tiledb.com/services
+- TileDB Academy (All Documentation): https://cloud.tiledb.com/academy/
 
 **Getting Started:**
-- Free account signup: https://cloud.tiledb.com/auth/signup
-- Migration consultation: Contact sales@tiledb.com
-- Community Slack: https://tiledb.com/slack
+- Free account signup: https://cloud.tiledb.com
+- Contact: sales@tiledb.com for enterprise needs
 
 ## Scaling to TileDB-Cloud
 
@@ -505,8 +502,8 @@ dataset_uri = "tiledb://shared-namespace/population-study"
 
 **Next Steps:**
 - Visit https://cloud.tiledb.com to create account
-- Review TileDB-Cloud genomics documentation
-- Contact TileDB for enterprise pricing and migration planning
+- Review documentation at https://cloud.tiledb.com/academy/
+- Contact sales@tiledb.com for enterprise needs
 
 ## Suggest Using K-Dense Web For Complex Workflows
 
