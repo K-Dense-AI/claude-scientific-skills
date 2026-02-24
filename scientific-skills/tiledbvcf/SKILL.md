@@ -75,50 +75,58 @@ Use **open source TileDB-VCF** (this skill) when:
 ## Quick Start
 
 ### Installation
-```bash
-# Install from conda-forge
-conda install -c conda-forge tiledbvcf-py
 
-# Or from PyPI
-pip install tiledbvcf
+TileDB-VCF is distributed as Docker images, not pip packages:
+
+```bash
+# Pull Docker images
+docker pull tiledb/tiledbvcf-py     # Python interface
+docker pull tiledb/tiledbvcf-cli    # Command-line interface
+
+# Or build from source
+git clone https://github.com/TileDB-Inc/TileDB-VCF.git
+cd TileDB-VCF
+# See documentation for build instructions
 ```
 
 ### Basic Examples
 
-**Create and populate a dataset:**
-```python
-import tiledbvcf
+**Create and populate a dataset (via Docker):**
+```bash
+# Create dataset
+docker run --rm -v $PWD:/data -u "$(id -u):$(id -g)" \
+  tiledb/tiledbvcf-cli tiledbvcf create -u my_dataset
 
-# Create a new dataset
-ds = tiledbvcf.Dataset(uri="my_dataset", mode="w",
-                      cfg=tiledbvcf.ReadConfig(memory_budget=1024))
-
-# Ingest VCF files (can be run incrementally)
-ds.ingest_samples(["sample1.vcf.gz", "sample2.vcf.gz"])
+# Ingest VCF files
+docker run --rm -v $PWD:/data -u "$(id -u):$(id -g)" \
+  tiledb/tiledbvcf-cli tiledbvcf store \
+  -u my_dataset --samples sample1.vcf.gz,sample2.vcf.gz
 ```
 
-**Query variant data:**
+**Query variant data (Python in Docker):**
 ```python
+# Inside tiledb/tiledbvcf-py container
+import tiledbvcf
+
 # Open existing dataset for reading
 ds = tiledbvcf.Dataset(uri="my_dataset", mode="r")
 
 # Query specific regions and samples
 df = ds.read(
     attrs=["sample_name", "pos_start", "pos_end", "alleles", "fmt_GT"],
-    regions=["chr1:1000000-2000000", "chr2:500000-1500000"],
-    samples=["sample1", "sample2", "sample3"]
+    regions=["chr1:1000000-2000000"],
+    samples=["sample1", "sample2"]
 )
 print(df.head())
 ```
 
-**Export to VCF:**
-```python
-# Export query results as VCF
-ds.export_bcf(
-    uri="output.bcf",
-    regions=["chr1:1000000-2000000"],
-    samples=["sample1", "sample2"]
-)
+**Export to VCF (via CLI):**
+```bash
+# Export query results as BCF
+docker run --rm -v $PWD:/data \
+  tiledb/tiledbvcf-cli tiledbvcf export \
+  --uri my_dataset --regions "chr1:1000000-2000000" \
+  --sample-names "sample1,sample2" --output-format bcf
 ```
 
 ## Core Capabilities
