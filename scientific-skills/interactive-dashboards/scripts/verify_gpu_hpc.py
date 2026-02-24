@@ -5,6 +5,7 @@
 from pathlib import Path
 import argparse
 import json
+import subprocess
 import time
 import matplotlib.pyplot as plt
 
@@ -16,7 +17,28 @@ def run_check():
         "total_vram_gb": 0.0,
         "small_matmul_seconds": None,
         "status": "cpu_fallback",
+        "detected_system_gpu": None,
+        "detected_system_vram_gb": None,
+        "config_hint": None,
     }
+
+    try:
+        smi = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-gpu=name,memory.total",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        first = smi.stdout.strip().splitlines()[0]
+        name, mem_mb = [x.strip() for x in first.split(",")]
+        result["detected_system_gpu"] = name
+        result["detected_system_vram_gb"] = round(float(mem_mb) / 1024.0, 2)
+    except Exception:
+        pass
 
     try:
         import torch
@@ -36,6 +58,13 @@ def run_check():
             torch.cuda.synchronize()
             result["small_matmul_seconds"] = round(time.time() - t0, 4)
             result["status"] = "gpu_ready"
+        else:
+            if result["detected_system_gpu"] and (torch.version.cuda is None):
+                result["status"] = "misconfigured_torch_cpu_build"
+                result["config_hint"] = (
+                    "GPU detected by nvidia-smi, but this Python env has CPU-only PyTorch. "
+                    "Install CUDA-enabled torch in this environment."
+                )
     except Exception as exc:
         result["status"] = f"check_failed: {exc.__class__.__name__}"
 
@@ -81,15 +110,21 @@ def main():
     ax2.axis("off")
     lines = [
         f"Status: {res['status']}",
-        f"GPU: {res['gpu_name']}",
+        f"GPU (torch): {res['gpu_name']}",
         f"VRAM (GB): {res['total_vram_gb']}",
     ]
+    if res.get("detected_system_gpu"):
+        lines.append(
+            f"GPU (system): {res['detected_system_gpu']} ({res['detected_system_vram_gb']} GB)"
+        )
     if res["small_matmul_seconds"] is not None:
         lines.append(f"4K matmul (s): {res['small_matmul_seconds']}")
     else:
         lines.append("4K matmul (s): n/a")
 
-    if res["cuda_available"]:
+    if res.get("config_hint"):
+        lines.append(f"Hint: {res['config_hint']}")
+    elif res["cuda_available"]:
         lines.append("Next: run torch/cuDF benchmark profile")
     else:
         lines.append("Next: install CUDA-enabled PyTorch and rerun")
