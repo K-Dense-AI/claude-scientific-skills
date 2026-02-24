@@ -1,0 +1,5 @@
+metric,value
+bonferroni_threshold,0.002
+burden_significant_genes,5.0
+skat_significant_genes,20.0
+causal_genes_total,5.0

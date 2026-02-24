@@ -16,10 +16,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### QTL Expansion — Advanced GWAS
 
-- [ ] **QTLGW-01**: Multi-trait GWAS example (joint model across 2+ traits) via sommer or GAPIT
-- [ ] **QTLGW-02**: G×E GWAS / MET model example with environment-specific effects
-- [ ] **QTLGW-03**: Enhanced covariate handling example (PCs + sex + batch + environment)
-- [ ] **QTLGW-04**: Permutation and FDR threshold correction example (BH, Bonferroni, permutation-based)
+- [x] **QTLGW-01**: Multi-trait GWAS example (joint model across 2+ traits) via sommer or GAPIT
+- [x] **QTLGW-02**: G×E GWAS / MET model example with environment-specific effects
+- [x] **QTLGW-03**: Enhanced covariate handling example (PCs + sex + batch + environment)
+- [x] **QTLGW-04**: Permutation and FDR threshold correction example (BH, Bonferroni, permutation-based)
 - [ ] **QTLGW-05**: Genomic control (lambda adjustment) as standalone example with before/after QQ plots
 - [ ] **QTLGW-06**: Rare variant association tests (burden/SKAT) example
 
@@ -114,10 +114,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLGP-02 | Phase 1 | Complete |
 | QTLGP-03 | Phase 1 | Complete |
 | QTLGP-04 | Phase 1 | Complete |
-| QTLGW-01 | Phase 2 | Pending |
-| QTLGW-02 | Phase 2 | Pending |
-| QTLGW-03 | Phase 2 | Pending |
-| QTLGW-04 | Phase 2 | Pending |
+| QTLGW-01 | Phase 2 | Complete |
+| QTLGW-02 | Phase 2 | Complete |
+| QTLGW-03 | Phase 2 | Complete |
+| QTLGW-04 | Phase 2 | Complete |
 | QTLGW-05 | Phase 2 | Pending |
 | QTLGW-06 | Phase 2 | Pending |
 | QTLKN-01 | Phase 3 | Pending |
