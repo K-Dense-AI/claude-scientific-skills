@@ -60,15 +60,57 @@ def main():
     vals = [
         1.0 if res["cuda_available"] else 0.0,
         min(float(res["total_vram_gb"]), 12.0) / 12.0,
+        1.0 if res["recommended_for_12gb"] else 0.0,
     ]
-    plt.figure(figsize=(6.2, 3.8))
-    plt.bar(["CUDA", "VRAM (12GB target)"], vals, color=["#1f77b4", "#2ca02c"])
-    plt.ylim(0, 1.1)
-    plt.ylabel("Normalized score")
-    plt.title("GPU/HPC Readiness Check")
-    plt.tight_layout()
-    plt.savefig(out / "gpu_hpc_check.png", dpi=160)
-    plt.close()
+    labels = ["CUDA", "VRAM (12GB)", "Ready"]
+    colors = ["#1f77b4", "#2ca02c", "#9467bd"]
+
+    fig, (ax1, ax2) = plt.subplots(
+        1, 2, figsize=(9.2, 4.8), gridspec_kw={"width_ratios": [1.65, 1]}
+    )
+
+    ax1.bar(labels, [1.0, 1.0, 1.0], color="#e6e6e6", edgecolor="#9a9a9a")
+    ax1.bar(labels, vals, color=colors, edgecolor="#3a3a3a")
+    ax1.set_ylim(0, 1.1)
+    ax1.set_ylabel("Normalized score")
+    ax1.set_title("GPU/HPC Readiness Metrics")
+    ax1.grid(axis="y", alpha=0.2)
+    for idx, val in enumerate(vals):
+        ax1.text(idx, val + 0.03, f"{val:.2f}", ha="center", fontsize=9)
+
+    ax2.axis("off")
+    lines = [
+        f"Status: {res['status']}",
+        f"GPU: {res['gpu_name']}",
+        f"VRAM (GB): {res['total_vram_gb']}",
+    ]
+    if res["small_matmul_seconds"] is not None:
+        lines.append(f"4K matmul (s): {res['small_matmul_seconds']}")
+    else:
+        lines.append("4K matmul (s): n/a")
+
+    if res["cuda_available"]:
+        lines.append("Next: run torch/cuDF benchmark profile")
+    else:
+        lines.append("Next: install CUDA-enabled PyTorch and rerun")
+
+    ax2.text(
+        0.02,
+        0.95,
+        "\n".join(lines),
+        va="top",
+        fontsize=9.5,
+        bbox={
+            "facecolor": "#f8f8f8",
+            "edgecolor": "#cccccc",
+            "boxstyle": "round,pad=0.4",
+        },
+    )
+
+    fig.suptitle("GPU/HPC Readiness Check", fontsize=14)
+    fig.tight_layout()
+    fig.savefig(out / "gpu_hpc_check.png", dpi=160)
+    plt.close(fig)
 
     if args.json:
         print(json.dumps(res))
