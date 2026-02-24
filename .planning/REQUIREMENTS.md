@@ -25,9 +25,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### QTL Expansion — Kinship & Relatedness
 
-- [ ] **QTLKN-01**: Pedigree kinship (NRM) example from pedigree records via AGHmatrix/nadiv
-- [ ] **QTLKN-02**: Genomic kinship (0-2 NRM scale) example via AGHmatrix
-- [ ] **QTLKN-03**: Genetic similarity matrix example (IBS/distance-based) via PLINK --distance
+- [x] **QTLKN-01**: Pedigree kinship (NRM) example from pedigree records via AGHmatrix/nadiv
+- [x] **QTLKN-02**: Genomic kinship (0-2 NRM scale) example via AGHmatrix
+- [x] **QTLKN-03**: Genetic similarity matrix example (IBS/distance-based) via PLINK --distance
 
 ### QTL Expansion — QC & Annotation
 
@@ -120,9 +120,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLGW-04 | Phase 2 | Complete |
 | QTLGW-05 | Phase 2 | Complete |
 | QTLGW-06 | Phase 2 | Complete |
-| QTLKN-01 | Phase 3 | Pending |
-| QTLKN-02 | Phase 3 | Pending |
-| QTLKN-03 | Phase 3 | Pending |
+| QTLKN-01 | Phase 3 | Complete |
+| QTLKN-02 | Phase 3 | Complete |
+| QTLKN-03 | Phase 3 | Complete |
 | QTLQC-01 | Phase 4 | Pending |
 | QTLQC-02 | Phase 4 | Pending |
 | QTLRP-01 | Phase 5 | Pending |

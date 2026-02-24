@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Full breeding genomics pipeline using only free, open-source tools
-**Current focus:** Phase 2 — Advanced GWAS
+**Current focus:** Phase 4 — QC & Annotation
 
 ## Current Milestone
 
@@ -15,7 +15,7 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 |-------|--------|-------------|
 | 1 | ✅ Complete | Bayesian & Advanced GP |
 | 2 | ✅ Complete | Advanced GWAS |
-| 3 | ○ Pending | Kinship & Relatedness |
+| 3 | ✅ Complete | Kinship & Relatedness |
 | 4 | ○ Pending | QC & Annotation |
 | 5 | ○ Pending | Report Generation |
 | 6 | ○ Pending | QTL Infrastructure |
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 | 11 | ○ Pending | Breeding Infrastructure |
 | 12 | ○ Pending | Attribution & Quality |
 
-Progress: █████░░░░░░░░ 26% (10/38 requirements)
+Progress: ███████░░░░░░ 34% (13/38 requirements)
 
 ## Completed in Phase 1
 
@@ -56,7 +56,7 @@ All Phase 1 deliverables verified:
 - No ASReml (commercial)
 
 ### Current Work
-- Phase 3: Kinship & Relatedness planning (QTLKN-01..03)
+- Phase 4: QC & Annotation execution (QTLQC-01..02)
 
 ### Roadmap Evolution
 - Phase 02.1 inserted after Phase 2: Progressive PR #55 comment updates after each successful image or major output (URGENT)
@@ -67,8 +67,8 @@ All Phase 1 deliverables verified:
 ## Session Continuity
 
 Last session: 2026-02-24T00:00:00Z
-Stopped at: Phase 2 complete, ready to plan Phase 3
-Resume file: 02-01-SUMMARY.md, 02-02-SUMMARY.md, 02-03-SUMMARY.md
+Stopped at: Phase 3 complete, ready for Phase 4
+Resume file: 03-01-SUMMARY.md
 
 ---
-*Last updated: 2026-02-24 after Phase 2 completion*
+*Last updated: 2026-02-24 after Phase 3 completion*
