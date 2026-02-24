@@ -1,0 +1,8 @@
+{
+  "cuda_available": false,
+  "gpu_name": "none",
+  "total_vram_gb": 0.0,
+  "small_matmul_seconds": null,
+  "status": "cpu_fallback",
+  "recommended_for_12gb": false
+}

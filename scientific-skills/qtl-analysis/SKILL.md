@@ -188,6 +188,10 @@ Reporting and extras:
 - `examples/analysis-report/`
 - `examples/real-dataset/` (optional public dataset catalog)
 
+v2 advanced modules in progress:
+- `examples/epistasis-scan/`
+- `examples/cnv-integration/`
+
 ## Input Formats
 
 **Genotypes:**

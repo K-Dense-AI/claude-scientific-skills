@@ -52,3 +52,8 @@ python scripts/breeding_cli.py cross --help
 - Trial design: `examples/rcbd-design/`, `examples/alpha-lattice/`, `examples/augmented-design/`, `examples/field-book/`
 - Germplasm and pedigree: `examples/breedbase-client/`, `examples/pedigree-management/`, `examples/bms-client/`
 - Selection and crossing: `examples/selection-index/`, `examples/breeding-value-ranking/`, `examples/crossing-plan/`, `examples/data-import/`
+- Field systems integration: `examples/iot-field-sync/`
+
+## Nested Modules
+
+- `breeding-simulation/`: AlphaSimR-style forward breeding simulation workflows
