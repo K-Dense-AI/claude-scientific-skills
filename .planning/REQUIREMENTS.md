@@ -31,8 +31,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### QTL Expansion — QC & Annotation
 
-- [ ] **QTLQC-01**: Sample QC example (heterozygosity outliers, sex check, call rate) via PLINK 2
-- [ ] **QTLQC-02**: SNP annotation example via snpEff (variant → gene → effect → impact)
+- [x] **QTLQC-01**: Sample QC example (heterozygosity outliers, sex check, call rate) via PLINK 2
+- [x] **QTLQC-02**: SNP annotation example via snpEff (variant → gene → effect → impact)
 
 ### QTL Expansion — Reporting
 
@@ -123,8 +123,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLKN-01 | Phase 3 | Complete |
 | QTLKN-02 | Phase 3 | Complete |
 | QTLKN-03 | Phase 3 | Complete |
-| QTLQC-01 | Phase 4 | Pending |
-| QTLQC-02 | Phase 4 | Pending |
+| QTLQC-01 | Phase 4 | Complete |
+| QTLQC-02 | Phase 4 | Complete |
 | QTLRP-01 | Phase 5 | Pending |
 | QTLIN-01 | Phase 6 | Pending |
 | QTLIN-02 | Phase 6 | Pending |
