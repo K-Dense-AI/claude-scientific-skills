@@ -422,15 +422,28 @@ tiledb.cloud.vcf.ingestion.ingest_vcf_dataset(
 ```python
 # TileDB-Cloud: VCF querying across distributed storage
 import tiledb.cloud.vcf
+import tiledbvcf
 
-# Use specialized VCF query module
-# Queries leverage TileDB-Cloud's distributed architecture
-results = tiledb.cloud.vcf.query.query_variants(
-    dataset_uri="tiledb://my-namespace/large-cohort",
-    regions=["chr1:1000000-2000000"],
-    samples=cohort_samples,
-    attributes=["sample_name", "pos_start", "alleles", "fmt_GT"]
+# Define the dataset URI
+dataset_uri = "tiledb://TileDB-Inc/gvcf-1kg-dragen-v376"
+
+# Get all samples from the dataset
+ds = tiledbvcf.Dataset(dataset_uri, tiledb_config=cfg)
+samples = ds.samples()
+
+# Define attributes and ranges to query on
+attrs = ["sample_name", "fmt_GT", "fmt_AD", "fmt_DP"]
+regions = ["chr13:32396898-32397044", "chr13:32398162-32400268"]
+
+# Perform the read, which is executed in a distributed fashion
+df = tiledb.cloud.vcf.read(
+    dataset_uri=dataset_uri,
+    regions=regions,
+    samples=samples,
+    attrs=attrs,
+    namespace="my-namespace",  # specifies which account to charge
 )
+df.to_pandas()
 ```
 
 ### Enterprise Features
