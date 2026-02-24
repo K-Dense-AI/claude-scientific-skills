@@ -139,7 +139,7 @@ def main():
         min(float(res["total_vram_gb"]), 12.0) / 12.0,
         1.0 if res["recommended_for_12gb"] else 0.0,
     ]
-    labels = ["CUDA", "VRAM (12GB)", "Ready"]
+    labels = ["CUDA", "VRAM12", "READY"]
     colors = ["#1f77b4", "#2ca02c", "#9467bd"]
 
     fig, (ax1, ax2) = plt.subplots(
@@ -151,6 +151,7 @@ def main():
     ax1.set_ylim(0, 1.1)
     ax1.set_ylabel("Normalized score")
     ax1.set_title("GPU/HPC Readiness Metrics")
+    ax1.tick_params(axis="x", labelrotation=0)
     ax1.grid(axis="y", alpha=0.2)
     for idx, val in enumerate(vals):
         ax1.text(idx, val + 0.03, f"{val:.2f}", ha="center", fontsize=9)
@@ -172,7 +173,8 @@ def main():
         lines.append("4K matmul (s): n/a")
 
     if res.get("config_hint"):
-        lines.append(f"Hint: {res['config_hint']}")
+        lines.append("Hint: GPU exists but active env torch is CPU-only")
+        lines.append("Fix: use CUDA-enabled conda env or reinstall torch")
     elif res["cuda_available"]:
         lines.append("Next: run torch/cuDF benchmark profile")
     else:

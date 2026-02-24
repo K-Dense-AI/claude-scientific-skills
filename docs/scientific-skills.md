@@ -1,5 +1,13 @@
 # Scientific Skills
 
+## Install Escalation (All Skills)
+
+If a skill needs a system-level dependency the agent cannot resolve in-session (driver install, privileged package install, reboot-required setup), follow `docs/install-escalation-policy.md` and provide:
+
+- reason it cannot be auto-fixed,
+- copy-paste one-liner command,
+- verification one-liner.
+
 ## Scientific Databases
 
 - **AlphaFold DB** - Comprehensive AI-predicted protein structure database from DeepMind providing 200M+ high-confidence protein structure predictions covering UniProt reference proteomes and beyond. Includes confidence metrics (pLDDT for per-residue confidence, PAE for pairwise accuracy estimates), structure quality assessment, predicted aligned error matrices, and multiple structure formats (PDB, mmCIF, AlphaFold DB format). Supports programmatic access via REST API, bulk downloads through Google Cloud Storage, and integration with structural analysis tools. Enables structure-based drug discovery, protein function prediction, structural genomics, comparative modeling, and structural bioinformatics research without experimental structure determination
@@ -210,4 +218,3 @@
 
 ### Document Processing
 - **XLSX** - Spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization
-
