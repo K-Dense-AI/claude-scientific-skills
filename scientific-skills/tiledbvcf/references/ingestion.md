@@ -2,6 +2,22 @@
 
 Complete guide to creating TileDB-VCF datasets and ingesting VCF/BCF files with optimal performance and reliability.
 
+## Important Requirements
+
+**Before ingesting VCF files, ensure they meet these requirements:**
+
+- **Single-sample VCFs only**: Multi-sample VCFs are not supported by TileDB-VCF
+- **Index files required**: All VCF/BCF files must have corresponding index files:
+  - `.csi` files (created with `bcftools index`)
+  - `.tbi` files (created with `tabix`)
+
+```bash
+# Create indexes if they don't exist
+bcftools index sample.vcf.gz        # Creates sample.vcf.gz.csi
+# OR
+tabix -p vcf sample.vcf.gz          # Creates sample.vcf.gz.tbi
+```
+
 ## Dataset Creation
 
 ### Basic Dataset Creation

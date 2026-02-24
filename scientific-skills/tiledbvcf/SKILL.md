@@ -63,7 +63,10 @@ import tiledbvcf
 ds = tiledbvcf.Dataset(uri="my_dataset", mode="w",
                       cfg=tiledbvcf.ReadConfig(memory_budget=1024))
 
-# Ingest VCF files (can be run incrementally)
+# Ingest VCF files (must be single-sample with indexes)
+# Requirements:
+# - VCFs must be single-sample (not multi-sample)
+# - Must have indexes: .csi (bcftools) or .tbi (tabix)
 ds.ingest_samples(["sample1.vcf.gz", "sample2.vcf.gz"])
 ```
 
@@ -99,6 +102,10 @@ ds.export(
 ### 1. Dataset Creation and Ingestion
 
 Create TileDB-VCF datasets and incrementally ingest variant data from multiple VCF/BCF files. This is appropriate for building population genomics databases and cohort studies.
+
+**Requirements:**
+- **Single-sample VCFs only**: Multi-sample VCFs are not supported
+- **Index files required**: VCF/BCF files must have indexes (.csi or .tbi)
 
 **Common operations:**
 - Create new datasets with optimized array schemas
