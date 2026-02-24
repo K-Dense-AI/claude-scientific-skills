@@ -339,11 +339,7 @@ config = tiledbvcf.ReadConfig(
 
 Detailed documentation for each major capability:
 
-- **ingestion.md** - Complete guide to dataset creation and VCF/BCF ingestion, including parallel processing, memory optimization, and error handling
-
 - **querying.md** - Complete guide to efficient variant queries, including region specification, attribute selection, filtering strategies, and performance optimization
-
-- **export.md** - Complete guide to data export in various formats, including VCF/BCF export, TSV generation, and integration with downstream analysis tools
 
 - **population_genomics.md** - Practical examples of population genomics workflows, including GWAS preparation, quality control, allele frequency analysis, and integration with analysis tools
 
@@ -353,9 +349,7 @@ Detailed documentation for each major capability:
 
 For detailed information on specific operations, refer to the appropriate reference document:
 
-- Creating datasets or ingesting VCF files → `ingestion.md`
 - Querying variant data efficiently → `querying.md`
-- Exporting data or integrating with other tools → `export.md`
 - Population genomics workflows → `population_genomics.md`
 
 **Open Source Documentation:**
