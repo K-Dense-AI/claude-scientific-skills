@@ -6,13 +6,13 @@ Open Notebook is built as a modern Python web application with a clear separatio
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   Docker Compose                     │
+│                   Docker Compose                    │
 │                                                     │
-│  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
-│  │   Next.js     │  │   FastAPI    │  │ SurrealDB │ │
-│  │   Frontend    │──│   Backend    │──│           │ │
-│  │  (port 8502)  │  │  (port 5055) │  │ (port 8K) │ │
-│  └──────────────┘  └──────────────┘  └───────────┘ │
+│  ┌──────────────┐  ┌──────────────┐  ┌───────────┐  │
+│  │   Next.js    │  │   FastAPI    │  │ SurrealDB │  │
+│  │   Frontend   │──│   Backend    │──│           │  │
+│  │  (port 8502) │  │  (port 5055) │  │ (port 8K) │  │
+│  └──────────────┘  └──────────────┘  └───────────┘  │
 │                          │                          │
 │                    ┌─────┴─────┐                    │
 │                    │ LangChain │                    │
@@ -21,9 +21,9 @@ Open Notebook is built as a modern Python web application with a clear separatio
 │                          │                          │
 │              ┌───────────┼───────────┐              │
 │              │           │           │              │
-│          ┌───┴───┐  ┌───┴───┐  ┌───┴───┐          │
-│          │OpenAI │  │Claude │  │Ollama │  ...      │
-│          └───────┘  └───────┘  └───────┘           │
+│          ┌───┴───┐   ┌───┴───┐   ┌───┴───┐          │
+│          │OpenAI │   │Claude │   │Ollama │  ...     │
+│          └───────┘   └───────┘   └───────┘          │
 └─────────────────────────────────────────────────────┘
 ```
 
