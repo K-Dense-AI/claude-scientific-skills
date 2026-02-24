@@ -46,9 +46,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Breeding Trial Management — Core Skill
 
-- [ ] **BREED-01**: SKILL.md with overview, installation, CLI reference, tool selection guide
-- [ ] **BREED-02**: Preflight system checker (scripts/check_system.py) for breeding dependencies
-- [ ] **BREED-03**: Unified CLI (scripts/breeding_cli.py) with subcommands
+- [x] **BREED-01**: SKILL.md with overview, installation, CLI reference, tool selection guide
+- [x] **BREED-02**: Preflight system checker (scripts/check_system.py) for breeding dependencies
+- [x] **BREED-03**: Unified CLI (scripts/breeding_cli.py) with subcommands
 
 ### Breeding Trial Management — Trial Design
 
@@ -129,9 +129,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLIN-01 | Phase 6 | Complete |
 | QTLIN-02 | Phase 6 | Complete |
 | QTLIN-03 | Phase 6 | Complete |
-| BREED-01 | Phase 7 | Pending |
-| BREED-02 | Phase 7 | Pending |
-| BREED-03 | Phase 7 | Pending |
+| BREED-01 | Phase 7 | Complete |
+| BREED-02 | Phase 7 | Complete |
+| BREED-03 | Phase 7 | Complete |
 | TRIAL-01 | Phase 8 | Pending |
 | TRIAL-02 | Phase 8 | Pending |
 | TRIAL-03 | Phase 8 | Pending |

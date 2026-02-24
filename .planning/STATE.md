@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Full breeding genomics pipeline using only free, open-source tools
-**Current focus:** Phase 7 — Breeding Core
+**Current focus:** Phase 8 — Trial Design
 
 ## Current Milestone
 
@@ -19,14 +19,14 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 | 4 | ✅ Complete | QC & Annotation |
 | 5 | ✅ Complete | Report Generation |
 | 6 | ✅ Complete | QTL Infrastructure |
-| 7 | ○ Pending | Breeding Core |
+| 7 | ✅ Complete | Breeding Core |
 | 8 | ○ Pending | Trial Design |
 | 9 | ○ Pending | Germplasm & Pedigree |
 | 10 | ○ Pending | Selection & Crossing |
 | 11 | ○ Pending | Breeding Infrastructure |
 | 12 | ○ Pending | Attribution & Quality |
 
-Progress: ██████████░░░ 50% (19/38 requirements)
+Progress: ███████████░░ 58% (22/38 requirements)
 
 ## Completed in Phase 1
 
@@ -56,7 +56,7 @@ All Phase 1 deliverables verified:
 - No ASReml (commercial)
 
 ### Current Work
-- Phase 7: Breeding Core setup (BREED-01..03)
+- Phase 8: Trial Design implementation (TRIAL-01..04)
 
 ### Roadmap Evolution
 - Phase 02.1 inserted after Phase 2: Progressive PR #55 comment updates after each successful image or major output (URGENT)
@@ -70,8 +70,8 @@ All Phase 1 deliverables verified:
 ## Session Continuity
 
 Last session: 2026-02-24T00:00:00Z
-Stopped at: Phase 6 complete, ready for Phase 7
-Resume file: 06-01-SUMMARY.md
+Stopped at: Phase 7 complete, ready for Phase 8
+Resume file: 07-01-SUMMARY.md
 
 ---
-*Last updated: 2026-02-24 after Phase 6 completion*
+*Last updated: 2026-02-24 after Phase 7 completion*
