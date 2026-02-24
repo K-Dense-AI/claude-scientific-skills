@@ -269,28 +269,34 @@ ds = tiledbvcf.Dataset(uri="gcs://bucket/dataset", mode="r")
 
 ## CLI Usage
 
-TileDB-VCF provides a powerful command-line interface:
+TileDB-VCF provides a command-line interface with the following subcommands:
+
+**Available Subcommands:**
+- `create` - Creates an empty TileDB-VCF dataset
+- `store` - Ingests samples into a TileDB-VCF dataset
+- `export` - Exports data from a TileDB-VCF dataset
+- `list` - Lists all sample names present in a TileDB-VCF dataset
+- `stat` - Prints high-level statistics about a TileDB-VCF dataset
+- `utils` - Utils for working with a TileDB-VCF dataset
+- `version` - Print the version information and exit
 
 ```bash
-# Create and ingest data
-tiledbvcf create-dataset --uri my_dataset
-tiledbvcf ingest --uri my_dataset sample1.vcf.gz sample2.vcf.gz
+# Create empty dataset
+tiledbvcf create --uri my_dataset
 
-# Query and export
+# Ingest samples (requires single-sample VCFs with indexes)
+tiledbvcf store --uri my_dataset --samples sample1.vcf.gz,sample2.vcf.gz
+
+# Export data
 tiledbvcf export --uri my_dataset \
   --regions "chr1:1000000-2000000" \
-  --sample-names "sample1,sample2" \
-  --output-format bcf \
-  --output-path output.bcf
+  --sample-names "sample1,sample2"
 
-# List dataset info
-tiledbvcf list-datasets --uri my_dataset
+# List all samples
+tiledbvcf list --uri my_dataset
 
-# Export as TSV
-tiledbvcf export --uri my_dataset \
-  --regions "chr1:1000000-2000000" \
-  --tsv-fields "CHR,POS,REF,ALT,S:GT" \
-  --output-format tsv
+# Show dataset statistics
+tiledbvcf stat --uri my_dataset
 ```
 
 ## Advanced Features
