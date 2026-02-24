@@ -40,9 +40,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### QTL Expansion — Infrastructure
 
-- [ ] **QTLIN-01**: Update SKILL.md to document all new examples and expanded CLI
-- [ ] **QTLIN-02**: Update qtl_cli.py with new subcommands for added analyses
-- [ ] **QTLIN-03**: Add optional real public dataset examples (Ames panel or NAM as downloads)
+- [x] **QTLIN-01**: Update SKILL.md to document all new examples and expanded CLI
+- [x] **QTLIN-02**: Update qtl_cli.py with new subcommands for added analyses
+- [x] **QTLIN-03**: Add optional real public dataset examples (Ames panel or NAM as downloads)
 
 ### Breeding Trial Management — Core Skill
 
@@ -126,9 +126,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLQC-01 | Phase 4 | Complete |
 | QTLQC-02 | Phase 4 | Complete |
 | QTLRP-01 | Phase 5 | Complete |
-| QTLIN-01 | Phase 6 | Pending |
-| QTLIN-02 | Phase 6 | Pending |
-| QTLIN-03 | Phase 6 | Pending |
+| QTLIN-01 | Phase 6 | Complete |
+| QTLIN-02 | Phase 6 | Complete |
+| QTLIN-03 | Phase 6 | Complete |
 | BREED-01 | Phase 7 | Pending |
 | BREED-02 | Phase 7 | Pending |
 | BREED-03 | Phase 7 | Pending |
