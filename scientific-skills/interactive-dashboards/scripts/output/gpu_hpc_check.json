@@ -1,11 +1,12 @@
 {
-  "cuda_available": false,
-  "gpu_name": "none",
-  "total_vram_gb": 0.0,
-  "small_matmul_seconds": null,
-  "status": "misconfigured_torch_cpu_build",
+  "cuda_available": true,
+  "gpu_name": "NVIDIA GeForce RTX 4070",
+  "total_vram_gb": 11.56,
+  "small_matmul_seconds": 0.0408,
+  "status": "gpu_ready_via_conda_env",
   "detected_system_gpu": "NVIDIA GeForce RTX 4070",
   "detected_system_vram_gb": 11.99,
-  "config_hint": "GPU detected by nvidia-smi, but this Python env has CPU-only PyTorch. Install CUDA-enabled torch in this environment.",
-  "recommended_for_12gb": false
+  "config_hint": "Detected working CUDA backend in conda env 'cs-gpu'. Use `conda run -n cs-gpu python ...` or activate that env.",
+  "active_backend": "conda:cs-gpu",
+  "recommended_for_12gb": true
 }

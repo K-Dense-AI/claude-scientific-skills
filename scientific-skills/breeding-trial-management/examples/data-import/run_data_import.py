@@ -8,6 +8,27 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+def draw_light_geopolitical_context(ax, lon, lat):
+    min_lon, max_lon = float(min(lon)), float(max(lon))
+    min_lat, max_lat = float(min(lat)), float(max(lat))
+    dx = max(0.35, (max_lon - min_lon) * 0.6)
+    dy = max(0.25, (max_lat - min_lat) * 0.6)
+    ax.set_facecolor("#f7fbff")
+    ax.set_xlim(min_lon - dx, max_lon + dx)
+    ax.set_ylim(min_lat - dy, max_lat + dy)
+    for x in [min_lon - 0.15, (min_lon + max_lon) / 2, max_lon + 0.15]:
+        ax.axvline(x, color="#d9e2ec", linewidth=0.8, linestyle="--", zorder=0)
+    for y in [min_lat - 0.1, (min_lat + max_lat) / 2, max_lat + 0.1]:
+        ax.axhline(y, color="#d9e2ec", linewidth=0.8, linestyle="--", zorder=0)
+    ax.text(
+        min_lon - dx + 0.05,
+        max_lat + dy - 0.08,
+        "Regional context",
+        fontsize=8,
+        color="#6b7280",
+    )
+
+
 def main():
     out = Path(__file__).parent / "output"
     out.mkdir(exist_ok=True)
@@ -69,8 +90,9 @@ def main():
     )
     geo.to_csv(out / "standardized_sites.csv", index=False)
 
-    plt.figure(figsize=(7, 4.8))
-    s = plt.scatter(
+    fig, ax = plt.subplots(figsize=(7.2, 5.0))
+    draw_light_geopolitical_context(ax, geo["lon"], geo["lat"])
+    s = ax.scatter(
         geo["lon"],
         geo["lat"],
         c=geo["yield_kg_ha"],
@@ -78,15 +100,16 @@ def main():
         s=90,
         edgecolor="black",
         linewidth=0.3,
+        zorder=2,
     )
-    plt.colorbar(s, label="Yield (kg/ha)")
-    plt.title("Imported Phenotype Sites (Mock Geospatial View)")
-    plt.xlabel("Longitude")
-    plt.ylabel("Latitude")
-    plt.grid(alpha=0.2)
-    plt.tight_layout()
-    plt.savefig(out / "standardized_sites_map.png", dpi=150)
-    plt.close()
+    fig.colorbar(s, ax=ax, label="Yield (kg/ha)")
+    ax.set_title("Imported Phenotype Sites")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.grid(alpha=0.18)
+    fig.tight_layout()
+    fig.savefig(out / "standardized_sites_map.png", dpi=150)
+    plt.close(fig)
 
     report_lines = [
         "Validation Report",

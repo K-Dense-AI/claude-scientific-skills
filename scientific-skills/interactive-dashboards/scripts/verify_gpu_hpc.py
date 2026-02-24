@@ -10,6 +10,33 @@ import time
 import matplotlib.pyplot as plt
 
 
+def probe_conda_env(env_name: str):
+    code = (
+        "import json,time;"
+        "import torch;"
+        "r={'cuda_available':bool(torch.cuda.is_available()),"
+        "'gpu_name':'none','total_vram_gb':0.0,'small_matmul_seconds':None};"
+        "\n"
+        "if r['cuda_available']:\n"
+        "  d=torch.device('cuda:0');p=torch.cuda.get_device_properties(d);"
+        "  r['gpu_name']=p.name;r['total_vram_gb']=round(p.total_memory/(1024**3),2);"
+        "  a=torch.randn((2048,2048),device=d);b=torch.randn((2048,2048),device=d);"
+        "  torch.cuda.synchronize();t=time.time();_=a@b;torch.cuda.synchronize();"
+        "  r['small_matmul_seconds']=round(time.time()-t,4);"
+        "print(json.dumps(r))"
+    )
+    try:
+        res = subprocess.run(
+            ["conda", "run", "-n", env_name, "python", "-c", code],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return json.loads(res.stdout.strip().splitlines()[-1])
+    except Exception:
+        return None
+
+
 def run_check():
     result = {
         "cuda_available": False,
@@ -20,6 +47,7 @@ def run_check():
         "detected_system_gpu": None,
         "detected_system_vram_gb": None,
         "config_hint": None,
+        "active_backend": "current_env",
     }
 
     try:
@@ -71,6 +99,26 @@ def run_check():
     result["recommended_for_12gb"] = bool(
         result["cuda_available"] and result["total_vram_gb"] >= 11.5
     )
+
+    if (not result["cuda_available"]) and result.get("detected_system_gpu"):
+        for env_name in ["cs-gpu", "gpu", "pytorch-gpu"]:
+            alt = probe_conda_env(env_name)
+            if alt and alt.get("cuda_available"):
+                result["cuda_available"] = True
+                result["gpu_name"] = alt.get("gpu_name", result["gpu_name"])
+                result["total_vram_gb"] = float(
+                    alt.get("total_vram_gb", result["total_vram_gb"])
+                )
+                result["small_matmul_seconds"] = alt.get("small_matmul_seconds")
+                result["status"] = "gpu_ready_via_conda_env"
+                result["active_backend"] = f"conda:{env_name}"
+                result["config_hint"] = (
+                    f"Detected working CUDA backend in conda env '{env_name}'. "
+                    f"Use `conda run -n {env_name} python ...` or activate that env."
+                )
+                result["recommended_for_12gb"] = bool(result["total_vram_gb"] >= 11.5)
+                break
+
     return result
 
 
@@ -110,6 +158,7 @@ def main():
     ax2.axis("off")
     lines = [
         f"Status: {res['status']}",
+        f"Backend: {res.get('active_backend', 'current_env')}",
         f"GPU (torch): {res['gpu_name']}",
         f"VRAM (GB): {res['total_vram_gb']}",
     ]

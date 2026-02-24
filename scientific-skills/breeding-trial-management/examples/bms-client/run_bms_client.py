@@ -8,6 +8,27 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+def draw_light_geopolitical_context(ax, lon, lat):
+    min_lon, max_lon = float(min(lon)), float(max(lon))
+    min_lat, max_lat = float(min(lat)), float(max(lat))
+    dx = max(0.35, (max_lon - min_lon) * 0.6)
+    dy = max(0.25, (max_lat - min_lat) * 0.6)
+    ax.set_facecolor("#f7fbff")
+    ax.set_xlim(min_lon - dx, max_lon + dx)
+    ax.set_ylim(min_lat - dy, max_lat + dy)
+    for x in [min_lon - 0.15, (min_lon + max_lon) / 2, max_lon + 0.15]:
+        ax.axvline(x, color="#d9e2ec", linewidth=0.8, linestyle="--", zorder=0)
+    for y in [min_lat - 0.1, (min_lat + max_lat) / 2, max_lat + 0.1]:
+        ax.axhline(y, color="#d9e2ec", linewidth=0.8, linestyle="--", zorder=0)
+    ax.text(
+        min_lon - dx + 0.05,
+        max_lat + dy - 0.08,
+        "Regional context",
+        fontsize=8,
+        color="#6b7280",
+    )
+
+
 def main():
     out = Path(__file__).parent / "output"
     out.mkdir(exist_ok=True)
@@ -42,23 +63,24 @@ def main():
     sites.to_csv(out / "bms_trial_sites.csv", index=False)
 
     colors = np.where(sites["status"] == "created", "#ff7f0e", "#2ca02c")
-    plt.figure(figsize=(6.5, 4.5))
-    plt.scatter(sites["lon"], sites["lat"], c=colors, s=130)
+    fig, ax = plt.subplots(figsize=(6.8, 4.8))
+    draw_light_geopolitical_context(ax, sites["lon"], sites["lat"])
+    ax.scatter(sites["lon"], sites["lat"], c=colors, s=130, zorder=2)
     for _, r in sites.iterrows():
-        plt.annotate(
+        ax.annotate(
             str(r["trial_id"]),
             (float(r["lon"]), float(r["lat"])),
             xytext=(4, 4),
             textcoords="offset points",
             fontsize=8,
         )
-    plt.title("BMS Trial Footprint (Mock Geospatial)")
-    plt.xlabel("Longitude")
-    plt.ylabel("Latitude")
-    plt.grid(alpha=0.25)
-    plt.tight_layout()
-    plt.savefig(out / "bms_trial_site_map.png", dpi=150)
-    plt.close()
+    ax.set_title("BMS Trial Footprint")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.grid(alpha=0.18)
+    fig.tight_layout()
+    fig.savefig(out / "bms_trial_site_map.png", dpi=150)
+    plt.close(fig)
 
     conclusion = (
         "BMS client conclusion\n"
