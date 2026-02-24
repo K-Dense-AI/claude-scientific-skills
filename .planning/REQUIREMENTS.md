@@ -52,10 +52,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Breeding Trial Management — Trial Design
 
-- [ ] **TRIAL-01**: RCBD (Randomized Complete Block Design) example with plot layout visualization
-- [ ] **TRIAL-02**: Alpha-lattice design example for large trials
-- [ ] **TRIAL-03**: Augmented design example (unreplicated entries + replicated checks)
-- [ ] **TRIAL-04**: Field book generation example — plot maps, QR/barcode labels
+- [x] **TRIAL-01**: RCBD (Randomized Complete Block Design) example with plot layout visualization
+- [x] **TRIAL-02**: Alpha-lattice design example for large trials
+- [x] **TRIAL-03**: Augmented design example (unreplicated entries + replicated checks)
+- [x] **TRIAL-04**: Field book generation example — plot maps, QR/barcode labels
 
 ### Breeding Trial Management — Germplasm & Pedigree
 
@@ -132,10 +132,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | BREED-01 | Phase 7 | Complete |
 | BREED-02 | Phase 7 | Complete |
 | BREED-03 | Phase 7 | Complete |
-| TRIAL-01 | Phase 8 | Pending |
-| TRIAL-02 | Phase 8 | Pending |
-| TRIAL-03 | Phase 8 | Pending |
-| TRIAL-04 | Phase 8 | Pending |
+| TRIAL-01 | Phase 8 | Complete |
+| TRIAL-02 | Phase 8 | Complete |
+| TRIAL-03 | Phase 8 | Complete |
+| TRIAL-04 | Phase 8 | Complete |
 | GERM-01 | Phase 9 | Pending |
 | GERM-02 | Phase 9 | Pending |
 | GERM-03 | Phase 9 | Pending |
