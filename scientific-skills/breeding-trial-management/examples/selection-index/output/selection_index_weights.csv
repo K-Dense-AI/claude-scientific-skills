@@ -1,0 +1,4 @@
+trait,weight
+yield_t_ha,0.6
+protein_pct,0.3
+disease_score,-0.4

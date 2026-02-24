@@ -1,3 +1,6 @@
+<!-- Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC) -->
+<!-- Licensed under the Apache License, Version 2.0. -->
+
 # Cross-validation methods for genomic prediction (genomic selection): research notes
 
 This note focuses on CV designs that are appropriate for genomic prediction when individuals are structured by ancestry/subpopulation and/or relatedness (families, half-sib/full-sib structure), plus forward (chronological) validation.

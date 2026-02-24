@@ -1,0 +1,7 @@
+Validation Report
+=================
+Rows imported: 36
+Missing yield values imputed: 2
+Unique genotypes: 12
+Unique environments: 3
+Replicate values valid: True

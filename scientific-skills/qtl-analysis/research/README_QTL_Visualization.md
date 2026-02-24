@@ -1,3 +1,6 @@
+<!-- Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC) -->
+<!-- Licensed under the Apache License, Version 2.0. -->
+
 # QTL and Genomic Data Visualization Guide
 
 Complete guide for visualizing QTL (Quantitative Trait Loci) and genomic data using Python and R.

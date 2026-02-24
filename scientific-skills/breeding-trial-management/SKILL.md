@@ -1,3 +1,6 @@
+<!-- Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC) -->
+<!-- Licensed under the Apache License, Version 2.0. -->
+
 ---
 name: breeding-trial-management
 description: >
@@ -43,3 +46,9 @@ python scripts/breeding_cli.py cross --help
 - Use `germplasm` for accession list and inventory operations.
 - Use `select` for ranking and shortlist generation.
 - Use `cross` for mate pairing and crossing plan scaffolds.
+
+## Example Modules
+
+- Trial design: `examples/rcbd-design/`, `examples/alpha-lattice/`, `examples/augmented-design/`, `examples/field-book/`
+- Germplasm and pedigree: `examples/breedbase-client/`, `examples/pedigree-management/`, `examples/bms-client/`
+- Selection and crossing: `examples/selection-index/`, `examples/breeding-value-ranking/`, `examples/crossing-plan/`, `examples/data-import/`

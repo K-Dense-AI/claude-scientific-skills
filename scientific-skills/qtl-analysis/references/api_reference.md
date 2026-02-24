@@ -1,3 +1,6 @@
+<!-- Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC) -->
+<!-- Licensed under the Apache License, Version 2.0. -->
+
 # API Reference
 
 Complete API documentation for all tools in the QTL Analysis skill.

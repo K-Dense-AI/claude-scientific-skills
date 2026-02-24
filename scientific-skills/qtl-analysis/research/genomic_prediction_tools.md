@@ -1,3 +1,6 @@
+<!-- Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC) -->
+<!-- Licensed under the Apache License, Version 2.0. -->
+
 # Open-Source Genomic Prediction Tools: Replacing QTLmax
 
 Comprehensive guide to open-source alternatives for genomic prediction and BLUP (Best Linear Unbiased Prediction) analysis.
