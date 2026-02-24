@@ -14,7 +14,7 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 | Phase | Status | Description |
 |-------|--------|-------------|
 | 1 | ✅ Complete | Bayesian & Advanced GP |
-| 2 | 🚧 In Progress | Advanced GWAS |
+| 2 | ✅ Complete | Advanced GWAS |
 | 3 | ○ Pending | Kinship & Relatedness |
 | 4 | ○ Pending | QC & Annotation |
 | 5 | ○ Pending | Report Generation |
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 | 11 | ○ Pending | Breeding Infrastructure |
 | 12 | ○ Pending | Attribution & Quality |
 
-Progress: ███░░░░░░░░░░ 11% (4/38 requirements)
+Progress: █████░░░░░░░░ 26% (10/38 requirements)
 
 ## Completed in Phase 1
 
@@ -56,16 +56,19 @@ All Phase 1 deliverables verified:
 - No ASReml (commercial)
 
 ### Current Work
-- Phase 2: Planning Advanced GWAS (QTLGW-01..06)
+- Phase 3: Kinship & Relatedness planning (QTLKN-01..03)
+
+### Roadmap Evolution
+- Phase 02.1 inserted after Phase 2: Progressive PR #55 comment updates after each successful image or major output (URGENT)
 
 ### Known Issues
 - qtl_cli.py line 197: `np` not defined (missing numpy import in manhattan plot function)
 
 ## Session Continuity
 
-Last session: 2026-02-23T20:45:00Z
-Stopped at: Phase 1 complete, Phase 2 planning
-Resume file: 01-01-SUMMARY.md, 01-02-SUMMARY.md
+Last session: 2026-02-24T00:00:00Z
+Stopped at: Phase 2 complete, ready to plan Phase 3
+Resume file: 02-01-SUMMARY.md, 02-02-SUMMARY.md, 02-03-SUMMARY.md
 
 ---
-*Last updated: 2026-02-23 after Phase 1 completion*
+*Last updated: 2026-02-24 after Phase 2 completion*

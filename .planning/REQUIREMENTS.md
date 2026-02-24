@@ -20,8 +20,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **QTLGW-02**: G×E GWAS / MET model example with environment-specific effects
 - [x] **QTLGW-03**: Enhanced covariate handling example (PCs + sex + batch + environment)
 - [x] **QTLGW-04**: Permutation and FDR threshold correction example (BH, Bonferroni, permutation-based)
-- [ ] **QTLGW-05**: Genomic control (lambda adjustment) as standalone example with before/after QQ plots
-- [ ] **QTLGW-06**: Rare variant association tests (burden/SKAT) example
+- [x] **QTLGW-05**: Genomic control (lambda adjustment) as standalone example with before/after QQ plots
+- [x] **QTLGW-06**: Rare variant association tests (burden/SKAT) example
 
 ### QTL Expansion — Kinship & Relatedness
 
@@ -118,8 +118,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLGW-02 | Phase 2 | Complete |
 | QTLGW-03 | Phase 2 | Complete |
 | QTLGW-04 | Phase 2 | Complete |
-| QTLGW-05 | Phase 2 | Pending |
-| QTLGW-06 | Phase 2 | Pending |
+| QTLGW-05 | Phase 2 | Complete |
+| QTLGW-06 | Phase 2 | Complete |
 | QTLKN-01 | Phase 3 | Pending |
 | QTLKN-02 | Phase 3 | Pending |
 | QTLKN-03 | Phase 3 | Pending |
