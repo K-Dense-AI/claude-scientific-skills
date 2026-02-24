@@ -2,7 +2,7 @@
   "cuda_available": true,
   "gpu_name": "NVIDIA GeForce RTX 4070",
   "total_vram_gb": 11.56,
-  "small_matmul_seconds": 0.0394,
+  "small_matmul_seconds": 0.041,
   "status": "gpu_ready_via_conda_env",
   "detected_system_gpu": "NVIDIA GeForce RTX 4070",
   "detected_system_vram_gb": 11.99,

@@ -7,6 +7,7 @@ import argparse
 import json
 import subprocess
 import time
+import shutil
 import matplotlib.pyplot as plt
 
 
@@ -25,9 +26,17 @@ def probe_conda_env(env_name: str):
         "  r['small_matmul_seconds']=round(time.time()-t,4);"
         "print(json.dumps(r))"
     )
+    conda_bin = shutil.which("conda")
+    if conda_bin is None:
+        fallback = Path.home() / "miniconda3" / "bin" / "conda"
+        if fallback.exists():
+            conda_bin = str(fallback)
+    if conda_bin is None:
+        return None
+
     try:
         res = subprocess.run(
-            ["conda", "run", "-n", env_name, "python", "-c", code],
+            [conda_bin, "run", "-n", env_name, "python", "-c", code],
             capture_output=True,
             text=True,
             check=True,
