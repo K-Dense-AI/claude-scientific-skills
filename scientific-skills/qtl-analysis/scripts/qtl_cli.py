@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2026 Clayton Young (borealBytes / Superior Byte Works, LLC)
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -34,6 +34,7 @@ import argparse
 import sys
 import subprocess
 import json
+import os
 from pathlib import Path
 
 
@@ -168,6 +169,7 @@ cat("Found", nrow(peaks), "QTL peaks\\n")
 
 def plot_manhattan(args):
     """Create Manhattan plot from GWAS results"""
+    import numpy as np
     import pandas as pd
     import matplotlib.pyplot as plt
 
@@ -311,6 +313,22 @@ def calc_kinship(args):
     print(f"✅ Kinship calculation complete")
 
 
+def run_builtin_example(args):
+    """Run one of the packaged example scripts."""
+    script_map = {
+        "bayesian-gp": "examples/bayesian-gp/run_bayesian.py",
+        "multi-trait": "examples/multi-trait-gwas/run_multitrait.py",
+        "sample-qc": "examples/sample-qc/run_sample_qc.py",
+        "annotate": "examples/snp-annotation/run_snp_annotation.py",
+        "report": "examples/analysis-report/run_report.py",
+    }
+    script_rel = script_map[args.command]
+    script_abs = os.path.join(os.path.dirname(os.path.dirname(__file__)), script_rel)
+    print(f"Running example: {args.command}")
+    subprocess.run([sys.executable, script_abs], check=True)
+    print(f"✅ {args.command} complete")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Unified CLI for QTL Analysis")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
@@ -375,6 +393,9 @@ def main():
     )
     kinship_parser.add_argument("--output", default="kinship", help="Output prefix")
 
+    for cmd in ["bayesian-gp", "multi-trait", "sample-qc", "annotate", "report"]:
+        subparsers.add_parser(cmd, help=f"Run bundled {cmd} example")
+
     args = parser.parse_args()
 
     if args.command is None:
@@ -389,6 +410,11 @@ def main():
         "manhattan": plot_manhattan,
         "qqplot": plot_qq,
         "kinship": calc_kinship,
+        "bayesian-gp": run_builtin_example,
+        "multi-trait": run_builtin_example,
+        "sample-qc": run_builtin_example,
+        "annotate": run_builtin_example,
+        "report": run_builtin_example,
     }
 
     try:

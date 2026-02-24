@@ -153,7 +153,37 @@ qtl_cli.py lodscan --cross data.zip --perms 1000
 qtl_cli.py manhattan --input pvalues.csv --output plot.png
 qtl_cli.py qqplot --input pvalues.csv --output qq.png
 qtl_cli.py kinship --geno data.vcf --method vanraden
+
+# Bundled advanced examples
+qtl_cli.py bayesian-gp
+qtl_cli.py multi-trait
+qtl_cli.py sample-qc
+qtl_cli.py annotate
+qtl_cli.py report
 ```
+
+## New Example Modules (v1 Expansion)
+
+Advanced GWAS:
+- `examples/multi-trait-gwas/`
+- `examples/gxe-gwas/`
+- `examples/covariate-gwas/`
+- `examples/threshold-correction/`
+- `examples/genomic-control/`
+- `examples/rare-variant-tests/`
+
+Kinship and relatedness:
+- `examples/pedigree-kinship/`
+- `examples/genomic-nrm/`
+- `examples/genetic-similarity/`
+
+QC and annotation:
+- `examples/sample-qc/`
+- `examples/snp-annotation/`
+
+Reporting and extras:
+- `examples/analysis-report/`
+- `examples/real-dataset/` (optional public dataset catalog)
 
 ## Input Formats
 
