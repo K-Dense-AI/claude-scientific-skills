@@ -6,6 +6,7 @@ from pathlib import Path
 import argparse
 import json
 import time
+import matplotlib.pyplot as plt
 
 
 def run_check():
@@ -55,6 +56,19 @@ def main():
     (out / "gpu_hpc_check.json").write_text(
         json.dumps(res, indent=2) + "\n", encoding="utf-8"
     )
+
+    vals = [
+        1.0 if res["cuda_available"] else 0.0,
+        min(float(res["total_vram_gb"]), 12.0) / 12.0,
+    ]
+    plt.figure(figsize=(6.2, 3.8))
+    plt.bar(["CUDA", "VRAM (12GB target)"], vals, color=["#1f77b4", "#2ca02c"])
+    plt.ylim(0, 1.1)
+    plt.ylabel("Normalized score")
+    plt.title("GPU/HPC Readiness Check")
+    plt.tight_layout()
+    plt.savefig(out / "gpu_hpc_check.png", dpi=160)
+    plt.close()
 
     if args.json:
         print(json.dumps(res))
