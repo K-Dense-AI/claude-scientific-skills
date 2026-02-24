@@ -36,7 +36,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### QTL Expansion — Reporting
 
-- [ ] **QTLRP-01**: Report generation — PDF/HTML summary of QC + GWAS + GP results from a single command
+- [x] **QTLRP-01**: Report generation — PDF/HTML summary of QC + GWAS + GP results from a single command
 
 ### QTL Expansion — Infrastructure
 
@@ -125,7 +125,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | QTLKN-03 | Phase 3 | Complete |
 | QTLQC-01 | Phase 4 | Complete |
 | QTLQC-02 | Phase 4 | Complete |
-| QTLRP-01 | Phase 5 | Pending |
+| QTLRP-01 | Phase 5 | Complete |
 | QTLIN-01 | Phase 6 | Pending |
 | QTLIN-02 | Phase 6 | Pending |
 | QTLIN-03 | Phase 6 | Pending |

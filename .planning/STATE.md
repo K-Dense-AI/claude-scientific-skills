@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-23)
 
 **Core value:** Full breeding genomics pipeline using only free, open-source tools
-**Current focus:** Phase 5 — Report Generation
+**Current focus:** Phase 6 — QTL Infrastructure
 
 ## Current Milestone
 
@@ -17,7 +17,7 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 | 2 | ✅ Complete | Advanced GWAS |
 | 3 | ✅ Complete | Kinship & Relatedness |
 | 4 | ✅ Complete | QC & Annotation |
-| 5 | ○ Pending | Report Generation |
+| 5 | ✅ Complete | Report Generation |
 | 6 | ○ Pending | QTL Infrastructure |
 | 7 | ○ Pending | Breeding Core |
 | 8 | ○ Pending | Trial Design |
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-02-23)
 | 11 | ○ Pending | Breeding Infrastructure |
 | 12 | ○ Pending | Attribution & Quality |
 
-Progress: ████████░░░░░ 39% (15/38 requirements)
+Progress: █████████░░░░ 42% (16/38 requirements)
 
 ## Completed in Phase 1
 
@@ -56,7 +56,7 @@ All Phase 1 deliverables verified:
 - No ASReml (commercial)
 
 ### Current Work
-- Phase 5: Report Generation (QTLRP-01)
+- Phase 6: QTL Infrastructure updates (QTLIN-01..03)
 
 ### Roadmap Evolution
 - Phase 02.1 inserted after Phase 2: Progressive PR #55 comment updates after each successful image or major output (URGENT)
@@ -67,8 +67,8 @@ All Phase 1 deliverables verified:
 ## Session Continuity
 
 Last session: 2026-02-24T00:00:00Z
-Stopped at: Phase 4 complete, ready for Phase 5
-Resume file: 04-01-SUMMARY.md
+Stopped at: Phase 5 complete, ready for Phase 6
+Resume file: 05-01-SUMMARY.md
 
 ---
-*Last updated: 2026-02-24 after Phase 4 completion*
+*Last updated: 2026-02-24 after Phase 5 completion*
