@@ -14,6 +14,7 @@ Process:
 Output:
 - output/rcbd_layout.csv
 - output/rcbd_layout.png
+- output/conclusion.txt
 
 Run:
 ```bash

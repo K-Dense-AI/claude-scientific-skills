@@ -15,6 +15,8 @@ Output:
 - output/coancestry_matrix.csv
 - output/all_candidate_crosses.csv
 - output/optimal_crossing_plan.csv
+- output/coancestry_heatmap.png
+- output/conclusion.txt
 
 Run:
 ```bash

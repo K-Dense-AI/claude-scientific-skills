@@ -1,0 +1,4 @@
+Crossing plan conclusion
+========================
+The selected plan balances expected gain and relatedness by penalizing high coancestry pairs.
+This supports safer multi-year progress by reducing inbreeding pressure.

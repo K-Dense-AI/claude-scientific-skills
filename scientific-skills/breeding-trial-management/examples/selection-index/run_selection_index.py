@@ -55,7 +55,15 @@ def main():
     plt.savefig(out / "selection_index_top15.png", dpi=150)
     plt.close()
 
-    print("Saved selection index scores, top selections, weights, and plot")
+    conclusion = (
+        "Selection index conclusion\n"
+        "=========================\n"
+        "Top-ranked entries combine strong yield and protein with acceptable disease pressure.\n"
+        "This shortlist is a practical first-pass recommendation for advancement decisions.\n"
+    )
+    (out / "conclusion.txt").write_text(conclusion, encoding="utf-8")
+
+    print("Saved selection index scores, top selections, weights, plot, and conclusion")
 
 
 if __name__ == "__main__":

@@ -5,3 +5,4 @@ Missing yield values imputed: 2
 Unique genotypes: 12
 Unique environments: 3
 Replicate values valid: True
+Conclusion: Data are standardized and ready for model fitting or breeding decisions.

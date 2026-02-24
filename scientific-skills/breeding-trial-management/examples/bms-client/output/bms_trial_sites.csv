@@ -1,0 +1,4 @@
+trial_id,lon,lat,status
+BMS-T01,-97.1,40.6,retrieved
+BMS-T02,-96.4,40.8,retrieved
+BMS-T03,-95.7,41.2,created

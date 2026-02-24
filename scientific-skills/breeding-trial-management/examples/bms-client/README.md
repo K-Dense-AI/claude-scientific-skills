@@ -13,6 +13,9 @@ Process:
 Output:
 - output/bms_trials_read.csv
 - output/bms_trials_write_result.csv
+- output/bms_trial_sites.csv
+- output/bms_trial_site_map.png
+- output/conclusion.txt
 
 Run:
 ```bash

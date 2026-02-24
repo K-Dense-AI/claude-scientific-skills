@@ -15,6 +15,7 @@ Output:
 - output/pedigree_records.csv
 - output/inbreeding_coefficients.csv
 - output/pedigree_lineage.png
+- output/conclusion.txt
 
 Run:
 ```bash

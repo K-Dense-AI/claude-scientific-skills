@@ -5,6 +5,7 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -41,7 +42,35 @@ def main():
         }
     )
     efficiency.to_csv(out / "alpha_lattice_efficiency.csv", index=False)
-    print("Saved alpha_lattice_layout.csv and alpha_lattice_efficiency.csv")
+
+    viz = df.copy()
+    viz["x"] = (viz["block"] - 1) * block_size + viz["unit"]
+    viz["y"] = viz["rep"]
+    plt.figure(figsize=(10, 3.8))
+    plt.scatter(viz["x"], viz["y"], c=viz["block"], cmap="tab20", s=120)
+    for _, r in viz.iterrows():
+        x_val = float(r["x"])
+        y_val = float(r["y"])
+        label = str(r["treatment"])
+        plt.text(x_val, y_val, label, ha="center", va="center", fontsize=6)
+    plt.title("Alpha-Lattice Field Map by Replicate and Block")
+    plt.xlabel("Field Position")
+    plt.ylabel("Replicate")
+    plt.grid(alpha=0.2)
+    plt.tight_layout()
+    plt.savefig(out / "alpha_lattice_field_map.png", dpi=150)
+    plt.close()
+
+    conclusion = (
+        "Alpha-lattice conclusion\n"
+        "========================\n"
+        "Entries are distributed in incomplete blocks to reduce local field noise.\n"
+        "Relative efficiency above 1.0 indicates better precision than a simple complete block layout.\n"
+    )
+    (out / "conclusion.txt").write_text(conclusion, encoding="utf-8")
+    print(
+        "Saved alpha_lattice_layout.csv, alpha_lattice_efficiency.csv, alpha_lattice_field_map.png, and conclusion.txt"
+    )
 
 
 if __name__ == "__main__":

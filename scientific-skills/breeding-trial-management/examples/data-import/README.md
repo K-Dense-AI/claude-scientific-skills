@@ -14,6 +14,8 @@ Process:
 Output:
 - output/raw_phenotypes.csv
 - output/standardized_phenotypes.csv
+- output/standardized_sites.csv
+- output/standardized_sites_map.png
 - output/validation_report.txt
 
 Run:

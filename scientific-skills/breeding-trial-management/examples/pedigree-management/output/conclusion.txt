@@ -1,0 +1,4 @@
+Pedigree management conclusion
+==============================
+Lineage and inbreeding summaries show how repeated backcrossing increases homozygosity risk.
+Use this view to balance genetic gain and diversity before fixing future crosses.

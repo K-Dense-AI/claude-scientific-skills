@@ -16,6 +16,7 @@ Output:
 - output/selection_index_top12.csv
 - output/selection_index_weights.csv
 - output/selection_index_top15.png
+- output/conclusion.txt
 
 Run:
 ```bash

@@ -14,6 +14,8 @@ Process:
 Output:
 - output/gebv_ranking_with_ci.csv
 - output/selection_list_top15.csv
+- output/gebv_top15_ci_plot.png
+- output/conclusion.txt
 
 Run:
 ```bash

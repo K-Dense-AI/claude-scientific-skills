@@ -6,6 +6,7 @@ from itertools import combinations
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -20,7 +21,8 @@ def main():
     raw = rng.uniform(0.0, 0.35, size=(n, n))
     coancestry = (raw + raw.T) / 2
     np.fill_diagonal(coancestry, 0.5)
-    coa = pd.DataFrame(coancestry, index=parents, columns=parents)
+    parent_index = pd.Index(parents)
+    coa = pd.DataFrame(coancestry, index=parent_index, columns=parent_index)
     coa.to_csv(out / "coancestry_matrix.csv", index=True)
 
     rows = []
@@ -33,9 +35,9 @@ def main():
             {
                 "parent_1": p1,
                 "parent_2": p2,
-                "mean_parent_gebv": round(mean_parent_gebv, 4),
+                "mean_parent_gebv": round(float(mean_parent_gebv), 4),
                 "coancestry": round(f_est, 4),
-                "cross_score": round(cross_score, 4),
+                "cross_score": round(float(cross_score), 4),
             }
         )
 
@@ -56,7 +58,27 @@ def main():
     plan.to_csv(out / "all_candidate_crosses.csv", index=False)
     selected_df.to_csv(out / "optimal_crossing_plan.csv", index=False)
 
-    print("Saved candidate crosses, selected crossing plan, and coancestry matrix")
+    plt.figure(figsize=(7, 6))
+    plt.imshow(coa.values, cmap="viridis", vmin=0.0, vmax=0.5)
+    plt.colorbar(label="Coancestry")
+    plt.xticks(range(len(parents)), parents, rotation=90, fontsize=6)
+    plt.yticks(range(len(parents)), parents, fontsize=6)
+    plt.title("Parent Coancestry Heatmap for Crossing Decisions")
+    plt.tight_layout()
+    plt.savefig(out / "coancestry_heatmap.png", dpi=150)
+    plt.close()
+
+    conclusion = (
+        "Crossing plan conclusion\n"
+        "========================\n"
+        "The selected plan balances expected gain and relatedness by penalizing high coancestry pairs.\n"
+        "This supports safer multi-year progress by reducing inbreeding pressure.\n"
+    )
+    (out / "conclusion.txt").write_text(conclusion, encoding="utf-8")
+
+    print(
+        "Saved candidate crosses, selected plan, coancestry matrix, heatmap, and conclusion"
+    )
 
 
 if __name__ == "__main__":

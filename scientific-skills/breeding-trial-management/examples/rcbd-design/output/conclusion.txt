@@ -1,0 +1,4 @@
+RCBD conclusion
+===============
+Blocking distributes each genotype across four blocks, which helps reduce field-position bias.
+This layout is suitable for early-stage comparisons where growers need fair, repeatable plot placement.

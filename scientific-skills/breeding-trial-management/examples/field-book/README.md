@@ -13,6 +13,8 @@ Process:
 Output:
 - output/fieldbook.csv
 - output/qr_labels.csv
+- output/fieldbook_plot_map.png
+- output/conclusion.txt
 
 Run:
 ```bash

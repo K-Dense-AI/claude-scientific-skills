@@ -1,0 +1,4 @@
+Augmented design conclusion
+===========================
+Checks are repeated in each block to anchor comparisons for many unreplicated entries.
+This layout supports grower-style early screening with limited seed while preserving comparability.

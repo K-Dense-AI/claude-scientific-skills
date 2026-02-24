@@ -29,12 +29,20 @@ def main():
     plt.figure(figsize=(10, 3))
     plt.imshow(np.arange(pivot.size).reshape(pivot.shape), cmap="tab20")
     plt.title("RCBD Plot Layout")
-    plt.yticks(range(len(pivot.index)), pivot.index)
-    plt.xticks(range(len(pivot.columns)), pivot.columns)
+    plt.yticks(range(len(pivot.index)), list(pivot.index))
+    plt.xticks(range(len(pivot.columns)), list(pivot.columns))
     plt.tight_layout()
     plt.savefig(out / "rcbd_layout.png", dpi=150)
     plt.close()
-    print("Saved rcbd_layout.csv and rcbd_layout.png")
+
+    conclusion = (
+        "RCBD conclusion\n"
+        "===============\n"
+        "Blocking distributes each genotype across four blocks, which helps reduce field-position bias.\n"
+        "This layout is suitable for early-stage comparisons where growers need fair, repeatable plot placement.\n"
+    )
+    (out / "conclusion.txt").write_text(conclusion, encoding="utf-8")
+    print("Saved rcbd_layout.csv, rcbd_layout.png, and conclusion.txt")
 
 
 if __name__ == "__main__":

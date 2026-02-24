@@ -38,12 +38,22 @@ def main():
             g.add_edge(r["dam"], r["id"])
     pos = nx.spring_layout(g, seed=7)
     plt.figure(figsize=(6, 4))
-    nx.draw(g, pos, with_labels=True, node_color="#9ecae1", arrows=True)
+    nx.draw(g, pos, with_labels=True, node_color="#9ecae1")
     plt.title("Pedigree lineage graph")
     plt.tight_layout()
     plt.savefig(out / "pedigree_lineage.png", dpi=150)
     plt.close()
-    print("Saved pedigree records, inbreeding coefficients, and lineage graph")
+
+    conclusion = (
+        "Pedigree management conclusion\n"
+        "==============================\n"
+        "Lineage and inbreeding summaries show how repeated backcrossing increases homozygosity risk.\n"
+        "Use this view to balance genetic gain and diversity before fixing future crosses.\n"
+    )
+    (out / "conclusion.txt").write_text(conclusion, encoding="utf-8")
+    print(
+        "Saved pedigree records, inbreeding coefficients, lineage graph, and conclusion"
+    )
 
 
 if __name__ == "__main__":

@@ -14,6 +14,8 @@ Process:
 Output:
 - output/augmented_layout.csv
 - output/augmented_summary.csv
+- output/augmented_field_map.png
+- output/conclusion.txt
 
 Run:
 ```bash

@@ -13,6 +13,8 @@ Process:
 Output:
 - output/alpha_lattice_layout.csv
 - output/alpha_lattice_efficiency.csv
+- output/alpha_lattice_field_map.png
+- output/conclusion.txt
 
 Run:
 ```bash

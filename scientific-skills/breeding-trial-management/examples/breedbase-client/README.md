@@ -13,6 +13,9 @@ Process:
 Output:
 - output/breedbase_accessions_read.csv
 - output/breedbase_accessions_write_result.csv
+- output/breedbase_accession_sites.csv
+- output/breedbase_accession_site_map.png
+- output/conclusion.txt
 
 Run:
 ```bash
