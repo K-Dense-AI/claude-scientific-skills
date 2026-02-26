@@ -3,7 +3,7 @@
 Generate and edit images using OpenRouter API with various image generation models.
 
 Supports models like:
-- google/gemini-3-pro-image-preview (generation and editing)
+- google/gemini-3.1-flash-image-preview (generation and editing)
 - black-forest-labs/flux.2-pro (generation and editing)
 - black-forest-labs/flux.2-flex (generation)
 - And more image generation models available on OpenRouter
@@ -74,7 +74,7 @@ def save_base64_image(base64_data: str, output_path: str) -> None:
 
 def generate_image(
     prompt: str,
-    model: str = "google/gemini-3-pro-image-preview",
+    model: str = "google/gemini-3.1-flash-image-preview",
     output_path: str = "generated_image.png",
     api_key: Optional[str] = None,
     input_image: Optional[str] = None
@@ -84,7 +84,7 @@ def generate_image(
 
     Args:
         prompt: Text description of the image to generate, or editing instructions
-        model: OpenRouter model ID (default: google/gemini-3-pro-image-preview)
+        model: OpenRouter model ID (default: google/gemini-3.1-flash-image-preview)
         output_path: Path to save the generated image
         api_key: OpenRouter API key (will check .env if not provided)
         input_image: Path to an input image for editing (optional)
@@ -212,7 +212,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Generate with default model (Gemini 3 Pro Image Preview)
+  # Generate with default model (Gemini 3.1 Flash Image Preview)
   python generate_image.py "A beautiful sunset over mountains"
 
   # Use a specific model
@@ -228,7 +228,7 @@ Examples:
   python generate_image.py "Add a hat to the person" --input portrait.png -m "black-forest-labs/flux.2-pro"
 
 Popular image models:
-  - google/gemini-3-pro-image-preview (default, high quality, generation + editing)
+  - google/gemini-3.1-flash-image-preview (default, high quality, generation + editing)
   - black-forest-labs/flux.2-pro (fast, high quality, generation + editing)
   - black-forest-labs/flux.2-flex (development version)
         """
@@ -243,8 +243,8 @@ Popular image models:
     parser.add_argument(
         "--model", "-m",
         type=str,
-        default="google/gemini-3-pro-image-preview",
-        help="OpenRouter model ID (default: google/gemini-3-pro-image-preview)"
+        default="google/gemini-3.1-flash-image-preview",
+        help="OpenRouter model ID (default: google/gemini-3.1-flash-image-preview)"
     )
 
     parser.add_argument(

@@ -1,6 +1,6 @@
 ---
 name: generate-image
-description: Generate or edit images using AI models (FLUX, Gemini). Use for general-purpose image generation including photos, illustrations, artwork, visual assets, concept art, and any image that is not a technical diagram or schematic. For flowcharts, circuits, pathways, and technical diagrams, use the scientific-schematics skill instead.
+description: Generate or edit images using AI models (FLUX, Nano Banana 2). Use for general-purpose image generation including photos, illustrations, artwork, visual assets, concept art, and any image that is not a technical diagram or schematic. For flowcharts, circuits, pathways, and technical diagrams, use the scientific-schematics skill instead.
 license: MIT license
 compatibility: Requires an OpenRouter API key
 metadata:
@@ -9,7 +9,7 @@ metadata:
 
 # Generate Image
 
-Generate and edit high-quality images using OpenRouter's image generation models including FLUX.2 Pro and Gemini 3 Pro.
+Generate and edit high-quality images using OpenRouter's image generation models including FLUX.2 Pro and Gemini 3.1 Flash Image Preview.
 
 ## When to Use This Skill
 
@@ -58,18 +58,18 @@ The script will automatically detect the `.env` file and provide clear error mes
 
 ## Model Selection
 
-**Default model**: `google/gemini-3-pro-image-preview` (high quality, recommended)
+**Default model**: `google/gemini-3.1-flash-image-preview` (high quality, recommended)
 
 **Available models for generation and editing**:
-- `google/gemini-3-pro-image-preview` - High quality, supports generation + editing
+- `google/gemini-3.1-flash-image-preview` - High quality, supports generation + editing
 - `black-forest-labs/flux.2-pro` - Fast, high quality, supports generation + editing
 
 **Generation only**:
 - `black-forest-labs/flux.2-flex` - Fast and cheap, but not as high quality as pro
 
 Select based on:
-- **Quality**: Use gemini-3-pro or flux.2-pro
-- **Editing**: Use gemini-3-pro or flux.2-pro (both support image editing)
+- **Quality**: Use gemini-3.1-flash-image-preview or flux.2-pro
+- **Editing**: Use gemini-3.1-flash-image-preview or flux.2-pro (both support image editing)
 - **Cost**: Use flux.2-flex for generation only
 
 ## Common Usage Patterns
@@ -115,7 +115,7 @@ python scripts/generate_image.py "Image 2 description" --output image2.png
 
 - `prompt` (required): Text description of the image to generate, or editing instructions
 - `--input` or `-i`: Input image path for editing (enables edit mode)
-- `--model` or `-m`: OpenRouter model ID (default: google/gemini-3-pro-image-preview)
+- `--model` or `-m`: OpenRouter model ID (default: google/gemini-3.1-flash-image-preview)
 - `--output` or `-o`: Output file path (default: generated_image.png)
 - `--api-key`: OpenRouter API key (overrides .env file)
 
@@ -172,7 +172,7 @@ If the script fails, read the error message and address the issue before retryin
 - Be specific about what changes you want (e.g., "change the sky to sunset colors" vs "edit the sky")
 - Reference specific elements in the image when possible
 - For best results, use clear and detailed editing instructions
-- Both Gemini 3 Pro and FLUX.2 Pro support image editing through OpenRouter
+- Both Gemini 3.1 Flash Image Preview and FLUX.2 Pro support image editing through OpenRouter
 
 ## Integration with Other Skills
 
