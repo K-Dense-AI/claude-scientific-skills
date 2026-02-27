@@ -1,11 +1,11 @@
 # Claude Scientific Skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Skills](https://img.shields.io/badge/Skills-147-brightgreen.svg)](#whats-included)
+[![Skills](https://img.shields.io/badge/Skills-148-brightgreen.svg)](#whats-included)
 [![Agent Skills](https://img.shields.io/badge/Standard-Agent_Skills-blueviolet.svg)](https://agentskills.io/)
 [![Works with](https://img.shields.io/badge/Works_with-Cursor_|_Claude_Code_|_Codex-blue.svg)](#getting-started)
 
-A comprehensive collection of **147+ ready-to-use scientific and research skills** (now including financial/SEC research, U.S. Treasury fiscal data, OFR Hedge Fund Monitor, and Alpha Vantage market data) for any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, created by [K-Dense](https://k-dense.ai). Works with **Cursor, Claude Code, Codex, and more**. Transform your AI agent into a research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
+A comprehensive collection of **148+ ready-to-use scientific and research skills** (now including financial/SEC research, U.S. Treasury fiscal data, OFR Hedge Fund Monitor, and Alpha Vantage market data) for any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, created by [K-Dense](https://k-dense.ai). Works with **Cursor, Claude Code, Codex, and more**. Transform your AI agent into a research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
 **Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
 
@@ -68,10 +68,10 @@ These skills enable your AI agent to seamlessly work with specialized scientific
 
 ## 📦 What's Included
 
-This repository provides **147 scientific and research skills** organized into the following categories:
+This repository provides **148 scientific and research skills** organized into the following categories:
 
 - **30+ Scientific & Financial Databases** - Direct API access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, ClinicalTrials.gov, SEC EDGAR, U.S. Treasury Fiscal Data, Alpha Vantage, and more
-- **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, BioServices, PennyLane, Qiskit, and others
+- **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioPython, pyzotero, BioServices, PennyLane, Qiskit, and others
 - **15+ Scientific Integrations** - Benchling, DNAnexus, LatchBio, OMERO, Protocols.io, and more
 - **30+ Analysis & Communication Tools** - Literature review, scientific writing, peer review, document processing, posters, slides, schematics, and more
 - **10+ Research & Clinical Tools** - Hypothesis generation, grant writing, clinical decision support, treatment plans, regulatory compliance
@@ -113,7 +113,7 @@ Each skill includes:
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **140 Skills** - Extensive coverage across all major scientific domains
+- **148 Skills** - Extensive coverage across all major scientific domains
 - **28+ Databases** - Direct access to OpenAlex, PubMed, bioRxiv, ChEMBL, UniProt, COSMIC, and more
 - **55+ Python Packages** - RDKit, Scanpy, PyTorch Lightning, scikit-learn, BioServices, PennyLane, Qiskit, and others
 
