@@ -8,36 +8,11 @@
 
 A comprehensive collection of **148+ ready-to-use scientific and research skills** (now including financial/SEC research, U.S. Treasury fiscal data, OFR Hedge Fund Monitor, and Alpha Vantage market data) for any AI agent that supports the open [Agent Skills](https://agentskills.io/) standard, created by [K-Dense](https://k-dense.ai). Works with **Cursor, Claude Code, Codex, and more**. Transform your AI agent into a research assistant capable of executing complex multi-step scientific workflows across biology, chemistry, medicine, and beyond.
 
-**Looking for the full AI co-scientist experience?** Try [K-Dense Web](https://k-dense.ai) for 200+ skills, cloud compute, and publication-ready outputs.
-
 <p align="center">
   <a href="https://k-dense.ai">
     <img src="docs/k-dense-web.gif" alt="K-Dense Web Demo" width="800"/>
   </a>
 </p>
-
----
-
-## K-Dense Web - The Full Experience
-
-Want 10x the power with zero setup? **[K-Dense Web](https://k-dense.ai)** is the complete AI co-scientist platform—everything in this repo, plus:
-
-| Feature | This Repo | K-Dense Web |
-|---------|-----------|-------------|
-| Scientific Skills | 148 skills | **200+ skills** (exclusive access) |
-| Setup Required | Manual installation | **Zero setup** — works instantly |
-| Compute | Your machine | **Cloud GPUs & HPC** included |
-| Workflows | Basic prompts | **End-to-end research pipelines** |
-| Outputs | Code & analysis | **Publication-ready** figures, reports & papers |
-| Integrations | Local tools | **Lab systems, ELNs, cloud storage** |
-
-**Researchers at Stanford, MIT, and leading pharma companies use K-Dense Web to accelerate discoveries.**
-
-**Get $50 in free credits** — no credit card required.
-
-<a href="https://k-dense.ai"><img src="https://img.shields.io/badge/Try_K--Dense_Web-Start_Free-blue?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTUgMTJoMTQiLz48cGF0aCBkPSJtMTIgNSA3IDctNyA3Ii8+PC9zdmc+" alt="Try K-Dense Web"></a>
-
-*Learn more at [k-dense.ai](https://k-dense.ai)* | *[Read our detailed comparison →](https://k-dense.ai/blog/k-dense-web-vs-claude-scientific-skills)*
 
 ---
 
@@ -250,6 +225,8 @@ mutations, and create visualizations and a comprehensive report.
 
 **Skills Used**: ChEMBL, RDKit, datamol, DiffDock, AlphaFold DB, PubMed, COSMIC, scientific visualization
 
+*Need cloud GPUs and a publication-ready report at the end? [Run this on K-Dense Web free.](https://k-dense.ai)*
+
 ---
 
 ### 🔬 Single-Cell RNA-seq Analysis
@@ -264,6 +241,8 @@ and identify therapeutic targets with Open Targets.
 ```
 
 **Skills Used**: Scanpy, Cellxgene Census, NCBI Gene, PyDESeq2, Arboreto, Reactome, KEGG, Open Targets
+
+*Want zero-setup cloud execution and shareable outputs? [Try K-Dense Web free.](https://k-dense.ai)*
 
 ---
 
@@ -280,6 +259,8 @@ and search ClinicalTrials.gov for relevant trials.
 
 **Skills Used**: PyDESeq2, pyOpenMS, HMDB, Metabolomics Workbench, UniProt, KEGG, STRING, statsmodels, scikit-learn, ClinicalTrials.gov
 
+*This pipeline is heavy on compute. [Run it on K-Dense Web with cloud GPUs, free to start.](https://k-dense.ai)*
+
 ---
 
 ### 🎯 Virtual Screening Campaign
@@ -294,6 +275,8 @@ MedChem/molfeat.
 ```
 
 **Skills Used**: AlphaFold DB, BioPython, ZINC, RDKit, DiffDock, DeepChem, PubChem, USPTO, MedChem, molfeat
+
+*Skip the local GPU bottleneck. [Run virtual screening on K-Dense Web free.](https://k-dense.ai)*
 
 ---
 
@@ -310,6 +293,8 @@ clinical report with document processing tools, and find matching trials on Clin
 
 **Skills Used**: pysam, Ensembl, ClinVar, COSMIC, NCBI Gene, UniProt, PubMed, ClinPGx, Document Skills, ClinicalTrials.gov
 
+*Need a polished clinical report at the end, not just code? [K-Dense Web delivers publication-ready outputs. Try it free.](https://k-dense.ai)*
+
 ---
 
 ### 🌐 Systems Biology Network Analysis
@@ -325,7 +310,41 @@ networks, and search GEO for similar patterns.
 
 **Skills Used**: NCBI Gene, UniProt, STRING, Reactome, KEGG, Torch Geometric, Arboreto, Open Targets, PyMC, GEO
 
+*Want end-to-end pipelines with shareable outputs and no setup? [Try K-Dense Web free.](https://k-dense.ai)*
+
 > 📖 **Want more examples?** Check out [docs/examples.md](docs/examples.md) for comprehensive workflow examples and detailed use cases across all scientific domains.
+
+---
+
+## 🚀 Want to Skip the Setup and Just Do the Science?
+
+**Recognize any of these?**
+
+- You spent more time configuring environments than running analyses
+- Your workflow needs a GPU your local machine does not have
+- You need a shareable, publication-ready figure or report, not just a script
+- You want to run a complex multi-step pipeline right now, without reading package docs first
+
+If so, **[K-Dense Web](https://k-dense.ai)** was built for you. It is the full AI co-scientist platform: everything in this repo plus cloud GPUs, 200+ skills, and outputs you can drop directly into a paper or presentation. Zero setup required.
+
+| Feature | This Repo | K-Dense Web |
+|---------|-----------|-------------|
+| Scientific Skills | 148 skills | **200+ skills** (exclusive access) |
+| Setup | Manual installation | **Zero setup, works instantly** |
+| Compute | Your machine | **Cloud GPUs and HPC included** |
+| Workflows | Prompt and code | **End-to-end research pipelines** |
+| Outputs | Code and analysis | **Publication-ready figures, reports, and papers** |
+| Integrations | Local tools | **Lab systems, ELNs, and cloud storage** |
+
+> *"K-Dense Web took me from raw sequencing data to a draft figure in one afternoon. What used to take three days of environment setup and scripting now just works."*
+> **Computational biologist, drug discovery**
+
+> ### 💰 $50 in free credits, no credit card required
+> Start running real scientific workflows in minutes.
+>
+> **[Try K-Dense Web free](https://k-dense.ai)**
+
+*[k-dense.ai](https://k-dense.ai) | [Read the full comparison](https://k-dense.ai/blog/k-dense-web-vs-claude-scientific-skills)*
 
 ---
 
@@ -376,6 +395,8 @@ networks, and search GEO for similar patterns.
 This repository contains **148 scientific and research skills** organized across multiple domains. Each skill provides comprehensive documentation, code examples, and best practices for working with scientific libraries, databases, and tools.
 
 ### Skill Categories
+
+> **Note:** The Python package and integration skills listed below are *explicitly defined* skills — curated with documentation, examples, and best practices for stronger, more reliable performance. They are not a ceiling: the agent can install and use *any* Python package or call *any* API, even without a dedicated skill. The skills listed simply make common workflows faster and more dependable.
 
 #### 🧬 **Bioinformatics & Genomics** (16+ skills)
 - Sequence analysis: BioPython, pysam, scikit-bio, BioServices
@@ -464,7 +485,8 @@ This repository contains **148 scientific and research skills** organized across
 - Citations: Citation Management
 - Illustration: Generate Image (AI image generation with FLUX.2 Pro and Gemini 3 Pro (Nano Banana Pro))
 
-#### 🔬 **Scientific Databases** (28+ skills)
+#### 🔬 **Scientific Databases** (28+ dedicated skills → 250+ databases total)
+> These 28+ skills each provide direct, optimized access to a named database. Collectively, however, these skills unlock **250+ databases and data sources** — multi-database packages like BioServices (~40 bioinformatics services + 30+ PSICQUIC interaction databases), BioPython (38 NCBI sub-databases via Entrez), and gget (20+ genomics databases) add far more coverage beyond what's listed here.
 - Protein: UniProt, PDB, AlphaFold DB
 - Chemical: PubChem, ChEMBL, DrugBank, ZINC, HMDB
 - Genomic: Ensembl, NCBI Gene, GEO, ENA, GWAS Catalog
