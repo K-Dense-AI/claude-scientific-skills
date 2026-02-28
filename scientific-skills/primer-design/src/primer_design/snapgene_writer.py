@@ -90,7 +90,8 @@ def _build_features_block(features: list[dict]) -> bytes:
     Each feature dict:
         name, type, start (0-based), end (0-based, inclusive),
         strand (1=fwd, 2=rev), color, translated (bool),
-        translation (str), qualifiers (list of (name, value) tuples)
+        translation (str), description (str, shown in SnapGene UI),
+        qualifiers (list of (name, value) tuples)
     """
     root = ET.Element("Features")
     for i, feat in enumerate(features):
@@ -104,6 +105,9 @@ def _build_features_block(features: list[dict]) -> bytes:
         strand = feat.get("strand", 1)
         if strand in (1, 2):
             attrs["directionality"] = str(strand)
+
+        if feat.get("description"):
+            attrs["description"] = feat["description"]
 
         if feat.get("translated"):
             prot = feat.get("translation", "")
@@ -427,13 +431,13 @@ def _write_recombinant_plasmid(
 
     protein = protein.rstrip("*")
 
-    # Gene description qualifiers
+    # Gene description
     cds_qualifiers: list[tuple[str, str]] = []
     if gene_description:
         cds_qualifiers.append(("product", gene_description))
         cds_qualifiers.append(("note", gene_description))
 
-    new_features.append({
+    cds_feat: dict = {
         "name": gene_name,
         "type": "CDS",
         "start": cds_start,
@@ -443,7 +447,10 @@ def _write_recombinant_plasmid(
         "translated": True,
         "translation": protein,
         "qualifiers": cds_qualifiers,
-    })
+    }
+    if gene_description:
+        cds_feat["description"] = gene_description
+    new_features.append(cds_feat)
 
     # ── 7. Add cloning primer binding sites ────────────────────────────────
     # Insert region boundaries (before C-terminal extension)
@@ -619,7 +626,7 @@ def _write_pcr_product(
     if gene_description:
         cds_qualifiers.append(("product", gene_description))
         cds_qualifiers.append(("note", gene_description))
-    features.append({
+    cds_feat: dict = {
         "name": gene_name,
         "type": "CDS",
         "start": insert_start,
@@ -629,7 +636,10 @@ def _write_pcr_product(
         "translated": True,
         "translation": protein,
         "qualifiers": cds_qualifiers,
-    })
+    }
+    if gene_description:
+        cds_feat["description"] = gene_description
+    features.append(cds_feat)
 
     # 3' RE site (reverse strand)
     re3_end_pos = total_len - prot3_len - 1
