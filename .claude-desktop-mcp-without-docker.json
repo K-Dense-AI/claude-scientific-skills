@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "YOUR_BRAVE_API_KEY_HERE"
+      }
+    },
+    "claude-skills-scientific": {
+      "command": "uvx",
+      "args": [
+        "claude-skills-mcp",
+        "--config",
+        "/home/user/claude-scientific-skills/mcp-config.json"
+      ]
+    }
+  }
+}

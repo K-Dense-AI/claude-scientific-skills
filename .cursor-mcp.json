@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "claude-skills-scientific": {
+      "command": "uvx",
+      "args": [
+        "claude-skills-mcp",
+        "--config",
+        "/home/user/claude-scientific-skills/mcp-config.json"
+      ],
+      "description": "Claude Scientific Skills MCP Server - Access 83+ scientific packages, databases, and methodologies"
+    }
+  }
+}

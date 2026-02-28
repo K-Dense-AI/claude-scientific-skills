@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "claude-skills-scientific": {
+      "command": "uvx",
+      "args": [
+        "claude-skills-mcp",
+        "--config",
+        "/home/user/claude-scientific-skills/mcp-config.json"
+      ]
+    }
+  }
+}
