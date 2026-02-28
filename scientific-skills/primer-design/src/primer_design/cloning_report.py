@@ -1,9 +1,10 @@
-"""RE Cloning primer design report image generator (matplotlib).
+"""RE Cloning primer design report & vector construct map (matplotlib).
 
 design_re_cloning_primers() 결과를 시각적 리포트(PNG)로 생성.
 - 프라이머 구조 다이어그램 (protection / RE / spacer / annealing 색상 구분)
 - QC 요약 테이블
 - 클로닝 construct 맵
+- Circular vector construct map (원형 플라스미드 맵)
 """
 
 from __future__ import annotations
@@ -16,7 +17,8 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import FancyBboxPatch, Arc, Wedge
+import numpy as np
 
 # ── Color scheme ─────────────────────────────────────────────────────────────
 
@@ -670,3 +672,374 @@ def _draw_construct_map(ax, dr: dict, gene_name: str):
             fontsize=7.5, fontfamily=_FONT_SANS, va="center", color="#555",
         )
         x_legend += 1.5
+
+
+# ── Backbone feature data for supported vectors ─────────────────────────────
+# Angular fractions (0 = top/12 o'clock, clockwise) + approximate sizes
+# Based on GenBank annotations for each vector series.
+
+_BACKBONE_FEATURES: dict[str, dict] = {
+    "pET-28a(+)": {
+        "total_bp": 5369,
+        "resistance": "KanR",
+        "features": [
+            # (name, frac_start, frac_span, color, label_side)
+            ("T7 promoter",    0.065, 0.010, "#E74C3C", "out"),
+            ("lac operator",   0.076, 0.008, "#E67E22", "out"),
+            ("RBS",            0.085, 0.004, "#F39C12", "out"),
+            ("T7 terminator",  0.005, 0.015, "#C0392B", "out"),
+            ("lacI",           0.14,  0.20,  "#95A5A6", "out"),
+            ("KanR",           0.74,  0.15,  "#E74C3C", "out"),
+            ("f1 ori",         0.91,  0.08,  "#3498DB", "out"),
+            ("pBR322 ori",     0.61,  0.12,  "#2980B9", "out"),
+        ],
+    },
+    "pET-21a(+)": {
+        "total_bp": 5443,
+        "resistance": "AmpR",
+        "features": [
+            ("T7 promoter",    0.065, 0.010, "#E74C3C", "out"),
+            ("lac operator",   0.076, 0.008, "#E67E22", "out"),
+            ("RBS",            0.085, 0.004, "#F39C12", "out"),
+            ("T7 terminator",  0.005, 0.015, "#C0392B", "out"),
+            ("lacI",           0.14,  0.20,  "#95A5A6", "out"),
+            ("AmpR",           0.72,  0.16,  "#E74C3C", "out"),
+            ("f1 ori",         0.91,  0.08,  "#3498DB", "out"),
+            ("pBR322 ori",     0.61,  0.10,  "#2980B9", "out"),
+        ],
+    },
+    "pMAL-c6T": {
+        "total_bp": 6721,
+        "resistance": "AmpR",
+        "features": [
+            ("Ptac promoter",  0.065, 0.010, "#E74C3C", "out"),
+            ("malE (MBP)",     0.08,  0.17,  "#8E44AD", "out"),
+            ("TEV site",       0.25,  0.005, "#F39C12", "out"),
+            ("rrnB terminator",0.005, 0.015, "#C0392B", "out"),
+            ("AmpR",           0.72,  0.14,  "#E74C3C", "out"),
+            ("pBR322 ori",     0.58,  0.10,  "#2980B9", "out"),
+            ("lacIq",          0.38,  0.15,  "#95A5A6", "out"),
+        ],
+    },
+}
+
+# Duet vectors reuse pET backbone layout
+for _duet in ("pETDuet-1:MCS1", "pETDuet-1:MCS2",
+              "pACYCDuet-1:MCS1", "pACYCDuet-1:MCS2"):
+    _res = "CmR" if "pACYC" in _duet else "AmpR"
+    _BACKBONE_FEATURES[_duet] = {
+        "total_bp": 5420 if "pET" in _duet else 4008,
+        "resistance": _res,
+        "features": [
+            ("T7 promoter",  0.065, 0.010, "#E74C3C", "out"),
+            ("T7 terminator",0.005, 0.015, "#C0392B", "out"),
+            ("lacI",         0.14,  0.20,  "#95A5A6", "out"),
+            (_res,           0.72,  0.15,  "#E74C3C", "out"),
+            ("ori",          0.61,  0.10,  "#2980B9", "out"),
+        ],
+    }
+
+
+# ── Color palette for construct map ──────────────────────────────────────────
+
+_CM = {
+    "backbone":    "#B0BEC5",
+    "insert":      "#2ECC71",
+    "tag":         "#9B59B6",
+    "re_site":     "#E74C3C",
+    "promoter":    "#E74C3C",
+    "resistance":  "#E74C3C",
+    "origin":      "#3498DB",
+    "regulatory":  "#95A5A6",
+    "signal_pep":  "#F39C12",
+}
+
+
+# ── Public API: Circular Vector Construct Map ────────────────────────────────
+
+def generate_vector_construct_map(
+    vector_name: str,
+    gene_name: str = "Insert",
+    insert_len: int = 0,
+    re_5prime: str = "",
+    re_3prime: str = "",
+    include_stop: bool = False,
+    frame_check: dict | None = None,
+    signal_peptide: dict | None = None,
+    output_path: Path | str | None = None,
+) -> Path:
+    """Circular vector construct map (원형 플라스미드 맵) PNG 생성.
+
+    Parameters
+    ----------
+    vector_name : str
+        벡터 이름 (예: "pET-28a(+)")
+    gene_name : str
+        삽입 유전자 이름
+    insert_len : int
+        Insert 길이 (bp)
+    re_5prime, re_3prime : str
+        5'/3' restriction enzyme 이름
+    include_stop : bool
+        Insert에 stop codon 포함 여부
+    frame_check : dict | None
+        check_reading_frame() 결과
+    signal_peptide : dict | None
+        signal peptide 분석 결과 (has_signal_peptide, cleavage_site_estimate 등)
+    output_path : Path | str | None
+        출력 파일 경로 (.png)
+
+    Returns
+    -------
+    Path : 생성된 PNG 파일 경로
+    """
+    if output_path is None:
+        output_path = Path.cwd() / f"{gene_name}_{vector_name.replace('(', '').replace(')', '').replace('+', '')}_construct.png"
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10), facecolor="white")
+    ax.set_xlim(-1.6, 1.6)
+    ax.set_ylim(-1.6, 1.6)
+    ax.set_aspect("equal")
+    ax.set_axis_off()
+
+    # ── Get vector data ─────────────────────────────────────────────────
+    # Try to resolve canonical name for backbone lookup
+    backbone = None
+    for canon_name, bb_data in _BACKBONE_FEATURES.items():
+        if canon_name.lower().replace(" ", "").replace("-", "").replace("(", "").replace(")", "").replace("+", "") == \
+           vector_name.lower().replace(" ", "").replace("-", "").replace("(", "").replace(")", "").replace("+", ""):
+            backbone = bb_data
+            break
+    if backbone is None:
+        # Fallback: generic E. coli expression vector
+        backbone = {
+            "total_bp": 5000,
+            "resistance": "AmpR",
+            "features": [
+                ("Promoter",    0.065, 0.010, "#E74C3C", "out"),
+                ("Terminator",  0.005, 0.015, "#C0392B", "out"),
+                ("AmpR",        0.72,  0.15,  "#E74C3C", "out"),
+                ("ori",         0.61,  0.10,  "#2980B9", "out"),
+            ],
+        }
+
+    total_bp = backbone["total_bp"] + insert_len
+    R = 1.0  # backbone circle radius
+    lw_backbone = 10
+    lw_feature = 14
+    lw_insert = 18
+
+    # ── Draw backbone circle ─────────────────────────────────────────────
+    circle = plt.Circle((0, 0), R, fill=False, edgecolor=_CM["backbone"],
+                         linewidth=lw_backbone, zorder=1)
+    ax.add_patch(circle)
+
+    # ── Helper: fraction → angle (0=top, clockwise) → matplotlib angle ──
+    def frac_to_angle(frac):
+        """Fraction (0=top, clockwise) to matplotlib angle (degrees, CCW from right)."""
+        return 90 - frac * 360
+
+    def draw_arc(frac_start, frac_span, radius, color, linewidth, zorder=2):
+        """Draw a colored arc on the circle."""
+        angle_start = frac_to_angle(frac_start + frac_span)
+        angle_end = frac_to_angle(frac_start)
+        theta = np.linspace(np.radians(angle_start), np.radians(angle_end), 100)
+        x = radius * np.cos(theta)
+        y = radius * np.sin(theta)
+        ax.plot(x, y, color=color, linewidth=linewidth, solid_capstyle="round", zorder=zorder)
+
+    def label_at_frac(frac, text, radius_offset=0.18, fontsize=8, color="#333",
+                      fontweight="normal", ha_override=None):
+        """Place a label at a fraction position, pointing outward."""
+        angle_rad = np.radians(frac_to_angle(frac))
+        r_label = R + radius_offset
+        x = r_label * np.cos(angle_rad)
+        y = r_label * np.sin(angle_rad)
+
+        # Determine horizontal alignment based on position
+        if ha_override:
+            ha = ha_override
+        elif abs(x) < 0.05:
+            ha = "center"
+        elif x > 0:
+            ha = "left"
+        else:
+            ha = "right"
+
+        ax.text(x, y, text, fontsize=fontsize, fontweight=fontweight,
+                fontfamily=_FONT_SANS, color=color, ha=ha, va="center",
+                zorder=10)
+
+    def tick_at_frac(frac, radius, length=0.04, color="#555", lw=1.5):
+        """Draw a small radial tick mark."""
+        angle_rad = np.radians(frac_to_angle(frac))
+        x1 = (radius - length / 2) * np.cos(angle_rad)
+        y1 = (radius - length / 2) * np.sin(angle_rad)
+        x2 = (radius + length / 2) * np.cos(angle_rad)
+        y2 = (radius + length / 2) * np.sin(angle_rad)
+        ax.plot([x1, x2], [y1, y2], color=color, linewidth=lw, zorder=5)
+
+    # ── Insert region ────────────────────────────────────────────────────
+    # Place insert at the top of the circle (fraction ~0.92 to ~0.08)
+    insert_frac = insert_len / total_bp if total_bp > 0 else 0.1
+    insert_frac = max(insert_frac, 0.06)  # minimum visibility
+    insert_start_frac = 1.0 - insert_frac / 2  # centered at top
+
+    # Draw insert arc (thick, green)
+    draw_arc(insert_start_frac, insert_frac, R, _CM["insert"], lw_insert, zorder=3)
+
+    # Insert label
+    insert_mid = (insert_start_frac + insert_frac / 2) % 1.0
+    label_at_frac(insert_mid, f"{gene_name}\n({insert_len} bp)",
+                  radius_offset=0.22, fontsize=11, color="#1B5E20",
+                  fontweight="bold")
+
+    # ── RE site markers ──────────────────────────────────────────────────
+    if re_5prime:
+        tick_at_frac(insert_start_frac, R, length=0.08, color=_CM["re_site"], lw=2.5)
+        label_at_frac(insert_start_frac, re_5prime,
+                      radius_offset=0.14, fontsize=8, color=_CM["re_site"],
+                      fontweight="bold")
+
+    if re_3prime:
+        re3_frac = (insert_start_frac + insert_frac) % 1.0
+        tick_at_frac(re3_frac, R, length=0.08, color=_CM["re_site"], lw=2.5)
+        label_at_frac(re3_frac, re_3prime,
+                      radius_offset=0.14, fontsize=8, color=_CM["re_site"],
+                      fontweight="bold")
+
+    # ── N-terminal / C-terminal tags (from frame_check) ──────────────────
+    if frame_check:
+        topology = frame_check.get("topology", "")
+        # Parse tag info from topology string
+        # N-terminal tags are before (RE5), C-terminal tags after (RE3)
+
+        # Draw small tag arcs adjacent to the insert
+        tag_frac_size = 0.015  # small arc for tags
+
+        # N-terminal tags (before insert)
+        n_tags = []
+        if "[N-His6]" in topology:
+            n_tags.append("N-His6")
+        if "[Thrombin]" in topology:
+            n_tags.append("Thrombin")
+        if "[T7-tag]" in topology:
+            n_tags.append("T7-tag")
+
+        for i, tag in enumerate(n_tags):
+            tag_start = insert_start_frac - (i + 1) * tag_frac_size
+            draw_arc(tag_start, tag_frac_size, R, _CM["tag"], lw_feature, zorder=3)
+            if i == 0:  # only label the first/nearest tag
+                label_at_frac(tag_start + tag_frac_size / 2,
+                              " + ".join(n_tags),
+                              radius_offset=0.15, fontsize=7.5, color="#6A1B9A")
+
+        # C-terminal tags (after insert)
+        c_tags = []
+        if "[C-His6]" in topology and ":OUT-OF-FRAME" not in topology:
+            c_tags.append("C-His6")
+        if "[S-tag]" in topology and ":OUT-OF-FRAME" not in topology:
+            c_tags.append("S-tag")
+
+        for i, tag in enumerate(c_tags):
+            tag_start = (insert_start_frac + insert_frac + i * tag_frac_size) % 1.0
+            draw_arc(tag_start, tag_frac_size, R, _CM["tag"], lw_feature, zorder=3)
+            if i == 0:
+                label_at_frac((tag_start + tag_frac_size / 2) % 1.0,
+                              " + ".join(c_tags),
+                              radius_offset=0.15, fontsize=7.5, color="#6A1B9A")
+
+    # ── Signal peptide region (within insert) ─────────────────────────────
+    if signal_peptide and signal_peptide.get("has_signal_peptide"):
+        cleavage = signal_peptide.get("cleavage_site_estimate", 20)
+        if cleavage and insert_len > 0:
+            sp_bp = cleavage * 3  # approximate bp for signal peptide
+            sp_frac = (sp_bp / total_bp) if total_bp > 0 else 0.02
+            sp_frac = min(sp_frac, insert_frac * 0.4)  # max 40% of insert arc
+            # Draw signal peptide as a distinct color within the insert arc
+            draw_arc(insert_start_frac, sp_frac, R, _CM["signal_pep"], lw_insert - 2, zorder=4)
+            # Add "scissors" annotation for cleavage site
+            sp_end_frac = (insert_start_frac + sp_frac) % 1.0
+            tick_at_frac(sp_end_frac, R, length=0.10, color="#D35400", lw=2)
+            sp_angle = np.radians(frac_to_angle(sp_end_frac))
+            sx = (R + 0.08) * np.cos(sp_angle)
+            sy = (R + 0.08) * np.sin(sp_angle)
+            ax.text(sx, sy, "\u2702", fontsize=14, ha="center", va="center",
+                    color="#D35400", zorder=10)
+            label_at_frac((insert_start_frac + sp_frac / 2) % 1.0,
+                          f"SP ({cleavage} aa)",
+                          radius_offset=-0.18, fontsize=7.5, color="#D35400",
+                          fontweight="bold")
+
+    # ── Backbone features ────────────────────────────────────────────────
+    for feat_name, f_start, f_span, f_color, _ in backbone["features"]:
+        draw_arc(f_start, f_span, R, f_color, lw_feature, zorder=2)
+        label_at_frac(f_start + f_span / 2, feat_name,
+                      radius_offset=0.18, fontsize=7.5, color="#444")
+
+    # ── Center text ──────────────────────────────────────────────────────
+    ax.text(0, 0.12, vector_name, fontsize=16, fontweight="bold",
+            ha="center", va="center", fontfamily=_FONT_SANS, color="#1A237E")
+    ax.text(0, -0.05, f"+ {gene_name}", fontsize=12,
+            ha="center", va="center", fontfamily=_FONT_SANS, color="#2E7D32")
+    ax.text(0, -0.22, f"{total_bp:,} bp", fontsize=11,
+            ha="center", va="center", fontfamily=_FONT, color="#555")
+
+    # ── Frame status indicator ───────────────────────────────────────────
+    if frame_check:
+        in5 = frame_check.get("in_frame_5prime", False)
+        in3 = frame_check.get("in_frame_3prime", False)
+        mark5 = "\u2713" if in5 else "\u2717"
+        mark3 = "\u2713" if in3 else "\u2717"
+        c5 = _CM["insert"] if in5 else _CM["re_site"]
+        c3 = _CM["insert"] if in3 else _CM["re_site"]
+
+        ax.text(0, -0.42, f"5' frame: {mark5}  |  3' frame: {mark3}",
+                fontsize=9, ha="center", va="center", fontfamily=_FONT_SANS,
+                color="#555")
+
+    # ── Direction arrow (clockwise) ──────────────────────────────────────
+    arrow_frac = 0.5  # bottom of circle
+    arrow_angle = np.radians(frac_to_angle(arrow_frac))
+    ax.annotate("",
+                xy=((R + 0.02) * np.cos(arrow_angle + 0.05),
+                    (R + 0.02) * np.sin(arrow_angle + 0.05)),
+                xytext=((R + 0.02) * np.cos(arrow_angle - 0.05),
+                        (R + 0.02) * np.sin(arrow_angle - 0.05)),
+                arrowprops=dict(arrowstyle="->", color="#888", lw=1.5),
+                zorder=5)
+
+    # ── Date ─────────────────────────────────────────────────────────────
+    ax.text(0, -0.58, f"Generated: {date.today().isoformat()}",
+            fontsize=7, ha="center", va="center", fontfamily=_FONT,
+            color="#999")
+
+    # ── Legend ────────────────────────────────────────────────────────────
+    legend_items = [
+        (_CM["insert"], "Insert CDS"),
+        (_CM["tag"], "Fusion tag"),
+        (_CM["re_site"], "Promoter / Resistance"),
+        (_CM["origin"], "Origin of replication"),
+        (_CM["regulatory"], "Regulatory"),
+    ]
+    if signal_peptide and signal_peptide.get("has_signal_peptide"):
+        legend_items.insert(1, (_CM["signal_pep"], "Signal peptide"))
+
+    legend_y = -1.35
+    legend_x_start = -1.2
+    for i, (lc, lt) in enumerate(legend_items):
+        x = legend_x_start + i * 0.55
+        ax.add_patch(FancyBboxPatch(
+            (x, legend_y - 0.03), 0.08, 0.06,
+            boxstyle="round,pad=0.01",
+            facecolor=lc, edgecolor="#999", linewidth=0.5,
+        ))
+        ax.text(x + 0.10, legend_y, lt, fontsize=6.5,
+                fontfamily=_FONT_SANS, va="center", color="#555")
+
+    fig.savefig(str(output_path), dpi=150, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+    return output_path
