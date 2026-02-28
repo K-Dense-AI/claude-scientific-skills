@@ -63,12 +63,12 @@ def design_re_cloning_primers(
     target_tm: float = 62.0,
     gene_name: str = "Insert",
     output_dir: str | None = None,
+    generate_report_png: bool = False,
 ) -> dict:
     """Design RE cloning primers for inserting a CDS into an expression vector.
 
-    When output_dir is provided, automatically generates:
-      - Report image (PNG): visual primer design report with QC table and construct map
-      - SnapGene file (.dna): PCR product construct with annotated features
+    Automatically generates a SnapGene .dna construct file (output_dir or CWD).
+    Optionally generates a PNG report when generate_report_png=True.
 
     Args:
         insert_seq: Insert CDS sequence (DNA, ATG to stop). Spaces are stripped.
@@ -79,12 +79,13 @@ def design_re_cloning_primers(
         include_stop_codon: Include stop codon in reverse primer (default False).
         target_tm: Target annealing Tm in Celsius (default 62.0).
         gene_name: Gene name for labeling report and SnapGene features (default "Insert").
-        output_dir: Output directory for report PNG and SnapGene .dna file.
-            If not provided, no files are generated.
+        output_dir: Output directory for generated files.
+            Defaults to current working directory.
+        generate_report_png: Generate a visual PNG report (default False).
 
     Returns:
         dict with F/R primer sequences, Tm, GC%, QC results, frame check, warnings,
-        and (if output_dir given) report_image_path and snapgene_path.
+        snapgene_path, and optionally report_image_path.
     """
     clean_seq = insert_seq.replace(" ", "")
     logger.info(
@@ -101,21 +102,45 @@ def design_re_cloning_primers(
         include_stop_codon=include_stop_codon,
     )
 
-    # ── Generate report image & SnapGene file when output_dir is given ────
-    if output_dir:
-        out = Path(output_dir)
-        out.mkdir(parents=True, exist_ok=True)
+    # ── Output directory (always generate files) ──────────────────────────
+    out = Path(output_dir) if output_dir else Path.cwd()
+    out.mkdir(parents=True, exist_ok=True)
 
-        safe_name = gene_name.replace(" ", "_")
-        # Include vector name in filename (sanitize parentheses/colons)
-        if vector_name:
-            safe_vec = (vector_name
-                        .replace("(", "").replace(")", "")
-                        .replace(":", "-").replace(" ", "_"))
-            base = f"{safe_name}_{safe_vec}_{re_5prime}_{re_3prime}"
+    safe_name = gene_name.replace(" ", "_")
+    if vector_name:
+        safe_vec = (vector_name
+                    .replace("(", "").replace(")", "")
+                    .replace(":", "-").replace(" ", "_"))
+        base = f"{safe_name}_{safe_vec}_{re_5prime}_{re_3prime}"
+    else:
+        base = f"{safe_name}_{re_5prime}_{re_3prime}"
+
+    # ── Always generate SnapGene .dna construct file ──────────────────────
+    try:
+        from .snapgene_writer import write_cloning_construct
+        from .vector_dna_config import get_vector_dna_path
+
+        vec_dna = get_vector_dna_path(vector_name) if vector_name else None
+        if vec_dna:
+            logger.info("Using base vector: %s", vec_dna)
         else:
-            base = f"{safe_name}_{re_5prime}_{re_3prime}"
+            logger.info("No vector .dna file found; generating PCR product only")
 
+        dna_path = write_cloning_construct(
+            design_result=result,
+            insert_seq=clean_seq,
+            output_path=out / f"{base}_construct.dna",
+            gene_name=gene_name,
+            vector_dna_path=vec_dna,
+        )
+        result["snapgene_path"] = str(dna_path)
+        logger.info("SnapGene file: %s", dna_path)
+    except Exception as exc:
+        logger.error("SnapGene generation failed: %s", exc)
+        result["snapgene_error"] = str(exc)
+
+    # ── Optional PNG report ───────────────────────────────────────────────
+    if generate_report_png:
         try:
             from .cloning_report import generate_cloning_report
 
@@ -129,30 +154,6 @@ def design_re_cloning_primers(
         except Exception as exc:
             logger.error("Report generation failed: %s", exc)
             result["report_image_error"] = str(exc)
-
-        try:
-            from .snapgene_writer import write_cloning_construct
-            from .vector_dna_config import get_vector_dna_path
-
-            # Look up base vector .dna file for in-silico cloning
-            vec_dna = get_vector_dna_path(vector_name) if vector_name else None
-            if vec_dna:
-                logger.info("Using base vector: %s", vec_dna)
-            else:
-                logger.info("No vector .dna file found; generating PCR product only")
-
-            dna_path = write_cloning_construct(
-                design_result=result,
-                insert_seq=clean_seq,
-                output_path=out / f"{base}_construct.dna",
-                gene_name=gene_name,
-                vector_dna_path=vec_dna,
-            )
-            result["snapgene_path"] = str(dna_path)
-            logger.info("SnapGene file: %s", dna_path)
-        except Exception as exc:
-            logger.error("SnapGene generation failed: %s", exc)
-            result["snapgene_error"] = str(exc)
 
     # ── Expression viability check ──────────────────────────────────────
     try:
