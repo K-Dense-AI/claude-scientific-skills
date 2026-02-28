@@ -20,6 +20,9 @@ Hairpin 회피:
   FAIL 시 대안 annealing 길이로 자동 재시도 (2-pass).
 """
 
+import os
+from pathlib import Path
+
 from Bio.Seq import Seq
 from Bio.SeqUtils.MeltingTemp import Tm_NN
 
@@ -391,10 +394,10 @@ def _run_tests():
             i += 5 + blen
         return sequence
 
-    dna_file = (
-        r"C:\Users\Jahyun\OneDrive - 고려대학교\저장소"
-        r"\8. D-Gal to MA and D-tagatose\Genes\251229"
-        r"\Cloned_fdh_nt_inpetduet-DESKTOP-LCOF517.dna"
+    dna_file = str(
+        Path.home() / "OneDrive - 고려대학교" / "저장소"
+        / "8. D-Gal to MA and D-tagatose" / "Genes" / "251229"
+        / "Cloned_fdh_nt_inpetduet-DESKTOP-LCOF517.dna"
     )
 
     if not os.path.exists(dna_file):

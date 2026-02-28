@@ -23,6 +23,7 @@ Offset (actual_pos = sixkey_pos + offset):
 """
 
 import os
+from pathlib import Path
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -770,9 +771,9 @@ def generate_report(all_results, output_path):
 # ══════════════════════════════════════════════════════════════════════════
 
 def main():
-    base_dir = (
-        r"C:\Users\Jahyun\OneDrive - 고려대학교\저장소"
-        r"\9. 한미해조류_해수부\Uronate dehydrogenase (UDH)"
+    base_dir = str(
+        Path.home() / "OneDrive - 고려대학교" / "저장소"
+        / "9. 한미해조류_해수부" / "Uronate dehydrogenase (UDH)"
     )
 
     designer = UdhMutagenesisDesigner(base_dir)
