@@ -64,6 +64,7 @@ def design_re_cloning_primers(
     include_stop_codon: bool = False,
     target_tm: float = 62.0,
     gene_name: str = "Insert",
+    gene_description: str = "",
     output_dir: str | None = None,
     generate_report_png: bool = False,
 ) -> dict:
@@ -81,6 +82,8 @@ def design_re_cloning_primers(
         include_stop_codon: Include stop codon in reverse primer (default False).
         target_tm: Target annealing Tm in Celsius (default 62.0).
         gene_name: Gene name for labeling report and SnapGene features (default "Insert").
+        gene_description: Gene product description (e.g. "beta-galactosidase").
+            Added as /note qualifier on CDS in SnapGene .dna file.
         output_dir: Output directory for generated files.
             Defaults to current working directory.
         generate_report_png: Generate a visual PNG report (default False).
@@ -117,6 +120,24 @@ def design_re_cloning_primers(
     else:
         base = f"{safe_name}_{re_5prime}_{re_3prime}"
 
+    # ── Colony PCR primer suggestion (for .dna annotation) ──────────────
+    colony_pcr_result = None
+    if vector_name:
+        try:
+            colony_pcr_result = _colony_designer.suggest(
+                vector_name=vector_name,
+                insert_length_bp=len(clean_seq),
+            )
+            result["colony_pcr"] = colony_pcr_result
+            logger.info(
+                "Colony PCR: %s / %s (band: %d bp)",
+                colony_pcr_result["f_name"],
+                colony_pcr_result["r_name"],
+                colony_pcr_result["expected_band_with_insert"],
+            )
+        except Exception as exc:
+            logger.warning("Colony PCR suggest skipped: %s", exc)
+
     # ── Always generate SnapGene .dna construct file ──────────────────────
     try:
         from .snapgene_writer import write_cloning_construct
@@ -134,6 +155,8 @@ def design_re_cloning_primers(
             output_path=out / f"{base}_construct.dna",
             gene_name=gene_name,
             vector_dna_path=vec_dna,
+            gene_description=gene_description,
+            colony_pcr=colony_pcr_result,
         )
         result["snapgene_path"] = str(dna_path)
         logger.info("SnapGene file: %s", dna_path)
