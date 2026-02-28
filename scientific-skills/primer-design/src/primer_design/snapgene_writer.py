@@ -225,6 +225,8 @@ def write_cloning_construct(
     output_path: Path | str,
     gene_name: str = "Insert",
     vector_dna_path: str | Path | None = None,
+    gene_description: str = "",
+    colony_pcr: dict | None = None,
 ) -> Path:
     """Write a SnapGene .dna file for the RE cloning result.
 
@@ -246,6 +248,13 @@ def write_cloning_construct(
     vector_dna_path : str, Path, or None
         Path to the base vector ``.dna`` file. When provided, generates
         a full recombinant plasmid. When None, generates PCR product only.
+    gene_description : str
+        Gene product description (e.g. "beta-galactosidase").
+        Added as /note qualifier on the CDS feature.
+    colony_pcr : dict or None
+        Colony PCR primer info from ColonyPCRDesigner.suggest().
+        When provided, primer_bind features for colony PCR primers
+        are added to the construct.
 
     Returns
     -------
@@ -258,10 +267,13 @@ def write_cloning_construct(
         return _write_recombinant_plasmid(
             design_result, insert_seq, output_path, gene_name,
             Path(vector_dna_path),
+            gene_description=gene_description,
+            colony_pcr=colony_pcr,
         )
     else:
         return _write_pcr_product(
             design_result, insert_seq, output_path, gene_name,
+            gene_description=gene_description,
         )
 
 
@@ -271,6 +283,8 @@ def _write_recombinant_plasmid(
     output_path: Path,
     gene_name: str,
     vector_path: Path,
+    gene_description: str = "",
+    colony_pcr: dict | None = None,
 ) -> Path:
     """In-silico cloning: insert CDS into base vector."""
 
@@ -413,6 +427,12 @@ def _write_recombinant_plasmid(
 
     protein = protein.rstrip("*")
 
+    # Gene description qualifiers
+    cds_qualifiers: list[tuple[str, str]] = []
+    if gene_description:
+        cds_qualifiers.append(("product", gene_description))
+        cds_qualifiers.append(("note", gene_description))
+
     new_features.append({
         "name": gene_name,
         "type": "CDS",
@@ -422,9 +442,68 @@ def _write_recombinant_plasmid(
         "color": "#66bb6a",
         "translated": True,
         "translation": protein,
+        "qualifiers": cds_qualifiers,
     })
 
-    # ── 7. Write .dna file ────────────────────────────────────────────────
+    # ── 7. Add cloning primer binding sites ────────────────────────────────
+    # Insert region boundaries (before C-terminal extension)
+    ins_start = gap_start + (len(sp3) + (3 if include_stop else 0) if is_reverse else len(sp5))
+    ins_end = ins_start + len(insert_seq) - 1
+
+    f_ann_len = dr.get("f_ann_len", 0)
+    r_ann_len = dr.get("r_ann_len", 0)
+
+    if f_ann_len > 0:
+        if is_reverse:
+            # Forward primer anneals at 5' end of insert (high pos on top strand)
+            new_features.append({
+                "name": f"F_{gene_name}",
+                "type": "primer_bind",
+                "start": ins_end - f_ann_len + 1,
+                "end": ins_end,
+                "strand": 2,  # same direction as CDS
+                "color": "#42a5f5",
+                "qualifiers": [("note", dr.get("f_full", ""))],
+            })
+        else:
+            new_features.append({
+                "name": f"F_{gene_name}",
+                "type": "primer_bind",
+                "start": ins_start,
+                "end": ins_start + f_ann_len - 1,
+                "strand": 1,
+                "color": "#42a5f5",
+                "qualifiers": [("note", dr.get("f_full", ""))],
+            })
+
+    if r_ann_len > 0:
+        if is_reverse:
+            # Reverse primer anneals at 3' end of insert (low pos on top strand)
+            new_features.append({
+                "name": f"R_{gene_name}",
+                "type": "primer_bind",
+                "start": ins_start,
+                "end": ins_start + r_ann_len - 1,
+                "strand": 1,  # opposite to CDS
+                "color": "#42a5f5",
+                "qualifiers": [("note", dr.get("r_full", ""))],
+            })
+        else:
+            new_features.append({
+                "name": f"R_{gene_name}",
+                "type": "primer_bind",
+                "start": ins_end - r_ann_len + 1,
+                "end": ins_end,
+                "strand": 2,
+                "color": "#42a5f5",
+                "qualifiers": [("note", dr.get("r_full", ""))],
+            })
+
+    # ── 8. Add colony PCR primer binding sites ─────────────────────────────
+    if colony_pcr:
+        _add_colony_pcr_primers(new_features, new_seq, colony_pcr)
+
+    # ── 9. Write .dna file ────────────────────────────────────────────────
     file_data = _build_cookie()
     file_data += _build_sequence_block(new_seq, circular=True)
     file_data += _build_features_block(new_features)
@@ -435,11 +514,63 @@ def _write_recombinant_plasmid(
     return output_path
 
 
+def _add_colony_pcr_primers(
+    features: list[dict],
+    construct_seq: str,
+    colony_pcr: dict,
+) -> None:
+    """Add colony PCR universal primer binding sites to feature list."""
+    seq_upper = construct_seq.upper()
+    seq_rc = str(Seq(construct_seq).reverse_complement()).upper()
+    seq_len = len(construct_seq)
+
+    for direction, key_name, key_seq in [
+        ("forward", "f_name", "f_seq"),
+        ("reverse", "r_name", "r_seq"),
+    ]:
+        name = colony_pcr.get(key_name, "")
+        primer_seq = colony_pcr.get(key_seq, "").upper()
+        if not name or not primer_seq:
+            continue
+
+        # Search for primer binding site on the construct
+        # Forward primer: same sequence as top strand → binds bottom strand
+        # Reverse primer: same sequence as bottom strand → binds top strand
+        idx = seq_upper.find(primer_seq)
+        if idx >= 0:
+            features.append({
+                "name": name,
+                "type": "primer_bind",
+                "start": idx,
+                "end": idx + len(primer_seq) - 1,
+                "strand": 1,
+                "color": "#ff9800",
+                "qualifiers": [("note", f"Colony PCR: {primer_seq}")],
+            })
+            continue
+
+        # Try reverse complement
+        idx_rc = seq_rc.find(primer_seq)
+        if idx_rc >= 0:
+            # Convert RC position back to top strand coordinates
+            top_start = seq_len - idx_rc - len(primer_seq)
+            features.append({
+                "name": name,
+                "type": "primer_bind",
+                "start": top_start,
+                "end": top_start + len(primer_seq) - 1,
+                "strand": 2,
+                "color": "#ff9800",
+                "qualifiers": [("note", f"Colony PCR: {primer_seq}")],
+            })
+
+
 def _write_pcr_product(
     dr: dict,
     insert_seq: str,
     output_path: Path,
     gene_name: str,
+    gene_description: str = "",
 ) -> Path:
     """Fallback: write PCR product (linear) when no vector .dna is available."""
 
@@ -484,6 +615,10 @@ def _write_pcr_product(
     insert_start = f_tail_len
     insert_end = f_tail_len + len(insert_seq) - 1
     protein = _translate(insert_seq).rstrip("*")
+    cds_qualifiers: list[tuple[str, str]] = []
+    if gene_description:
+        cds_qualifiers.append(("product", gene_description))
+        cds_qualifiers.append(("note", gene_description))
     features.append({
         "name": gene_name,
         "type": "CDS",
@@ -493,6 +628,7 @@ def _write_pcr_product(
         "color": "#66bb6a",
         "translated": True,
         "translation": protein,
+        "qualifiers": cds_qualifiers,
     })
 
     # 3' RE site (reverse strand)
