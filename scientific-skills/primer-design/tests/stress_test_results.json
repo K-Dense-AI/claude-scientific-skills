@@ -1,0 +1,15 @@
+{
+  "total_tested": 200,
+  "fetch_ok": 187,
+  "fetch_ok_pct": 93.5,
+  "design_ok": 187,
+  "design_ok_pct": 100.0,
+  "fetch_errors": 13,
+  "design_errors": 0,
+  "fetch_error_types": {
+    "No valid CDS": 13
+  },
+  "design_error_types": {},
+  "design_exception_samples": [],
+  "fetch_exception_samples": []
+}
