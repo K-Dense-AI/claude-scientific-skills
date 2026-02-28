@@ -789,7 +789,7 @@ def _search_ncbi_gene(gene_name: str, organism: str) -> int | None:
     return None
 
 
-def _fetch_cds_from_gene_id(gene_id: int) -> dict | None:
+def _fetch_cds_from_gene_id(gene_id: int, gene_name_hint: str = "") -> dict | None:
     """Fetch CDS nucleotide sequence from NCBI Gene ID."""
     from Bio import Entrez, SeqIO
 
@@ -838,6 +838,10 @@ def _fetch_cds_from_gene_id(gene_id: int) -> dict | None:
         return None
 
     # 3. Fetch GenBank and extract CDS
+    # gene name을 소문자로 비교 (lacZ, LacZ, LACZ 모두 매칭)
+    target_name = (official_name or gene_name_hint).lower()
+    fallback_cds = None  # gene name 매칭 실패 시 첫 CDS를 fallback으로 보관
+
     for nuc_id in nuc_ids[:5]:
         time.sleep(0.4)
         try:
@@ -867,9 +871,8 @@ def _fetch_cds_from_gene_id(gene_id: int) -> dict | None:
 
             product = feature.qualifiers.get("product", [""])[0]
             accession = record.id or record.name
-            logger.info("Extracted CDS: gene=%s, %d bp, %d aa", feat_gene or feat_locus, len(cds_seq), len(protein))
 
-            return {
+            cds_info = {
                 "cds_seq": cds_seq,
                 "protein_seq": protein,
                 "source": accession,
@@ -878,6 +881,33 @@ def _fetch_cds_from_gene_id(gene_id: int) -> dict | None:
                 "locus_tag": feat_locus,
             }
 
+            # Gene name 매칭: official name과 CDS의 gene qualifier 비교
+            if target_name and feat_gene.lower() == target_name:
+                logger.info(
+                    "Matched CDS by gene name '%s': %d bp, %d aa",
+                    feat_gene, len(cds_seq), len(protein),
+                )
+                return cds_info
+
+            # Single-CDS record (mRNA/RefSeq) → gene name 무관하게 사용
+            cds_count = sum(1 for f in record.features if f.type == "CDS")
+            if cds_count == 1:
+                logger.info(
+                    "Single-CDS record: gene=%s, %d bp, %d aa",
+                    feat_gene or feat_locus, len(cds_seq), len(protein),
+                )
+                return cds_info
+
+            # Fallback: 첫 유효 CDS 저장 (gene name 매칭이 안 될 경우 대비)
+            if fallback_cds is None:
+                fallback_cds = cds_info
+
+    # Gene name 매칭 실패 시 fallback 사용하지 않음 (잘못된 gene 반환 방지)
+    if fallback_cds:
+        logger.warning(
+            "No CDS matched gene name '%s'; discarding fallback '%s'",
+            target_name, fallback_cds.get("gene_name_official"),
+        )
     return None
 
 
@@ -931,7 +961,7 @@ def fetch_gene_sequence(
 
     # Step 2: Fetch CDS
     try:
-        cds_result = _fetch_cds_from_gene_id(gene_id)
+        cds_result = _fetch_cds_from_gene_id(gene_id, gene_name_hint=gene_name)
     except Exception as exc:
         return {
             "error": f"Failed to fetch CDS for Gene ID {gene_id}: {exc}",
