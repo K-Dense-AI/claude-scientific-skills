@@ -23,7 +23,7 @@ import pandas as pd
 
 # ── Constants ──────────────────────────────────────────────────────────────
 
-COST_PER_BASE_KRW = 400    # 25 nmol scale
+COST_PER_BASE_KRW = 400    # 50 nmol scale
 MIN_PRIMER_COST_KRW = 5000
 
 # Macrogen 주문서 매핑
@@ -84,7 +84,7 @@ class PrimerOrderSheet:
     def __init__(
         self,
         project_name: str = "primer_order",
-        default_scale: PrimerScale = PrimerScale.NMOL_25,
+        default_scale: PrimerScale = PrimerScale.NMOL_50,
         default_purification: Purification = Purification.DESALTING,
     ):
         self.project_name = project_name
@@ -398,7 +398,7 @@ class PrimerOrderSheet:
         Macrogen 홈페이지 업로드 호환 형식 (OLE2/BIFF8):
           No. | Oligo Name | 5` - Oligo Seq - 3` | Amount | Purification
 
-        Amount: umol 단위 (0.025 = 25 nmol, 0.05 = 50 nmol)
+        Amount: umol 단위 (0.05 = 50 nmol 기본, 0.025 = 25 nmol)
         Purification: MOPC (desalting), PAGE, HPLC
         빈 행 포함 총 1000행 (Macrogen 템플릿 호환).
 
@@ -444,7 +444,7 @@ class PrimerOrderSheet:
                 entry = self.entries[row_num - 1]
                 ws.write(row_num, 1, entry.name)
                 ws.write(row_num, 2, entry.sequence, seq_style)
-                amount = _SCALE_TO_UMOL.get(entry.scale.value, 0.025)
+                amount = _SCALE_TO_UMOL.get(entry.scale.value, 0.05)
                 ws.write(row_num, 3, amount)
                 pur = _PURIFICATION_TO_MACROGEN.get(entry.purification.value, "MOPC")
                 ws.write(row_num, 4, pur)
@@ -476,7 +476,7 @@ class PrimerOrderSheet:
                 ws.cell(row=row_idx, column=2, value=entry.name)
                 seq_cell = ws.cell(row=row_idx, column=3, value=entry.sequence)
                 seq_cell.font = Font(name="Consolas", size=10)
-                amount = _SCALE_TO_UMOL.get(entry.scale.value, 0.025)
+                amount = _SCALE_TO_UMOL.get(entry.scale.value, 0.05)
                 ws.cell(row=row_idx, column=4, value=amount)
                 pur = _PURIFICATION_TO_MACROGEN.get(entry.purification.value, "MOPC")
                 ws.cell(row=row_idx, column=5, value=pur)
@@ -511,13 +511,13 @@ class PrimerOrderSheet:
             {
                 "sample_name": str,                      # 필수
                 "primer_name": str,                      # 필수
-                "sample_conc": float | None,             # ng/ul
+                "sample_conc": float | None,             # ng/ul (생략 가능)
                 "plate_name": str,                       # optional
                 "well_position": str,                    # optional
-                "product_size": int | None,              # bp
-                "target_size": int | None,               # bp
+                "product_size": int | None,              # bp (확실할 때만 기입, 아니면 생략)
+                "target_size": int | None,               # bp (optional)
                 "primer_seq": str,                       # optional (5'→3')
-                "primer_conc": float | None,             # pmol/ul
+                "primer_conc": float | None,             # pmol/ul (universal primer면 생략)
             }
         """
         import openpyxl
@@ -817,7 +817,7 @@ def _run_tests():
     assert summary["estimated_cost_krw"] == expected_cost, (
         f"Expected {expected_cost}, got {summary['estimated_cost_krw']}"
     )
-    assert summary["scale_counts"]["25 nmol"] == 5
+    assert summary["scale_counts"]["50 nmol"] == 5
     assert summary["purification_counts"]["Desalting"] == 5
     assert set(summary["unique_experiments"]) == {"site-directed mutagenesis", "restriction cloning", "sequencing"}
 
@@ -902,7 +902,7 @@ def _run_tests():
     # 데이터 검증 (5개 프라이머)
     assert xls_ws.cell_value(1, 1) == "iPCR_UDH_WT_D280N_F"
     assert xls_ws.cell_value(1, 2) == "ATGCGTAACCTGGCGATCAAGCTG"
-    assert xls_ws.cell_value(1, 3) == 0.025  # 25 nmol = 0.025 umol
+    assert xls_ws.cell_value(1, 3) == 0.05  # 50 nmol = 0.05 umol
     assert xls_ws.cell_value(1, 4) == "MOPC"
 
     # 빈 행 검증 (row 6 이후 = 데이터 없음)
