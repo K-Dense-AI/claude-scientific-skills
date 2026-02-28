@@ -393,37 +393,82 @@ class PrimerOrderSheet:
     # ── Export: Macrogen Oligo Order ──────────────────────────────────
 
     def to_macrogen_oligo(self, output_path: str | Path | None = None) -> Path:
-        """Macrogen Oligo 주문서 형식 (.xlsx) 생성.
+        """Macrogen Oligo 주문서 형식 (.xls BIFF8) 생성.
 
-        Macrogen 홈페이지 업로드 호환 형식:
+        Macrogen 홈페이지 업로드 호환 형식 (OLE2/BIFF8):
           No. | Oligo Name | 5` - Oligo Seq - 3` | Amount | Purification
 
-        Amount: umol 단위 (0.025 = 25 nmol)
+        Amount: umol 단위 (0.025 = 25 nmol, 0.05 = 50 nmol)
         Purification: MOPC (desalting), PAGE, HPLC
         빈 행 포함 총 1000행 (Macrogen 템플릿 호환).
-        """
-        import openpyxl
-        from openpyxl.styles import Alignment, Font
 
+        output_path 확장자가 .xlsx면 openpyxl로, .xls(기본)이면 xlwt로 저장.
+        """
         if output_path is None:
-            output_path = self._generate_filename(Path.cwd(), "xlsx")
+            output_path = self._generate_filename(Path.cwd(), "xls")
         else:
             output_path = Path(output_path)
+
+        if output_path.suffix.lower() == ".xlsx":
+            return self._write_macrogen_oligo_xlsx(output_path)
+        return self._write_macrogen_oligo_xls(output_path)
+
+    def _write_macrogen_oligo_xls(self, output_path: Path) -> Path:
+        """xlwt로 Macrogen Oligo 주문서 (.xls BIFF8) 생성."""
+        import xlwt
+
+        wb = xlwt.Workbook(encoding="utf-8")
+        ws = wb.add_sheet("Sheet")
+
+        # 헤더 스타일
+        header_style = xlwt.easyxf("font: bold on; align: horiz center")
+        seq_style = xlwt.easyxf("font: name Consolas, height 200")
+
+        # 컬럼 너비 (1/256 문자 단위)
+        ws.col(0).width = 256 * 6    # No.
+        ws.col(1).width = 256 * 35   # Oligo Name
+        ws.col(2).width = 256 * 60   # Sequence
+        ws.col(3).width = 256 * 10   # Amount
+        ws.col(4).width = 256 * 14   # Purification
+
+        # 헤더
+        headers = ["No.", "Oligo Name", "5` - Oligo Seq - 3`", "Amount", "Purification"]
+        for col, h in enumerate(headers):
+            ws.write(0, col, h, header_style)
+
+        # 데이터 + 빈 행 (총 1000행)
+        for row_num in range(1, 1001):
+            ws.write(row_num, 0, row_num)
+
+            if row_num <= len(self.entries):
+                entry = self.entries[row_num - 1]
+                ws.write(row_num, 1, entry.name)
+                ws.write(row_num, 2, entry.sequence, seq_style)
+                amount = _SCALE_TO_UMOL.get(entry.scale.value, 0.025)
+                ws.write(row_num, 3, amount)
+                pur = _PURIFICATION_TO_MACROGEN.get(entry.purification.value, "MOPC")
+                ws.write(row_num, 4, pur)
+
+        wb.save(str(output_path))
+        return output_path
+
+    def _write_macrogen_oligo_xlsx(self, output_path: Path) -> Path:
+        """openpyxl로 Macrogen Oligo 주문서 (.xlsx) 생성 (fallback)."""
+        import openpyxl
+        from openpyxl.styles import Alignment, Font
 
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Sheet"
 
-        # 헤더 (Macrogen 템플릿과 동일)
         headers = ["No.", "Oligo Name", "5` - Oligo Seq - 3`", "Amount", "Purification"]
         for col_idx, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=header)
             cell.font = Font(bold=True)
             cell.alignment = Alignment(horizontal="center")
 
-        # 데이터 + 빈 행 (총 1000행)
         for row_num in range(1, 1001):
-            row_idx = row_num + 1  # 헤더가 1행
+            row_idx = row_num + 1
             ws.cell(row=row_idx, column=1, value=row_num)
 
             if row_num <= len(self.entries):
@@ -435,13 +480,7 @@ class PrimerOrderSheet:
                 ws.cell(row=row_idx, column=4, value=amount)
                 pur = _PURIFICATION_TO_MACROGEN.get(entry.purification.value, "MOPC")
                 ws.cell(row=row_idx, column=5, value=pur)
-            else:
-                ws.cell(row=row_idx, column=2, value="")
-                ws.cell(row=row_idx, column=3, value="")
-                ws.cell(row=row_idx, column=4, value="")
-                ws.cell(row=row_idx, column=5, value="")
 
-        # 컬럼 너비
         ws.column_dimensions["A"].width = 6
         ws.column_dimensions["B"].width = 35
         ws.column_dimensions["C"].width = 60
@@ -664,7 +703,10 @@ class PrimerOrderSheet:
 
 def _run_tests():
     """PrimerOrderSheet 기능 테스트."""
+    import os
     import tempfile
+
+    import xlrd
 
     sep = "=" * 70
 
@@ -837,15 +879,65 @@ def _run_tests():
     print(f"  Columns: {list(df.columns)}")
     print("  -> Test 7 PASSED")
 
-    # ── Test 8: Auto filename generation ───────────────────────────────
-    print(f"\n{sep}\n  Test 8: Auto filename generation\n{sep}")
+    # ── Test 8: Macrogen Oligo .xls export ──────────────────────────────
+    print(f"\n{sep}\n  Test 8: Macrogen Oligo .xls export (BIFF8)\n{sep}")
+
+    xls_path = sheet.to_macrogen_oligo(tmpdir / "macrogen_oligo_test.xls")
+    assert xls_path.exists(), f"XLS not created: {xls_path}"
+    assert xls_path.suffix == ".xls"
+
+    # xlrd로 읽어서 검증
+    xls_wb = xlrd.open_workbook(str(xls_path))
+    xls_ws = xls_wb.sheet_by_name("Sheet")
+    assert xls_ws.nrows == 1001, f"Expected 1001 rows, got {xls_ws.nrows}"
+    assert xls_ws.ncols == 5
+
+    # 헤더 검증
+    assert xls_ws.cell_value(0, 0) == "No."
+    assert xls_ws.cell_value(0, 1) == "Oligo Name"
+    assert xls_ws.cell_value(0, 2) == "5` - Oligo Seq - 3`"
+    assert xls_ws.cell_value(0, 3) == "Amount"
+    assert xls_ws.cell_value(0, 4) == "Purification"
+
+    # 데이터 검증 (5개 프라이머)
+    assert xls_ws.cell_value(1, 1) == "iPCR_UDH_WT_D280N_F"
+    assert xls_ws.cell_value(1, 2) == "ATGCGTAACCTGGCGATCAAGCTG"
+    assert xls_ws.cell_value(1, 3) == 0.025  # 25 nmol = 0.025 umol
+    assert xls_ws.cell_value(1, 4) == "MOPC"
+
+    # 빈 행 검증 (row 6 이후 = 데이터 없음)
+    assert xls_ws.cell_value(6, 1) == "", f"Expected empty, got '{xls_ws.cell_value(6, 1)}'"
+    assert xls_ws.cell_value(6, 0) == 6.0  # No. 컬럼은 채워져야 함
+
+    # 바이너리 헤더로 BIFF8 확인
+    with open(str(xls_path), "rb") as f:
+        magic = f.read(8)
+    assert magic == b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1", "Not a valid OLE2/BIFF8 file"
+
+    print(f"  XLS: {xls_path} ({os.path.getsize(str(xls_path))} bytes)")
+    print(f"  Format: OLE2/BIFF8 verified")
+    print(f"  Rows: {xls_ws.nrows}, Cols: {xls_ws.ncols}")
+    print(f"  Primers: {len(sheet.entries)}, First: {xls_ws.cell_value(1, 1)}")
+    print("  -> Test 8 PASSED")
+
+    # ── Test 9: Macrogen Oligo .xlsx fallback ──────────────────────────
+    print(f"\n{sep}\n  Test 9: Macrogen Oligo .xlsx fallback\n{sep}")
+
+    xlsx_oligo_path = sheet.to_macrogen_oligo(tmpdir / "macrogen_oligo_test.xlsx")
+    assert xlsx_oligo_path.exists()
+    assert xlsx_oligo_path.suffix == ".xlsx"
+    print(f"  XLSX fallback: {xlsx_oligo_path}")
+    print("  -> Test 9 PASSED")
+
+    # ── Test 10: Auto filename generation ──────────────────────────────
+    print(f"\n{sep}\n  Test 10: Auto filename generation\n{sep}")
 
     sheet_auto = PrimerOrderSheet(project_name="autoname")
-    path1 = sheet_auto._generate_filename(tmpdir, "xlsx")
+    path1 = sheet_auto._generate_filename(tmpdir, "xls")
     assert "autoname_" in path1.name
-    assert "_001_order.xlsx" in path1.name
+    assert "_001_order.xls" in path1.name
     print(f"  Auto filename: {path1.name}")
-    print("  -> Test 8 PASSED")
+    print("  -> Test 10 PASSED")
 
     print(f"\n{sep}\n  All tests PASSED\n{sep}")
     print(f"  Temp dir: {tmpdir}")
