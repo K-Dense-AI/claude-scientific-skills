@@ -1,0 +1,7 @@
+id,sire,dam
+P1,0,0
+P2,0,0
+F1,P1,P2
+BC1,F1,P1
+BC2,BC1,P1
+BC3,BC2,P1

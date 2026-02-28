@@ -1,0 +1,5 @@
+metric,value
+block_size,4.0
+replications,3.0
+treatments,24.0
+relative_efficiency,1.12

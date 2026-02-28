@@ -1,0 +1,12 @@
+{
+  "cuda_available": true,
+  "gpu_name": "NVIDIA GeForce RTX 4070",
+  "total_vram_gb": 11.56,
+  "small_matmul_seconds": 0.041,
+  "status": "gpu_ready_via_conda_env",
+  "detected_system_gpu": "NVIDIA GeForce RTX 4070",
+  "detected_system_vram_gb": 11.99,
+  "config_hint": "Detected working CUDA backend in conda env 'cs-gpu'. Use `conda run -n cs-gpu python ...` or activate that env.",
+  "active_backend": "conda:cs-gpu",
+  "recommended_for_12gb": true
+}
