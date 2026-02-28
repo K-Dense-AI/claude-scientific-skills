@@ -861,11 +861,23 @@ def _fetch_cds_from_gene_id(gene_id: int, gene_name_hint: str = "") -> dict | No
         return None
 
     # 3. Fetch GenBank and extract CDS
-    # gene name을 소문자로 비교 (lacZ, LacZ, LACZ 모두 매칭)
-    target_name = (official_name or gene_name_hint).lower()
+    # Build target name set for case-insensitive matching
+    target_names: set[str] = set()
+    if official_name:
+        target_names.add(official_name.lower())
+    if gene_name_hint:
+        target_names.add(gene_name_hint.lower())
+
+    def _matches_gene(feat_gene: str, feat_locus: str) -> bool:
+        """Check if CDS gene/locus_tag matches any target name."""
+        if not target_names:
+            return False
+        return (feat_gene.lower() in target_names
+                or feat_locus.lower() in target_names)
+
     fallback_cds = None  # gene name 매칭 실패 시 첫 CDS를 fallback으로 보관
 
-    for nuc_id in nuc_ids[:5]:
+    for nuc_id in nuc_ids[:10]:
         time.sleep(0.4)
         try:
             handle = Entrez.efetch(db="nuccore", id=nuc_id, rettype="gb", retmode="text")
@@ -882,7 +894,8 @@ def _fetch_cds_from_gene_id(gene_id: int, gene_name_hint: str = "") -> dict | No
             feat_locus = feature.qualifiers.get("locus_tag", [""])[0]
             cds_seq = str(feature.location.extract(record.seq)).upper()
 
-            if not cds_seq.startswith("ATG") or len(cds_seq) % 3 != 0:
+            # Accept alternative start codons (ATG, GTG, TTG) common in prokaryotes
+            if cds_seq[:3] not in ("ATG", "GTG", "TTG") or len(cds_seq) % 3 != 0:
                 continue
 
             protein = feature.qualifiers.get("translation", [None])[0]
@@ -904,11 +917,11 @@ def _fetch_cds_from_gene_id(gene_id: int, gene_name_hint: str = "") -> dict | No
                 "locus_tag": feat_locus,
             }
 
-            # Gene name 매칭: official name과 CDS의 gene qualifier 비교
-            if target_name and feat_gene.lower() == target_name:
+            # Gene name 매칭: gene qualifier 또는 locus_tag 비교
+            if _matches_gene(feat_gene, feat_locus):
                 logger.info(
-                    "Matched CDS by gene name '%s': %d bp, %d aa",
-                    feat_gene, len(cds_seq), len(protein),
+                    "Matched CDS by gene/locus '%s'/'%s': %d bp, %d aa",
+                    feat_gene, feat_locus, len(cds_seq), len(protein),
                 )
                 return cds_info
 
@@ -928,8 +941,8 @@ def _fetch_cds_from_gene_id(gene_id: int, gene_name_hint: str = "") -> dict | No
     # Gene name 매칭 실패 시 fallback 사용하지 않음 (잘못된 gene 반환 방지)
     if fallback_cds:
         logger.warning(
-            "No CDS matched gene name '%s'; discarding fallback '%s'",
-            target_name, fallback_cds.get("gene_name_official"),
+            "No CDS matched gene name(s) %s; discarding fallback '%s'",
+            target_names, fallback_cds.get("gene_name_official"),
         )
     return None
 
@@ -1017,6 +1030,16 @@ def fetch_gene_sequence(
                 "protein_seq": protein_seq,
             }
 
+    # Detect native start codon (ATG/GTG/TTG)
+    native_start = cds_result["cds_seq"][:3]
+    start_codon_note = ""
+    if native_start != "ATG":
+        start_codon_note = (
+            f"Native start codon is {native_start} (not ATG). "
+            f"For recombinant expression, the RE cloning primer will "
+            f"replace it with ATG automatically."
+        )
+
     result = {
         "gene_name": cds_result.get("gene_name_official") or gene_name,
         "organism": organism,
@@ -1028,7 +1051,10 @@ def fetch_gene_sequence(
         "source": cds_result["source"],
         "description": cds_result["description"],
         "codon_optimized": codon_optimize,
+        "native_start_codon": native_start,
     }
+    if start_codon_note:
+        result["start_codon_note"] = start_codon_note
     if cds_result.get("locus_tag"):
         result["locus_tag"] = cds_result["locus_tag"]
 

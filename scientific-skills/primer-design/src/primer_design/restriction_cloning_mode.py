@@ -231,11 +231,31 @@ class RestrictionCloningDesigner(iPCRDesignerBase):
         f_tail = protection_5 + re5_site + spacer_5prime
 
         # Forward annealing: RE tail does NOT contribute to Tm
+        # Fallback: extend range then relax Tm for AT-rich regions
         f_ann, f_tm, f_gc, f_ann_len = self._design_annealing(
             template=insert_seq, anchor=0, direction="+",
             target_tm=target_tm, min_len=min_ann_len, max_len=max_ann_len,
             tail_seq="",
         )
+        if f_ann is None:
+            # Fallback 1: extend max to 35 bp
+            f_ann, f_tm, f_gc, f_ann_len = self._design_annealing(
+                template=insert_seq, anchor=0, direction="+",
+                target_tm=target_tm, min_len=min_ann_len, max_len=35,
+                tail_seq="",
+            )
+        if f_ann is None:
+            # Fallback 2: relax Tm by 4°C with extended range
+            f_ann, f_tm, f_gc, f_ann_len = self._design_annealing(
+                template=insert_seq, anchor=0, direction="+",
+                target_tm=target_tm - 4.0, min_len=min_ann_len, max_len=36,
+                tail_seq="",
+            )
+            if f_ann is not None:
+                warnings.append(
+                    f"Forward primer Tm ({f_tm:.1f}°C) is below target "
+                    f"({target_tm}°C) due to AT-rich region"
+                )
         if f_ann is None:
             raise RuntimeError(
                 "Forward primer annealing design failed "
@@ -250,11 +270,31 @@ class RestrictionCloningDesigner(iPCRDesignerBase):
         r_tail = protection_3 + re3_site + spacer_3prime + stop_rc
 
         # Reverse annealing: RE tail does NOT contribute to Tm
+        # Fallback: extend range then relax Tm for AT-rich regions
         r_ann, r_tm, r_gc, r_ann_len = self._design_annealing(
             template=insert_seq, anchor=len(insert_seq), direction="-",
             target_tm=target_tm, min_len=min_ann_len, max_len=max_ann_len,
             tail_seq="",
         )
+        if r_ann is None:
+            # Fallback 1: extend max to 35 bp
+            r_ann, r_tm, r_gc, r_ann_len = self._design_annealing(
+                template=insert_seq, anchor=len(insert_seq), direction="-",
+                target_tm=target_tm, min_len=min_ann_len, max_len=35,
+                tail_seq="",
+            )
+        if r_ann is None:
+            # Fallback 2: relax Tm by 4°C with extended range
+            r_ann, r_tm, r_gc, r_ann_len = self._design_annealing(
+                template=insert_seq, anchor=len(insert_seq), direction="-",
+                target_tm=target_tm - 4.0, min_len=min_ann_len, max_len=36,
+                tail_seq="",
+            )
+            if r_ann is not None:
+                warnings.append(
+                    f"Reverse primer Tm ({r_tm:.1f}°C) is below target "
+                    f"({target_tm}°C) due to AT-rich region"
+                )
         if r_ann is None:
             raise RuntimeError(
                 "Reverse primer annealing design failed "
