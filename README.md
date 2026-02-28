@@ -12,6 +12,8 @@ A comprehensive collection of **148+ ready-to-use scientific and research skills
   <a href="https://k-dense.ai">
     <img src="docs/k-dense-web.gif" alt="K-Dense Web Demo" width="800"/>
   </a>
+  <br/>
+  <em>The demo above shows <a href="https://k-dense.ai">K-Dense Web</a> — the hosted platform built on top of these skills. Claude Scientific Skills is the open-source skill collection; K-Dense Web is the full AI co-scientist platform with more power and zero setup.</em>
 </p>
 
 ---
