@@ -23,26 +23,27 @@ cp -r ~/.claude/claude-scientific-skills/scientific-skills/primer-design \
 # 2. 의존성 설치
 pip install -r ~/.claude/skills/primer-design/requirements.txt
 
-# 3. ~/.claude/settings.json에 MCP 등록 (아래 참조)
+# 3. ~/.claude/.mcp.json에 MCP 등록 (아래 참조)
 ```
 
 ### MCP 서버 활성화
 
-`~/.claude/settings.json`에 등록 필요:
+`~/.claude/.mcp.json` 생성 (Claude Code용):
 
 ```json
 {
   "mcpServers": {
     "primer-design": {
-      "command": "python",
+      "command": "/path/to/python",
       "args": ["-m", "src.primer_design.mcp_server"],
-      "cwd": "C:/Users/Jahyun/.claude/skills/primer-design"
+      "cwd": "~/.claude/skills/primer-design"
     }
   }
 }
 ```
 
-> **참고**: `vector_dna_config.py`의 OneDrive 경로는 각 컴퓨터에 맞게 수동 수정 필요.
+> **참고**: `command`는 biopython/primer3-py가 설치된 Python 인터프리터 경로로 변경.
+> 벡터 `.dna` 파일은 `vectors/` 폴더에 번들되어 있어 별도 경로 설정 불필요.
 
 ---
 
