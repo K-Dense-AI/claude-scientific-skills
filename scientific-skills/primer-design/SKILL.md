@@ -1,6 +1,6 @@
-Base directory for this skill: C:\Users\Jahyun\.claude\skills\ipcr-primer-design
+Base directory for this skill: C:\Users\Jahyun\.claude\skills\primer-design
 
-# iPCR & 클로닝 프라이머 설계 (UDH Primer Design Suite)
+# 프라이머 & 클로닝 설계 (Primer Design Suite)
 
 원형 플라스미드 mutagenesis(치환·결실), RE 클로닝, Colony PCR 스크리닝, E. coli 발현 최적화 분석, Macrogen 주문서 생성까지 지원하는 통합 프라이머 설계 스킬.
 
@@ -8,12 +8,27 @@ Base directory for this skill: C:\Users\Jahyun\.claude\skills\ipcr-primer-design
 
 ## 개요
 
-**패키지 위치**: `C:/Users/Jahyun/PycharmProjects/UDH Clustering/src/primer_design/`
-**MCP 서버**: `mcp_server.py` (FastMCP, stdio transport)
+**패키지 위치**: `~/.claude/skills/primer-design/src/primer_design/`
+**MCP 서버**: `src/primer_design/mcp_server.py` (FastMCP, stdio transport)
 
-### MCP 서버 활성화 확인
+### 신규 환경 설치 (다른 컴퓨터)
 
-`.claude/settings.json`에 등록 필요:
+```bash
+# 1. 스킬 레포 clone (또는 pull)
+git clone https://github.com/jahyunlee00299/claude-scientific-skills \
+          ~/.claude/claude-scientific-skills
+cp -r ~/.claude/claude-scientific-skills/scientific-skills/primer-design \
+       ~/.claude/skills/primer-design
+
+# 2. 의존성 설치
+pip install -r ~/.claude/skills/primer-design/requirements.txt
+
+# 3. ~/.claude/settings.json에 MCP 등록 (아래 참조)
+```
+
+### MCP 서버 활성화
+
+`~/.claude/settings.json`에 등록 필요:
 
 ```json
 {
@@ -21,11 +36,13 @@ Base directory for this skill: C:\Users\Jahyun\.claude\skills\ipcr-primer-design
     "primer-design": {
       "command": "python",
       "args": ["-m", "src.primer_design.mcp_server"],
-      "cwd": "C:/Users/Jahyun/PycharmProjects/UDH Clustering"
+      "cwd": "C:/Users/Jahyun/.claude/skills/primer-design"
     }
   }
 }
 ```
+
+> **참고**: `vector_dna_config.py`의 OneDrive 경로는 각 컴퓨터에 맞게 수동 수정 필요.
 
 ---
 
