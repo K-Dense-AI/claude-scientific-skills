@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import logging
 import sys
+import time
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
@@ -735,6 +737,253 @@ def generate_macrogen_order(
         "total_length_nt": summary["total_length_nt"],
         "estimated_cost_krw": summary["estimated_cost_krw"],
     }
+
+
+# ── E. coli K12 codon usage (best codon per amino acid) ──────────────────────
+
+_ECOLI_BEST_CODON: dict[str, str] = {
+    "F": "TTC", "L": "CTG", "I": "ATT", "M": "ATG", "V": "GTG",
+    "S": "AGC", "P": "CCG", "T": "ACC", "A": "GCG", "Y": "TAC",
+    "H": "CAC", "Q": "CAG", "N": "AAC", "K": "AAA", "D": "GAT",
+    "E": "GAA", "C": "TGC", "W": "TGG", "R": "CGC", "G": "GGC",
+    "*": "TAA",
+}
+
+
+def _codon_optimize_for_ecoli(protein_seq: str) -> str:
+    """Back-translate protein to DNA using E. coli K12 optimal codons."""
+    codons = []
+    for aa in protein_seq.upper():
+        best = _ECOLI_BEST_CODON.get(aa)
+        if best is None:
+            raise ValueError(f"Unknown amino acid: '{aa}'")
+        codons.append(best)
+    return "".join(codons)
+
+
+def _search_ncbi_gene(gene_name: str, organism: str) -> int | None:
+    """Search NCBI Gene database and return Gene ID."""
+    from Bio import Entrez
+
+    queries = [
+        f'{gene_name}[Gene Name] AND "{organism}"[Organism]',
+        f'{gene_name}[All Fields] AND "{organism}"[Organism]',
+    ]
+    for query in queries:
+        logger.info("NCBI Gene search: %s", query)
+        try:
+            handle = Entrez.esearch(db="gene", term=query, retmax=5)
+            record = Entrez.read(handle)
+            handle.close()
+        except Exception as exc:
+            logger.warning("Entrez esearch failed: %s", exc)
+            time.sleep(0.5)
+            continue
+
+        id_list = record.get("IdList", [])
+        if id_list:
+            gene_id = int(id_list[0])
+            logger.info("Found Gene ID: %d (%d results)", gene_id, len(id_list))
+            return gene_id
+        time.sleep(0.4)
+    return None
+
+
+def _fetch_cds_from_gene_id(gene_id: int) -> dict | None:
+    """Fetch CDS nucleotide sequence from NCBI Gene ID."""
+    from Bio import Entrez, SeqIO
+
+    # 1. Gene summary for metadata
+    logger.info("Fetching Gene summary for ID %d", gene_id)
+    official_name = ""
+    description = ""
+    try:
+        handle = Entrez.efetch(db="gene", id=str(gene_id), rettype="xml")
+        xml_data = handle.read()
+        handle.close()
+        root = ET.fromstring(xml_data)
+        for el in root.iter("Gene-ref_locus"):
+            official_name = el.text or ""
+            break
+        for el in root.iter("Gene-ref_desc"):
+            description = el.text or ""
+            break
+    except Exception as exc:
+        logger.warning("Gene XML parse: %s", exc)
+    time.sleep(0.4)
+
+    # 2. Link Gene → Nucleotide (RefSeq)
+    nuc_ids: list[str] = []
+    for link_name in ("gene_nuccore_refseqrna", "gene_nuccore_refseqgene", "gene_nuccore"):
+        try:
+            handle = Entrez.elink(dbfrom="gene", db="nuccore", id=str(gene_id), linkname=link_name)
+            link_results = Entrez.read(handle)
+            handle.close()
+        except Exception as exc:
+            logger.warning("Elink %s failed: %s", link_name, exc)
+            time.sleep(0.4)
+            continue
+
+        for linkset in link_results:
+            for link_db in linkset.get("LinkSetDb", []):
+                for link in link_db.get("Link", []):
+                    nuc_ids.append(link["Id"])
+        if nuc_ids:
+            logger.info("Found %d nucleotide IDs via %s", len(nuc_ids), link_name)
+            break
+        time.sleep(0.4)
+
+    if not nuc_ids:
+        logger.warning("No linked nucleotide records for Gene %d", gene_id)
+        return None
+
+    # 3. Fetch GenBank and extract CDS
+    for nuc_id in nuc_ids[:5]:
+        time.sleep(0.4)
+        try:
+            handle = Entrez.efetch(db="nuccore", id=nuc_id, rettype="gb", retmode="text")
+            record = SeqIO.read(handle, "genbank")
+            handle.close()
+        except Exception as exc:
+            logger.warning("Nucleotide fetch %s failed: %s", nuc_id, exc)
+            continue
+
+        for feature in record.features:
+            if feature.type != "CDS":
+                continue
+            feat_gene = feature.qualifiers.get("gene", [""])[0]
+            feat_locus = feature.qualifiers.get("locus_tag", [""])[0]
+            cds_seq = str(feature.location.extract(record.seq)).upper()
+
+            if not cds_seq.startswith("ATG") or len(cds_seq) % 3 != 0:
+                continue
+
+            protein = feature.qualifiers.get("translation", [None])[0]
+            if protein is None:
+                try:
+                    protein = str(feature.location.extract(record.seq).translate(to_stop=True))
+                except Exception:
+                    continue
+
+            product = feature.qualifiers.get("product", [""])[0]
+            accession = record.id or record.name
+            logger.info("Extracted CDS: gene=%s, %d bp, %d aa", feat_gene or feat_locus, len(cds_seq), len(protein))
+
+            return {
+                "cds_seq": cds_seq,
+                "protein_seq": protein,
+                "source": accession,
+                "description": product or description,
+                "gene_name_official": feat_gene or official_name,
+                "locus_tag": feat_locus,
+            }
+
+    return None
+
+
+# ── Tool 9: fetch_gene_sequence ───────────────────────────────────────────────
+
+@mcp.tool()
+def fetch_gene_sequence(
+    gene_name: str,
+    organism: str = "Escherichia coli",
+    gene_id: int | None = None,
+    codon_optimize: bool = False,
+) -> dict:
+    """Fetch a gene's CDS nucleotide sequence from NCBI for primer design.
+
+    Searches the NCBI Gene database, retrieves the CDS (ATG to stop),
+    and returns DNA/protein sequences ready for design_re_cloning_primers.
+
+    Default: returns native genomic sequence (gDNA PCR용).
+    codon_optimize=True일 때만 E. coli K12 최적 코돈으로 back-translate.
+
+    Args:
+        gene_name: Gene name or symbol (e.g. "gudD", "lacZ", "malE").
+        organism: Organism name for NCBI search (default "Escherichia coli").
+        gene_id: Optional NCBI Gene ID. If provided, skips search step.
+        codon_optimize: Back-translate using E. coli K12 optimal codons
+            (default False). Only enable when explicitly requested.
+
+    Returns:
+        dict with gene_name, organism, gene_id, cds_seq, protein_seq,
+        cds_length_bp, protein_length_aa, source, description.
+    """
+    from Bio import Entrez
+    Entrez.email = "jahyunlee00299@gmail.com"
+    Entrez.tool = "primer-design-mcp"
+
+    logger.info(
+        "fetch_gene_sequence: gene=%s, organism=%s, gene_id=%s, optimize=%s",
+        gene_name, organism, gene_id, codon_optimize,
+    )
+
+    # Step 1: Resolve Gene ID
+    if gene_id is None:
+        gene_id = _search_ncbi_gene(gene_name, organism)
+        if gene_id is None:
+            return {
+                "error": f"Gene '{gene_name}' not found for '{organism}'. "
+                         f"Try a different name or provide gene_id directly.",
+                "gene_name": gene_name,
+                "organism": organism,
+            }
+
+    # Step 2: Fetch CDS
+    try:
+        cds_result = _fetch_cds_from_gene_id(gene_id)
+    except Exception as exc:
+        return {
+            "error": f"Failed to fetch CDS for Gene ID {gene_id}: {exc}",
+            "gene_name": gene_name, "gene_id": gene_id,
+        }
+
+    if cds_result is None:
+        return {
+            "error": f"No valid CDS for Gene ID {gene_id} ('{gene_name}'). "
+                     f"Provide the sequence directly.",
+            "gene_name": gene_name, "gene_id": gene_id,
+        }
+
+    cds_seq = cds_result["cds_seq"]
+    protein_seq = cds_result["protein_seq"]
+
+    # Step 3: Codon optimization (optional, only when explicitly requested)
+    if codon_optimize:
+        logger.info("Codon-optimizing %d aa for E. coli K12", len(protein_seq))
+        try:
+            optimized = _codon_optimize_for_ecoli(protein_seq)
+            if cds_seq[-3:] in ("TAA", "TAG", "TGA"):
+                optimized += _ECOLI_BEST_CODON["*"]
+            cds_seq = optimized
+        except Exception as exc:
+            return {
+                "error": f"Codon optimization failed: {exc}",
+                "gene_name": gene_name, "gene_id": gene_id,
+                "native_cds_seq": cds_result["cds_seq"],
+                "protein_seq": protein_seq,
+            }
+
+    result = {
+        "gene_name": cds_result.get("gene_name_official") or gene_name,
+        "organism": organism,
+        "gene_id": gene_id,
+        "cds_seq": cds_seq,
+        "protein_seq": protein_seq,
+        "cds_length_bp": len(cds_seq),
+        "protein_length_aa": len(protein_seq),
+        "source": cds_result["source"],
+        "description": cds_result["description"],
+        "codon_optimized": codon_optimize,
+    }
+    if cds_result.get("locus_tag"):
+        result["locus_tag"] = cds_result["locus_tag"]
+
+    logger.info(
+        "fetch_gene_sequence OK: %s, %d bp, %d aa, source=%s",
+        result["gene_name"], len(cds_seq), len(protein_seq), result["source"],
+    )
+    return result
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

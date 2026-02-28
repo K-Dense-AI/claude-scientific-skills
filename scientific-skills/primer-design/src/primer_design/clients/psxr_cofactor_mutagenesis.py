@@ -16,6 +16,7 @@ Mutations:
 """
 
 import os
+from pathlib import Path
 from datetime import datetime
 from Bio.Seq import Seq
 
@@ -699,9 +700,9 @@ def generate_report(all_results, output_path):
 # ══════════════════════════════════════════════════════════════════════════
 
 def main():
-    base_dir = (
-        r"C:\Users\Jahyun\OneDrive - 고려대학교\저장소"
-        r"\8. D-Gal to MA and D-tagatose\Genes"
+    base_dir = str(
+        Path.home() / "OneDrive - 고려대학교" / "저장소"
+        / "8. D-Gal to MA and D-tagatose" / "Genes"
     )
 
     constructs = [
@@ -726,7 +727,7 @@ def main():
         all_results.append(result)
 
     # Generate report
-    output_dir = r"C:\Users\Jahyun\PycharmProjects\pythonProject1"
+    output_dir = str(Path.home() / "PycharmProjects" / "pythonProject1")
     report_path = os.path.join(output_dir, "PsXR_cofactor_mutagenesis_report.md")
     generate_report(all_results, report_path)
 
