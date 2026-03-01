@@ -785,20 +785,36 @@ fig.write_image('figure.png', scale=3)  # scale=3 gives ~300 DPI
   - Resolution and file format requirements
   - Typography guidelines
   - Layout and composition rules
+  - Context-specific design (publication vs poster vs presentation)
+  - Scheme numbering for chemistry papers
   - Statistical rigor requirements
   - Complete publication checklist
 
 - **`color_palettes.md`**: Color usage guide
   - Colorblind-friendly palette specifications with RGB values
   - Sequential and diverging colormap recommendations
+  - Crameri scientific colour maps (batlow, vik, etc.)
   - Testing procedures for accessibility
   - Domain-specific palettes (genomics, microscopy)
 
 - **`journal_requirements.md`**: Journal-specific specifications
-  - Technical requirements by publisher
+  - Technical requirements by publisher (Nature, Science, Cell, ACS, Elsevier, PLOS, PNAS, RSC, IEEE, BMC)
   - File format and DPI specifications
   - Figure dimension requirements
   - Quick reference table
+
+- **`figure_rubric.md`**: Quantitative scoring rubric
+  - 6-criteria evaluation (Scale, Labels, Colors, Emphasis, Ink:Content, Accessibility)
+  - 0-2 points per criterion (12 points max)
+  - Context-specific minimum scores (journal, poster, presentation)
+  - Automated scorer function and manual worksheet
+
+- **`figure_reproducibility.md`**: Reproducible figure workflow
+  - Project directory structure for figure scripts
+  - Shared `config.py` template with journal settings
+  - Per-figure script template
+  - Makefile for batch regeneration
+  - Version control best practices
 
 - **`matplotlib_examples.md`**: Practical code examples
   - 10 complete working examples

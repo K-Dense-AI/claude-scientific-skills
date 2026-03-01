@@ -246,6 +246,190 @@ Adapted from Rougier, Droettboom & Bourne (2014), *PLOS Computational Biology* 1
 - Choose the right software for the task; no single tool is best for everything
 - **Implementation**: Use matplotlib/seaborn for statistical plots, Inkscape/Illustrator for post-processing and annotations, ImageJ/FIJI for microscopy, and BioRender for biological schematics. Avoid doing everything in one tool when a combination yields better results.
 
+## Context-Specific Figure Design
+
+Figures must be adapted to their display context. A figure optimized for a journal article will fail on a poster, and vice versa.
+
+### Publication (Journal Article)
+
+The primary context. Figures are viewed at final print size (often small) and must be self-contained.
+
+| Parameter | Recommendation |
+|-----------|---------------|
+| **Figure width** | Single column (85-90 mm) preferred; double only when needed |
+| **Font size** | 6-9 pt at final size (minimum 5-6 pt) |
+| **Line width** | 0.5-1.5 pt for data, 0.5 pt for axes |
+| **Marker size** | 3-5 pt |
+| **Color** | Colorblind-safe; must work in grayscale |
+| **Detail level** | High: error bars, individual data points, statistical annotations |
+| **Format** | Vector (PDF/EPS) for plots; TIFF (LZW) for images |
+| **DPI** | 300-1200 depending on content type |
+| **Caption** | Detailed, self-contained (see Figure Caption Writing Guide) |
+
+**Key principle:** Design at final print size. Everything must be legible when the figure occupies 85 mm of column width.
+
+### Poster
+
+Posters are viewed from 1-2 meters. Figures must be readable at a distance.
+
+| Parameter | Recommendation |
+|-----------|---------------|
+| **Figure width** | Large: 15-30 cm depending on poster layout |
+| **Font size** | 14-24 pt (minimum 12 pt) |
+| **Line width** | 2-4 pt for data, 1-2 pt for axes |
+| **Marker size** | 8-14 pt |
+| **Color** | Bold, high-contrast colors; fewer data series per plot |
+| **Detail level** | Simplified: key trends only, fewer data points, larger annotations |
+| **Format** | PDF or high-DPI PNG (150-300 DPI at poster size) |
+| **DPI** | 150-300 DPI (posters are large, so lower DPI is acceptable) |
+| **Caption** | Very brief or none (explained verbally or in poster text) |
+
+**Key principle:** Simplify ruthlessly. If a poster figure has more than 3-4 data series, consider splitting into multiple panels or removing less important data.
+
+```python
+# Poster style adjustments
+import matplotlib as mpl
+
+def set_poster_style():
+    mpl.rcParams.update({
+        'font.size': 16,
+        'axes.labelsize': 20,
+        'axes.titlesize': 22,
+        'xtick.labelsize': 14,
+        'ytick.labelsize': 14,
+        'legend.fontsize': 14,
+        'lines.linewidth': 3,
+        'lines.markersize': 10,
+        'axes.linewidth': 1.5,
+        'xtick.major.width': 1.5,
+        'ytick.major.width': 1.5,
+        'xtick.major.size': 6,
+        'ytick.major.size': 6,
+    })
+```
+
+### Presentation (Slides)
+
+Slides complement verbal explanation. Figures should be glanceable.
+
+| Parameter | Recommendation |
+|-----------|---------------|
+| **Figure width** | Full slide width or half-slide |
+| **Font size** | 18-28 pt (minimum 14 pt) |
+| **Line width** | 2.5-4 pt for data |
+| **Marker size** | 10-16 pt |
+| **Color** | High contrast against slide background (dark or light); fewer categories |
+| **Detail level** | Minimal: show the one key message, build complexity across slides |
+| **Format** | PNG (300 DPI) or SVG |
+| **DPI** | 150-300 DPI (screen resolution) |
+| **Caption** | None; the slide title serves as the caption |
+
+**Key principle:** One message per slide. If the audience cannot grasp the figure in 3-5 seconds, it is too complex.
+
+```python
+# Presentation style adjustments
+import matplotlib as mpl
+
+def set_presentation_style():
+    mpl.rcParams.update({
+        'font.size': 20,
+        'axes.labelsize': 24,
+        'axes.titlesize': 26,
+        'xtick.labelsize': 18,
+        'ytick.labelsize': 18,
+        'legend.fontsize': 18,
+        'lines.linewidth': 3.5,
+        'lines.markersize': 12,
+        'axes.linewidth': 2,
+        'xtick.major.width': 2,
+        'ytick.major.width': 2,
+        'xtick.major.size': 8,
+        'ytick.major.size': 8,
+        'figure.facecolor': 'white',
+    })
+```
+
+### Comparison Table
+
+| Feature | Publication | Poster | Presentation |
+|---------|------------|--------|--------------|
+| Minimum font size | 6 pt | 12 pt | 14 pt |
+| Line width | 0.5-1.5 pt | 2-4 pt | 2.5-4 pt |
+| Max data series | 6-8 | 3-4 | 2-3 |
+| Error bars | Required | Optional (if visible) | Optional |
+| Individual data points | Recommended | Optional | Rarely |
+| Grayscale compatible | Required | Recommended | Not required |
+| Caption detail | Full (self-contained) | Brief | None (slide title) |
+| File format | Vector (PDF/EPS) | PDF or PNG | PNG or SVG |
+
+## Scheme Numbering for Chemistry Papers
+
+Chemistry manuscripts use **Schemes** to depict reaction sequences, synthetic routes, and mechanistic pathways. Schemes are numbered separately from Figures and Tables.
+
+### Numbering Convention
+
+- Schemes are numbered sequentially: **Scheme 1**, **Scheme 2**, **Scheme 3**, etc.
+- Numbering is independent of Figures and Tables (a paper can have Figure 1, Scheme 1, and Table 1)
+- Compounds within a scheme are numbered with bold Arabic numerals: **1**, **2**, **3**, etc.
+- Compound numbering is sequential throughout the manuscript (not per-scheme)
+
+### Journal-Specific Scheme Conventions
+
+| Publisher | Scheme numbering | Compound numbering | Tools |
+|-----------|-----------------|-------------------|-------|
+| **ACS** | Scheme 1, 2, 3 | Bold Arabic (**1**, **2**, **3**) | ChemDraw required |
+| **RSC** | Scheme 1, 2, 3 | Bold Arabic (**1**, **2**, **3**) | ChemDraw or ChemSketch |
+| **Wiley** | Scheme 1, 2, 3 | Bold Arabic (**1**, **2**, **3**) | ChemDraw preferred |
+| **Elsevier** | Scheme 1, 2, 3 | Bold Arabic (**1**, **2**, **3**) | Any structure editor |
+| **Nature Chemistry** | Fig. (schemes are submitted as figures) | Bold Arabic | ChemDraw |
+
+### Scheme Design Guidelines
+
+1. **Left-to-right flow**: Reactants on left, products on right
+2. **Arrow conventions**:
+   - Reaction arrow: `->` (standard arrow)
+   - Equilibrium: `<=>` (double-headed arrow)
+   - Resonance: `<->` (double-headed curved arrow)
+3. **Conditions above the arrow**: Reagents, catalysts, temperature, solvent
+4. **Yield below the arrow**: Percentage yield, diastereomeric ratio, ee
+5. **Consistent bond lengths**: 1.058 cm in ChemDraw (ACS Document 1996 template)
+6. **Atom label font**: 10-12 pt (matches the caption font size)
+7. **Bond thickness**: ~2 pt (0.6 mm)
+8. **Stereochemistry**: Use wedge/dash bonds; indicate absolute configuration where known
+
+### ChemDraw Settings for Publication
+
+```
+ACS Document 1996 template:
+  Bond spacing: 18% of length
+  Fixed length: 1.058 cm (0.417 in)
+  Bond width: 2 pt (0.6 mm)
+  Line width: 0.6 pt
+  Margin width: 1.6 pt
+  Hash spacing: 2.5 pt
+  Atom label font: Arial 10 pt
+  Caption font: Arial 10 pt
+```
+
+### LaTeX Integration
+
+```latex
+\begin{scheme}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{scheme1.pdf}
+  \caption{Retrosynthetic analysis of target molecule \textbf{1}.
+  Reagents and conditions: (a) NaH, THF, 0~\textdegree{}C, 2~h, 85\%;
+  (b) Pd(PPh$_3$)$_4$, K$_2$CO$_3$, DMF, 80~\textdegree{}C, 12~h, 72\%.}
+  \label{sch:retro}
+\end{scheme}
+```
+
+**Note:** The `scheme` environment requires `\usepackage{float}` and defining:
+```latex
+\newfloat{scheme}{htbp}{los}
+\floatname{scheme}{Scheme}
+```
+
 ## Common Mistakes to Avoid
 
 1. **Font too small**: Text unreadable at final print size

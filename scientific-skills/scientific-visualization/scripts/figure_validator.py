@@ -72,6 +72,28 @@ JOURNAL_SPECS: Dict[str, dict] = {
         "max_file_size_mb": 10,
         "font_requirements": "Embedded fonts",
     },
+    "pnas": {
+        "single_column_mm": 87,
+        "double_column_mm": 178,
+        "max_height_mm": 230,
+        "min_dpi_line_art": 1000,
+        "min_dpi_halftone": 300,
+        "min_dpi_combination": 600,
+        "accepted_formats": ["pdf", "eps", "tiff", "png"],
+        "max_file_size_mb": 10,
+        "font_requirements": "TrueType (Type 42), no Type 3",
+    },
+    "rsc": {
+        "single_column_mm": 85,
+        "double_column_mm": 171,
+        "max_height_mm": 235,
+        "min_dpi_line_art": 1200,
+        "min_dpi_halftone": 600,
+        "min_dpi_combination": 600,
+        "accepted_formats": ["eps", "tiff", "pdf", "png", "cdx"],
+        "max_file_size_mb": 10,
+        "font_requirements": "Embedded sans-serif, no Type 3",
+    },
 }
 
 
