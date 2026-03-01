@@ -511,7 +511,7 @@ class PrimerOrderSheet:
             {
                 "sample_name": str,                      # 필수
                 "primer_name": str,                      # 필수
-                "sample_conc": float | None,             # ng/ul (생략 가능)
+                "sample_conc": float | None,             # ng/ul — 비워둘 것 (실측값 기입용)
                 "plate_name": str,                       # optional
                 "well_position": str,                    # optional
                 "product_size": int | None,              # bp (확실할 때만 기입, 아니면 생략)
@@ -519,6 +519,11 @@ class PrimerOrderSheet:
                 "primer_seq": str,                       # optional (5'→3')
                 "primer_conc": float | None,             # pmol/ul (universal primer면 생략)
             }
+
+        Note
+        ----
+        sample_conc는 임의 기본값(예: 100)을 넣지 말 것.
+        실험자가 miniprep 후 실측 농도를 직접 기입하므로 None(빈칸)으로 둔다.
         """
         import openpyxl
         from openpyxl.styles import Alignment, Font
