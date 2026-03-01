@@ -1,2 +1,0 @@
-[console_scripts]
-research-agent = research_agent.main:main
