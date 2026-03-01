@@ -107,6 +107,67 @@ DNA_BASES_ACCESSIBLE = {
     'T': '#D55E00',  # Vermillion
 }
 
+# Scientific Colour Maps (Crameri et al., 2020, Nature Communications)
+# These are registered as matplotlib colormaps when cmcrameri is installed.
+# Listed here for reference; use via: import cmcrameri.cm as cmc; cmap=cmc.batlow
+CRAMERI_SEQUENTIAL = [
+    'batlow',    # Blue-yellow-red, perceptually uniform (recommended default)
+    'oslo',      # Dark to light gray-blue
+    'hawaii',    # Green-yellow-pink
+    'lapaz',     # Blue-gray-brown
+    'davos',     # Blue-white-green
+    'tokyo',     # Dark to light (good for grayscale)
+    'turku',     # White to dark
+    'acton',     # Purple to white
+    'bamako',    # Yellow to dark brown
+    'nuuk',      # Blue to green
+]
+
+CRAMERI_DIVERGING = [
+    'vik',       # Blue-white-red (colorblind-safe RdBu alternative)
+    'berlin',    # Blue-white-red (darker variant)
+    'broc',      # Brown-white-cyan
+    'cork',      # Green-white-brown
+    'roma',      # Blue-white-orange
+    'bam',       # Red-white-blue
+    'vanimo',    # Purple-white-green
+]
+
+
+def get_crameri_cmap(name='batlow'):
+    """
+    Get a Crameri scientific colour map.
+
+    Requires the cmcrameri package: pip install cmcrameri
+
+    Parameters
+    ----------
+    name : str
+        Colormap name (e.g., 'batlow', 'vik').
+
+    Returns
+    -------
+    matplotlib.colors.Colormap
+    """
+    try:
+        import cmcrameri.cm as cmc
+        return getattr(cmc, name)
+    except ImportError:
+        import warnings
+        warnings.warn(
+            f"cmcrameri not installed. Install with: pip install cmcrameri. "
+            f"Falling back to viridis.",
+            stacklevel=2,
+        )
+        import matplotlib.pyplot as plt
+        return plt.cm.viridis
+    except AttributeError:
+        raise ValueError(
+            f"Colormap '{name}' not found in cmcrameri. "
+            f"Available sequential: {CRAMERI_SEQUENTIAL}. "
+            f"Available diverging: {CRAMERI_DIVERGING}."
+        )
+
 
 def apply_palette(palette_name='okabe_ito'):
     """
