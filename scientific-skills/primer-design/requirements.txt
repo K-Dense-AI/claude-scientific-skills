@@ -1,0 +1,19 @@
+# Primer Design MCP Server — Dependencies
+# Install: pip install -r requirements.txt
+
+# MCP framework
+mcp>=1.0.0
+
+# Bioinformatics
+biopython>=1.79
+
+# Primer QC (optional but recommended)
+primer3-py>=2.0.0
+
+# Data / Excel export
+pandas>=1.3.0
+openpyxl>=3.0.0
+xlwt>=1.3.0
+
+# Visualization (cloning report PNG)
+matplotlib>=3.4.0

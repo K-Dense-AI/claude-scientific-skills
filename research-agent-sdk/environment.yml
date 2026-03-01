@@ -1,0 +1,10 @@
+name: research-agent
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - claude-agent-sdk>=0.1.0
+    - python-dotenv>=1.0.0
+    - PyYAML>=6.0

@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: research-agent
+Version: 0.2.0
+Summary: Domain-based research agents with dynamic skill registry, built on Claude Agent SDK
+Requires-Python: >=3.10
+Requires-Dist: claude-agent-sdk>=0.1.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: PyYAML>=6.0

@@ -200,6 +200,88 @@ fluorophore_alt = {
 }
 ```
 
+## Scientific Colour Maps (Crameri et al.)
+
+Crameri, Shephard & Heron (2020) published "The misuse of colour in science communication" in *Nature Communications*, identifying that most colormaps used in science are perceptually distorted and inaccessible. They developed the **Scientific Colour Maps** suite -- a set of perceptually uniform, order-preserving, colorblind-friendly, and printer-friendly colormaps.
+
+### Why Use Scientific Colour Maps?
+
+1. **Perceptually uniform**: Equal data steps produce equal visual steps (unlike jet/rainbow)
+2. **Colorblind-safe**: All maps pass deuteranopia and protanopia simulation
+3. **Order-preserving**: Monotonic lightness gradient ensures correct ordering in grayscale
+4. **Printer-friendly**: Work in both color and black-and-white print
+
+### Key Colormaps
+
+#### Sequential (low to high)
+
+| Name | Description | Use Case |
+|------|-------------|----------|
+| **batlow** | Blue-yellow-red, perceptually uniform | General-purpose sequential; recommended default replacement for jet |
+| **oslo** | Dark to light gray-blue | Oceanography, depth, ice |
+| **hawaii** | Green-yellow-pink | Topography, elevation |
+| **lapaz** | Blue-gray-brown | Geophysics |
+| **davos** | Blue-white-green | Temperature, climate |
+
+#### Diverging (negative to positive)
+
+| Name | Description | Use Case |
+|------|-------------|----------|
+| **vik** | Blue-white-red | Anomalies, deviations (colorblind-safe RdBu alternative) |
+| **berlin** | Blue-white-red (darker) | Temperature anomalies |
+| **broc** | Brown-white-cyan | Geophysical anomalies |
+| **cork** | Green-white-brown | Topography anomalies |
+| **roma** | Blue-white-orange | General diverging data |
+
+#### Multi-sequential
+
+| Name | Description | Use Case |
+|------|-------------|----------|
+| **oleron** | Blue-green-brown | Topography with ocean and land |
+| **bukavu** | Blue-green-brown-yellow | Complex terrain |
+
+### Installation and Usage
+
+```bash
+# Install the cmcrameri package
+pip install cmcrameri
+```
+
+```python
+# Usage with matplotlib
+import cmcrameri.cm as cmc
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = np.random.randn(20, 20)
+
+# Sequential: batlow (recommended default)
+fig, ax = plt.subplots()
+im = ax.imshow(data, cmap=cmc.batlow)
+plt.colorbar(im, ax=ax, label='Value')
+
+# Diverging: vik (colorblind-safe alternative to RdBu)
+fig, ax = plt.subplots()
+im = ax.imshow(data, cmap=cmc.vik, vmin=-3, vmax=3)
+plt.colorbar(im, ax=ax, label='Anomaly')
+```
+
+### When to Use Crameri vs. Matplotlib Colormaps
+
+| Situation | Recommended Colormap |
+|-----------|---------------------|
+| General sequential data | `batlow` (Crameri) or `viridis` (matplotlib) |
+| Diverging data (colorblind-safe) | `vik` (Crameri) or `PuOr` (matplotlib) |
+| Geophysical/climate data | `batlow`, `oslo`, `vik` (Crameri) |
+| Quick plotting (no cmcrameri installed) | `viridis`, `cividis`, `PuOr` (matplotlib built-in) |
+| Categorical data | Okabe-Ito or Paul Tol (discrete palettes) |
+
+### Reference
+
+Crameri, F., Shephard, G.E. & Heron, P.J. (2020). The misuse of colour in science communication. *Nature Communications*, 11, 5444. https://doi.org/10.1038/s41467-020-19160-7
+
+Scientific Colour Maps: https://www.fabiocrameri.ch/colourmaps/
+
 ## Color Usage Best Practices
 
 ### Categorical Data (Qualitative Color Schemes)
