@@ -50,8 +50,8 @@ try {
       ? `⚠ 토큰 ${projPct}% 초과 → 시간 전 차단 위험`
       : `여유 (예상최종 ${projPct}%)`;
 
-    const blockPart = `블록${curPct}%·${$$(activeBlock.costUSD)}/${projCost}·리셋${resetStr}`;
-    blockLine = projTokens >= TOKEN_LIMIT ? `[${blockPart}·!토큰초과]` : `[${blockPart}]`;
+    const tokenOver = projTokens >= TOKEN_LIMIT ? '!' : '';
+    blockLine = `[5h ${curPct}%·${$$(activeBlock.costUSD)}->${projCost}${tokenOver}·${resetStr}]`;
   }
 
   // ── 주간 ──
@@ -77,11 +77,11 @@ try {
     const maxPastCost = pastWeeks.length > 0 ? Math.max(...pastWeeks.map(w => w.totalCost)) : null;
     const projWeekRaw = weekPct > 0 ? currentWeek.totalCost / (weekPct / 100) : null;
 
-    let overStr = '';
+    let projStr = '';
     if (maxPastCost && projWeekRaw) {
       const projPctNum = (projWeekRaw / maxPastCost) * 100;
       const projPct = projPctNum.toFixed(0);
-      overStr = projPctNum >= 100 ? `·!예상${projPct}%` : `·예상${projPct}%`;
+      projStr = projPctNum >= 100 ? `·${projPct}%!` : `·${projPct}%`;
     }
 
     // 모델별
@@ -91,7 +91,7 @@ try {
       .map(m => `${shortModel(m.modelName)}${$$(m.cost)}`)
       .join(' ');
 
-    weekLine = `[주간${$$(currentWeek.totalCost)}·리셋${resetStr}${overStr}·${models}]`;
+    weekLine = `[주간 ${$$(currentWeek.totalCost)}·${resetStr}${projStr} | ${models}]`;
   }
 
   console.log([blockLine, weekLine].filter(Boolean).join(' '));
