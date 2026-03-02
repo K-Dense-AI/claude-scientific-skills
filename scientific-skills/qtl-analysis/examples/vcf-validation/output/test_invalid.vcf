@@ -1,0 +1,11 @@
+##fileformat=VCFv4.2
+##fileDate=20240222
+##source=TestData
+##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of Samples">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	Sample1	Sample2	Sample3
+1	1000	rs1	A	G	99	PASS	NS=3	0/0	0/1	1/1
+1	-500	rs2	C	T	99	PASS	NS=3	GT	0/1	0/0	0/1
+2	500	rs3	G	A	50	q10	NS=3	GT	3/3	0/1	0/0
+2	500	rs4	T	C	99	PASS	NS=3	GT	./.	0/0	0/1
+CHR_X	3000	rs5	A	C	99	PASS	NS=3	GT	0/0	1/1	0/1

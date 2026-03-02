@@ -1,0 +1,4 @@
+Alpha-lattice conclusion
+========================
+Entries are distributed in incomplete blocks to reduce local field noise.
+Relative efficiency above 1.0 indicates better precision than a simple complete block layout.

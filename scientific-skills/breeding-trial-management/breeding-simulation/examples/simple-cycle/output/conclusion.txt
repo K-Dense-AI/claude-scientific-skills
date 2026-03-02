@@ -1,0 +1,4 @@
+Simulation conclusion
+====================
+Expected gain increases across cycles while diversity gradually declines.
+Use this trend to tune selection intensity before implementing long-term crossing programs.

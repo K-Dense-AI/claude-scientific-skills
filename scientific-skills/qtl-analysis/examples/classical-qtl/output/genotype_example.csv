@@ -1,0 +1,11 @@
+marker,chr,pos,Sample1,Sample2
+m1,1,0,S,H
+m2,1,10,S,H
+m3,1,20,H,S
+m4,1,30,B,S
+m5,1,40,H,S
+m6,1,50,S,H
+m7,1,60,H,B
+m8,1,70,S,S
+m9,1,80,H,S
+m10,1,90,B,H

@@ -1,0 +1,4 @@
+IoT sync conclusion
+===================
+Sensor observations are transformed into sync-ready records for Breedbase/BMS pipelines.
+This pattern can be wired to real MQTT/Kafka ingestion while preserving current offline demo behavior.

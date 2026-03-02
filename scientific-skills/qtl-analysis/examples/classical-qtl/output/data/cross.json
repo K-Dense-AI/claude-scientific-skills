@@ -1,0 +1,24 @@
+{
+  "cross_type": "f2",
+  "geno_file": "genotypes.csv",
+  "pheno_file": "phenotypes.csv",
+  "map_file": "map.csv",
+  "alleles": [
+    "A",
+    "B"
+  ],
+  "genotypes": [
+    [
+      "AA"
+    ],
+    [
+      "AB"
+    ],
+    [
+      "BB"
+    ]
+  ],
+  "na.strings": [
+    "-"
+  ]
+}

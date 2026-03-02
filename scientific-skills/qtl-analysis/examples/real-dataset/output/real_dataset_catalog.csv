@@ -1,0 +1,4 @@
+dataset,source,status,notes
+Ames panel,https://www.maizegenetics.net/,optional,Use for larger-scale GWAS benchmarking
+Maize NAM,https://www.panzea.org/,optional,Use for NAM-style QTL workflows
+Rice 3K,https://snp-seek.irri.org/,optional,Use for rice population analyses

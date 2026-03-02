@@ -8,7 +8,7 @@ description: >
   source of truth, with clear pathways to downstream Python or AI-generated images.
   Includes full style guides (markdown + mermaid), 24 diagram type references, and
   9 document templates ready to use.
-allowed-tools: Read Write Edit Bash
+allowed-tools: [Read, Write, Edit, Bash]
 license: Apache-2.0
 metadata:
   skill-author: Clayton Young / Superior Byte Works, LLC (@borealBytes)

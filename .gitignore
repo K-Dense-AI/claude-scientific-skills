@@ -11,3 +11,7 @@ uv.lock
 main.py
 
 __pycache__/
+*.pyc
+*.pyo
+.sisyphus/
+.planning/

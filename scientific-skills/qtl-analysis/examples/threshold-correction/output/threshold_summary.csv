@@ -1,0 +1,4 @@
+Method,True_Positives,False_Positives,True_Negatives,False_Negatives,Power,FDR
+Bonferroni,0,6,9944,50,0.0,1.0
+BH FDR,0,7,9943,50,0.0,1.0
+Permutation,0,6,9944,50,0.0,1.0

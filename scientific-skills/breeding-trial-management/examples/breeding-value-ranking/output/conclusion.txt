@@ -1,0 +1,4 @@
+Breeding value ranking conclusion
+=================================
+Top lines show strong expected gain with quantified uncertainty bands.
+Use CI overlap to avoid overconfidence when selecting near-tied candidates.

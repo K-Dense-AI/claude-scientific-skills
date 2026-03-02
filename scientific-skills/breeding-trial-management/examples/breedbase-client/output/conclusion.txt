@@ -1,0 +1,4 @@
+Breedbase client conclusion
+===========================
+Read/write accession workflows are represented alongside site placement metadata.
+This helps teams confirm germplasm records and deployment locations before planting.
