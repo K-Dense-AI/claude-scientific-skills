@@ -133,3 +133,20 @@ git push origin main
 - Warns before stashing
 - Dry-run by default for cleanup
 - Duplication detector is read-only
+
+---
+
+## 커밋/푸시/PR 사전 확인 (MANDATORY)
+
+**커밋, 푸시, PR 생성 전에 반드시 사용자에게 확인을 받는다.** 자동으로 수행하지 않는다.
+
+### 확인 필요 동작
+1. **커밋** — 커밋 메시지와 포함 파일 목록을 보여주고 "커밋할까요?" 확인
+2. **푸시** — 대상 remote/branch를 보여주고 "푸시할까요?" 확인
+3. **PR 생성** — PR 제목, 본문, base/head branch를 보여주고 "PR 생성할까요?" 확인
+
+### 규칙
+- 사용자가 "커밋해", "푸시해", "PR 만들어" 등 **명시적으로 요청**해도 실행 직전 요약을 보여주고 최종 확인
+- 커밋+푸시를 한 번에 요청해도 각 단계별로 확인 (커밋 확인 → 푸시 확인)
+- `--force`, `--force-with-lease` 푸시는 **반드시** 위험성 경고 후 확인
+- 이 규칙은 모든 git 레포에 적용 (claude-scientific-skills, UDH_Clustering, Kinetic-modeling 등)
