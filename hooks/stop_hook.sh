@@ -50,8 +50,8 @@ try {
       ? `⚠ 토큰 ${projPct}% 초과 → 시간 전 차단 위험`
       : `여유 (예상최종 ${projPct}%)`;
 
-    const blockPart = `블록${curPct}%·${$$(activeBlock.costUSD)}→${projCost}·리셋${resetStr}`;
-    blockLine = projTokens >= TOKEN_LIMIT ? `[${blockPart}·⚠토큰초과]` : `[${blockPart}]`;
+    const blockPart = `블록${curPct}%·${$$(activeBlock.costUSD)}/${projCost}·리셋${resetStr}`;
+    blockLine = projTokens >= TOKEN_LIMIT ? `[${blockPart}·!토큰초과]` : `[${blockPart}]`;
   }
 
   // ── 주간 ──
@@ -81,7 +81,7 @@ try {
     if (maxPastCost && projWeekRaw) {
       const projPctNum = (projWeekRaw / maxPastCost) * 100;
       const projPct = projPctNum.toFixed(0);
-      overStr = projPctNum >= 100 ? `·⚠예상${projPct}%` : `·예상${projPct}%`;
+      overStr = projPctNum >= 100 ? `·!예상${projPct}%` : `·예상${projPct}%`;
     }
 
     // 모델별
