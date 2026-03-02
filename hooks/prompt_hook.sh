@@ -4,9 +4,9 @@
 PENDING='/c/Users/Jahyun/.claude/pending_usage.txt'
 TODOS_DIR='/c/Users/Jahyun/.claude/todos'
 
-# 1) 이전 세션 사용량 보고
+# 1) 이전 세션 사용량 컨텍스트 주입 (보고 지시 없음)
 if [ -f "$PENDING" ] && [ -s "$PENDING" ]; then
-    echo '=== [토큰 사용량 자동 보고] 응답 맨 앞에 이번 주 사용량을 한 줄로 간단히 알려주세요 ==='
+    echo '=== [현재 사용량 컨텍스트] ==='
     cat "$PENDING"
     echo '==='
     rm -f "$PENDING"
