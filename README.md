@@ -462,8 +462,9 @@ This repository contains **148 scientific and research skills** organized across
 - Exploratory data analysis: EDA workflows
 - Statistical analysis: Statistical Analysis workflows
 
-#### 🧪 **Laboratory Automation** (3 skills)
+#### 🧪 **Laboratory Automation** (4 skills)
 - Liquid handling: PyLabRobot
+- Cloud lab: Ginkgo Cloud Lab (cell-free protein expression, fluorescent pixel art via autonomous RAC infrastructure)
 - Protocol management: Protocols.io
 - LIMS integration: Benchling, LabArchives
 

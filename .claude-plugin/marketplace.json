@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.24.0"
+    "version": "2.25.0"
   },
   "plugins": [
     {
@@ -39,6 +39,7 @@
         "./scientific-skills/geniml",
         "./scientific-skills/geopandas",
         "./scientific-skills/gget",
+        "./scientific-skills/ginkgo-cloud-lab",
         "./scientific-skills/gtars",
         "./scientific-skills/histolab",
         "./scientific-skills/imaging-data-commons",
