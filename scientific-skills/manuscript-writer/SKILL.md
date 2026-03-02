@@ -92,6 +92,22 @@ Analyze each section separately. Report errors by category:
 - Enzyme: regular for protein, italic for gene
 - Species: E. coli after first full mention
 
+**[SOFTWARE PACKAGE NAME]** ← Software Availability / Methods 섹션 작성 시 확인
+- 공식 표기 기준 (PyPI/공식 문서 우선):
+  | 패키지 | 공식 표기 | 주의 |
+  |--------|----------|------|
+  | SciPy | `SciPy` | 대문자 S, P |
+  | LMFIT | `LMFIT` | 전체 대문자 (lmfit ❌) |
+  | SALib | `SALib` | SA 대문자, Lib 소문자 |
+  | NumPy | `NumPy` | 대문자 N, P |
+  | pandas | `pandas` | 전체 소문자 (문장 첫 단어도!) |
+  | Matplotlib | `Matplotlib` | 대문자 M만 (matplotlib ❌) |
+  | statsmodels | `statsmodels` | 전체 소문자 |
+  | openpyxl | `openpyxl` | 전체 소문자 |
+  | XlsxWriter | `XlsxWriter` | X, W 대문자 |
+- 인명 유래 메서드: `Sobol method` (OK) / `Sobol' method` (러시아어 연음부호 포함, 정확) / `Sobol's method` (비공식, 비권장)
+- Main vs SI 소프트웨어명 일관성 교차 확인 필수
+
 **[REFERENCE]**
 - Space before reference: "reported [1]." or "reported [1],"
 - No duplicate references
