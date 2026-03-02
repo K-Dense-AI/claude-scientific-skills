@@ -4,12 +4,13 @@
 PENDING='/c/Users/Jahyun/.claude/pending_usage.txt'
 TODOS_DIR='/c/Users/Jahyun/.claude/todos'
 
-# 1) 이전 세션 사용량 컨텍스트 주입 (보고 지시 없음)
+# 1) 이전 세션 사용량 보고 - 첫 줄에 그대로 출력
 if [ -f "$PENDING" ] && [ -s "$PENDING" ]; then
-    echo '=== [현재 사용량 컨텍스트] ==='
-    cat "$PENDING"
-    echo '==='
+    USAGE=$(cat "$PENDING")
     rm -f "$PENDING"
+    echo "=== [사용량 보고] 응답 맨 첫 줄에 아래 텍스트를 그대로 복사해서 출력하세요 (수정 금지) ==="
+    echo "$USAGE"
+    echo "==="
 fi
 
 # 2) 진행 중인 작업 감지 (최근 2분 내 수정된 todos 파일 확인)
