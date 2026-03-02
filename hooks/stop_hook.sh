@@ -7,7 +7,7 @@ TMPDIR='/c/Users/Jahyun/.claude'
 ccusage weekly --offline --json 2>/dev/null > "$TMPDIR/claude_weekly.json"
 ccusage blocks --recent --offline --json 2>/dev/null > "$TMPDIR/claude_blocks.json"
 
-node << 'EOF' > "$PENDING" 2>/dev/null
+node << 'EOF' 2>/dev/null | tee "$PENDING"
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
