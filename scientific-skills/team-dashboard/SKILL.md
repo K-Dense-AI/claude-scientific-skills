@@ -335,6 +335,39 @@ asana_create_task(
 
 ---
 
+## 작업 생성 원칙 (Task Creation Principles)
+
+### 기본 규칙
+
+1. **워크스페이스**: 항상 `Ribose team (GID: 1202946172929462)` 사용
+   - 다른 워크스페이스(FBE, FBE-FBR 공동연구 등)에 생성하지 않도록 주의
+2. **담당자**: 특별히 언급 없으면 `me` (이자현) 기본 할당
+3. **마감일**: 명시적 언급 없으면 M5 복잡도 분석으로 자동 추천
+
+### 체크박스 항목 → 서브태스크로 생성
+
+Asana notes에 번호 목록으로 적는 대신, **체크박스가 필요한 항목은 서브태스크(subtask)로 생성**한다.
+
+```python
+# ❌ 잘못된 방법: notes에 목록으로 작성
+asana_create_task(
+  name="작업명",
+  notes="1. 항목A\n2. 항목B"
+)
+
+# ✅ 올바른 방법: 각 항목을 서브태스크로 생성
+parent_task = asana_create_task(name="작업명", workspace=RIBOSE_GID, assignee="me")
+asana_create_task(name="항목A", parent=parent_task.gid, assignee="me")
+asana_create_task(name="항목B", parent=parent_task.gid, assignee="me")
+```
+
+**적용 기준:**
+- 사용자가 "체크박스로", "항목별로", "리스트로" 언급 시 → 서브태스크
+- 디스커션에서 세부 확인사항이 2개 이상 있는 액션 아이템 → 서브태스크
+- 단순 메모성 설명 → notes에 작성
+
+---
+
 ## API 호출 최적화 (토큰 절약)
 
 ### 원칙
