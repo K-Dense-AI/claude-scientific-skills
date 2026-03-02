@@ -104,6 +104,16 @@ Analyze each section separately. Report errors by category:
 - All figures mentioned in text
 - Lowercase subpanel: Figure 1a, Figure 1b
 - SI format: Figure S1
+- Caption bold 패턴 (ACS/JACS): **"Figure X."** 번호만 bold, 나머지 캡션 텍스트는 plain
+  - ❌ 전체 캡션 bold, 번호와 캡션 mixed bold 모두 오류
+  - 캡션 앞 선행 공백 없어야 함 (leading space 확인)
+
+**[BOLD 일관성]** ← ACS/JACS docx 체크 시 추가 확인
+- 참고문헌 연도 bold (예: **2024**) → ACS 스타일 정상, 수정 불필요
+- 본문 내 이중공백처럼 보이는 공백 → 수식 변수 field object 갭일 가능성 높음, 진짜 오류 아님
+- 섹션명 인라인 참조 bold (예: "as described in the **Analytical methods** section") → JACS 비공식 허용이나 italic 권장. 일관성 확인
+- Author contributions 저자 이니셜 bold (예: **J.H.L.**) → JACS 정상
+- 본문 중 특정 문장만 accidentally bold → 트래킹 변경 잔재 가능성, 확인 필요
 
 **[FORMATTING]**
 - Number + unit spacing: 10 mM, 50 °C, 100 rpm
@@ -283,5 +293,24 @@ Supported journal styles:
 
 - 원고 초안은 보조 도구, 최종 텍스트는 연구자 검토/수정
 - 저널 스타일 변환 후 수동 검증 필요
+
+## Word 코멘트 달기 (docx comment 삽입)
+
+`add_comments.py` 패턴을 사용할 때 반드시 아래 3가지를 모두 처리해야 Word가 코멘트를 인식함:
+
+### 필수 체크리스트
+1. **`word/comments.xml`** — 코멘트 내용 정의
+2. **`word/_rels/document.xml.rels`** — comments 관계(Relationship) 등록
+3. **`[Content_Types].xml`** — `/word/comments.xml` Override 등록 ← **자주 누락되는 항목**
+
+```xml
+<!-- [Content_Types].xml에 반드시 추가 -->
+<Override PartName="/word/comments.xml"
+  ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"/>
+```
+
+### 재사용 스크립트
+`C:\Users\Jahyun\OneDrive - 호서대학교\논문\LRib\LRib Manuscripts\투고 이전\JACS\add_comments.py`
+→ 위 3가지 모두 처리하는 완전한 버전. 새 docx 코멘트 작업 시 이 파일을 복사해 사용.
 
 사용자 요청: $ARGUMENTS
