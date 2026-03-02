@@ -4,6 +4,10 @@
 # This style provides clean, professional formatting suitable
 # for most scientific journals
 
+# PDF/PS font type (42 = TrueType, prevents Type 3 fonts)
+pdf.fonttype: 42
+ps.fonttype: 42
+
 # Figure properties
 figure.dpi: 100
 figure.facecolor: white
@@ -59,7 +63,7 @@ legend.loc: best
 savefig.dpi: 300
 savefig.format: pdf
 savefig.bbox: tight
-savefig.pad_inches: 0.05
+savefig.pad_inches: 0.02
 savefig.transparent: False
 savefig.facecolor: white
 

@@ -1,0 +1,35 @@
+# Known Python Package Version Conflicts
+# Used by check_env.py for automated conflict detection
+
+- name: numba-numpy
+  packages: [numba, numpy]
+  check: numba_numpy
+  description: "Numba C API binding requires specific NumPy version range"
+  detail: "numba 0.63.x → numpy<=2.3, numba 0.62.x → numpy<=2.2"
+  fix: "pip install 'numpy<=2.3'"
+
+- name: torch-numpy
+  packages: [torch, numpy]
+  check: torch_numpy
+  description: "PyTorch may conflict with latest NumPy"
+  detail: "torch 2.x may not support numpy>=2.4"
+  fix: "pip install 'numpy<2.4'"
+
+# Conda/pip mixing issues (detected by duplicate check, not version check)
+# These are patterns to be aware of:
+#
+# Pattern: numpoly ghost
+#   Symptom: pip installs numpoly 0.1.0, conda installs 1.3.9 but pip version takes priority
+#   Cause: pip dist-info overrides conda-installed package
+#   Fix: pip uninstall numpoly && conda install -c conda-forge numpoly
+#
+# Pattern: C extension build failure on Windows
+#   Symptom: "Microsoft Visual C++ 14.0 or greater is required"
+#   Cause: Package has C extensions but no pre-built wheel for Windows
+#   Fix: Use conda-forge binary instead of pip
+#   Affected packages: numpoly, rdkit, openmm, pyarrow (older versions)
+#
+# Pattern: conda environment activation in Claude Code
+#   Symptom: conda activate doesn't work in Claude Code bash
+#   Cause: Claude Code bash doesn't load ~/.bashrc
+#   Fix: Use 'conda run -n env_name command' or set CLAUDE_ENV_FILE

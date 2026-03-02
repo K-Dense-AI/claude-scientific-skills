@@ -1,0 +1,23 @@
+{
+  "skill_name": "asana-extended-api",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "김유담의 'AcP Synthesis' 태스크를 팀원관리 프로젝트에도 추가해줘. 태스크 GID는 1212636876875978이고 팀원관리 프로젝트 GID는 1213473127047670이야.",
+      "expected_output": "addProject API를 사용하는 Python 스크립트를 workspace에 생성하고, 로컬 실행 안내",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Nucleoside APIs 프로젝트에 '진행중' 섹션을 새로 만들고, 태스크 3개를 그 섹션으로 옮겨줘. 프로젝트 GID: 1211503856522344, 태스크 GID: 1212636876875978, 1211690702655189, 1211690702655192",
+      "expected_output": "createSection + addTaskToSection을 조합한 Python 스크립트 생성",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "이 태스크들을 한번에 팀원관리 프로젝트에 넣어줘: 1213445258351390, 1212636876875978, 1211690702655189, 1211690702655192, 1211503856522349. 프로젝트 GID는 1213473127047670",
+      "expected_output": "batch_add_to_project 또는 반복 addProject를 사용하는 일괄 처리 스크립트 생성",
+      "files": []
+    }
+  ]
+}

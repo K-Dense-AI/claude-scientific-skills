@@ -1,9 +1,11 @@
 .claude
 .DS_Store
+.vscode/
 
 temp/
 
 pyproject.toml
+!research-agent-sdk/pyproject.toml
 uv.lock
 
 .venv/

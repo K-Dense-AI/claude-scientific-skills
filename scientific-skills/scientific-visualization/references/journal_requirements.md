@@ -256,6 +256,84 @@ Example: `abn1234_Fig1.eps`
 - Source data encouraged
 - Accessibility important (colorblind-friendly)
 
+## PNAS (Proceedings of the National Academy of Sciences)
+
+### Technical Specifications
+- **File formats**:
+  - Vector: EPS, PDF (preferred for graphs)
+  - Raster: TIFF, PNG
+  - Never: PowerPoint, Word, JPEG
+
+- **Resolution**:
+  - Line art: 1000 DPI minimum
+  - Photographs: 300 DPI minimum
+  - Combination: 600 DPI minimum
+
+- **Color space**: RGB (digital-first publication)
+
+- **Dimensions**:
+  - Single column: 8.7 cm (3.42 inches)
+  - 1.5 column: 11.4 cm (4.49 inches)
+  - Double column: 17.8 cm (7.01 inches)
+  - Maximum height: 23.0 cm (9.06 inches)
+
+- **Fonts**:
+  - Helvetica or Arial preferred
+  - Minimum 6 pt at final size
+  - Embed all fonts in PDF/EPS
+
+### PNAS Specific Guidelines
+- Panel labels: uppercase bold (A, B, C) or italic lowercase (a, b, c) -- check current guidelines
+- Scale bars required for microscopy
+- Color figures at no extra charge
+- SI units required throughout
+- Figures placed after references in initial submission
+- Source data required for all graphs
+- Data Availability statement mandatory
+
+### File Naming
+Format: `pnas.XXXXXXXXXX.fig01.ext`
+Example: `pnas.2312345678.fig01.pdf`
+
+## RSC (Royal Society of Chemistry)
+
+### Technical Specifications
+- **File formats**:
+  - Vector: EPS, CDX (ChemDraw), PDF
+  - Raster: TIFF (preferred), PNG
+  - Application: ChemDraw CDX/CDXML files accepted directly
+
+- **Resolution**:
+  - Line art: 1200 DPI
+  - Photographs: 600 DPI
+  - Combination: 600 DPI
+
+- **Color space**: RGB (online first); CMYK available for some print journals
+
+- **Dimensions**:
+  - Single column: 8.5 cm (3.35 inches)
+  - Double column: 17.1 cm (6.73 inches)
+  - Maximum height: 23.5 cm (9.25 inches)
+
+- **Fonts**:
+  - Sans-serif (Arial, Helvetica)
+  - Minimum 7 pt at final size
+  - Embed all fonts
+
+### RSC Specific Guidelines
+- Chemical structures: ChemDraw CDX files strongly preferred
+- ChemDraw settings: RSC template available in ChemDraw
+- Atom labels: 10 pt minimum
+- Bond thickness: 2 pt
+- Panel labels: (a), (b), (c) lowercase in parentheses
+- Color figures free for online; may incur charges for print
+- Schemes numbered separately from Figures
+- TOC graphic: maximum 6 x 8 cm, 600 DPI
+
+### File Naming
+Format: `Surname_FigX.ext`
+Example: `Kim_Fig1.eps`
+
 ## Common Requirements Across Journals
 
 ### Universal Best Practices
@@ -283,6 +361,8 @@ Example: `abn1234_Fig1.eps`
 | Cell Press | 85 mm | 178 mm | 300 | 1000 | EPS, PDF |
 | PLOS | 8.3 cm | 17.3 cm | 300 | 600 | EPS, TIFF |
 | ACS | 3.25 in | 7 in | 300 | 600 | TIFF, EPS |
+| PNAS | 8.7 cm | 17.8 cm | 300 | 1000 | EPS, PDF |
+| RSC | 8.5 cm | 17.1 cm | 600 | 1200 | EPS, TIFF |
 
 ## Checking Requirements
 
