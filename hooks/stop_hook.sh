@@ -50,7 +50,8 @@ try {
       ? `⚠ 토큰 ${projPct}% 초과 → 시간 전 차단 위험`
       : `여유 (예상최종 ${projPct}%)`;
 
-    blockLine = `[5h블록] 현재 ${curPct}% ${$$(activeBlock.costUSD)} | 초기화 ${resetStr} (${h}h${m}m 후) | 이대로라면 ${projCost} · ${tokenWarning}`;
+    const blockPart = `블록${curPct}%·${$$(activeBlock.costUSD)}→${projCost}·리셋${resetStr}`;
+    blockLine = projTokens >= TOKEN_LIMIT ? `[${blockPart}·⚠토큰초과]` : `[${blockPart}]`;
   }
 
   // ── 주간 ──
@@ -58,50 +59,42 @@ try {
   const currentWeek = weekList[weekList.length - 1];
   let weekLine = '';
   if (currentWeek) {
-    const weekCost = $$(currentWeek.totalCost);
     const weekStart = new Date(currentWeek.week + 'T00:00:00');
     const weekEnd   = new Date(weekStart.getTime() + 7 * 24 * 3600 * 1000);
     const now = Date.now();
 
     // 경과율 (시간 기준)
     const weekPct = Math.min(100, (now - weekStart.getTime()) / (7 * 24 * 3600 * 1000) * 100);
-    const weekPctStr = weekPct.toFixed(0);
 
     // 초기화까지 남은 시간
     const remainMs = weekEnd - now;
     const remainDays = Math.floor(remainMs / (24 * 3600 * 1000));
     const remainHrs  = Math.floor((remainMs % (24 * 3600 * 1000)) / (3600 * 1000));
-    const resetStr = remainDays > 0 ? `D-${remainDays} ${remainHrs}h` : `${remainHrs}h`;
+    const resetStr = remainDays > 0 ? `D-${remainDays}` : `${remainHrs}h후`;
 
-    // 현재 페이스로 주간 완료 시 예상 비용
-    const projWeekRaw = weekPct > 0 ? currentWeek.totalCost / (weekPct / 100) : null;
-    const projWeekCost = projWeekRaw ? $$(projWeekRaw) : '?';
-
-    // 전주 대비 비교 + 역대 최대 대비 예상최종 %
-    const prevWeek = weekList[weekList.length - 2];
-    const pastWeeks = weekList.slice(0, -1); // 이번 주 제외
+    // 역대 최대 대비 예상최종 %
+    const pastWeeks = weekList.slice(0, -1);
     const maxPastCost = pastWeeks.length > 0 ? Math.max(...pastWeeks.map(w => w.totalCost)) : null;
+    const projWeekRaw = weekPct > 0 ? currentWeek.totalCost / (weekPct / 100) : null;
 
-    // 주간 한도(역대최대) 대비 현재 % 및 예상최종 %
-    let weekStatusStr = '';
-    if (maxPastCost) {
-      const curVsMax  = ((currentWeek.totalCost / maxPastCost) * 100).toFixed(0);
-      const projPctNum = projWeekRaw ? (projWeekRaw / maxPastCost) * 100 : null;
-      const projPct   = projPctNum ? projPctNum.toFixed(0) : '?';
-      const status    = projPctNum && projPctNum >= 100 ? '초과위험' : '여유';
-      weekStatusStr   = `, 한도대비 ${curVsMax}% 이대로라면 - ${status} (예상최종 ${projPct}%)`;
+    let overStr = '';
+    if (maxPastCost && projWeekRaw) {
+      const projPctNum = (projWeekRaw / maxPastCost) * 100;
+      const projPct = projPctNum.toFixed(0);
+      overStr = projPctNum >= 100 ? `·⚠예상${projPct}%` : `·예상${projPct}%`;
     }
 
+    // 모델별
     const models = (currentWeek.modelBreakdowns || [])
       .filter(m => m.cost > 0.5)
       .sort((a, b) => b.cost - a.cost)
-      .map(m => `${shortModel(m.modelName)} ${$$(m.cost)}`)
-      .join(' · ');
+      .map(m => `${shortModel(m.modelName)}${$$(m.cost)}`)
+      .join(' ');
 
-    weekLine = `[주간] ${weekCost} · 초기화 ${resetStr} 후 (${weekPctStr}% 경과${weekStatusStr}) | ${models}`;
+    weekLine = `[주간${$$(currentWeek.totalCost)}·리셋${resetStr}${overStr}·${models}]`;
   }
 
-  console.log([blockLine, weekLine].filter(Boolean).join('\n'));
+  console.log([blockLine, weekLine].filter(Boolean).join(' '));
 } catch(e) {
   console.log('사용량 파싱 오류: ' + e.message);
 }
