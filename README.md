@@ -587,6 +587,19 @@ We welcome contributions to expand and improve this scientific skills repository
 ✅ Provide clear comments and docstrings in code  
 ✅ Include references to official documentation
 
+### Security Scanning
+
+All skills in this repository are security-scanned using [Cisco AI Defense Skill Scanner](https://github.com/cisco-ai-defense/skill-scanner), an open-source tool that detects prompt injection, data exfiltration, and malicious code patterns in Agent Skills.
+
+If you are contributing a new skill, we recommend running the scanner locally before submitting a pull request:
+
+```bash
+uv pip install cisco-ai-skill-scanner
+skill-scanner scan /path/to/your/skill --use-behavioral
+```
+
+> **Note:** A clean scan result reduces noise in review, but does not guarantee a skill is free of all risk. Contributed skills are also reviewed manually before merging.
+
 ### Recognition
 
 Contributors are recognized in our community and may be featured in:

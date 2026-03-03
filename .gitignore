@@ -11,3 +11,5 @@ uv.lock
 main.py
 
 __pycache__/
+
+.env
