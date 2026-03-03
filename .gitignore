@@ -13,3 +13,5 @@ main.py
 __pycache__/
 
 .env
+
+scan_skills.py
