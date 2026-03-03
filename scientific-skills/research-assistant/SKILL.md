@@ -20,22 +20,25 @@ description: 연구 논문 검색, 문헌 리뷰 자동화, 사실관계 확인,
 
 ### 다중 소스 검색 전략
 
-검색은 반드시 **2회 이상** 실행하여 커버리지를 확보한다.
+**필수 검색 2개 + 해당 선택 검색을 단일 응답에 묶어 동시 병렬 실행한다 (순차 금지).**
 
-**필수 검색 (2회):**
+**필수 검색 (2개):**
 ```
-쿼리 1: {핵심 키워드} site:pubmed.ncbi.nlm.nih.gov
-쿼리 2: {핵심 키워드} {추가 키워드/동의어} review OR recent
-```
-
-**선택 검색 (필요 시):**
-```
-쿼리 3: {키워드} site:biorxiv.org
-쿼리 4: {키워드} site:nature.com OR site:sciencedirect.com
-쿼리 5: {EC번호 또는 기질명} enzyme characterization
+쿼리 A: {핵심 키워드} site:pubmed.ncbi.nlm.nih.gov
+쿼리 B: {핵심 키워드} {추가 키워드/동의어} review OR recent
 ```
 
-### DOI 자동 보완: 핵심 논문 5편 이내에서 web_fetch로 PubMed DOI 추출
+**선택 검색 (해당 시, 필수 검색과 동시 실행):**
+```
+쿼리 C: {키워드} site:biorxiv.org
+쿼리 D: {키워드} site:nature.com OR site:sciencedirect.com
+쿼리 E: {EC번호 또는 기질명} enzyme characterization
+```
+
+> 실행 방법: 한 번의 응답에 WebSearch 툴 호출을 2~5개 병렬로 묶어 동시 실행.
+> 결과를 기다린 뒤 취합하여 분석.
+
+### DOI 보완: 검색 결과에 DOI가 없는 핵심 논문에 한해 WebFetch로 PubMed 페이지에서 추출 (필요 시만, 무조건 실행 금지)
 
 ### 인용 규칙: APA 7th Edition, DOI 필수
 

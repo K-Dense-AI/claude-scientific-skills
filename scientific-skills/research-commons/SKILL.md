@@ -9,6 +9,16 @@ experiment-hub, research-discussion, research-assistant, manuscript-writer 4개 
 
 ---
 
+## 병렬 처리 규칙 (필수)
+
+**연구/조사 병렬화에는 `Agent` 서브에이전트만 사용. `TeamCreate` 절대 금지.**
+
+- `TeamCreate`로 생성된 in-process 에이전트는 세션 종료 후에도 폴링 루프가 지속되어 좀비 에이전트가 된다
+- 병렬 문헌 조사, 웹 검색, 데이터 수집 등은 모두 `Agent` 도구(subagent_type 지정)로만 처리한다
+- 이 규칙은 experiment-hub, research-discussion, research-assistant, manuscript-writer 모두에 적용
+
+---
+
 ## 인용 규칙 (APA 7th Edition)
 
 ### 본문 인용
