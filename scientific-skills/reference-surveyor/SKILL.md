@@ -15,7 +15,6 @@ P1 (학문적 검토) → [P1.5 Reference Survey] → P2 (구현)
 
 ## 실행 방식
 
-
 - 레포 탐색: WebSearch 병렬 호출 (Papers With Code + GitHub 동시 검색)
 - 레포 평가: Bash로 `gh repo view` 등 직접 확인
 - 예시 실행: Bash로 clone → venv → pip install → 실행
