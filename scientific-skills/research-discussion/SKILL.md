@@ -628,6 +628,12 @@ disc:action 도출
     → 사용자 확인 후 asana_create_task(project_id, name, assignee, due_on, notes)
 ```
 
+**⚠️ Asana 태스크 출력 규칙 (필수):**
+- 태스크명·서브태스크명 언급 시 **반드시** `[태스크명](permalink_url)` 마크다운 링크로 출력
+- GID만 적거나 따옴표 텍스트로만 쓰는 것 금지
+- permalink_url 없을 경우: `https://app.asana.com/0/0/{gid}/f` 형식 사용
+- opt_fields에 `permalink_url` 항상 포함
+
 **Asana 팀원관리 프로젝트 연동:**
 ```
 Workspace: Ribose team (GID: 1202946172929462)
