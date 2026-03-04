@@ -28,7 +28,14 @@ with open("C:/Users/Jahyun/tmp_ppt.txt", 'w', encoding='utf-8', errors='replace'
     f.write(result.text_content)
 ```
 
-### Step 1.5. 정밀 텍스트 추출 및 오타 탐지 (python-pptx)
+### Step 1.5. 학술 표기 규칙 로드 + 정밀 텍스트 추출 (python-pptx)
+
+**먼저 Read 도구로 규칙 파일을 읽어올 것:**
+```
+Read: C:/Users/Jahyun/.claude/commands/academic-term-rules.md
+```
+이 파일에는 균주명·유전자·효소·단위·통계·figure caption·dash 규칙 및 TYPO_PATTERNS가 정의되어 있음.
+규칙을 숙지한 뒤 아래 python-pptx 추출 텍스트에 적용하여 검토.
 
 markitdown은 유니코드 특수문자로 인해 중간에 잘릴 수 있으므로, 오타 탐지는 python-pptx로 별도 추출.
 
@@ -80,14 +87,23 @@ for run in para.runs:
 - "나중에 보완", "추후 수정" 등의 미완성 표시 → 수정 필수 표기
 - 슬라이드 본문이 없고 노트만 있는 경우 → 시각화 필요
 
-**학술적 엄밀성 체크리스트**
-- [ ] 통계: n수, error bar, p-value 존재 여부
+**학술적 엄밀성 체크리스트** (academic-term-rules.md의 MANUAL_REVIEW 항목 포함)
+- [ ] 통계: n수, error bar (SD/SEM/CI 명시), p-value 존재 여부
 - [ ] 방법론: 실험 조건 가정 근거 명시 여부
 - [ ] 문헌 인용: 가설/결론 근거 문헌 여부
 - [ ] 효소 kinetics: Km 추정 시 [S] 범위가 Km 주변을 포함하는지 (0.2×Km ~ 10×Km)
 - [ ] 분석 신뢰성: detection limit, S/N ratio 고려 여부
 - [ ] 데이터 보정: 보정 방법론 가정 명시 여부
 - [ ] 결론 타당성: 데이터→결론 논리 검토
+- [ ] 학명 이탤릭 여부 (Genus species)
+- [ ] 유전자명 이탤릭·소문자 여부 (xylA, gldA 등)
+- [ ] 단백질/효소 약어 첫 등장 시 전체명 병기 여부 (BsGDH, PsFDH 등)
+- [ ] Figure 번호 존재 여부 ("Figure." → "Figure 1.")
+- [ ] 캡션 내 실험 조건 완비 (온도, pH, 시간, 기질 농도)
+- [ ] Relative amount 정규화 기준 명시
+- [ ] 단위 표기: µL (ul 금지), µM (uM 금지), h (hr 금지), °C (℃ 금지), 숫자-단위 공백
+- [ ] 범위 표기: en dash(–) 사용 (hyphen(-) 금지) — pH 3–5, 25–45 °C
+- [ ] NAD⁺/NADP⁺ 위첨자 적용 여부
 
 ### Step 3. 댓글 삽입 — PowerPoint COM API (권장)
 
