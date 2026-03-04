@@ -100,8 +100,6 @@ main → dev → exp/{name} → fix/{issue}
 
 ## Step 2-5: 품질 게이트
 
-**팀 생성 금지. Bash 병렬 호출로 처리한다.**
-
 ruff, mypy, pytest를 **한 메시지에서 Bash 3개 병렬 호출**:
 ```bash
 # Bash 1        # Bash 2          # Bash 3

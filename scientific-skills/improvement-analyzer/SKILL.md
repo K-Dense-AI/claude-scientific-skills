@@ -9,8 +9,6 @@ description: 사이클 종료 시 개선점 도출 도구. (1) P1~P4 에러·회
 
 ## 실행 방식
 
-**팀 생성 금지. 직접 순차 실행한다.**
-
 Step 1–3은 파일 읽기+분석이므로 에이전트 없이 직접 처리한다.
 upstream 확인만 Bash로 `git fetch upstream && git log upstream/main..HEAD --oneline` 실행.
 

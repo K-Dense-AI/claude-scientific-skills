@@ -15,7 +15,6 @@ P1 (학문적 검토) → [P1.5 Reference Survey] → P2 (구현)
 
 ## 실행 방식
 
-**팀 생성 금지. WebSearch + Bash 직접 실행으로 처리한다.**
 
 - 레포 탐색: WebSearch 병렬 호출 (Papers With Code + GitHub 동시 검색)
 - 레포 평가: Bash로 `gh repo view` 등 직접 확인
