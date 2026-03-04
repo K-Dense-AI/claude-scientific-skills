@@ -185,6 +185,51 @@ task_gids = ["GID1", "GID2", "GID3"]
 api.batch_add_to_project(task_gids, "PROJECT_GID")
 ```
 
+## html_notes 사용법 (태스크 링크 포함)
+
+`html_notes` 필드로 서식 있는 설명 + 태스크 링크(@멘션)를 만들 수 있다.
+MCP 도구 `html_notes` 파라미터도 동일 규칙 적용.
+
+### 지원 태그
+
+```
+<body>   — 루트 필수 (없으면 html_lacks_body 오류)
+<ul>, <li>  — 목록
+<strong>, <em>  — 강조
+<a data-asana-gid="GID"/>  — 태스크/프로젝트 링크 (자동 확장)
+&#10;   — 줄바꿈
+&lt; &gt;  — < > 이스케이프
+```
+
+### ⚠️ 주의: `<p>` 태그 사용 불가
+
+`<p>` 태그는 Asana XML 파서에서 **xml_parsing_error** 발생. 줄바꿈은 `&#10;` 사용.
+
+### 태스크 링크 생성 예시
+
+```python
+html = (
+    '<body>'
+    '<strong>섹션 제목</strong>&#10;'
+    '본문 내용. 참고 태스크: <a data-asana-gid="1211779567725587"/>&#10;'
+    '<ul><li>항목 1</li><li>항목 2</li></ul>'
+    '</body>'
+)
+data = json.dumps({'data': {'html_notes': html}}, ensure_ascii=False).encode('utf-8')
+req = urllib.request.Request(
+    f'https://app.asana.com/api/1.0/tasks/{task_gid}',
+    data=data, method='PUT',
+    headers={
+        'Authorization': f'Bearer {pat}',
+        'Content-Type': 'application/json; charset=utf-8',
+    }
+)
+```
+
+`<a data-asana-gid="GID"/>` → Asana API가 자동으로 태스크명 + permalink로 확장해줌.
+
+---
+
 ## 주의사항
 
 - Asana Free 플랜에서도 모든 REST API가 동작한다 (search_tasks만 Premium 필요).

@@ -13,20 +13,37 @@ import json
 import time
 import urllib.request
 import urllib.error
+from pathlib import Path
 
 BASE_URL = "https://app.asana.com/api/1.0"
+_SECRETS_FILE = Path.home() / ".claude" / "secrets.json"
+
+
+def _load_pat():
+    """PAT 로드 우선순위: 환경변수 → ~/.claude/secrets.json"""
+    pat = os.environ.get("ASANA_PAT")
+    if pat:
+        return pat
+    if _SECRETS_FILE.exists():
+        try:
+            secrets = json.loads(_SECRETS_FILE.read_text(encoding="utf-8"))
+            pat = secrets.get("ASANA_PAT")
+            if pat:
+                return pat
+        except Exception:
+            pass
+    raise ValueError(
+        "ASANA_PAT를 찾을 수 없습니다.\n"
+        "아래 중 하나를 선택하세요:\n"
+        f"  방법 1: {_SECRETS_FILE} 파일에 {{\"ASANA_PAT\": \"2/xxxx...\"}} 저장\n"
+        "  방법 2: 환경변수 설정: setx ASANA_PAT 2/xxxx...\n"
+        "  PAT 발급: https://app.asana.com/0/my-apps"
+    )
 
 
 class AsanaAPI:
     def __init__(self, pat=None):
-        self.pat = pat or os.environ.get("ASANA_PAT")
-        if not self.pat:
-            raise ValueError(
-                "ASANA_PAT 환경변수가 설정되지 않았습니다.\n"
-                "1. https://app.asana.com/0/my-apps 접속\n"
-                "2. Personal access token → New access token 생성\n"
-                "3. 환경변수 설정: set ASANA_PAT=2/xxxx/xxxx:xxxx"
-            )
+        self.pat = pat or _load_pat()
 
     def _request(self, method, path, data=None):
         """Asana API 호출. 성공 시 응답 dict, 실패 시 예외 발생."""
