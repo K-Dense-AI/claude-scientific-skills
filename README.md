@@ -455,7 +455,7 @@ This repository contains **149 scientific and research skills** organized across
 
 #### 📊 **Data Analysis & Visualization** (15+ skills)
 - Visualization: Matplotlib, Seaborn, Plotly, Scientific Visualization
-- Geospatial analysis: GeoPandas, GeoMaster (comprehensive geospatial science covering remote sensing, GIS, spatial analysis, satellite imagery processing, and machine learning for Earth observation)
+- Geospatial analysis: GeoPandas, GeoMaster (comprehensive geospatial science covering remote sensing, GIS, spatial analysis, satellite imagery processing, machine learning for Earth observation, 8 programming languages, cloud-native workflows with STAC/COG, and comprehensive troubleshooting guide)
 - Network analysis: NetworkX
 - Symbolic math: SymPy
 - Document processing: Document Skills (PDF, DOCX, PPTX, XLSX)
