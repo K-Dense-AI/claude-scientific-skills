@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.26.0"
+    "version": "2.27.0"
   },
   "plugins": [
     {
@@ -169,10 +169,10 @@
         "./scientific-skills/scientific-slides",
         "./scientific-skills/treatment-plans",
         "./scientific-skills/venue-templates",
-        "./scientific-skills/document-skills/docx",
-        "./scientific-skills/document-skills/pdf",
-        "./scientific-skills/document-skills/pptx",
-        "./scientific-skills/document-skills/xlsx",
+        "./scientific-skills/docx",
+        "./scientific-skills/pdf",
+        "./scientific-skills/pptx",
+        "./scientific-skills/xlsx",
         "./scientific-skills/benchling-integration",
         "./scientific-skills/dnanexus-integration",
         "./scientific-skills/labarchive-integration",
