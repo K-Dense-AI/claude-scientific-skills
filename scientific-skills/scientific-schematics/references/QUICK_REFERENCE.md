@@ -1,6 +1,6 @@
 # Scientific Schematics - Quick Reference
 
-**How it works:** Describe your diagram → Nano Banana Pro generates it automatically
+**How it works:** Describe your diagram → Nano Banana 2 generates it automatically
 
 ## Setup (One-Time)
 
@@ -15,7 +15,7 @@ echo 'export OPENROUTER_API_KEY="sk-or-v1-your_key"' >> ~/.bashrc  # or ~/.zshrc
 ## Basic Usage
 
 ```bash
-# Describe your diagram, Nano Banana Pro creates it
+# Describe your diagram, Nano Banana 2 creates it
 python scripts/generate_schematic.py "your diagram description" -o output.png
 
 # That's it! Automatic:
@@ -166,7 +166,7 @@ Typical cost per diagram (max 2 iterations):
 - Simple (1 iteration): $0.05-0.15
 - Complex (2 iterations): $0.10-0.30
 
-## How Nano Banana Pro Works
+## How Nano Banana 2 Works
 
 **Simply describe your diagram in natural language:**
 - ✓ No coding required
