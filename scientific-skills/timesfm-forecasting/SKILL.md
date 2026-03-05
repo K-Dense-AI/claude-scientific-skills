@@ -1,14 +1,6 @@
 ---
 name: timesfm-forecasting
-description: >
-  Zero-shot time series forecasting with Google's TimesFM foundation model. Use this
-  skill when forecasting ANY univariate time series — sales, sensor readings, stock prices,
-  energy demand, patient vitals, weather, or scientific measurements — without training a
-  custom model. Automatically checks system RAM/GPU before loading the model, supports
-  CSV/DataFrame/array inputs, and returns point forecasts with calibrated prediction
-  intervals. Includes a preflight system checker script that MUST be run before first use
-  to verify the machine can load the model. For classical statistical time series models
-  (ARIMA, SARIMAX, VAR) use statsmodels; for time series classification/clustering use aeon.
+description: Zero-shot time series forecasting with Google's TimesFM foundation model. Use for any univariate time series (sales, sensors, energy, vitals, weather) without training a custom model. Supports CSV/DataFrame/array inputs with point forecasts and prediction intervals. Includes a preflight system checker script to verify RAM/GPU before first use.
 allowed-tools: Read Write Edit Bash
 license: Apache-2.0 license
 metadata:
