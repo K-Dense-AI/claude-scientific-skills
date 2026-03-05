@@ -1,0 +1,435 @@
+1. Talanta. 2026 Jan 1;297(Pt B):128705. doi: 10.1016/j.talanta.2025.128705. Epub
+ 2025 Aug 16.
+
+High-performance glucose isomerase detection enabled by self-cascade copper 
+oxide nanozyme system.
+
+Liu JQ(1), Feng YB(2), Xiao YF(3), Chen LF(4), Huang YX(1), Lin SS(1), Zhang 
+Y(3), Xu QX(3), He SB(5), Chen W(6).
+
+Author information:
+(1)School of Pharmacy, Quanzhou Medical College, Quanzhou, 362000, China.
+(2)Office of Clinical Trial Institutions for Drugs and Medical Devices Fujian 
+Maternity and Child Health Hospital, College of Clinical Medicine for Obstetrics 
+& Gynecology and Pediatrics, Fujian Medical University, 350004, China; Fujian 
+Key Laboratory of Women and Children's Critical Diseases Research, Fujian 
+Maternity and Child Health Hospital, Fuzhou, 350004, China.
+(3)Laboratory of Clinical Pharmacy, Department of Pharmacy, The Second 
+Affiliated Hospital of Fujian Medical University, Quanzhou, 362000, China.
+(4)Higher Educational Key Laboratory for Nano Biomedical Technology of Fujian 
+Province, Department of Pharmaceutical Analysis, Fujian Medical University, 
+Fuzhou, 350004, China.
+(5)Higher Educational Key Laboratory for Nano Biomedical Technology of Fujian 
+Province, Department of Pharmaceutical Analysis, Fujian Medical University, 
+Fuzhou, 350004, China; Laboratory of Clinical Pharmacy, Department of Pharmacy, 
+The Second Affiliated Hospital of Fujian Medical University, Quanzhou, 362000, 
+China. Electronic address: hesb@fjmu.edu.cn.
+(6)Higher Educational Key Laboratory for Nano Biomedical Technology of Fujian 
+Province, Department of Pharmaceutical Analysis, Fujian Medical University, 
+Fuzhou, 350004, China; Laboratory of Clinical Pharmacy, Department of Pharmacy, 
+The Second Affiliated Hospital of Fujian Medical University, Quanzhou, 362000, 
+China. Electronic address: chenandhu@163.com.
+
+Glucose isomerase (GI), also known as D-xylose isomerase, plays a crucial role 
+in converting glucose to fructose, widely applied in the food and agricultural 
+industries. However, current GI activity detection methods suffer from limited 
+sensitivity and operational complexity. Herein, we propose a novel detection 
+strategy by coupling GI-catalyzed isomerization with a self-cascade copper oxide 
+(CuO) nanozyme system. This cascade leverages the dual fructose oxidase-like and 
+peroxidase-like activities of CuO nanozymes to achieve efficient signal 
+amplification. The method offers a broad linear range (0.3-9.375 U/mL) and a low 
+detection limit (0.11 U/mL), outperforming existing detection techniques. 
+Spiking recovery experiments were performed on the glucose isomerase extract 
+derived from Escherichia coli cultures, the culture medium, and commercial 
+glucose isomerase preparations, yielding recoveries ranging from 86.22 % to 
+107.34 %. Given its high sensitivity, simplicity, and practicality, this method 
+shows great promise for screening GI-producing bacterial strains and for the 
+detection of GI activity in various applications.
+
+Copyright © 2025 Elsevier B.V. All rights reserved.
+
+DOI: 10.1016/j.talanta.2025.128705
+PMID: 40819506 [Indexed for MEDLINE]
+
+Conflict of interest statement: Declaration of competing interest The authors 
+declare that they have no known competing financial interests or personal 
+relationships that could have appeared to influence the work reported in this 
+paper.
+
+
+2. 3 Biotech. 2020 Feb;10(2):39. doi: 10.1007/s13205-019-2036-6. Epub 2020 Jan 9.
+
+Production, purification and physicochemical characterization of 
+D-xylose/glucose isomerase from Escherichia coli strain BL21.
+
+Fatima B(1), Javed MM(1)(2).
+
+Author information:
+(1)1Institute of Industrial Biotechnology (IIB), GC University Kachery Road, 
+Lahore, 54000 Punjab Pakistan.
+(2)Virtual University, Defence Road-off Raiwind Road Lahore, Punjab, Pakistan.
+
+Cell lysate of Escherichia coli strain BL21 showed significant D-glucose 
+isomerase activity. The rate of glucose conversion was increased up to 40% when 
+cells were induced with 1% D-xylose. E. coli BL21 xylose isomerase (ECXI-BL21) 
+was purified to homogeneity, up to 1.9-fold with overall 10.88% enzyme yield by 
+heat shock, salting out and electro-elution. The molecular mass of ECXI-BL21 was 
+estimated as 43.9 kDa on SDS-PAGE. pHopt. and Topt. of the enzyme were 
+calculated as 7.0 and 50 °C, respectively. Activation energy (E a) of ECXI-BL21 
+was 45 kJ/mol. Enzyme was stable from 30 to 55 °C and at pH range 6.0-8.0. 
+ECXI-BL21(holo) was activated by 10 mM magnesium (35%), 0.5 mM cobalt (20%) and 
+manganese (25%), and 0.5/10 mM Mn2+/Mg2+ (50%) and Co2+/Mg2+ (30%) as compared 
+to ECXI-BL21(apo). Catalytic affinity (K m) of ECXI-BL21 for D-glucose was 
+calculated as 0.82 mM, while maximum velocity (V max) of the reaction 
+D-glucose(aldo) ⇌ D-fructose(keto) was 108 μmol/mg/min. D-fructose formed was 
+identified on silica gel plate. This thermophilic enzyme, T m = 75 °C, has great 
+potential for high fructose syrup production used in food and soft drink 
+industries.
+
+© King Abdulaziz City for Science and Technology 2020.
+
+DOI: 10.1007/s13205-019-2036-6
+PMCID: PMC6949339
+PMID: 31988833
+
+Conflict of interest statement: Conflict of interestThe authors declare no 
+conflict of interest related to this article.
+
+
+3. Metab Eng. 2018 Jul;48:94-108. doi: 10.1016/j.ymben.2018.05.019. Epub 2018 Jun
+ 2.
+
+Refactoring the upper sugar metabolism of Pseudomonas putida for co-utilization 
+of cellobiose, xylose, and glucose.
+
+Dvořák P(1), de Lorenzo V(2).
+
+Author information:
+(1)Systems and Synthetic Biology Program, Centro Nacional de Biotecnología 
+CNB-CSIC, Cantoblanco, 28049 Madrid, Spain.
+(2)Systems and Synthetic Biology Program, Centro Nacional de Biotecnología 
+CNB-CSIC, Cantoblanco, 28049 Madrid, Spain. Electronic address: 
+vdlorenzo@cnb.csic.es.
+
+Given its capacity to tolerate stress, NAD(P)H/ NAD(P) balance, and increased 
+ATP levels, the platform strain Pseudomonas putida EM42, a genome-edited 
+derivative of the soil bacterium P. putida KT2440, can efficiently host a suite 
+of harsh reactions of biotechnological interest. Because of the lifestyle of the 
+original isolate, however, the nutritional repertoire of P. putida EM42 is 
+centered largely on organic acids, aromatic compounds and some hexoses (glucose 
+and fructose). To enlarge the biochemical network of P. putida EM42 to include 
+disaccharides and pentoses, we implanted heterologous genetic modules for 
+D-cellobiose and D-xylose metabolism into the enzymatic complement of this 
+strain. Cellobiose was actively transported into the cells through the ABC 
+complex formed by native proteins PP1015-PP1018. The knocked-in β-glucosidase 
+BglC from Thermobifida fusca catalyzed intracellular cleavage of the 
+disaccharide to D-glucose, which was then channelled to the default central 
+metabolism. Xylose oxidation to the dead end product D-xylonate was prevented by 
+deleting the gcd gene that encodes the broad substrate range quinone-dependent 
+glucose dehydrogenase. Intracellular intake was then engineered by expressing 
+the Escherichia coli proton-coupled symporter XylE. The sugar was further 
+metabolized by the products of E. coli xylA (xylose isomerase) and xylB 
+(xylulokinase) towards the pentose phosphate pathway. The resulting P. putida 
+strain co-utilized xylose with glucose or cellobiose to complete depletion of 
+the sugars. These results not only show the broadening of the metabolic capacity 
+of a soil bacterium towards new substrates, but also promote P. putida EM42 as a 
+platform for plug-in of new biochemical pathways for utilization and 
+valorization of carbohydrate mixtures from lignocellulose processing.
+
+Copyright © 2018 The Authors. Published by Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.ymben.2018.05.019
+PMID: 29864584 [Indexed for MEDLINE]
+
+
+4. J Microbiol Biotechnol. 2018 Apr 28;28(4):606-612. doi:
+10.4014/jmb.1712.12021.
+
+Expression and Characterization of Calcium- and Zinc-Tolerant Xylose Isomerase 
+from Anoxybacillus kamchatkensis G10.
+
+Park YJ(1), Jung BK(1), Hong SJ(1), Park GS(2), Ibal JC(1), Pham H(1), Shin 
+JH(1).
+
+Author information:
+(1)School of Applied Biosciences, College of Agriculture and Life Sciences, 
+Kyungpook National University, Daegu 41566, Republic of Korea.
+(2)Department of Biomedical Engineering, The University of Texas at Austin, TX 
+78712, USA.
+
+The enzyme xylose isomerase (E.C. 5.3.1.5, XI) is responsible for the conversion 
+of an aldose to ketose, especially xylose to xylulose. Owing to the ability of 
+XI to isomerize glucose to fructose, this enzyme is used in the food industry to 
+prepare high-fructose corn syrup. Therefore, we studied the characteristics of 
+XI from Anoxybacillus kamchatkensis G10, a thermophilic bacterium. First, the 
+gene coding for XI (xylA) was inserted into the pET-21a(+) expression vector and 
+the construct was transformed into the Escherichia coli competent cell BL21 
+(DE3). The expression of recombinant XI was induced in the absence of 
+isopropyl-thio-β-galactopyranoside and purified using Ni-NTA affinity 
+chromatography. The optimum temperature of recombinant XI was 80°C and 
+measurement of the heat stability indicated that 55% of residual activity was 
+maintained after 2 h incubation at 60°C. The optimum pH was found to be 7.5 in 
+sodium phosphate buffer. Magnesium, manganese, and cobalt ions were found to 
+increase the enzyme activity; manganese was the most effective. Additionally, 
+recombinant XI was resistant to the presence of Ca²⁺ and Zn²⁺ ions. The kinetic 
+properties, Km and Vmax, were calculated as 81.44 mM and 2.237 μmol/min/mg, 
+respectively. Through redundancy analysis, XI of A. kamchatkensis G10 was 
+classified into a family containing type II XIs produced by the genera 
+Geobacillus, Bacillus, and Thermotoga. These results suggested that the 
+thermostable nature of XI of A. kamchatkensis G10 may be advantageous in 
+industrial applications and food processing.
+
+DOI: 10.4014/jmb.1712.12021
+PMID: 29429321 [Indexed for MEDLINE]
+
+
+5. Microbiology (Reading). 2017 Jun;163(6):866-877. doi: 10.1099/mic.0.000480.
+Epub  2017 Jun 22.
+
+Glucose consumption in carbohydrate mixtures by phosphotransferase-system 
+mutants of Escherichia coli.
+
+Xia T(1), Sriram N(1), Lee SA(1), Altman R(2), Urbauer JL(3), Altman E(2), 
+Eiteman MA(4)(1).
+
+Author information:
+(1)College of Engineering, University of Georgia, Athens, GA 30602, USA.
+(2)Department of Biology, Middle Tennessee State University, Murfreesboro, TN 
+37132, USA.
+(3)Department of Chemistry and Department of Biochemistry and Molecular Biology, 
+University of Georgia, Athens, GA 30602, USA.
+(4)Department of Microbiology, University of Georgia, Athens, GA 30602, USA.
+
+Escherichia coli lacking the glucose phosphotransferase system (PTS), mannose 
+PTS and glucokinase are supposedly unable to grow on glucose as the sole carbon 
+source (Curtis SJ, Epstein W. J Bacteriol 1975;122:1189-1199). We report that W 
+ptsG manZ glk (ALS1406) grows slowly on glucose in media containing glucose with 
+a second carbon source: ALS1406 metabolizes glucose after that other carbon 
+source, including arabinose, fructose, glycerol, succinate or xylose, is 
+exhausted. Galactose is an exception to this rule, as ALS1406 simultaneously 
+consumes both galactose and glucose. The ability of ALS1406 to metabolize 
+glucose in a xylose-glucose mixture was unchanged by an additional knockout in 
+any single gene involved in carbohydrate transport and utilization, including 
+agp (periplasmic glucose-1-phosphatase), galP (galactose permease), xylA (xylose 
+isomerase), alsK (allose kinase), crr (glucose PTS enzyme IIA), galK (galactose 
+kinase), mak (mannokinase), malE (maltose transporter), malX (maltose PTS enzyme 
+IIBC), mglB (methyl-galactose transporter subunit), nagE (N-acetyl glucosamine 
+PTS enzyme IICBA), nanK (N-acetyl mannosamine kinase) or pgm (phosphoglucose 
+mutase). Glucose metabolism was only blocked by the deletion of two metabolic 
+genes, pgi (phosphoglucose isomerase) and zwf (glucose-6-phosphate 
+1-dehydrogenase), which prevents the entry of glucose-6-phosphate into the 
+pentose phosphate and Embden-Meyerhof-Parnas pathways. Carbon-limited 
+steady-state studies demonstrated that xylose must be sub-saturating for glucose 
+to be metabolized, while nitrogen-limited studies showed that xylose is partly 
+converted to glucose when xylose is in excess. Under transient conditions, 
+ALS1406 converts almost 25 % (mass) xylose into glucose as a result of 
+reversible transketolase and transaldolase and the re-entry of carbon into the 
+pentose phosphate pathway via glucose-6-phosphate 1-dehydrogenase.
+
+DOI: 10.1099/mic.0.000480
+PMID: 28640743 [Indexed for MEDLINE]
+
+
+6. J Basic Microbiol. 2016 Sep;56(9):949-62. doi: 10.1002/jobm.201500589. Epub
+2016  Apr 26.
+
+Cloning, purification, and characterization of xylose isomerase from Thermotoga 
+naphthophila RKU-10.
+
+Fatima B(1), Aftab MN(2), Haq IU(3).
+
+Author information:
+(1)Institute of Industrial Biotechnology (IIB), GC University, Lahore, Pakistan. 
+bilqeesravian@gmail.com, fatima_gcu@yahoo.com.
+(2)Institute of Industrial Biotechnology (IIB), GC University, Lahore, Pakistan. 
+nauman535@yahoo.com.
+(3)Institute of Industrial Biotechnology (IIB), GC University, Lahore, Pakistan.
+
+A 1.3 kb xyl-A gene encoding xylose isomerase from a hyperthermophilic 
+eubacterium Thermotoga naphthophila RKU-10 (TnapXI) was cloned and 
+over-expressed in Escherichia coli to produce the enzyme in mesophilic 
+conditions that work at high temperature. The enzyme was concentrated by 
+lyophilization and purified by heat treatment, fractional precipitation, and 
+UNOsphere Q anion-exchange column chromatography to homogeneity level. The 
+apparent molecular mass was estimated by SDS-PAGE to be 49.5 kDa. The active 
+enzyme showed a clear zone on Native-PAGE when stained with 2, 3, 
+5-triphenyltetrazolium chloride. The optimum temperature and pH for D-glucose to 
+D-fructose isomerization were 98 °C and 7.0, respectively. Xylose isomerase 
+retains 85% of its activity at 50 °C (t1/2 1732 min) for 4 h and 32.5% at 90 °C 
+(t1/2 58 min) for 2 h. It retains 90-95% of its activity at pH 6.5-7.5 for 
+30 min. The enzyme was highly activated (350%) with the addition of 0.5 mM 
+Co(2+) and to a lesser extent about 180 and 80% with the addition of 5 and 10 mM 
+Mn(2+) and Mg(2+) , respectively but it was inhibited (54-90%) in the presence 
+of 0.5-10 mM Ca(2+) with respect to apo-enzyme. D-glucose isomerization product 
+was also analyzed by Thin Layer Chromatography (Rf 0.65). The enzyme was very 
+stable at neutral pH and sufficiently high temperature and required only a trace 
+amount of Co(2+) for its optimal activity and stability. Overall, 52.2% 
+conversion of D-glucose to D-fructose was achieved by TnapXI. Thus, it has a 
+great potential for industrial applications.
+
+© 2016 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim.
+
+DOI: 10.1002/jobm.201500589
+PMID: 27112133 [Indexed for MEDLINE]
+
+
+7. Metab Eng. 2015 Sep;31:112-22. doi: 10.1016/j.ymben.2015.07.003. Epub 2015 Jul
+ 18.
+
+Efficient production of xylitol from hemicellulosic hydrolysate using engineered 
+Escherichia coli.
+
+Su B(1), Wu M(2), Zhang Z(3), Lin J(4), Yang L(5).
+
+Author information:
+(1)Key Laboratory of Biomass Chemical Engineering of Ministry of Education, 
+College of Chemical and Biological Engineering, Zhejiang University, Hangzhou 
+310027, China. Electronic address: bolysu@gmail.com.
+(2)Key Laboratory of Biomass Chemical Engineering of Ministry of Education, 
+College of Chemical and Biological Engineering, Zhejiang University, Hangzhou 
+310027, China. Electronic address: wumb@zju.edu.cn.
+(3)Key Laboratory of Biomass Chemical Engineering of Ministry of Education, 
+College of Chemical and Biological Engineering, Zhejiang University, Hangzhou 
+310027, China. Electronic address: 979987841@qq.com.
+(4)Key Laboratory of Biomass Chemical Engineering of Ministry of Education, 
+College of Chemical and Biological Engineering, Zhejiang University, Hangzhou 
+310027, China. Electronic address: linjp@zju.edu.cn.
+(5)Key Laboratory of Biomass Chemical Engineering of Ministry of Education, 
+College of Chemical and Biological Engineering, Zhejiang University, Hangzhou 
+310027, China. Electronic address: lryang@zju.edu.cn.
+
+A metabolically engineered Escherichia coli has been constructed for the 
+production of xylitol, one of the top 12 platform chemicals from agricultural 
+sources identified by the US Department of Energy. An optimal plasmid was 
+constructed to express xylose reductase from Neurospora crassa with almost no 
+inclusion bodies at relatively high temperature. The 
+phosphoenolpyruvate-dependent glucose phosphotransferase system (ptsG) was 
+disrupted to eliminate catabolite repression and allow simultaneous uptake of 
+glucose and xylose. The native pathway for D-xylose catabolism in E. coli W3110 
+was blocked by deleting the xylose isomerase (xylA) and xylulose kinase (xylB) 
+genes. The putative pathway for xylitol phosphorylation was also blocked by 
+disrupting the phosphoenolpyruvate-dependent fructose phosphotransferase system 
+(ptsF). The xylitol producing recombinant E. coli allowed production of 172.4 g 
+L(-1) xylitol after 110 h of fed-batch cultivation with an average productivity 
+of 1.57 g L(-1) h(-1). The molar yield of xylitol to glucose reached 
+approximately 2.2 (mol xylitol mol(-1) glucose). Furthermore, the recombinant 
+strain also produced about 150 g L(-1) xylitol from hemicellulosic sugars in 
+modified M9 minimal medium and the overall productivity was 1.40 g L(-1) h(-1), 
+representing the highest xylitol concentration and productivity reported to date 
+from hemicellulosic sugars using bacteria. Thus, this engineered E. coli is a 
+candidate for the development of efficient industrial-scale production of 
+xylitol from hemicellulosic hydrolysate.
+
+Copyright © 2015 International Metabolic Engineering Society. Published by 
+Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.ymben.2015.07.003
+PMID: 26197036 [Indexed for MEDLINE]
+
+
+8. AMB Express. 2014 Aug 31;4:68. doi: 10.1186/s13568-014-0068-1. eCollection
+2014.
+
+Characterisation of a recombinant β-xylosidase (xylA) from Aspergillus oryzae 
+expressed in Pichia pastoris.
+
+Kirikyali N(1), Wood J(1), Connerton IF(1).
+
+Author information:
+(1)Division of Food Sciences, School of Biosciences, University of Nottingham, 
+Sutton Bonington Campus, Loughborough LE12 5RD, UK.
+
+β-xylosidases catalyse the hydrolysis of short chain xylooligosaccharides from 
+their non-reducing ends into xylose. In this study we report the heterologous 
+expression of Aspergillus oryzae β-xylosidase (XylA) in Pichia pastoris under 
+the control of the glyceraldehyde-3-phosphate dehydrogenase promoter. The 
+recombinant enzyme was optimally active at 55°C and pH 4.5 with Km and Vmax 
+values of 1.0 mM and 250 μmol min(-1) mg(-1) respectively against 4-nitrophenyl 
+β-xylopyranoside. Xylose was a competitive inhibitor with a Ki of 2.72 mM, 
+whereas fructose was an uncompetitive inhibitor reducing substrate binding 
+affinity (Km) and conversion efficiency (Vmax). The enzyme was characterised to 
+be an exo-cutting enzyme releasing xylose from the non-reducing ends of β-1,4 
+linked xylooligosaccharides (X2, X3 and X4). Catalytic conversion of X2, X3 and 
+X4 decreased (Vmax and kcat) with increasing chain length.
+
+DOI: 10.1186/s13568-014-0068-1
+PMCID: PMC4230903
+PMID: 25401069
+
+
+9. J Agric Food Chem. 2014 Feb 19;62(7):1617-24. doi: 10.1021/jf404785m. Epub
+2014  Feb 4.
+
+L-Arabinose isomerase and D-xylose isomerase from Lactobacillus reuteri: 
+characterization, coexpression in the food grade host Lactobacillus plantarum, 
+and application in the conversion of D-galactose and D-glucose.
+
+Staudigl P(1), Haltrich D, Peterbauer CK.
+
+Author information:
+(1)Food Biotechnology Laboratory, Department of Food Science and Technology, 
+University of Natural Resources and Life Science Vienna , Muthgasse 18, 1190 
+Vienna, Austria.
+
+The L-arabinose isomerase (L-AI) and the D-xylose isomerase (D-XI) encoding 
+genes from Lactobacillus reuteri (DSMZ 17509) were cloned and overexpressed in 
+Escherichia coli BL21 (DE3). The proteins were purified to homogeneity by 
+one-step affinity chromatography and characterized biochemically. L-AI displayed 
+maximum activity at 65 °C and pH 6.0, whereas D-XI showed maximum activity at 65 
+°C and pH 5.0. Both enzymes require divalent metal ions. The genes were also 
+ligated into the inducible lactobacillal expression vectors pSIP409 and pSIP609, 
+the latter containing a food grade auxotrophy marker instead of an antibiotic 
+resistance marker, and the L-AI- and D-XI-encoding sequences/genes were 
+coexpressed in the food grade host Lactobacillus plantarum . The recombinant 
+enzymes were tested for applications in carbohydrate conversion reactions of 
+industrial relevance. The purified L-AI converted D-galactose to D-tagatose with 
+a maximum conversion rate of 35%, and the D-XI isomerized D-glucose to 
+D-fructose with a maximum conversion rate of 48% at 60 °C.
+
+DOI: 10.1021/jf404785m
+PMCID: PMC3931408
+PMID: 24443973 [Indexed for MEDLINE]
+
+
+10. J Biotechnol. 2013 Oct 20;168(2):155-73. doi: 10.1016/j.jbiotec.2013.06.023. 
+Epub 2013 Jul 10.
+
+Catabolite regulation analysis of Escherichia coli for acetate overflow 
+mechanism and co-consumption of multiple sugars based on systems biology 
+approach using computer simulation.
+
+Matsuoka Y(1), Shimizu K.
+
+Author information:
+(1)Department of Bioscience and Bioinformatics, Kyushu Institute of Technology, 
+Iizuka, Fukuoka 820-8502, Japan.
+
+It is quite important to understand the basic principle embedded in the main 
+metabolism for the interpretation of the fermentation data. For this, it may be 
+useful to understand the regulation mechanism based on systems biology approach. 
+In the present study, we considered the perturbation analysis together with 
+computer simulation based on the models which include the effects of global 
+regulators on the pathway activation for the main metabolism of Escherichia 
+coli. Main focus is the acetate overflow metabolism and the co-fermentation of 
+multiple carbon sources. The perturbation analysis was first made to understand 
+the nature of the feed-forward loop formed by the activation of Pyk by FDP 
+(F1,6BP), and the feed-back loop formed by the inhibition of Pfk by PEP in the 
+glycolysis. Those together with the effect of transcription factor Cra caused by 
+FDP level affected the glycolysis activity. The PTS (phosphotransferase system) 
+acts as the feed-back system by repressing the glucose uptake rate for the 
+increase in the glucose uptake rate. It was also shown that the increased PTS 
+flux (or glucose consumption rate) causes PEP/PYR ratio to be decreased, and 
+EIIA-P, Cya, cAMP-Crp decreased, where cAMP-Crp in turn repressed TCA cycle and 
+more acetate is formed. This was further verified by the detailed computer 
+simulation. In the case of multiple carbon sources such as glucose and xylose, 
+it was shown that the sequential utilization of carbon sources was observed for 
+wild type, while the co-consumption of multiple carbon sources with slow 
+consumption rates were observed for the ptsG mutant by computer simulation, and 
+this was verified by experiments. Moreover, the effect of a specific gene 
+knockout such as Δpyk on the metabolic characteristics was also investigated 
+based on the computer simulation.
+
+Copyright © 2013 Elsevier B.V. All rights reserved.
+
+DOI: 10.1016/j.jbiotec.2013.06.023
+PMID: 23850830 [Indexed for MEDLINE]
