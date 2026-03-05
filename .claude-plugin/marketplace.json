@@ -98,7 +98,7 @@
         "./scientific-skills/sympy",
         "./scientific-skills/tiledbvcf",
         "./scientific-skills/timesfm-forecasting",
-        "./scientific-skills/torch_geometric",
+        "./scientific-skills/torch-geometric",
         "./scientific-skills/torchdrug",
         "./scientific-skills/transformers",
         "./scientific-skills/umap-learn",
