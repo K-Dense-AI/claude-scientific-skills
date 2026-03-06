@@ -1,13 +1,6 @@
 ---
 name: markdown-mermaid-writing
-description: >
-  Comprehensive markdown and Mermaid diagram writing skill that establishes text-based
-  diagrams as the DEFAULT documentation standard. Use this skill when creating ANY
-  scientific document, report, analysis, or visualization — it ensures all outputs are
-  in version-controlled, token-efficient markdown with embedded Mermaid diagrams as the
-  source of truth, with clear pathways to downstream Python or AI-generated images.
-  Includes full style guides (markdown + mermaid), 24 diagram type references, and
-  9 document templates ready to use.
+description: Comprehensive markdown and Mermaid diagram writing skill. Use when creating any scientific document, report, analysis, or visualization. Establishes text-based diagrams as the default documentation standard with full style guides (markdown + mermaid), 24 diagram type references, and 9 document templates.
 allowed-tools: Read Write Edit Bash
 license: Apache-2.0
 metadata:
