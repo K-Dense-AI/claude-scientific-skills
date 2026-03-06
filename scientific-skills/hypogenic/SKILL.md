@@ -8,6 +8,10 @@ metadata:
 
 # Hypogenic
 
+## 실행 방식
+이 스킬의 모든 작업은 반드시 **Agent tool**을 사용해 서브에이전트로 실행할 것.
+직접 실행하지 말고, 작업 전체를 Agent에 위임한다.
+
 ## Overview
 
 Hypogenic provides automated hypothesis generation and testing using large language models to accelerate scientific discovery. The framework supports three approaches: HypoGeniC (data-driven hypothesis generation), HypoRefine (synergistic literature and data integration), and Union methods (mechanistic combination of literature and data-driven hypotheses).
