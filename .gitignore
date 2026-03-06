@@ -13,3 +13,22 @@ uv.lock
 main.py
 
 __pycache__/
+
+# 분석 스크립트/결과물 (lab-analyses/ 에 저장)
+output/
+skills/
+research-agent-sdk/
+nul
+RESEARCH_STATUS.md
+hardcoding_audit_all_projects.md
+*_abstracts.txt
+*.png
+*.pdf
+*.html
+*_analysis*.py
+*_plot.py
+*_report.py
+*_summary.py
+*_query.py
+*_workflow.py
+run_si_bold_comments.py
