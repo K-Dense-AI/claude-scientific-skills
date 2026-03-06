@@ -1,0 +1,410 @@
+{
+  "version": "1.0",
+  "description": "Jahyun의 Claude Code 스킬 자동 활성화 규칙. 프롬프트 분석으로 관련 커맨드/스킬 제안.",
+  "skills": {
+
+    "manuscript-writer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "논문 작성, scientific writing",
+      "promptTriggers": {
+        "keywords": [
+          "논문 쓰", "논문 작성", "manuscript", "scientific paper",
+          "paper writing", "introduction 써", "결론 써", "discussion 써",
+          "abstract 써", "학술지", "저널 제출", "journal submission"
+        ],
+        "intentPatterns": [
+          "(쓰|작성|draft|write).*(논문|paper|manuscript|abstract|introduction|discussion|conclusion)",
+          "(논문|paper|manuscript).*(쓰|작성|write|draft)"
+        ]
+      }
+    },
+
+    "research-discussion": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "실험 결과 해석, 디스커션",
+      "promptTriggers": {
+        "keywords": [
+          "디스커션", "실험 결과 해석", "결과 분석", "interpret result",
+          "결과 토론", "실험 결과 의미", "데이터 해석", "결과 논의"
+        ],
+        "intentPatterns": [
+          "(해석|분석|interpret|discuss).*(결과|data|실험|experiment)",
+          "(결과|data|실험).*(해석|분석|의미|significance)"
+        ]
+      }
+    },
+
+    "pptx-reviewer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "PPT 피드백, 오타 수정, 슬라이드 리뷰",
+      "promptTriggers": {
+        "keywords": [
+          "ppt", "pptx", "powerpoint", "슬라이드", "발표 자료",
+          "ppt 오타", "ppt 피드백", "슬라이드 리뷰", "랩미팅 ppt",
+          "ppt 댓글", "발표 검토"
+        ],
+        "intentPatterns": [
+          "(리뷰|검토|review|피드백|feedback).*(ppt|pptx|슬라이드|발표)",
+          "(ppt|pptx|슬라이드).*(리뷰|검토|오타|피드백)"
+        ]
+      }
+    },
+
+    "experiment-hub": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "실험 계획, 프로토콜 설계",
+      "promptTriggers": {
+        "keywords": [
+          "실험 계획", "실험 설계", "experiment plan", "프로토콜 설계",
+          "실험 프로토콜", "실험 조건", "실험 노트"
+        ],
+        "intentPatterns": [
+          "(설계|계획|plan|design).*(실험|experiment|protocol)",
+          "(실험|experiment).*(계획|설계|조건|protocol)"
+        ]
+      }
+    },
+
+    "research-assistant": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "문헌 검색, PubMed, 논문 찾기",
+      "promptTriggers": {
+        "keywords": [
+          "논문 찾", "문헌 검색", "pubmed 검색", "literature search",
+          "논문 조사", "관련 논문", "참고문헌", "선행 연구"
+        ],
+        "intentPatterns": [
+          "(찾|검색|search|조사).*(논문|문헌|paper|literature|reference)",
+          "(논문|paper|literature).*(찾|검색|조사|survey)"
+        ]
+      }
+    },
+
+    "code-validator": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "코드 검수, 디버깅, pytest 실행",
+      "promptTriggers": {
+        "keywords": [
+          "코드 검수", "코드 테스트", "pytest", "코드 검증", "validate code",
+          "테스트 실행", "test run", "코드 확인", "버그 찾기"
+        ],
+        "intentPatterns": [
+          "(검수|검증|validate|test|debug).*(코드|code)",
+          "(코드|code).*(테스트|검수|검증|확인|디버그)"
+        ]
+      }
+    },
+
+    "improvement-analyzer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "개선점 분석, 사이클 회고",
+      "promptTriggers": {
+        "keywords": [
+          "개선점", "improvement", "회고", "retrospective",
+          "사이클 분석", "무엇을 개선", "bottleneck", "병목"
+        ],
+        "intentPatterns": [
+          "(분석|analyze|찾).*(개선|improvement|bottleneck)",
+          "(개선|improve|회고).*(점|사항|방향)"
+        ]
+      }
+    },
+
+    "git-workflow-manager": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "git, commit, PR, 브랜치 관리",
+      "promptTriggers": {
+        "keywords": [
+          "커밋", "commit", "push", "pull request", "PR", "브랜치",
+          "branch", "merge", "git flow", "git 정리", "stash"
+        ],
+        "intentPatterns": [
+          "(커밋|commit|push|merge).*(전략|방법|메시지|message)",
+          "(브랜치|branch|PR|pull request).*(만들|생성|create|전략)"
+        ]
+      }
+    },
+
+    "conda-env-manager": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "conda 환경, 패키지 설치, 가상환경",
+      "promptTriggers": {
+        "keywords": [
+          "conda", "가상환경", "virtual env", "패키지 설치", "pip install",
+          "환경 세팅", "environment setup", "conda create", "import error",
+          "모듈 없", "module not found"
+        ],
+        "intentPatterns": [
+          "(설치|install|만들|create).*(conda|환경|environment|env)",
+          "(conda|pip|패키지).*(설치|install|오류|error)"
+        ]
+      }
+    },
+
+    "academic-term-rules": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "생명공학 학술 표기 규칙, 용어 통일",
+      "promptTriggers": {
+        "keywords": [
+          "학술 표기", "academic term", "용어 통일", "표기법",
+          "이탤릭체", "이탤릭", "italic", "유전자 표기", "단백질 표기"
+        ],
+        "intentPatterns": [
+          "(표기|notation|용어|term).*(맞|확인|check|통일|규칙)",
+          "(유전자|단백질|gene|protein).*(이름|표기|notation|이탤릭)"
+        ]
+      }
+    },
+
+    "solid-principles": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "SOLID 원칙, 코드 설계, 리팩토링",
+      "promptTriggers": {
+        "keywords": [
+          "solid", "design pattern", "리팩토링", "refactor",
+          "클래스 설계", "의존성", "dependency", "단일 책임"
+        ],
+        "intentPatterns": [
+          "(설계|design|리팩토링|refactor).*(클래스|class|코드|code|구조|structure)",
+          "(solid|원칙|principle).*(적용|apply|따르)"
+        ]
+      }
+    },
+
+    "ipcr-primer-design": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "iPCR 프라이머 설계, PCR",
+      "promptTriggers": {
+        "keywords": [
+          "primer", "프라이머", "pcr", "ipcr", "역 pcr",
+          "primer design", "tm", "melting temperature", "oligo"
+        ],
+        "intentPatterns": [
+          "(설계|design|만들|design).*(primer|프라이머|oligo)",
+          "(pcr|ipcr|primer).*(설계|design|Tm|온도|조건)"
+        ]
+      }
+    },
+
+    "lab-equipment-check": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "실험실 장비 예약, HPLC, 장비 확인",
+      "promptTriggers": {
+        "keywords": [
+          "장비 예약", "lab equipment", "실험실 장비", "hplc 예약",
+          "장비 가용", "기기 예약", "장비 스케줄"
+        ],
+        "intentPatterns": [
+          "(예약|reservation|확인).*(장비|equipment|hplc|기기)",
+          "(장비|equipment|hplc).*(예약|가용|available|스케줄)"
+        ]
+      }
+    },
+
+    "reference-surveyor": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "GitHub 구현 사례 조사, 레퍼런스 탐색",
+      "promptTriggers": {
+        "keywords": [
+          "github 조사", "reference survey", "레퍼런스 조사", "구현 사례",
+          "reference code", "오픈소스 조사", "유사 구현"
+        ],
+        "intentPatterns": [
+          "(조사|survey|찾).*(github|구현|reference|implementation)",
+          "(구현|implement|코드).*(조사|찾|레퍼런스|참고)"
+        ]
+      }
+    },
+
+    "code-implementer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "매핑 문서 기반 코드 구현, fork 레포 작업",
+      "promptTriggers": {
+        "keywords": [
+          "구현", "implement", "포크", "fork", "매핑 문서",
+          "레포 구현", "코드 적용"
+        ],
+        "intentPatterns": [
+          "(구현|implement|적용).*(매핑|mapping|fork|포크)",
+          "(fork|포크|레포).*(구현|implement|적용)"
+        ]
+      }
+    },
+
+    "update-skills": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "스킬 업데이트, 스킬 설치",
+      "promptTriggers": {
+        "keywords": [
+          "스킬 업데이트", "update skills", "스킬 설치",
+          "install skills", "스킬 동기화", "skills sync"
+        ],
+        "intentPatterns": [
+          "(업데이트|update|설치|install).*(스킬|skill)",
+          "(스킬|skill).*(업데이트|update|설치|최신)"
+        ]
+      }
+    },
+
+    "skill-developer": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "스킬 만들기, skill-rules.json 수정, 훅 시스템",
+      "promptTriggers": {
+        "keywords": [
+          "스킬 만들", "스킬 작성", "create skill", "add skill",
+          "skill-rules", "스킬 트리거", "훅 시스템", "skill developer",
+          "스킬 시스템", "새 스킬"
+        ],
+        "intentPatterns": [
+          "(만들|작성|create|add|build).*(스킬|skill)",
+          "(스킬|skill).*(만들|추가|수정|트리거|trigger)"
+        ]
+      }
+    },
+
+    "weekly-briefing": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "주간 브리핑, 주간 보고",
+      "promptTriggers": {
+        "keywords": [
+          "주간 브리핑", "weekly briefing", "주간 보고",
+          "이번 주 정리", "weekly summary"
+        ],
+        "intentPatterns": [
+          "(주간|weekly).*(브리핑|briefing|보고|summary|정리)"
+        ]
+      }
+    },
+
+    "scientific-visualization": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "논문 그림, publication figure, matplotlib/plotly",
+      "promptTriggers": {
+        "keywords": [
+          "논문 그림", "publication figure", "figure", "그래프",
+          "플롯", "plot", "시각화", "visualization", "matplotlib",
+          "plotly", "seaborn", "차트", "chart"
+        ],
+        "intentPatterns": [
+          "(그리|만들|create|plot|draw).*(그래프|figure|plot|chart|시각화)",
+          "(논문|publication|paper).*(그림|figure|plot)"
+        ]
+      }
+    },
+
+    "statistical-analysis": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "통계 분석, t-test, ANOVA, 통계 검정",
+      "promptTriggers": {
+        "keywords": [
+          "통계", "statistics", "t-test", "anova", "p-value",
+          "p값", "유의성", "significance", "correlation", "상관관계"
+        ],
+        "intentPatterns": [
+          "(분석|analyze|test).*(통계|statistical|유의|significance)",
+          "(t-test|anova|regression|correlation).*(분석|결과|해석)"
+        ]
+      }
+    },
+
+    "pubmed-database": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "PubMed 검색, NCBI, 논문 데이터베이스",
+      "promptTriggers": {
+        "keywords": [
+          "pubmed", "ncbi", "medline", "논문 db", "문헌 db"
+        ],
+        "intentPatterns": [
+          "(검색|search|query).*(pubmed|ncbi|medline)",
+          "(pubmed|ncbi).*(논문|paper|article|검색)"
+        ]
+      }
+    },
+
+    "cobrapy": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "대사 모델링, FBA, COBRA",
+      "promptTriggers": {
+        "keywords": [
+          "fba", "flux balance", "대사 모델", "metabolic model",
+          "cobra", "cobrapy", "genome scale model", "gsm"
+        ],
+        "intentPatterns": [
+          "(모델링|modeling|분석|analyze).*(대사|metabolic|flux|fba)",
+          "(fba|cobra|대사).*(시뮬레이션|simulation|분석|결과)"
+        ]
+      }
+    },
+
+    "rdkit": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "분자 구조, SMILES, cheminformatics",
+      "promptTriggers": {
+        "keywords": [
+          "smiles", "rdkit", "분자 구조", "molecule", "cheminformatics",
+          "fingerprint", "분자 유사도", "molecular"
+        ],
+        "intentPatterns": [
+          "(그리|그려|draw|visualize).*(분자|molecule|smiles|구조)",
+          "(smiles|분자|molecule).*(분석|similarity|fingerprint)"
+        ]
+      }
+    }
+  },
+
+  "notes": {
+    "priority": {
+      "critical": "항상 활성화",
+      "high": "명확한 매칭 시 활성화",
+      "medium": "관련 작업 감지 시 제안",
+      "low": "참고용"
+    },
+    "커스터마이즈": "keywords/intentPatterns 추가로 트리거 범위 조정. skill-developer 스킬 참고."
+  }
+}

@@ -1,9 +1,9 @@
 #!/bin/bash
 # Stop hook: 응답 끝날 때 weekly + 현재 5h 블록 사용량 요약 저장
 
-PENDING='/c/Users/Jahyun/.claude/pending_usage.txt'
+PENDING="${HOME}/.claude/pending_usage.txt"
 
-TMPDIR='/c/Users/Jahyun/.claude'
+TMPDIR="${HOME}/.claude"
 ccusage weekly --offline --json 2>/dev/null > "$TMPDIR/claude_weekly.json"
 ccusage blocks --recent --offline --json 2>/dev/null > "$TMPDIR/claude_blocks.json"
 
