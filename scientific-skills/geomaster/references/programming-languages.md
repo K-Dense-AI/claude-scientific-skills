@@ -1,6 +1,6 @@
 # Multi-Language Geospatial Programming
 
-Geospatial programming across 7 languages: R, Julia, JavaScript, C++, Java, Go, and Python.
+Geospatial programming across 8 languages: R, Julia, JavaScript, C++, Java, Go, Rust, and Python.
 
 ## R Geospatial
 
@@ -391,3 +391,66 @@ func main() {
 ```
 
 For more code examples across all languages, see [code-examples.md](code-examples.md).
+
+## Rust Geospatial
+
+### GeoRust (Geographic Rust)
+
+The Rust geospatial ecosystem includes crates for geometry operations, projections, and file I/O.
+
+\`\`\`rust
+// Cargo.toml dependencies:
+// geo = "0.28"
+// geo-types = "0.7"
+// proj = "0.27"
+// shapefile = "0.5"
+
+use geo::{Coord, Point, LineString, Polygon, Geometry};
+use geo::prelude::*;
+use proj::Proj;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Create a point
+    let point = Point::new(-122.4_f64, 37.7_f64);
+
+    // Create a linestring
+    let linestring = LineString::new(vec![
+        Coord { x: -122.4, y: 37.7 },
+        Coord { x: -122.3, y: 37.8 },
+        Coord { x: -122.2, y: 37.9 },
+    ]);
+
+    // Create a polygon
+    let polygon = Polygon::new(
+        LineString::new(vec![
+            Coord { x: -122.4, y: 37.7 },
+            Coord { x: -122.3, y:  37.7 },
+            Coord { x: -122.3, y: 37.8 },
+            Coord { x: -122.4, y: 37.8 },
+            Coord { x: -2.4, y: 37.7 }, // Close the ring
+        ]),
+        vec![], // No interior rings
+    );
+
+    // Geometric operations
+    let buffered = polygon.buffer(1000.0); // Buffer in CRS units
+    let centroid = polygon.centroid();
+    let convex_hull = polygon.convex_hull();
+    let simplified = polygon.simplify(&1.0); // Tolerance
+
+    // Spatial relationships
+    let point_within = point.within(&polygon);
+    let line_intersects = linestring.intersects(&polygon);
+
+    // Coordinate transformation
+    let from = "EPSG:4326";
+    let to = "EPSG:32610";
+    let proj = Proj::new_known_crs(from, to, None)?;
+    let transformed = proj.convert(point)?;
+
+    println!("Point: {:?}", point);
+    println!("Within polygon: {}", point_within);
+
+    Ok(())
+}
+\`\`\`
