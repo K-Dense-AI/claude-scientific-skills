@@ -11,6 +11,10 @@ metadata:
 
 # BGPT Paper Search
 
+## 실행 방식
+이 스킬의 모든 작업은 반드시 **Agent tool**을 사용해 서브에이전트로 실행할 것.
+직접 실행하지 말고, 작업 전체를 Agent에 위임한다.
+
 ## Overview
 
 BGPT is a remote MCP server that searches a curated database of scientific papers built from raw experimental data extracted from full-text studies. Unlike traditional literature databases that return titles and abstracts, BGPT returns structured data from the actual paper content — methods, quantitative results, sample sizes, quality assessments, and 25+ metadata fields per paper.

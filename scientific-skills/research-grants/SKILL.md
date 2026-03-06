@@ -9,6 +9,10 @@ metadata:
 
 # Research Grant Writing
 
+## 실행 방식
+이 스킬의 모든 작업은 반드시 **Agent tool**을 사용해 서브에이전트로 실행할 것.
+직접 실행하지 말고, 작업 전체를 Agent에 위임한다.
+
 ## Overview
 
 Research grant writing is the process of developing competitive funding proposals for federal agencies and foundations. Master agency-specific requirements, review criteria, narrative structure, budget preparation, and compliance for NSF (National Science Foundation), NIH (National Institutes of Health), DOE (Department of Energy), DARPA (Defense Advanced Research Projects Agency), and Taiwan's NSTC (National Science and Technology Council) submissions.

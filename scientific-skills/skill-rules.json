@@ -278,6 +278,23 @@
       }
     },
 
+    "agent-guardian": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "스킬 에이전트 적합성 점검, SKILL.md 실행 방식 자동 설정",
+      "promptTriggers": {
+        "keywords": [
+          "에이전트 적합", "agent 필요", "스킬 에이전트", "실행 방식 설정",
+          "agent-guardian", "스킬 점검", "에이전트 설정"
+        ],
+        "intentPatterns": [
+          "(점검|확인|설정).*(에이전트|agent).*(스킬|skill)",
+          "(스킬|skill).*(에이전트|agent).*(필요|적합|설정)"
+        ]
+      }
+    },
+
     "skill-developer": {
       "type": "domain",
       "enforcement": "suggest",

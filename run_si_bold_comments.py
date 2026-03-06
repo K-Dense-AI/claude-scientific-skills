@@ -12,8 +12,12 @@ COMMENT_DATE = "2026-03-02T00:00:00Z"
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W = W_NS
 
-# 하드코딩된 경로 (string literal → UTF-8로 정확히 읽힘)
-SI_PATH = "C:/Users/Jahyun/OneDrive - 호서대학교/논문/LRib/LRib Manuscripts/투고 이전/JACS/260302_L-Rib_SI_JACS.docx"
+# SI 파일 경로: 환경변수 SI_DOCX_PATH 또는 기본값
+SI_PATH = os.environ.get(
+    "SI_DOCX_PATH",
+    os.path.join(os.path.expanduser("~"), "OneDrive - 호서대학교", "논문", "LRib",
+                 "LRib Manuscripts", "투고 이전", "JACS", "260302_L-Rib_SI_JACS.docx")
+)
 
 
 def make_comment_xml(comment_id, text):

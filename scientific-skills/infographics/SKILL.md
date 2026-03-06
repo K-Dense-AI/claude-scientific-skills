@@ -6,6 +6,10 @@ allowed-tools: Read Write Edit Bash
 
 # Infographics
 
+## 실행 방식
+이 스킬의 모든 작업은 반드시 **Agent tool**을 사용해 서브에이전트로 실행할 것.
+직접 실행하지 말고, 작업 전체를 Agent에 위임한다.
+
 ## Overview
 
 Infographics are visual representations of information, data, or knowledge designed to present complex content quickly and clearly. **This skill uses Nano Banana Pro AI for infographic generation with Gemini 3 Pro quality review and Perplexity Sonar for research.**

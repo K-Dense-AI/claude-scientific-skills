@@ -9,6 +9,10 @@ metadata:
 
 # Scientific Writing
 
+## 실행 방식
+이 스킬의 모든 작업은 반드시 **Agent tool**을 사용해 서브에이전트로 실행할 것.
+직접 실행하지 말고, 작업 전체를 Agent에 위임한다.
+
 ## Overview
 
 **This is the core skill for the deep research and writing tool**—combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill.
