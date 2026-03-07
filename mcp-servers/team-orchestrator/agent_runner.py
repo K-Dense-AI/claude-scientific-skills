@@ -15,6 +15,7 @@ DIR = Path(__file__).parent
 sys.path.insert(0, str(DIR))
 
 import state as st
+import notion_logger as nl
 
 PYTHON_BIN = sys.executable
 BOARD_SCRIPT = str(DIR / "shared_board.py")
@@ -358,11 +359,19 @@ async def run_agent(team_id: str, team_type: str, task: str,
     )
 
     st.init_db()
+    nl_role = "lead" if is_lead else "worker"
     role_label = "LEAD" if is_lead else f"WORKER(lead={lead_id})"
+    model = (LEAD_MODELS.get(team_type, "claude-sonnet-4-6")
+             if is_lead else
+             WORKER_MODELS.get(team_type, "claude-sonnet-4-6"))
     started_at = time.time()
     st.set_team_started_at(team_id, started_at)
     st.update_team_status(team_id, "running")
     st.append_team_output(team_id, f"[AGENT SDK 시작: {team_type.upper()} {role_label}]\n")
+    nl.log_event("agent_start", task[:80],
+                 agent_id=team_id, project_id=project_id,
+                 team_type=team_type, role=nl_role, model=model,
+                 status="running", task=task[:300])
 
     if is_lead:
         system_prompt = LEAD_PROMPTS.get(team_type, LEAD_PROMPTS["research"]).format(
@@ -412,27 +421,36 @@ async def run_agent(team_id: str, team_type: str, task: str,
                     st.append_team_output(team_id, f"\n[최종 결과]\n{message.result}")
                 elapsed = time.time() - started_at
                 usage = message.usage or {}
+                in_tok = usage.get("input_tokens", 0)
+                out_tok = usage.get("output_tokens", 0)
+                cost = message.total_cost_usd or 0.0
                 st.update_team_usage(
                     team_id,
-                    input_tokens=usage.get("input_tokens", 0),
-                    output_tokens=usage.get("output_tokens", 0),
+                    input_tokens=in_tok,
+                    output_tokens=out_tok,
                     model_used=model,
                     elapsed_seconds=elapsed,
-                    total_cost_usd=message.total_cost_usd or 0.0,
+                    total_cost_usd=cost,
                 )
                 st.update_team_status(team_id, "done")
                 role_label = "리드" if is_lead else "워커"
                 st.add_notification(
                     team_id,
                     f"✅ [{team_type}] {role_label} 완료 (소요 {elapsed:.0f}초, "
-                    f"토큰 in={usage.get('input_tokens',0):,} out={usage.get('output_tokens',0):,})"
+                    f"토큰 in={in_tok:,} out={out_tok:,})"
                 )
                 st.append_team_output(
                     team_id,
                     f"\n[완료 | 소요 {elapsed:.1f}초 | "
-                    f"토큰 in={usage.get('input_tokens',0):,} out={usage.get('output_tokens',0):,} | "
+                    f"토큰 in={in_tok:,} out={out_tok:,} | "
                     f"모델={model}]\n"
                 )
+                nl_role2 = "리드" if is_lead else "워커"
+                nl.log_event("agent_done", task[:80],
+                             agent_id=team_id, project_id=project_id,
+                             team_type=team_type, role=nl_role, model=model, status="done",
+                             elapsed=elapsed, tokens_in=in_tok, tokens_out=out_tok, cost=cost,
+                             task=task[:300], result=(message.result or "")[:300])
                 return
 
         # ResultMessage 없이 스트림 종료 시
@@ -440,6 +458,10 @@ async def run_agent(team_id: str, team_type: str, task: str,
         st.update_team_status(team_id, "done")
         st.add_notification(team_id, f"✅ [{team_type}] 완료 (소요 {elapsed:.0f}초)")
         st.append_team_output(team_id, f"\n[완료 | 소요 {elapsed:.1f}초]\n")
+        nl.log_event("agent_done", task[:80],
+                     agent_id=team_id, project_id=project_id,
+                     team_type=team_type, role=nl_role, model=model,
+                     status="done", elapsed=elapsed, task=task[:300])
 
     except Exception as e:
         err_str = str(e).lower()
@@ -452,6 +474,10 @@ async def run_agent(team_id: str, team_type: str, task: str,
         st.update_team_status(team_id, "failed", error=str(e))
         st.add_notification(team_id, f"❌ [{team_type}] 실패: {str(e)[:80]}")
         st.append_team_output(team_id, f"\n[ERROR] {e}\n")
+        nl.log_event("agent_failed", task[:80],
+                     agent_id=team_id, project_id=project_id,
+                     team_type=team_type, role=nl_role, model=model, status="failed",
+                     task=task[:300], result=str(e)[:300])
 
 
 async def run_solo_agent(team_id: str, team_type: str, task: str,
@@ -468,10 +494,15 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
     )
 
     st.init_db()
+    solo_model = WORKER_MODELS.get(team_type, "claude-sonnet-4-6")
     started_at = time.time()
     st.set_team_started_at(team_id, started_at)
     st.update_team_status(team_id, "running")
     st.append_team_output(team_id, f"[특무 에이전트 시작: {team_type.upper()}]\n")
+    nl.log_event("agent_start", task[:80],
+                 agent_id=team_id, project_id=project_id,
+                 team_type=team_type, role="solo", model=solo_model,
+                 status="running", task=task[:300])
 
     system_prompt = (
         _SOLO_SYSTEM_BASE.format(agent_id=team_id, team_type=team_type, project_id=project_id)
@@ -516,32 +547,44 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
                     st.append_team_output(team_id, f"\n[최종 결과]\n{message.result}")
                 elapsed = time.time() - started_at
                 usage = message.usage or {}
+                in_tok = usage.get("input_tokens", 0)
+                out_tok = usage.get("output_tokens", 0)
+                cost = message.total_cost_usd or 0.0
                 st.update_team_usage(
                     team_id,
-                    input_tokens=usage.get("input_tokens", 0),
-                    output_tokens=usage.get("output_tokens", 0),
+                    input_tokens=in_tok,
+                    output_tokens=out_tok,
                     model_used=model,
                     elapsed_seconds=elapsed,
-                    total_cost_usd=message.total_cost_usd or 0.0,
+                    total_cost_usd=cost,
                 )
                 st.update_team_status(team_id, "done")
                 st.add_notification(
                     team_id,
                     f"✅ [특무/{team_type}] 완료 (소요 {elapsed:.0f}초, "
-                    f"토큰 in={usage.get('input_tokens',0):,} out={usage.get('output_tokens',0):,})"
+                    f"토큰 in={in_tok:,} out={out_tok:,})"
                 )
                 st.append_team_output(
                     team_id,
                     f"\n[완료 | 소요 {elapsed:.1f}초 | "
-                    f"토큰 in={usage.get('input_tokens',0):,} out={usage.get('output_tokens',0):,} | "
+                    f"토큰 in={in_tok:,} out={out_tok:,} | "
                     f"모델={model}]\n"
                 )
+                nl.log_event("agent_done", task[:80],
+                             agent_id=team_id, project_id=project_id,
+                             team_type=team_type, role="solo", model=solo_model, status="done",
+                             elapsed=elapsed, tokens_in=in_tok, tokens_out=out_tok, cost=cost,
+                             task=task[:300], result=(message.result or "")[:300])
                 return
 
         elapsed = time.time() - started_at
         st.update_team_status(team_id, "done")
         st.add_notification(team_id, f"✅ [특무/{team_type}] 완료 (소요 {elapsed:.0f}초)")
         st.append_team_output(team_id, f"\n[완료 | 소요 {elapsed:.1f}초]\n")
+        nl.log_event("agent_done", task[:80],
+                     agent_id=team_id, project_id=project_id,
+                     team_type=team_type, role="solo", model=solo_model,
+                     status="done", elapsed=elapsed, task=task[:300])
 
     except Exception as e:
         err_str = str(e).lower()
@@ -554,3 +597,7 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
         st.update_team_status(team_id, "failed", error=str(e))
         st.add_notification(team_id, f"❌ [특무/{team_type}] 실패: {str(e)[:80]}")
         st.append_team_output(team_id, f"\n[ERROR] {e}\n")
+        nl.log_event("agent_failed", task[:80],
+                     agent_id=team_id, project_id=project_id,
+                     team_type=team_type, role="solo", model=solo_model, status="failed",
+                     task=task[:300], result=str(e)[:300])
