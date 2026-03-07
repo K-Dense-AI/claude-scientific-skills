@@ -13,6 +13,23 @@ echo "레포: $REPO_DIR"
 echo "Claude 설정 디렉토리: $CLAUDE_DIR"
 echo ""
 
+# 0) Python 탐지 (스크립트 전체에서 공용)
+PYTHON_BIN=""
+for candidate in \
+    "$HOME/anaconda3/python.exe" \
+    "$HOME/miniconda3/python.exe" \
+    "$HOME/miniforge3/python.exe"; do
+    if [ -f "$candidate" ]; then
+        PYTHON_BIN="$candidate"
+        break
+    fi
+done
+if [ -z "$PYTHON_BIN" ]; then
+    PYTHON_BIN="$(command -v python3 2>/dev/null || command -v python 2>/dev/null)"
+fi
+echo "Python: ${PYTHON_BIN:-미감지}"
+echo ""
+
 # 1) ~/.claude 디렉토리 생성
 mkdir -p "$CLAUDE_DIR/hooks"
 mkdir -p "$CLAUDE_DIR/skills"
@@ -50,7 +67,7 @@ if [ ! -f "$SETTINGS" ]; then
 fi
 
 # Python으로 settings.json 업데이트 (hooks 섹션만 추가/갱신)
-python3 - "$SETTINGS" "$CLAUDE_DIR" << 'PYEOF'
+${PYTHON_BIN:-python3} - "$SETTINGS" "$CLAUDE_DIR" << 'PYEOF'
 import json, sys, os
 
 settings_path = sys.argv[1]
@@ -67,7 +84,7 @@ def to_bash_path(p):
 
 hooks_dir = to_bash_path(claude_dir) + "/hooks"
 
-with open(settings_path) as f:
+with open(settings_path, encoding="utf-8") as f:
     settings = json.load(f)
 
 settings["hooks"] = {
@@ -108,46 +125,54 @@ if [ -d "$ORCH_SRC" ]; then
     chmod +x "$ORCH_DST/"*.py
     echo "    파일 복사 완료: $ORCH_DST"
 
-    # Python 패키지 설치
-    PYTHON_BIN="$(command -v python3 || command -v python)"
-    if [ -n "$PYTHON_BIN" ]; then
+
+    if [ -z "$PYTHON_BIN" ]; then
+        echo "    경고: Python 미감지. 수동으로 설치하세요."
+    else
         echo "    Python: $PYTHON_BIN"
         "$PYTHON_BIN" -m pip install -q -r "$ORCH_DST/requirements.txt" && \
             echo "    requirements.txt 설치 완료" || \
             echo "    경고: pip 설치 실패. 수동으로 실행하세요: pip install -r $ORCH_DST/requirements.txt"
-    else
-        echo "    경고: Python 미감지. 수동으로 설치하세요."
-    fi
 
-    # mcp.json 생성/업데이트 (team-orchestrator 섹션)
-    MCP_JSON="$CLAUDE_DIR/mcp.json"
-    if [ ! -f "$MCP_JSON" ]; then
-        echo '{"mcpServers":{}}' > "$MCP_JSON"
-    fi
+        # mcp.json 생성/업데이트 (team-orchestrator 섹션)
+        MCP_JSON="$CLAUDE_DIR/mcp.json"
+        if [ ! -f "$MCP_JSON" ]; then
+            echo '{"mcpServers":{}}' > "$MCP_JSON"
+        fi
 
-    # Windows 경로 변환 (Git Bash: /c/Users/... -> C:\Users\...)
-    ORCH_DST_WIN="$(echo "$ORCH_DST" | sed 's|/\([a-z]\)/|\1:/|; s|/|\\\\|g')"
+        # Python으로 경로 변환 + mcp.json 업데이트 (Git Bash 경로 -> Windows 경로)
+        "$PYTHON_BIN" - "$MCP_JSON" "$PYTHON_BIN" "$ORCH_DST/server.py" << 'PYEOF'
+import json, sys, re as _re
 
-    python3 - "$MCP_JSON" "$ORCH_DST_WIN" << 'PYEOF'
-import json, sys
-mcp_path = sys.argv[1]
-server_path = sys.argv[2] + "\\server.py"
+mcp_path, python_posix, server_posix = sys.argv[1], sys.argv[2], sys.argv[3]
 
-with open(mcp_path) as f:
+def to_win(p):
+    m = _re.match(r'^/([a-z])/(.*)', p)
+    if m:
+        return m.group(1).upper() + ":\\" + m.group(2).replace("/", "\\")
+    return p
+
+python_win = to_win(python_posix)
+server_win = to_win(server_posix)
+
+with open(mcp_path, encoding="utf-8") as f:
     mcp = json.load(f)
 
 mcp.setdefault("mcpServers", {})["team-orchestrator"] = {
     "type": "stdio",
-    "command": "python",
-    "args": [server_path],
+    "command": python_win,
+    "args": [server_win],
     "env": {"ASANA_PAT": "${ASANA_PAT}"}
 }
 
 with open(mcp_path, "w", encoding="utf-8") as f:
     json.dump(mcp, f, indent=2, ensure_ascii=False)
 
-print(f"    mcp.json 업데이트 완료: team-orchestrator -> {server_path}")
+print(f"    mcp.json 업데이트 완료:")
+print(f"      python: {python_win}")
+print(f"      server: {server_win}")
 PYEOF
+    fi
 else
     echo "    건너뜀: mcp-servers/team-orchestrator/ 디렉토리 없음"
 fi
