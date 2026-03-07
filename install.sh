@@ -97,8 +97,63 @@ with open(settings_path, 'w', encoding='utf-8') as f:
 print(f"    settings.json 업데이트 완료: {settings_path}")
 PYEOF
 
-# 6) ccusage 설치 확인
-echo "[4/4] ccusage 설치 확인 중..."
+# 6) team-orchestrator MCP 서버 설치
+echo "[4/5] team-orchestrator MCP 서버 설치 중..."
+ORCH_SRC="$REPO_DIR/mcp-servers/team-orchestrator"
+ORCH_DST="$CLAUDE_DIR/mcp-servers/team-orchestrator"
+if [ -d "$ORCH_SRC" ]; then
+    mkdir -p "$ORCH_DST"
+    cp "$ORCH_SRC/"*.py "$ORCH_DST/"
+    cp "$ORCH_SRC/requirements.txt" "$ORCH_DST/"
+    chmod +x "$ORCH_DST/"*.py
+    echo "    파일 복사 완료: $ORCH_DST"
+
+    # Python 패키지 설치
+    PYTHON_BIN="$(command -v python3 || command -v python)"
+    if [ -n "$PYTHON_BIN" ]; then
+        echo "    Python: $PYTHON_BIN"
+        "$PYTHON_BIN" -m pip install -q -r "$ORCH_DST/requirements.txt" && \
+            echo "    requirements.txt 설치 완료" || \
+            echo "    경고: pip 설치 실패. 수동으로 실행하세요: pip install -r $ORCH_DST/requirements.txt"
+    else
+        echo "    경고: Python 미감지. 수동으로 설치하세요."
+    fi
+
+    # mcp.json 생성/업데이트 (team-orchestrator 섹션)
+    MCP_JSON="$CLAUDE_DIR/mcp.json"
+    if [ ! -f "$MCP_JSON" ]; then
+        echo '{"mcpServers":{}}' > "$MCP_JSON"
+    fi
+
+    # Windows 경로 변환 (Git Bash: /c/Users/... -> C:\Users\...)
+    ORCH_DST_WIN="$(echo "$ORCH_DST" | sed 's|/\([a-z]\)/|\1:/|; s|/|\\\\|g')"
+
+    python3 - "$MCP_JSON" "$ORCH_DST_WIN" << 'PYEOF'
+import json, sys
+mcp_path = sys.argv[1]
+server_path = sys.argv[2] + "\\server.py"
+
+with open(mcp_path) as f:
+    mcp = json.load(f)
+
+mcp.setdefault("mcpServers", {})["team-orchestrator"] = {
+    "type": "stdio",
+    "command": "python",
+    "args": [server_path],
+    "env": {"ASANA_PAT": "${ASANA_PAT}"}
+}
+
+with open(mcp_path, "w", encoding="utf-8") as f:
+    json.dump(mcp, f, indent=2, ensure_ascii=False)
+
+print(f"    mcp.json 업데이트 완료: team-orchestrator -> {server_path}")
+PYEOF
+else
+    echo "    건너뜀: mcp-servers/team-orchestrator/ 디렉토리 없음"
+fi
+
+# 7) ccusage 설치 확인
+echo "[5/5] ccusage 설치 확인 중..."
 if command -v ccusage &>/dev/null; then
     echo "    ccusage 이미 설치됨: $(ccusage --version 2>/dev/null || echo '버전 확인 불가')"
 else
@@ -111,6 +166,7 @@ echo "=== 설치 완료 ==="
 echo "Claude Code를 재시작하면 토큰 사용량 보고가 활성화됩니다."
 echo ""
 echo "추가 설정 필요:"
-echo "  - secrets.json: ASANA_PAT 토큰 직접 입력 필요"
-echo "    echo '{\"ASANA_PAT\": \"your_token\"}' > $CLAUDE_DIR/secrets.json"
+echo "  - secrets.json: API 토큰 직접 입력 필요"
+echo "    echo '{\"ASANA_PAT\": \"your_token\", \"GITHUB_PAT\": \"your_token\"}' > $CLAUDE_DIR/secrets.json"
 echo "  - CLAUDE.md: 필요 시 $CLAUDE_DIR/CLAUDE.md 수동 복사"
+echo "  - gh 인증: gh auth login (GitHub 보고 기능용)"
