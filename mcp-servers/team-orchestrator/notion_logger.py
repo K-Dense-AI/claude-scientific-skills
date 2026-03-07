@@ -16,12 +16,20 @@ import threading
 import requests
 from pathlib import Path
 
-_NOTION_PAGE_ID = "31cf91ac-a96f-81bb-8e6a-fd0d9a137a13"
+# 완료 대기가 필요한 스레드 추적 (subprocess 종료 전 flush용)
+_pending_threads: list[threading.Thread] = []
+_pending_lock = threading.Lock()
+
+_NOTION_PAGE_ID = "31cf91ac-a96f-8107-819b-ef1d4b05900a"
 _API = "https://api.notion.com/v1"
 _CACHE = Path(__file__).parent / ".notion_cache.json"
 
 _PROJECT_DB_TITLE = "Orchestrator — Projects"
 _AGENT_DB_TITLE   = "Orchestrator — Agents"
+
+# 대시보드에 이미 존재하는 DB ID (하드코딩으로 검색/생성 우회)
+_PROJECT_DB_ID = "31cf91ac-a96f-819e-813d-e1f3dce80bf7"
+_AGENT_DB_ID   = "31cf91ac-a96f-81ae-bc8e-fa6bac46b3b7"
 
 _KNOWN_REPOS = [
     "UDH_Clustering", "PeakPicker", "biosteam-tagatose",
@@ -183,22 +191,8 @@ def _create_agent_db(token: str, project_db_id: str) -> str:
 
 
 def _ensure_dbs(token: str) -> tuple[str, str]:
-    cache = _load_cache()
-    project_db_id = cache.get("project_db_id")
-    agent_db_id   = cache.get("agent_db_id")
-
-    if not project_db_id:
-        project_db_id = _search_db(token, _PROJECT_DB_TITLE) or _create_project_db(token)
-        cache["project_db_id"] = project_db_id
-        _save_cache(cache)
-
-    if not agent_db_id:
-        agent_db_id = _search_db(token, _AGENT_DB_TITLE) or _create_agent_db(token, project_db_id)
-        if agent_db_id:
-            cache["agent_db_id"] = agent_db_id
-            _save_cache(cache)
-
-    return project_db_id, agent_db_id or ""
+    # 하드코딩된 DB ID 우선 사용 (검색/생성 불필요)
+    return _PROJECT_DB_ID, _AGENT_DB_ID
 
 
 # ── Project DB 관리 ──────────────────────────────────────────────────────────
@@ -289,7 +283,7 @@ def _log_agent_sync(event: str, name: str, agent_id: str = "", project_id: str =
         if status:
             props["Status"]    = {"select": {"name": status}}
         if elapsed is not None:
-            props["Elapsed (s)"] = {"number": round(elapsed, 1)}
+            props["Elap. (s)"] = {"number": round(elapsed, 1)}
         if tokens_in is not None:
             props["Tokens In"]  = {"number": tokens_in}
         if tokens_out is not None:
@@ -330,9 +324,35 @@ def _log_project_sync(project_id: str, description: str):
 
 # ── 공개 API ─────────────────────────────────────────────────────────────────
 
+def wait_for_pending(timeout: float = 10.0):
+    """subprocess 종료 전 대기 중인 Notion 로그 스레드를 모두 flush한다."""
+    with _pending_lock:
+        threads = list(_pending_threads)
+    for t in threads:
+        t.join(timeout=timeout)
+
+
+def _track(t: threading.Thread) -> threading.Thread:
+    """스레드를 _pending_threads에 등록하고, 완료 시 자동 제거한다."""
+    with _pending_lock:
+        _pending_threads.append(t)
+
+    def _remove():
+        with _pending_lock:
+            try:
+                _pending_threads.remove(t)
+            except ValueError:
+                pass
+
+    wrapper = threading.Thread(target=lambda: (t.join(), _remove()), daemon=True)
+    wrapper.start()
+    return t
+
+
 def log_project(project_id: str, description: str):
     """프로젝트 생성 로그 (비동기, Project DB 행 생성)"""
-    t = threading.Thread(target=_log_project_sync, args=(project_id, description), daemon=True)
+    t = threading.Thread(target=_log_project_sync, args=(project_id, description), daemon=False)
+    _track(t)
     t.start()
 
 
@@ -361,6 +381,7 @@ def log_event(event: str, name: str, agent_id: str = "", project_id: str = "",
                     team_type=team_type, role=role, model=model, status=status,
                     elapsed=elapsed, tokens_in=tokens_in, tokens_out=tokens_out,
                     cost=cost, task=task, result=result),
-        daemon=True,
+        daemon=False,
     )
+    _track(t)
     t.start()

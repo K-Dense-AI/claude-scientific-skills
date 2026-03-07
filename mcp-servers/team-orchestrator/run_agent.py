@@ -11,6 +11,7 @@ DIR = Path(__file__).parent
 sys.path.insert(0, str(DIR))
 
 import state as st
+import notion_logger as nl
 
 
 def main():
@@ -41,6 +42,9 @@ def main():
         is_lead = mode != "worker"
         asyncio.run(agent_runner.run_agent(team_id, team_type, task, project_id, workdir,
                                            is_lead=is_lead, lead_id=lead_id))
+
+    # 에이전트 종료 전 Notion 로그 스레드가 HTTP 요청을 완료할 때까지 대기
+    nl.wait_for_pending(timeout=10)
 
 
 if __name__ == "__main__":
