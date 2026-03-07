@@ -20,6 +20,7 @@ import state as st
 import task_router
 import team_manager
 import shutdown_handler
+import notion_logger as nl
 
 SKILLS_BASE = Path.home() / "claude-scientific-skills" / "scientific-skills"
 
@@ -62,6 +63,7 @@ def start_project(description: str, feedback_timeout: int = 10) -> str:
     """
     project_id = str(uuid.uuid4())[:8]
     st.create_project(project_id, description)
+    nl.log_project(project_id, description)
     team_manager.set_project_feedback_timeout(project_id, feedback_timeout)
 
     # Claude로 태스크 분석 및 팀 배정
@@ -456,6 +458,7 @@ def run_quick_agent(task: str, team_type: str = "general", name: str = None,
         agent_id — get_output(agent_id)로 결과 조회
     """
     result = _spawn_solo_agent(task=task, team_type=team_type, name=name, skills=skills)
+    nl.log_project(result["project_id"], task)
     return json.dumps({
         **result,
         "team_type": team_type,
