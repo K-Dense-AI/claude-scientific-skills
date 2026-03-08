@@ -196,6 +196,7 @@ def get_status(project_id: str = None) -> str:
 
         # 타이머: running 상태이면 경과 시간 표시
         timer_info = ""
+        elapsed = 0.0
         if t["status"] == "running":
             team = st.get_team(t["team_id"])
             if team and team.started_at > 0:
@@ -206,6 +207,14 @@ def get_status(project_id: str = None) -> str:
                     timer_info = f" (🕐 {minutes}m {seconds}s 경과)"
                 else:
                     timer_info = f" (🕐 {seconds}s 경과)"
+                # Notion 실시간 동기화
+                nl.update_agent_status(t["team_id"], t["status"], elapsed)
+        else:
+            # running 아닌 상태도 최종 경과 시간 동기화
+            team = st.get_team(t["team_id"])
+            if team:
+                elapsed = team.elapsed_seconds or 0.0
+                nl.update_agent_status(t["team_id"], t["status"], elapsed)
 
         lines.append(
             f"{status_icon} **{t['name']}** (ID: `{t['team_id']}`){timer_info}\n"

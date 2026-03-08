@@ -322,6 +322,55 @@ def _log_project_sync(project_id: str, description: str):
         pass
 
 
+# ── Agent 상태 실시간 동기화 ──────────────────────────────────────────────────
+
+def _update_agent_status_sync(agent_id: str, status: str, elapsed: float = 0.0):
+    """
+    기존 Agent 행의 Status와 Elapsed 시간을 Notion에 업데이트 (실시간 폴링용).
+    agent_id → Notion Agent DB에서 검색 → Status 및 Elapsed 필드 업데이트.
+    """
+    try:
+        token = _get_token()
+        if not token:
+            return
+
+        _, agent_db_id = _ensure_dbs(token)
+
+        # Agent DB에서 해당 agent_id 행 검색
+        resp = requests.post(
+            f"{_API}/databases/{agent_db_id}/query",
+            headers=_headers(token),
+            json={
+                "filter": {
+                    "property": "Agent ID",
+                    "rich_text": {"equals": agent_id}
+                }
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        results = resp.json().get("results", [])
+
+        if not results:
+            return  # 아직 생성되지 않은 에이전트 (agent_start 이벤트 대기 중)
+
+        page_id = results[0]["id"]
+
+        # Status와 Elapsed 필드 업데이트
+        props = {
+            "Status": {"select": {"name": status}},
+            "Elapsed (s)": {"number": round(elapsed, 1)},
+        }
+        requests.patch(
+            f"{_API}/pages/{page_id}",
+            headers=_headers(token),
+            json={"properties": props},
+            timeout=10,
+        )
+    except Exception:
+        pass
+
+
 # ── 공개 API ─────────────────────────────────────────────────────────────────
 
 def wait_for_pending(timeout: float = 10.0):
@@ -352,6 +401,20 @@ def _track(t: threading.Thread) -> threading.Thread:
 def log_project(project_id: str, description: str):
     """프로젝트 생성 로그 (비동기, Project DB 행 생성)"""
     t = threading.Thread(target=_log_project_sync, args=(project_id, description), daemon=False)
+    _track(t)
+    t.start()
+
+
+def update_agent_status(agent_id: str, status: str, elapsed: float = 0.0):
+    """
+    에이전트 상태를 Notion에 실시간으로 업데이트 (비동기, 폴링용).
+    get_status() 호출 시 각 팀마다 호출되어 running 상태의 경과 시간을 동기화.
+    """
+    t = threading.Thread(
+        target=_update_agent_status_sync,
+        args=(agent_id, status, elapsed),
+        daemon=False,
+    )
     _track(t)
     t.start()
 
