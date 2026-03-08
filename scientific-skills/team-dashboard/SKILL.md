@@ -499,6 +499,25 @@ asana_create_task(
 2. **담당자**: 특별히 언급 없으면 `me` (이자현) 기본 할당
 3. **마감일**: 명시적 언급 없으면 M5 복잡도 분석으로 자동 추천
 
+### html_notes 사용 규칙
+
+태스크 notes에 줄바꿈·목록이 필요한 경우 반드시 `html_notes`를 사용한다 (`notes` 파라미터에 `\n` 리터럴 금지):
+
+```python
+# ❌ 잘못된 방법: notes에 \n 사용
+asana_create_task(name="작업명", notes="항목A\n항목B")
+
+# ✅ 올바른 방법: html_notes 사용
+asana_create_task(
+  name="작업명",
+  html_notes="<body><ul><li>항목A</li><li>항목B</li></ul></body>"
+)
+# 줄바꿈만 필요할 때: <body>첫째 줄\n둘째 줄</body>  (실제 개행문자 사용)
+# 금지 태그: <p>, <br>, &#10;
+```
+
+**opt_fields에 permalink_url 항상 포함**: 태스크 조회 시 `opt_fields`에 반드시 `permalink_url`을 포함하여 출력 시 `[태스크명](permalink_url)` 형식으로 링크를 제공한다.
+
 ### 체크박스 항목 → 서브태스크로 생성
 
 Asana notes에 번호 목록으로 적는 대신, **체크박스가 필요한 항목은 서브태스크(subtask)로 생성**한다.

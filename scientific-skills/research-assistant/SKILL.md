@@ -37,10 +37,53 @@ description: 연구 논문 검색, 문헌 리뷰 자동화, 사실관계 확인,
 쿼리 C: {키워드} site:biorxiv.org
 쿼리 D: {키워드} site:nature.com OR site:sciencedirect.com
 쿼리 E: {EC번호 또는 기질명} enzyme characterization
+쿼리 F: {키워드} site:openalex.org  (오픈액세스 메타데이터, 인용 네트워크 포함)
 ```
 
 > 실행 방법: 한 번의 응답에 WebSearch 툴 호출을 2~5개 병렬로 묶어 동시 실행.
 > 결과를 기다린 뒤 취합하여 분석.
+
+### 병렬 검색 패턴 예시 (4-DB 동시 검색)
+
+```
+# 단일 응답에서 아래 4개 WebSearch를 동시 호출:
+WebSearch("{키워드} site:pubmed.ncbi.nlm.nih.gov")
+WebSearch("{키워드} review recent site:nature.com OR site:sciencedirect.com")
+WebSearch("{키워드} site:biorxiv.org")
+WebSearch("{키워드} site:openalex.org")
+# → 4개 결과 수신 후 취합 분석
+```
+
+### bgpt-paper-search 스킬 연동
+
+`bgpt-paper-search` 스킬(upstream)과 연동 시:
+- **트리거**: 논문 본문 전체 접근, PDF 다운로드, 저자/기관 기반 검색이 필요할 때
+- **연동 흐름**:
+  ```
+  research-assistant M1 (WebSearch 기반 탐색)
+      ↓ 핵심 논문 DOI/PMID 확보
+  bgpt-paper-search (전문 본문 추출)
+      ↓ 본문 M&M 섹션, 결과 수치 추출
+  research-assistant M4 (메소드 참조 정리)
+  ```
+- **적용 조건**: WebSearch 결과로 abstract만 확인된 경우 → bgpt-paper-search에 DOI 전달하여 전문 확보
+
+### OpenAlex / bioRxiv 연계 흐름
+
+```
+OpenAlex (openalex.org)
+  - 오픈액세스 논문 메타데이터, 인용 그래프, 저자 네트워크
+  - 쿼리: https://api.openalex.org/works?search={키워드}&filter=is_oa:true
+
+bioRxiv (biorxiv.org)
+  - 프리프린트 최신 결과 (피어리뷰 전 데이터 포함)
+  - PubMed에 아직 없는 최신 연구 탐색 시 우선 확인
+
+연계 전략:
+  1. PubMed (확립된 문헌) + bioRxiv (최신 프리프린트) 병렬 검색
+  2. OpenAlex에서 인용 네트워크로 관련 논문 확장
+  3. 핵심 논문 DOI → bgpt-paper-search로 전문 확보
+```
 
 ### DOI 보완: 검색 결과에 DOI가 없는 핵심 논문에 한해 WebFetch로 PubMed 페이지에서 추출 (필요 시만, 무조건 실행 금지)
 
