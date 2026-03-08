@@ -1,3 +1,6 @@
 anthropic>=0.40.0
 mcp[cli]>=1.0.0
 requests>=2.31.0
+fastapi>=0.100.0
+websockets>=12.0
+uvicorn[standard]>=0.24.0
