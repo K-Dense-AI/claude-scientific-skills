@@ -16,6 +16,7 @@ DEFAULT_WORKDIR = str(Path.home())
 
 DETACHED_PROCESS = 0x00000008
 CREATE_NEW_PROCESS_GROUP = 0x00000200
+CREATE_NO_WINDOW = 0x08000000
 
 _pids: dict[str, int] = {}
 _task_files: dict[str, str] = {}
@@ -78,7 +79,7 @@ def _launch_detached_agent(team_id: str, team_type: str, task: str,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         env=clean_env,
-        creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
+        creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW,
         close_fds=True,
     )
     return proc.pid

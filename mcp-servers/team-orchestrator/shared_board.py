@@ -261,6 +261,7 @@ def spawn_worker(lead_id: str, sub_task: str, worker_type: str = None) -> str:
 
     DETACHED_PROCESS = 0x00000008
     CREATE_NEW_PROCESS_GROUP = 0x00000200
+    CREATE_NO_WINDOW = 0x08000000
     PYTHON_BIN = sys.executable
     RUN_AGENT_SCRIPT = str(Path(__file__).parent / "run_agent.py")
 
@@ -301,7 +302,7 @@ def spawn_worker(lead_id: str, sub_task: str, worker_type: str = None) -> str:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         env=clean_env,
-        creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
+        creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW,
         close_fds=True,
     )
 

@@ -302,10 +302,10 @@ LEAD_MODELS: dict[str, str] = {
     "code":           "claude-sonnet-4-6",
     "writing":        "claude-sonnet-4-6",
     "lab-protocol":   "claude-sonnet-4-6",
-    "ops":            "claude-haiku-4-5-20251001",
+    "ops":            "claude-sonnet-4-6",
 }
 
-# 팀 타입별 리드 모델 (ops는 haiku로 충분)
+# 팀 타입별 리드 모델
 WORKER_MODELS: dict[str, str] = {
     "research": "claude-sonnet-4-6",
     "literature": "claude-sonnet-4-6",
@@ -331,7 +331,7 @@ WORKER_MODELS: dict[str, str] = {
     "lab-protocol": "claude-sonnet-4-6",
     "design": "claude-sonnet-4-6",
     "primer": "claude-haiku-4-5-20251001",
-    "ops": "claude-haiku-4-5-20251001",
+    "ops": "claude-sonnet-4-6",
     "git": "claude-haiku-4-5-20251001",
     "asana": "claude-haiku-4-5-20251001",
     "env": "claude-haiku-4-5-20251001",

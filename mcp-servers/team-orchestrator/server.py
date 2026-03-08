@@ -101,7 +101,10 @@ def start_project(description: str, feedback_timeout: int = 10) -> str:
         "project_id": project_id,
         "project_summary": plan.get("project_summary", ""),
         "teams": teams_created,
-        "message": f"{len(teams_created)} agents created. Use get_status() to check progress."
+        "message": (
+            f"{len(teams_created)} agents created. Use get_status() to check progress.\n"
+            f"(모든 팀 완료 시 자동으로 Notion + Asana 보고 에이전트가 실행됩니다)"
+        )
     }
     return json.dumps(result, ensure_ascii=False, indent=2)
 
@@ -139,9 +142,24 @@ def get_status(project_id: str = None) -> str:
         project_id: (선택) 특정 프로젝트 ID. 없으면 전체 조회.
 
     Returns:
-        팀별 상태 요약
+        팀별 상태 요약 + 타이머
     """
     teams = team_manager.get_status_all(project_id)
+    current_time = time.time()
+
+    # 자동 보고 트리거 (모든 팀 완료 시)
+    if project_id:
+        _trigger_auto_reporting(project_id)
+    else:
+        # 전체 조회 시 각 프로젝트별로 체크
+        all_projects = set(t["team_id"].split("-")[0] for t in teams)
+        for proj_id in all_projects:
+            _trigger_auto_reporting(proj_id)
+
+    # 상태별 카운트
+    status_counts = {"running": 0, "pending": 0, "done": 0, "failed": 0, "paused": 0}
+    for t in teams:
+        status_counts[t["status"]] = status_counts.get(t["status"], 0) + 1
 
     # 읽지 않은 완료 알림 먼저 표시
     notifications = st.get_pending_notifications()
@@ -156,7 +174,19 @@ def get_status(project_id: str = None) -> str:
     if not teams:
         return notif_header + "No active agents." if notif_header else "No active agents."
 
-    lines = ["## Agent Status\n"]
+    # 요약 헤더
+    summary_parts = []
+    if status_counts["running"] > 0:
+        summary_parts.append(f"🔄 실행: {status_counts['running']}")
+    if status_counts["pending"] > 0:
+        summary_parts.append(f"⏳ 대기: {status_counts['pending']}")
+    if status_counts["done"] > 0:
+        summary_parts.append(f"✅ 완료: {status_counts['done']}")
+    if status_counts["failed"] > 0:
+        summary_parts.append(f"❌ 실패: {status_counts['failed']}")
+    summary = " | ".join(summary_parts) if summary_parts else "상태 없음"
+
+    lines = [f"## Agent Status — {summary}\n"]
     done_leads = []
     for t in teams:
         status_icon = {
@@ -164,8 +194,21 @@ def get_status(project_id: str = None) -> str:
             "pending": "⏳", "paused": "⏸️"
         }.get(t["status"], "❓")
 
+        # 타이머: running 상태이면 경과 시간 표시
+        timer_info = ""
+        if t["status"] == "running":
+            team = st.get_team(t["team_id"])
+            if team and team.started_at > 0:
+                elapsed = current_time - team.started_at
+                minutes = int(elapsed // 60)
+                seconds = int(elapsed % 60)
+                if minutes > 0:
+                    timer_info = f" (🕐 {minutes}m {seconds}s 경과)"
+                else:
+                    timer_info = f" (🕐 {seconds}s 경과)"
+
         lines.append(
-            f"{status_icon} **{t['name']}** (ID: `{t['team_id']}`)\n"
+            f"{status_icon} **{t['name']}** (ID: `{t['team_id']}`){timer_info}\n"
             f"   role: {t['type']} | status: {t['status']}\n"
             f"   task: {t['task']}\n"
         )
@@ -292,7 +335,18 @@ def shutdown(project_id: str = None) -> str:
             team_type="report-notion",
             name="NotionReport",
         )
-        notion_msg = f"Notion 리포트 에이전트 시작 (agent_id: {nr['agent_id']})"
+        notion_agent_id = nr["agent_id"]
+        # Notion 에이전트 완료까지 최대 120초 대기
+        import time as _t
+        deadline = _t.time() + 120
+        while _t.time() < deadline:
+            _t.sleep(5)
+            agent = st.get_team(notion_agent_id)
+            if agent and agent.status in ("done", "failed"):
+                break
+        agent = st.get_team(notion_agent_id)
+        status = agent.status if agent else "unknown"
+        notion_msg = f"Notion 리포트 완료 [{status}] (agent_id: {notion_agent_id})"
     except Exception as e:
         notion_msg = f"Notion 리포트 생략: {e}"
 
@@ -389,6 +443,61 @@ def get_board_messages(project_id: str = None, limit: int = 30) -> str:
     return "\n".join(lines)
 
 
+# ── 자동 보고 트리거 (모든 팀 완료 시 Notion + Asana 업데이트) ──────────────
+
+def _trigger_auto_reporting(project_id: str):
+    """
+    프로젝트의 모든 팀이 완료되었을 때 Notion + Asana 보고 에이전트를 자동 실행.
+    get_status()에서 호출됨.
+    """
+    teams = st.list_teams(project_id)
+    if not teams:
+        return
+
+    # 모든 팀이 완료/실패 상태인지 확인
+    all_done = all(t.status in ("done", "failed") for t in teams)
+    if not all_done:
+        return
+
+    # 이미 보고 에이전트가 실행 중이거나 완료된지 확인
+    report_teams = [t for t in teams if t.team_type in ("report-notion", "report-asana")]
+    if report_teams:
+        return  # 이미 보고 에이전트 존재
+
+    # 산출물 수집
+    team_outputs = [
+        {
+            "name": t.name,
+            "type": t.team_type,
+            "task": t.task,
+            "output": t.output
+        }
+        for t in teams if t.output.strip()
+    ]
+
+    if not team_outputs:
+        return
+
+    # Notion 보고 에이전트 spawn
+    try:
+        outputs_summary = "\n\n".join(
+            f"### {t['name']} ({t['type']})\n**태스크:** {t['task'][:200]}\n\n{t['output'][:1000]}"
+            for t in team_outputs
+        )
+        notion_task = (
+            f"[보고서]\n## 프로젝트 완료 리포트\n\n{outputs_summary}\n\n"
+            f"[태스크 컨텍스트]\n프로젝트ID: {project_id} | 팀 수: {len(team_outputs)}개"
+        )
+        _spawn_solo_agent(
+            task=notion_task,
+            team_type="report-notion",
+            name=f"NotionReport-{project_id[:6]}",
+            project_id=project_id,
+        )
+    except Exception as e:
+        print(f"[warning] Notion 보고 자동 실행 실패: {e}", flush=True)
+
+
 # ── 내부 헬퍼: solo 에이전트 subprocess 실행 ──────────────────────────────────
 
 def _spawn_solo_agent(task: str, team_type: str = "general", name: str = None,
@@ -400,6 +509,7 @@ def _spawn_solo_agent(task: str, team_type: str = "general", name: str = None,
 
     DETACHED_PROCESS = 0x00000008
     CREATE_NEW_PROCESS_GROUP = 0x00000200
+    CREATE_NO_WINDOW = 0x08000000
     RUN_AGENT_SCRIPT = str(Path(__file__).parent / "run_agent.py")
 
     proj_id = project_id or f"quick-{str(uuid.uuid4())[:6]}"
@@ -427,7 +537,7 @@ def _spawn_solo_agent(task: str, team_type: str = "general", name: str = None,
          agent_id, team_type, proj_id, str(Path.home()), tmp.name, "solo"],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         env=clean_env,
-        creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
+        creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW,
         close_fds=True,
     )
     return {"agent_id": agent_id, "name": agent_name, "project_id": proj_id}
@@ -521,9 +631,10 @@ def tail_output(team_id: str, since_offset: int = 0) -> str:
         since_offset: 마지막으로 읽은 출력 길이 (0이면 전체 반환)
 
     Returns:
-        JSON: {output_chunk, total_offset, status, done}
+        JSON: {output_chunk, total_offset, status, done, elapsed_seconds}
         - output_chunk: since_offset 이후 새 내용
         - total_offset: 현재 전체 출력 길이 (다음 호출 시 since_offset으로 사용)
+        - elapsed_seconds: 경과 시간 (running 상태일 때만 실시간 계산)
         - done: True이면 에이전트 완료 (더 이상 폴링 불필요)
     """
     team = st.get_team(team_id)
@@ -534,12 +645,21 @@ def tail_output(team_id: str, since_offset: int = 0) -> str:
     total_len = len(output)
     chunk = output[since_offset:] if since_offset < total_len else ""
 
+    # 실시간 경과 시간 계산
+    current_time = time.time()
+    elapsed = 0.0
+    if team.status == "running" and team.started_at > 0:
+        elapsed = current_time - team.started_at
+    else:
+        elapsed = team.elapsed_seconds or 0.0
+
     return json.dumps({
         "team_id": team_id,
         "name": team.name,
         "status": team.status,
         "output_chunk": chunk,
         "total_offset": total_len,
+        "elapsed_seconds": round(elapsed, 1),
         "done": team.status in ("done", "failed", "stuck"),
     }, ensure_ascii=False)
 
