@@ -10,7 +10,7 @@ This reference documents pymatgen's extensive analysis capabilities for material
 from pymatgen.analysis.phase_diagram import PhaseDiagram, PDPlotter
 from pymatgen.entries.computed_entries import ComputedEntry
 
-# Create entries (composition and energy per atom)
+# Create entries (composition and total energy)
 entries = [
     ComputedEntry("Fe", -8.4),
     ComputedEntry("O2", -4.9),

@@ -32,3 +32,5 @@ hardcoding_audit_all_projects.md
 *_query.py
 *_workflow.py
 run_si_bold_comments.py
+.env
+scan_skills.py
