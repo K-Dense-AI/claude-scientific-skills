@@ -63,6 +63,13 @@ class AsanaAPI:
             error_body = e.read().decode()
             raise RuntimeError(f"Asana API 오류 {e.code}: {error_body[:500]}")
 
+    # ── Workspace ──
+
+    def get_workspaces(self) -> list:
+        """사용자의 워크스페이스 목록 조회."""
+        result = self._request("GET", "/workspaces")
+        return result.get("data", [])
+
     # ── Task ↔ Project (multi-homing) ──
 
     def add_task_to_project(self, task_gid, project_gid, section_gid=None):
