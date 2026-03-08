@@ -10,7 +10,9 @@ Notion 작동 로그 연동 모듈 v2 — Project / Agent 분리 DB + 관계형 
   ~/.claude/secrets.json 에 "NOTION_TOKEN" (Notion Internal Integration 토큰)
 """
 import json
+import os
 import re
+import subprocess
 import time
 import threading
 import requests
@@ -94,6 +96,58 @@ def _make_github_rt(urls: list[str]) -> list[dict]:
 
 def _short_model(model: str) -> str:
     return model.replace("claude-", "").replace("-20251001", "")
+
+
+# ── 주간 토큰 한도 조회 (ccusage) ────────────────────────────────────────────
+
+_ccusage_cache: dict = {}
+_ccusage_cache_time: float = 0.0
+
+
+def _get_weekly_usage() -> dict | None:
+    """ccusage CLI로 현재 5h 블록의 주간 한도 대비 사용량을 조회한다.
+    결과를 60초간 캐시한다.
+    Returns: {totalTokens, limit, percentUsed, costUSD, projectedUsage} or None
+    """
+    global _ccusage_cache, _ccusage_cache_time
+    if time.time() - _ccusage_cache_time < 60 and _ccusage_cache:
+        return _ccusage_cache
+
+    try:
+        result = subprocess.run(
+            "ccusage blocks --recent --offline --token-limit max --json",
+            capture_output=True, text=True, timeout=30, shell=True,
+        )
+        if result.returncode != 0:
+            return None
+        data = json.loads(result.stdout)
+        blocks = data.get("blocks", [])
+        active = next((b for b in blocks if b.get("isActive")), None)
+        if not active:
+            return None
+
+        tls = active.get("tokenLimitStatus", {})
+        info = {
+            "totalTokens": active.get("totalTokens", 0),
+            "limit": tls.get("limit", 0),
+            "percentUsed": round(tls.get("percentUsed", 0), 1),
+            "costUSD": round(active.get("costUSD", 0), 2),
+            "projectedUsage": tls.get("projectedUsage", 0),
+        }
+        _ccusage_cache = info
+        _ccusage_cache_time = time.time()
+        return info
+    except Exception:
+        return None
+
+
+def _format_tokens(n: int) -> str:
+    """173025844 → '173M'"""
+    if n >= 1_000_000:
+        return f"{n / 1_000_000:.0f}M"
+    if n >= 1_000:
+        return f"{n / 1_000:.0f}K"
+    return str(n)
 
 
 # ── DB 생성 / 검색 ───────────────────────────────────────────────────────────
@@ -229,14 +283,39 @@ def _get_or_create_project_notion_id(token: str, project_id: str,
     return None
 
 
-def _update_project_cost(token: str, project_notion_id: str, cost_delta: float):
-    """Project 페이지의 Total Cost 증가 (read → add → write)"""
+def _update_project_metrics(token: str, project_notion_id: str,
+                            cost_delta: float = 0.0, elapsed_delta: float = 0.0,
+                            tokens_delta: int = 0):
+    """Project 페이지의 Total Cost / Total Elapsed / Total Tokens / Tok/s 증가 (read → add → write)"""
     try:
         r = requests.get(f"{_API}/pages/{project_notion_id}", headers=_headers(token), timeout=10)
-        current = r.json().get("properties", {}).get("Total Cost ($)", {}).get("number") or 0.0
+        props = r.json().get("properties", {})
+        current_cost = props.get("Total Cost ($)", {}).get("number") or 0.0
+        current_elapsed = props.get("Total Elapsed (s)", {}).get("number") or 0.0
+        current_tokens = props.get("Total Tokens", {}).get("number") or 0
+
+        new_cost = round(current_cost + cost_delta, 6)
+        new_elapsed = round(current_elapsed + elapsed_delta, 1)
+        new_tokens = int(current_tokens + tokens_delta)
+        new_toks = round(new_tokens / new_elapsed, 1) if new_elapsed > 0 else 0
+
+        # 주간 한도 대비 사용률 계산 (Notion percent 포맷: 0.01 = 1%)
+        weekly_pct = None
+        usage = _get_weekly_usage()
+        if usage and usage.get("limit") and new_tokens > 0:
+            weekly_pct = round(new_tokens / usage["limit"], 6)
+
+        update_props = {
+            "Total Cost ($)": {"number": new_cost},
+            "Total Elapsed (s)": {"number": new_elapsed},
+            "Total Tokens": {"number": new_tokens},
+            "Tok/s": {"number": new_toks},
+        }
+        if weekly_pct is not None:
+            update_props["Weekly %"] = {"number": weekly_pct}
         requests.patch(
             f"{_API}/pages/{project_notion_id}", headers=_headers(token),
-            json={"properties": {"Total Cost ($)": {"number": round(current + cost_delta, 6)}}},
+            json={"properties": update_props},
             timeout=10,
         )
     except Exception:
@@ -303,9 +382,19 @@ def _log_agent_sync(event: str, name: str, agent_id: str = "", project_id: str =
                       json={"parent": {"database_id": agent_db_id}, "properties": props},
                       timeout=10)
 
-        # 완료 시 Project 비용 누적
-        if project_notion_id and event == "agent_done" and cost:
-            _update_project_cost(token, project_notion_id, cost)
+        # 완료 시 Project 메트릭 누적 + 프로젝트 상태 업데이트
+        if project_notion_id and event == "agent_done":
+            _update_project_metrics(
+                token, project_notion_id,
+                cost_delta=cost or 0.0,
+                elapsed_delta=elapsed or 0.0,
+                tokens_delta=(tokens_in or 0) + (tokens_out or 0),
+            )
+            _update_project_agent_count(token, project_notion_id, project_id)
+
+        # 대시보드 헤더 자동 갱신
+        if event in ("agent_done", "agent_failed", "agent_start"):
+            _update_dashboard_header(token)
 
     except Exception:
         pass
@@ -356,10 +445,10 @@ def _update_agent_status_sync(agent_id: str, status: str, elapsed: float = 0.0):
 
         page_id = results[0]["id"]
 
-        # Status와 Elapsed 필드 업데이트
+        # Status와 Elapsed 필드 업데이트 (Notion 실제 필드명: "Elap. (s)")
         props = {
             "Status": {"select": {"name": status}},
-            "Elapsed (s)": {"number": round(elapsed, 1)},
+            "Elap. (s)": {"number": round(elapsed, 1)},
         }
         requests.patch(
             f"{_API}/pages/{page_id}",
@@ -369,6 +458,215 @@ def _update_agent_status_sync(agent_id: str, status: str, elapsed: float = 0.0):
         )
     except Exception:
         pass
+
+
+# ── 대시보드 헤더 자동 갱신 ──────────────────────────────────────────────────
+
+def _count_agents_by_status(token: str) -> dict[str, int]:
+    """Agent DB를 쿼리해서 Status별 카운트를 반환"""
+    counts = {"running": 0, "done": 0, "failed": 0}
+    try:
+        # done 에이전트 카운트 (agent_done 이벤트만)
+        for status_val in ("running", "done", "failed"):
+            resp = requests.post(
+                f"{_API}/databases/{_AGENT_DB_ID}/query",
+                headers=_headers(token),
+                json={
+                    "filter": {"property": "Status", "select": {"equals": status_val}},
+                    "page_size": 1,
+                },
+                timeout=10,
+            )
+            # Notion은 has_more + 총 개수를 직접 안 줌 → 간단히 쿼리
+            # page_size=100으로 여러 번 페이징하는 대신, 마지막 업데이트 기준으로 추정
+        # 더 효율적: filter 없이 전체를 한 번에 (최대 100)
+        all_agents = []
+        has_more = True
+        start_cursor = None
+        while has_more:
+            body: dict = {"page_size": 100}
+            if start_cursor:
+                body["start_cursor"] = start_cursor
+            resp = requests.post(
+                f"{_API}/databases/{_AGENT_DB_ID}/query",
+                headers=_headers(token), json=body, timeout=15,
+            )
+            data = resp.json()
+            all_agents.extend(data.get("results", []))
+            has_more = data.get("has_more", False)
+            start_cursor = data.get("next_cursor")
+            if len(all_agents) > 500:
+                break  # 안전 제한
+
+        for a in all_agents:
+            s = a.get("properties", {}).get("Status", {}).get("select", {})
+            sname = s.get("name", "") if s else ""
+            if sname in counts:
+                counts[sname] += 1
+    except Exception:
+        pass
+    return counts
+
+
+def _update_dashboard_header(token: str):
+    """대시보드 페이지의 헤더 카운트를 갱신"""
+    try:
+        counts = _count_agents_by_status(token)
+        now_str = time.strftime("%Y-%m-%d %H:%M", time.localtime())
+        running = counts.get("running", 0)
+        done = counts.get("done", 0)
+        failed = counts.get("failed", 0)
+
+        # Notion 페이지 내용에서 기존 헤더 찾아 교체
+        new_header = (
+            f"**🔄 마지막 업데이트**: {now_str} \\| "
+            f"**실행 중**: {running}개 \\| "
+            f"**완료**: {done}개 \\| "
+            f"**실패**: {failed}개"
+        )
+
+        # Notion MCP update_content는 사용 불가 (동기 HTTP 직접 호출)
+        # 대신 REST API로 페이지 블록을 업데이트
+        # 페이지의 첫 번째 자식 블록(callout/quote)을 찾아서 교체
+        resp = requests.get(
+            f"{_API}/blocks/{_NOTION_PAGE_ID}/children?page_size=5",
+            headers=_headers(token), timeout=10,
+        )
+        blocks = resp.json().get("results", [])
+
+        for block in blocks:
+            # quote 블록(>) 찾기 — 헤더가 여기 있음
+            if block.get("type") == "quote":
+                block_id = block["id"]
+                # quote 블록은 rich_text 교체 (한 번에 덮어쓰기)
+                rt = []
+                parts = [
+                    ("🔄 마지막 업데이트", False), (f": {now_str}", False),
+                    (" | ", False),
+                    ("실행 중", True), (f": {running}개", False),
+                    (" | ", False),
+                    ("완료", True), (f": {done}개", False),
+                    (" | ", False),
+                    ("실패", True), (f": {failed}개", False),
+                ]
+                # 주간 한도 사용량 추가
+                usage = _get_weekly_usage()
+                if usage and usage.get("limit"):
+                    pct = usage["percentUsed"]
+                    total = _format_tokens(usage["totalTokens"])
+                    limit = _format_tokens(usage["limit"])
+                    cost = usage["costUSD"]
+                    parts.append((" | ", False))
+                    parts.append(("📊 한도", True))
+                    parts.append((f": {total}/{limit} ({pct}%) ${cost}", False))
+                for text, bold in parts:
+                    item = {"type": "text", "text": {"content": text}}
+                    if bold:
+                        item["annotations"] = {"bold": True}
+                    rt.append(item)
+
+                requests.patch(
+                    f"{_API}/blocks/{block_id}",
+                    headers=_headers(token),
+                    json={"quote": {"rich_text": rt}},
+                    timeout=10,
+                )
+                break
+    except Exception:
+        pass
+
+
+def _update_project_agent_count(token: str, project_notion_id: str, project_id: str):
+    """Project의 Agent Count와 Status를 업데이트 (전체 에이전트 완료 시 done으로)"""
+    try:
+        # 해당 프로젝트의 에이전트 수 카운트
+        resp = requests.post(
+            f"{_API}/databases/{_AGENT_DB_ID}/query",
+            headers=_headers(token),
+            json={
+                "filter": {
+                    "property": "Agent ID",
+                    "rich_text": {"starts_with": project_id}
+                },
+                "page_size": 100,
+            },
+            timeout=10,
+        )
+        agents = resp.json().get("results", [])
+        agent_count = len(agents)
+
+        props: dict = {"Agent Count": {"number": agent_count}}
+
+        # 모든 에이전트가 done/failed인지 확인
+        all_terminal = all(
+            (a.get("properties", {}).get("Event", {}).get("select", {}) or {}).get("name", "")
+            in ("agent_done", "agent_failed")
+            for a in agents
+        ) if agents else False
+
+        if all_terminal and agent_count > 0:
+            props["Status"] = {"select": {"name": "done"}}
+
+        requests.patch(
+            f"{_API}/pages/{project_notion_id}",
+            headers=_headers(token),
+            json={"properties": props},
+            timeout=10,
+        )
+    except Exception:
+        pass
+
+
+# ── 자동 폴링 (백그라운드 Notion Elapsed 동기화) ─────────────────────────────
+
+_auto_sync_thread: threading.Thread | None = None
+_auto_sync_stop = threading.Event()
+
+
+def _auto_sync_loop(interval: float = 30.0):
+    """
+    백그라운드 스레드: running 에이전트의 Elapsed를 interval초마다 Notion에 동기화.
+    get_status() 수동 호출 없이도 Notion DB가 실시간 갱신됨.
+    """
+    import importlib
+    while not _auto_sync_stop.is_set():
+        _auto_sync_stop.wait(interval)
+        if _auto_sync_stop.is_set():
+            break
+        try:
+            # state 모듈을 늦게 import (순환 import 방지)
+            st = importlib.import_module("state")
+            current_time = time.time()
+            teams = st.list_teams()
+            for t in teams:
+                if t.status == "running" and t.started_at > 0:
+                    elapsed = current_time - t.started_at
+                    _update_agent_status_sync(t.team_id, "running", elapsed)
+            # 대시보드 헤더도 갱신
+            token = _get_token()
+            if token:
+                _update_dashboard_header(token)
+        except Exception:
+            pass
+
+
+def start_auto_sync(interval: float = 30.0):
+    """자동 동기화 시작 (MCP 서버 시작 시 호출)"""
+    global _auto_sync_thread
+    if _auto_sync_thread and _auto_sync_thread.is_alive():
+        return  # 이미 실행 중
+    _auto_sync_stop.clear()
+    _auto_sync_thread = threading.Thread(
+        target=_auto_sync_loop, args=(interval,), daemon=True
+    )
+    _auto_sync_thread.start()
+
+
+def stop_auto_sync():
+    """자동 동기화 중지"""
+    _auto_sync_stop.set()
+    if _auto_sync_thread:
+        _auto_sync_thread.join(timeout=5)
 
 
 # ── 공개 API ─────────────────────────────────────────────────────────────────
@@ -401,8 +699,8 @@ def _track(t: threading.Thread) -> threading.Thread:
 def log_project(project_id: str, description: str):
     """프로젝트 생성 로그 (비동기, Project DB 행 생성)"""
     t = threading.Thread(target=_log_project_sync, args=(project_id, description), daemon=False)
-    _track(t)
     t.start()
+    _track(t)
 
 
 def update_agent_status(agent_id: str, status: str, elapsed: float = 0.0):
@@ -415,8 +713,8 @@ def update_agent_status(agent_id: str, status: str, elapsed: float = 0.0):
         args=(agent_id, status, elapsed),
         daemon=False,
     )
-    _track(t)
     t.start()
+    _track(t)
 
 
 def log_event(event: str, name: str, agent_id: str = "", project_id: str = "",
@@ -446,5 +744,5 @@ def log_event(event: str, name: str, agent_id: str = "", project_id: str = "",
                     cost=cost, task=task, result=result),
         daemon=False,
     )
-    _track(t)
     t.start()
+    _track(t)
