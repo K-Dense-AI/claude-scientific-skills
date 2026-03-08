@@ -208,23 +208,29 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
     # ────────────────────────────────────────────────────────────────────────
 
+    is_reply = bool(update.message.reply_to_message)
+    status_text = "💬 대화 이어서 응답 생성 중..." if is_reply else "🔄 새 세션 열림 · 응답 생성 중..."
+
+    status_msg = await update.message.reply_text("✅ 수신확인")
+    await asyncio.sleep(0.4)
+    await status_msg.edit_text(status_text)
     await context.bot.send_chat_action(update.effective_chat.id, "typing")
+
+    FOOTER = "\n\n↩️ 이 메시지에 답장하면 대화가 이어집니다"
 
     try:
         response = await ask_claude(user_id, update.message.text)
 
-        # 4096자 제한 분할 전송
-        if len(response) <= 4096:
-            await update.message.reply_text(response)
-        else:
-            for i in range(0, len(response), 4000):
+        first_chunk = response[:4096 - len(FOOTER)]
+        await status_msg.edit_text(first_chunk + FOOTER)
+        if len(response) > 4096 - len(FOOTER):
+            for i in range(4096 - len(FOOTER), len(response), 4000):
                 await update.message.reply_text(response[i : i + 4000])
-                if i + 4000 < len(response):
-                    await asyncio.sleep(0.3)
+                await asyncio.sleep(0.3)
 
     except Exception as e:
         logger.exception("메시지 처리 오류")
-        await update.message.reply_text(f"오류 발생: {e}")
+        await status_msg.edit_text(f"❌ 오류 발생: {e}")
 
 
 # ── 메인 ───────────────────────────────────────────────────────────────────────
