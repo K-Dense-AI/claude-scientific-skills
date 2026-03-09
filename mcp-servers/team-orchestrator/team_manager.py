@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Optional
 
 import state as st
+import event_bus as eb
 
 PYTHON_BIN = sys.executable
 RUN_AGENT_SCRIPT = str(Path(__file__).parent / "run_agent.py")
@@ -76,6 +77,7 @@ def _launch_detached_agent(team_id: str, team_type: str, task: str,
     proc = subprocess.Popen(
         [PYTHON_BIN, RUN_AGENT_SCRIPT,
          team_id, team_type, project_id, workdir, tmp.name],
+        stdin=subprocess.DEVNULL,    # MCP stdin 파이프 상속 차단
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
         env=clean_env,
@@ -107,6 +109,8 @@ def start_team(team_id: str, name: str, team_type: str, task: str,
     _pids[team_id] = pid
 
     st.append_team_output(team_id, f"[{team_type.upper()} 에이전트 시작 PID={pid}]\n")
+    eb.publish("team_started", team_id=team_id, project_id=project_id,
+               data={"name": name, "type": team_type, "pid": pid})
     return team_id
 
 
@@ -117,6 +121,7 @@ def send_feedback(team_id: str, message: str):
 
     # 메시지 큐에 CEO 피드백 저장 (에이전트가 read_inbox로 읽을 수 있도록)
     st.push_message(team_id, "ceo", message)
+    eb.publish("feedback_sent", team_id=team_id, data={"message": message[:200]})
 
     # 완료된 팀이면 새 프로세스로 재실행
     if team.status == "done":
@@ -139,6 +144,7 @@ def set_project_feedback_timeout(project_id: str, timeout: int):
 def pause_team(team_id: str):
     """팀 상태를 paused로 표시 (detached 프로세스는 다음 체크포인트에서 감지)"""
     st.update_team_status(team_id, "paused")
+    eb.publish("team_paused", team_id=team_id)
 
 
 def get_status_all(project_id: Optional[str] = None) -> list[dict]:
