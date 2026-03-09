@@ -3,6 +3,13 @@
 Team Orchestrator MCP Server
 CEO 역할의 Claude Code에서 여러 팀을 실시간으로 관리하는 MCP 서버
 """
+# [DIAGNOSTIC] 가장 첫 번째 로그 — import 전에 실행되는지 확인
+import os as _os_diag, time as _time_diag
+_DIAG_LOG = _os_diag.path.join(_os_diag.path.dirname(_os_diag.path.abspath(__file__)), "startup_diag.log")
+with open(_DIAG_LOG, "a", encoding="utf-8") as _f:
+    _f.write(f"[{_time_diag.strftime('%H:%M:%S')}] server.py 시작 | PID={_os_diag.getpid()} | cwd={_os_diag.getcwd()} | USERPROFILE={_os_diag.environ.get('USERPROFILE','없음')}\n")
+del _os_diag, _time_diag, _DIAG_LOG, _f
+
 import sys
 from pathlib import Path
 # 서버 디렉토리를 sys.path에 추가 (VSCode 확장에서 cwd가 달라도 import 가능)
@@ -11,11 +18,30 @@ sys.path.insert(0, str(Path(__file__).parent))
 import asyncio
 import atexit
 import json
+import logging
 import os
 import subprocess
 import threading
 import time
+import traceback
 import uuid
+
+# 파일 로거 (MCP stdio 오염 없이 Claude Code 연결 시 디버그 가능)
+_LOG_FILE = Path(__file__).parent / "server_debug.log"
+logging.basicConfig(
+    filename=str(_LOG_FILE),
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(message)s",
+    encoding="utf-8",
+)
+_logger = logging.getLogger("team-orchestrator")
+_logger.info("=== server.py 시작 ===")
+
+def _global_exception_hook(exc_type, exc_value, exc_tb):
+    _logger.critical("Uncaught exception: %s", "".join(traceback.format_exception(exc_type, exc_value, exc_tb)))
+    sys.__excepthook__(exc_type, exc_value, exc_tb)
+
+sys.excepthook = _global_exception_hook
 
 # FastMCP 사용
 from mcp.server.fastmcp import FastMCP
@@ -31,15 +57,29 @@ SKILLS_BASE = Path.home() / "claude-scientific-skills" / "scientific-skills"
 
 # ── PID 기록 (디버깅용) ───────────────────────────────────────────────────────
 _PID_FILE = Path.home() / ".claude" / "team-orchestrator.pid"
+_TG_LISTENER_PID_FILE = Path(__file__).parent / "tg_listener.pid"
 _PID_FILE.write_text(str(os.getpid()))
-atexit.register(lambda: _PID_FILE.unlink(missing_ok=True))
 
 
-def _inject_skill_hints(task: str, skills: list) -> str:
+def _cleanup_on_exit():
+    """MCP 서버 종료 시 자식 프로세스(ws_server, tg_listener) 정리"""
+    _PID_FILE.unlink(missing_ok=True)
+    _TG_LISTENER_PID_FILE.unlink(missing_ok=True)
+    for proc in _child_procs:
+        try:
+            proc.terminate()
+        except Exception:
+            pass
+
+
+atexit.register(_cleanup_on_exit)
+
+
+def _inject_skill_hints(task: str, skills: list[str]) -> str:
     """태스크 텍스트에 스킬 SKILL.md 경로 힌트를 추가"""
     if not skills:
         return task
-    lines = [task, "", "[참고 스킬 — Read 도구로 해당 SKILL.md를 확인하여 API/라이브러리 사용법을 파악하라]"]
+    lines = [task, "", "[Skill hint -- use Read tool to check the relevant SKILL.md for API/library usage]"]
     for skill in skills:
         path = SKILLS_BASE / skill / "SKILL.md"
         lines.append(f"- {skill}: {path}")
@@ -61,26 +101,51 @@ if _stale:
 _DASHBOARD_PUBLIC_URL = None  # 외부에서 조회 가능하도록 모듈 레벨 저장
 _CLOUDFLARED_PATH = str(Path.home() / "cloudflared.exe")
 
+_child_procs: list[subprocess.Popen] = []  # 자식 프로세스 추적 (atexit 정리용)
+
+
+def _is_port_in_use(port: int) -> bool:
+    """포트가 이미 사용 중인지 확인"""
+    import socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex(("127.0.0.1", port)) == 0
+
+
 def _start_dashboard_background():
     """WS 서버 + Cloudflare Tunnel을 백그라운드로 시작"""
     global _DASHBOARD_PUBLIC_URL
     script_dir = str(Path(__file__).parent)
 
-    # 1) WebSocket 서버 (ws_server.py) 서브프로세스
-    try:
-        _cflags = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
-        subprocess.Popen(
-            [sys.executable, os.path.join(script_dir, "ws_server.py")],
-            cwd=script_dir,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            creationflags=_cflags,
-        )
-        print("[startup] WebSocket 대시보드 서버 시작 (포트 8765)", file=sys.stderr, flush=True)
-        # 로컬 호스트는 항상 사용 가능
-        _DASHBOARD_PUBLIC_URL = "http://localhost:8765"
-    except Exception as e:
-        print(f"[startup] WebSocket 서버 시작 실패: {e}", file=sys.stderr, flush=True)
+    # 0) 환경변수에서 고정 URL 우선 사용 (ngrok 유료 고정 도메인 등)
+    static_url = os.environ.get("NGROK_STATIC_URL", "").strip()
+
+    # 1) WebSocket 서버 (ws_server.py) 서브프로세스 — 이미 실행 중이면 스킵
+    if _is_port_in_use(8765):
+        print("[startup] WebSocket 서버 이미 실행 중 (포트 8765) — 스킵", file=sys.stderr, flush=True)
+        _DASHBOARD_PUBLIC_URL = static_url or "http://localhost:8765"
+    else:
+        try:
+            _cflags = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
+            proc = subprocess.Popen(
+                [sys.executable, os.path.join(script_dir, "ws_server.py")],
+                cwd=script_dir,
+                stdin=subprocess.DEVNULL,   # MCP stdin 파이프 상속 차단
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=_cflags,
+            )
+            _child_procs.append(proc)
+            print("[startup] WebSocket 대시보드 서버 시작 (포트 8765)", file=sys.stderr, flush=True)
+            # 로컬 호스트는 항상 사용 가능
+            _DASHBOARD_PUBLIC_URL = static_url or "http://localhost:8765"
+        except Exception as e:
+            print(f"[startup] WebSocket 서버 시작 실패: {e}", file=sys.stderr, flush=True)
+            return
+
+    # 고정 URL이 설정되어 있으면 Cloudflare 터널 스킵
+    if static_url:
+        print(f"[startup] 고정 URL 사용: {static_url} — Cloudflare 터널 스킵", file=sys.stderr, flush=True)
+        _update_notion_embed(static_url)
         return
 
     # 2) Cloudflare Tunnel (무료, 인터스티셜 없음) — 선택사항
@@ -93,6 +158,7 @@ def _start_dashboard_background():
         _cflags2 = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
         proc = subprocess.Popen(
             [_CLOUDFLARED_PATH, "tunnel", "--url", "http://localhost:8765"],
+            stdin=subprocess.DEVNULL,    # MCP stdin 파이프 상속 차단
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -162,27 +228,46 @@ def _update_notion_embed(new_url: str):
     except Exception as e:
         print(f"[startup] Notion embed 갱신 오류: {e}", file=sys.stderr, flush=True)
 
-# 데몬 스레드로 실행 (MCP 서버 종료 시 같이 종료)
-threading.Thread(target=_start_dashboard_background, daemon=True).start()
+def _is_tg_listener_running() -> bool:
+    """tg_listener.py가 이미 실행 중인지 PID 파일로 확인"""
+    if not _TG_LISTENER_PID_FILE.exists():
+        return False
+    try:
+        pid = int(_TG_LISTENER_PID_FILE.read_text().strip())
+        # Windows: 프로세스 존재 여부 확인
+        import ctypes
+        handle = ctypes.windll.kernel32.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if handle:
+            ctypes.windll.kernel32.CloseHandle(handle)
+            return True
+    except Exception:
+        pass
+    _TG_LISTENER_PID_FILE.unlink(missing_ok=True)
+    return False
+
 
 # ── Telegram 리스너 자동 시작 (답장 수신용) ──────────────────────────────────
 def _start_tg_listener():
-    """tg_listener.py를 서브프로세스로 시작"""
+    """tg_listener.py를 서브프로세스로 시작 — 이미 실행 중이면 스킵"""
+    if _is_tg_listener_running():
+        print("[startup] Telegram 리스너 이미 실행 중 — 스킵", file=sys.stderr, flush=True)
+        return
     try:
         script = str(Path(__file__).parent / "tg_listener.py")
         _cflags3 = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
-        subprocess.Popen(
+        proc = subprocess.Popen(
             [sys.executable, script],
             cwd=str(Path(__file__).parent),
+            stdin=subprocess.DEVNULL,    # MCP stdin 파이프 상속 차단
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             creationflags=_cflags3,
         )
+        _TG_LISTENER_PID_FILE.write_text(str(proc.pid))
+        _child_procs.append(proc)
         print("[startup] Telegram 리스너 시작", file=sys.stderr, flush=True)
     except Exception as e:
         print(f"[startup] Telegram 리스너 시작 실패: {e}", file=sys.stderr, flush=True)
-
-threading.Thread(target=_start_tg_listener, daemon=True).start()
 
 mcp = FastMCP("team-orchestrator")
 
@@ -245,7 +330,7 @@ def start_project(description: str, feedback_timeout: int = 10) -> str:
         "dashboard_url": _DASHBOARD_PUBLIC_URL or "N/A",
         "message": (
             f"{len(teams_created)} agents created. Use get_status() to check progress.\n"
-            f"(모든 팀 완료 시 자동으로 Telegram 알림 + Notion 보고 에이전트가 실행됩니다)"
+            f"[CEO 지시] 모든 팀리드 완료 보고 수신 후 → shutdown(project_id='{project_id}') 호출하여 Notion 보고 에이전트를 실행할 것."
         )
     }
     return json.dumps(result, ensure_ascii=False, indent=2)
@@ -319,11 +404,11 @@ def get_status(project_id: str = None) -> str:
     # 요약 헤더
     summary_parts = []
     if status_counts["running"] > 0:
-        summary_parts.append(f"🔄 실행: {status_counts['running']}")
+        summary_parts.append(f"🔄 running: {status_counts['running']}")
     if status_counts["pending"] > 0:
-        summary_parts.append(f"⏳ 대기: {status_counts['pending']}")
+        summary_parts.append(f"⏳ pending: {status_counts['pending']}")
     if status_counts["done"] > 0:
-        summary_parts.append(f"✅ 완료: {status_counts['done']}")
+        summary_parts.append(f"✅ done: {status_counts['done']}")
     if status_counts["failed"] > 0:
         summary_parts.append(f"❌ 실패: {status_counts['failed']}")
     summary = " | ".join(summary_parts) if summary_parts else "상태 없음"
@@ -373,7 +458,7 @@ def get_status(project_id: str = None) -> str:
 
     result = notif_header + "\n".join(lines)
     for name, team_id, output in done_leads:
-        notion_hint = "\n\n---\n> 📋 Notion에 업데이트하려면 이 결과를 Notion 페이지에 추가해 주세요."
+        notion_hint = "\n\n---\n> 📋 To update Notion, please add this result to the Notion page."
         result += f"\n\n---\n## 📋 {name} — 최종 결과\n\n{output}{notion_hint}"
 
     return result
@@ -423,21 +508,20 @@ def pause_team(team_id: str) -> str:
     return f"Agent '{team.name}' paused."
 
 
-# ── 종료 및 Asana/Notion 동기화 ──────────────────────────────────────────────
+# ── 종료 및 Notion 동기화 ────────────────────────────────────────────────────
 
 @mcp.tool()
 def shutdown(project_id: str = None) -> str:
     """
-    모든 팀(또는 특정 프로젝트)을 종료하고 Asana를 자동 업데이트합니다.
+    모든 팀(또는 특정 프로젝트)을 종료하고 Notion에 스프린트 리포트를 생성합니다.
     - 팀 산출물 수집
-    - 현재 Asana 태스크와 비교
-    - 중복 없이 신규/업데이트 항목 반영
+    - Notion 리포트 에이전트 실행
 
     Args:
         project_id: (선택) 특정 프로젝트만 종료. 없으면 전체.
 
     Returns:
-        동기화 결과 요약
+        종료 결과 요약
     """
     teams = st.list_teams(project_id)
 
@@ -458,18 +542,6 @@ def shutdown(project_id: str = None) -> str:
         for t in teams
     ]
 
-    # Asana 동기화
-    asana_msg = ""
-    try:
-        sync_result = shutdown_handler.run_shutdown_sync(team_outputs)
-        logs_text = "\n".join(sync_result.get("logs", []))
-        asana_msg = (
-            f"**Sync summary:** {sync_result.get('summary', '')}\n\n"
-            f"**Processed items:**\n{logs_text}"
-        )
-    except Exception as e:
-        asana_msg = f"Asana sync error: {e}"
-
     # Notion 스프린트 리포트 — haiku 특무 에이전트 비동기 실행
     notion_msg = ""
     try:
@@ -478,7 +550,7 @@ def shutdown(project_id: str = None) -> str:
             for t in team_outputs if t.get("output", "").strip()
         )
         notion_task = (
-            f"[보고서]\n## 스프린트 결과 리포트\n\n{outputs_summary}\n\n"
+            f"[Report]\n## Sprint Result Report\n\n{outputs_summary}\n\n"
             f"[태스크 컨텍스트]\n팀명: sprint-shutdown | 에이전트 수: {len(team_outputs)}개"
         )
         nr = _spawn_solo_agent(
@@ -503,7 +575,6 @@ def shutdown(project_id: str = None) -> str:
 
     result = (
         f"## Shutdown Complete\n\n"
-        f"{asana_msg}\n\n"
         f"**Notion:** {notion_msg}"
     )
 
@@ -605,11 +676,11 @@ def get_board_messages(project_id: str = None, limit: int = 30) -> str:
     return "\n".join(lines)
 
 
-# ── 자동 보고 트리거 (모든 팀 완료 시 Notion + Asana 업데이트) ──────────────
+# ── 자동 보고 트리거 (모든 팀 완료 시 Notion 업데이트) ──────────────────────
 
 def _trigger_auto_reporting(project_id: str):
     """
-    프로젝트의 모든 팀이 완료되었을 때 Notion + Asana 보고 에이전트를 자동 실행.
+    프로젝트의 모든 팀이 완료되었을 때 Notion 보고 에이전트를 자동 실행.
     get_status()에서 호출됨.
     """
     teams = st.list_teams(project_id)
@@ -622,7 +693,7 @@ def _trigger_auto_reporting(project_id: str):
         return
 
     # 이미 보고 에이전트가 실행 중이거나 완료된지 확인
-    report_teams = [t for t in teams if t.team_type in ("report-notion", "report-asana")]
+    report_teams = [t for t in teams if t.team_type == "report-notion"]
     if report_teams:
         return  # 이미 보고 에이전트 존재
 
@@ -646,7 +717,7 @@ def _trigger_auto_reporting(project_id: str):
         total_elapsed = max((t.elapsed_seconds or 0.0 for t in teams), default=0.0)
         done_count = sum(1 for t in teams if t.status == "done")
         fail_count = sum(1 for t in teams if t.status == "failed")
-        team_names = ", ".join(t.name for t in teams if t.team_type not in ("report-notion", "report-asana"))
+        team_names = ", ".join(t.name for t in teams if t.team_type != "report-notion")
         tg.send(
             f"📋 프로젝트 완료: {project_id}\n"
             f"팀: {team_names}\n"
@@ -673,30 +744,6 @@ def _trigger_auto_reporting(project_id: str):
         )
         notion_agent_id = result.get("agent_id") or result.get("team_id")
         notion_proj_id = result.get("project_id")
-
-        # Notion 보고 완료 후 자동 종료 (백그라운드 폴링)
-        def _wait_and_exit():
-            import os
-            deadline = time.time() + 600  # 최대 10분 대기
-            while time.time() < deadline:
-                time.sleep(15)
-                try:
-                    teams_now = st.list_teams(notion_proj_id)
-                    report = next((t for t in teams_now if t.team_id == notion_agent_id), None)
-                    if report and report.status in ("done", "failed"):
-                        print(
-                            f"[auto-shutdown] Notion 보고 완료 ({report.status}). 30초 후 MCP 종료.",
-                            file=sys.stderr, flush=True,
-                        )
-                        time.sleep(30)
-                        print("[auto-shutdown] MCP 서버 자동 종료.", file=sys.stderr, flush=True)
-                        os._exit(0)
-                except Exception as ex:
-                    print(f"[auto-shutdown] 폴링 오류: {ex}", file=sys.stderr, flush=True)
-            print("[auto-shutdown] 타임아웃 — 자동 종료 포기.", file=sys.stderr, flush=True)
-
-        t = threading.Thread(target=_wait_and_exit, daemon=True)
-        t.start()
     except Exception as e:
         print(f"[warning] Notion 보고 자동 실행 실패: {e}", file=sys.stderr, flush=True)
 
@@ -704,7 +751,7 @@ def _trigger_auto_reporting(project_id: str):
 # ── 내부 헬퍼: solo 에이전트 subprocess 실행 ──────────────────────────────────
 
 def _spawn_solo_agent(task: str, team_type: str = "general", name: str = None,
-                      skills: list = None, project_id: str = None) -> dict:
+                      skills: list[str] = None, project_id: str = None) -> dict:
     """solo 에이전트를 detached subprocess로 실행하고 ID 정보 반환 (내부 헬퍼)"""
     import os
     import subprocess
@@ -750,7 +797,7 @@ def _spawn_solo_agent(task: str, team_type: str = "general", name: str = None,
 
 @mcp.tool()
 def run_quick_agent(task: str, team_type: str = "general", name: str = None,
-                    skills: list = None) -> str:
+                    skills: list[str] = None) -> str:
     """
     특무 에이전트 — 단일 에이전트를 board 없이 즉시 실행합니다.
     팀 리드/워커 계층 없음. 단순·빠른 작업에 최적.
@@ -941,4 +988,48 @@ def get_dashboard_url() -> str:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    # Fix: Python 3.13 + Windows PIPE에서 stdout.flush() → OSError [Errno 22] 발생
+    # anyio의 AsyncFile.flush에서 OSError를 suppress해서 연결 유지
+    try:
+        import anyio._core._fileio as _anyio_fio
+        _orig_flush = _anyio_fio.AsyncFile.flush
+        _orig_write = _anyio_fio.AsyncFile.write
+
+        async def _safe_flush(self):
+            try:
+                await _orig_flush(self)
+            except OSError:
+                pass  # Windows PIPE flush 실패 무시
+
+        async def _safe_write(self, b):
+            try:
+                return await _orig_write(self, b)
+            except (OSError, BrokenPipeError) as _we:
+                _logger.warning("anyio.AsyncFile.write 오류 (무시): %s", _we)
+                return 0
+
+        _anyio_fio.AsyncFile.flush = _safe_flush
+        _anyio_fio.AsyncFile.write = _safe_write
+        _logger.info("anyio.AsyncFile flush+write OSError-safe 패치 적용")
+    except Exception as _e:
+        _logger.warning("패치 실패 (무시): %s", _e)
+
+    # atexit에서 서버 종료 시간 기록
+    def _log_exit():
+        _logger.info("=== server.py 종료 ===")
+        logging.shutdown()
+    atexit.register(_log_exit)
+
+    # 백그라운드 스레드 시작 (mcp.run() 전에, __main__ 컨텍스트에서)
+    threading.Thread(target=_start_dashboard_background, daemon=True).start()
+    threading.Thread(target=_start_tg_listener, daemon=True).start()
+    _logger.info("백그라운드 스레드 시작")
+
+    try:
+        _logger.info("mcp.run() 호출")
+        mcp.run()
+        _logger.info("mcp.run() 정상 종료 (stdin EOF - 클라이언트 연결 종료)")
+    except SystemExit as _se:
+        _logger.info("mcp.run() SystemExit: code=%s", _se.code)
+    except Exception as _ex:
+        _logger.critical("mcp.run() 예외:\n%s", traceback.format_exc())

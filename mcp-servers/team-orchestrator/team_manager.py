@@ -53,7 +53,7 @@ def _resolve_dependents(completed_team_id: str, feedback_timeout: int = 10):
         if all_deps_done:
             st.append_team_output(
                 team.team_id,
-                f"\n[의존성 해결 - 자동 시작: {', '.join(deps)} 완료]\n"
+                f"\n[Dependency resolved - auto-starting: {', '.join(deps)} completed]\n"
             )
             ft = _project_feedback_timeouts.get(team.project_id, 10)
             start_team(team.team_id, team.name, team.team_type, team.task,
@@ -108,7 +108,7 @@ def start_team(team_id: str, name: str, team_type: str, task: str,
     pid = _launch_detached_agent(team_id, team_type, task, project_id, workdir)
     _pids[team_id] = pid
 
-    st.append_team_output(team_id, f"[{team_type.upper()} 에이전트 시작 PID={pid}]\n")
+    st.append_team_output(team_id, f"[{team_type.upper()} Agent started PID={pid}]\n")
     eb.publish("team_started", team_id=team_id, project_id=project_id,
                data={"name": name, "type": team_type, "pid": pid})
     return team_id
@@ -117,7 +117,7 @@ def start_team(team_id: str, name: str, team_type: str, task: str,
 def send_feedback(team_id: str, message: str):
     team = st.get_team(team_id)
     if not team:
-        raise ValueError(f"팀 {team_id}를 찾을 수 없습니다.")
+        raise ValueError(f"Team {team_id} not found.")
 
     # 메시지 큐에 CEO 피드백 저장 (에이전트가 read_inbox로 읽을 수 있도록)
     st.push_message(team_id, "ceo", message)
