@@ -610,6 +610,76 @@ def shutdown(project_id: str = None) -> str:
     return result
 
 
+# ── CEO 세션 종료 ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def close_session(summary: str, project_id: str = "") -> str:
+    """
+    CEO 작업 세션을 종료합니다.
+    에이전트 작업이 모두 끝난 뒤 CEO가 마지막으로 호출합니다.
+
+    동작:
+    1. Notion — Project status를 done으로 직접 업데이트 (에이전트 없이)
+    2. Telegram — 완료 요약 알림 발송
+    3. MCP 서버 종료 (3초 후) — CEO 세션이 토큰을 더 소비하지 않음
+
+    Args:
+        summary: 세션 완료 요약 (Telegram 알림 + Notion 기록에 사용)
+        project_id: (선택) 완료 처리할 프로젝트 ID. 없으면 Notion 업데이트 생략.
+
+    Returns:
+        종료 메시지
+    """
+    lines = ["## Session Closed"]
+
+    # 1) Notion — 프로젝트 done 직접 기록 (에이전트 없이)
+    if project_id:
+        try:
+            token = nl._get_token()
+            if token:
+                project_db_id, _ = nl._ensure_dbs(token)
+                notion_pid = nl._get_or_create_project_notion_id(
+                    token, project_id, project_db_id, summary[:200]
+                )
+                import requests as _req
+                _req.patch(
+                    f"https://api.notion.com/v1/pages/{notion_pid}",
+                    headers={
+                        "Authorization": f"Bearer {token}",
+                        "Notion-Version": "2022-06-28",
+                        "Content-Type": "application/json",
+                    },
+                    json={"properties": {"Status": {"select": {"name": "done"}}}},
+                    timeout=10,
+                )
+                lines.append(f"**Notion:** Project `{project_id}` → done")
+            else:
+                lines.append("**Notion:** NOTION_TOKEN 없음 — 스킵")
+        except Exception as e:
+            lines.append(f"**Notion:** 업데이트 실패 ({e})")
+    else:
+        lines.append("**Notion:** project_id 없음 — 스킵")
+
+    # 2) Telegram — 완료 알림
+    try:
+        tg.send_message(f"CEO 세션 완료\n\n{summary}")
+        lines.append("**Telegram:** 알림 발송")
+    except Exception as e:
+        lines.append(f"**Telegram:** 발송 실패 ({e})")
+
+    lines.append("\nMCP 서버가 3초 후 종료됩니다.")
+
+    def _exit():
+        import time as _t
+        _t.sleep(3)
+        _logger.info("close_session: MCP 서버 종료")
+        import os as _os
+        _os.exit(0)
+
+    threading.Thread(target=_exit, daemon=True).start()
+    return "\n".join(lines)
+
+
 # ── 팀 수동 시작 (이미 pending인 팀) ─────────────────────────────────────────
 
 @mcp.tool()
