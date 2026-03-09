@@ -123,6 +123,8 @@ def _get_weekly_usage() -> dict | None:
         data = json.loads(result.stdout)
         blocks = data.get("blocks", [])
         active = next((b for b in blocks if b.get("isActive")), None)
+        if not active and blocks:
+            active = blocks[-1]  # 가장 최근 블록 사용
         if not active:
             return None
 
@@ -272,8 +274,59 @@ def _get_or_create_project_notion_id(token: str, project_id: str,
     if repos:
         props["Repo"] = {"multi_select": [{"name": r} for r in repos]}
 
+    # 페이지 본문에 프로젝트 정보 블록 추가
+    children = [
+        {
+            "object": "block",
+            "type": "heading_2",
+            "heading_2": {"rich_text": [{"type": "text", "text": {"content": "Project Info"}}]},
+        },
+        {
+            "object": "block",
+            "type": "bulleted_list_item",
+            "bulleted_list_item": {"rich_text": [
+                {"type": "text", "text": {"content": "Project ID: "}, "annotations": {"bold": True}},
+                {"type": "text", "text": {"content": project_id}},
+            ]},
+        },
+        {
+            "object": "block",
+            "type": "bulleted_list_item",
+            "bulleted_list_item": {"rich_text": [
+                {"type": "text", "text": {"content": "Description: "}, "annotations": {"bold": True}},
+                {"type": "text", "text": {"content": description[:500]}},
+            ]},
+        },
+        {
+            "object": "block",
+            "type": "bulleted_list_item",
+            "bulleted_list_item": {"rich_text": [
+                {"type": "text", "text": {"content": "Created: "}, "annotations": {"bold": True}},
+                {"type": "text", "text": {"content": now_iso}},
+            ]},
+        },
+        {
+            "object": "block",
+            "type": "divider",
+            "divider": {},
+        },
+        {
+            "object": "block",
+            "type": "heading_2",
+            "heading_2": {"rich_text": [{"type": "text", "text": {"content": "Agent Results"}}]},
+        },
+        {
+            "object": "block",
+            "type": "paragraph",
+            "paragraph": {"rich_text": [
+                {"type": "text", "text": {"content": "(Results will be appended as agents complete)"}, "annotations": {"italic": True}},
+            ]},
+        },
+    ]
+
     r = requests.post(f"{_API}/pages", headers=_headers(token),
-                      json={"parent": {"database_id": project_db_id}, "properties": props},
+                      json={"parent": {"database_id": project_db_id}, "properties": props,
+                            "children": children},
                       timeout=10)
     if r.status_code == 200:
         notion_id = r.json()["id"]
@@ -281,6 +334,53 @@ def _get_or_create_project_notion_id(token: str, project_id: str,
         _save_cache(cache)
         return notion_id
     return None
+
+
+def _append_agent_result_to_page(token: str, project_notion_id: str,
+                                 agent_name: str, agent_id: str, status: str,
+                                 elapsed: float, cost: float, result: str):
+    """에이전트 완료 시 Project 페이지 본문에 결과 블록을 추가"""
+    try:
+        elapsed_str = f"{elapsed:.0f}s" if elapsed else "N/A"
+        cost_str = f"${cost:.4f}" if cost else "N/A"
+        status_icon = {"done": "v", "failed": "x"}.get(status, "?")
+
+        blocks = [
+            {
+                "object": "block",
+                "type": "heading_3",
+                "heading_3": {"rich_text": [
+                    {"type": "text", "text": {"content": f"[{status_icon}] {agent_name} ({agent_id})"}},
+                ]},
+            },
+            {
+                "object": "block",
+                "type": "bulleted_list_item",
+                "bulleted_list_item": {"rich_text": [
+                    {"type": "text", "text": {"content": f"Status: {status} | Elapsed: {elapsed_str} | Cost: {cost_str}"}},
+                ]},
+            },
+        ]
+
+        # 결과 텍스트를 최대 1500자까지 paragraph 블록으로 추가
+        if result:
+            result_text = result[:1500]
+            blocks.append({
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {"rich_text": [
+                    {"type": "text", "text": {"content": result_text}},
+                ]},
+            })
+
+        requests.patch(
+            f"{_API}/blocks/{project_notion_id}/children",
+            headers=_headers(token),
+            json={"children": blocks},
+            timeout=15,
+        )
+    except Exception:
+        pass
 
 
 def _update_project_metrics(token: str, project_notion_id: str,
@@ -303,7 +403,7 @@ def _update_project_metrics(token: str, project_notion_id: str,
         weekly_pct = None
         usage = _get_weekly_usage()
         if usage and usage.get("limit") and new_tokens > 0:
-            weekly_pct = round(new_tokens / usage["limit"], 6)
+            weekly_pct = round(usage["totalTokens"] / usage["limit"], 6)
 
         update_props = {
             "Total Cost ($)": {"number": new_cost},
@@ -328,7 +428,8 @@ def _log_agent_sync(event: str, name: str, agent_id: str = "", project_id: str =
                     team_type: str = "", role: str = "solo", model: str = "",
                     status: str = "", elapsed: float = None,
                     tokens_in: int = None, tokens_out: int = None,
-                    cost: float = None, task: str = "", result: str = ""):
+                    cost: float = None, task: str = "", result: str = "",
+                    mcp_tools_used: dict = None):
     try:
         token = _get_token()
         if not token:
@@ -371,10 +472,19 @@ def _log_agent_sync(event: str, name: str, agent_id: str = "", project_id: str =
             props["Cost ($)"]   = {"number": round(cost, 6)}
         if task:
             props["Task"]   = {"rich_text": [{"text": {"content": task[:2000]}}]}
-        if result:
-            props["Result"] = {"rich_text": [{"text": {"content": result[:2000]}}]}
+
+        # MCP 도구 사용량 추가
+        final_result = result or ""
+        if mcp_tools_used and isinstance(mcp_tools_used, dict):
+            mcp_summary = "\n\n[MCP Tools Used]"
+            for tool, tokens in sorted(mcp_tools_used.items()):
+                mcp_summary += f"\n  {tool}: {tokens:,} tokens"
+            final_result = (final_result + mcp_summary)[:2000]
+
+        if final_result:
+            props["Result"] = {"rich_text": [{"text": {"content": final_result}}]}
         # result + task에서 모든 GitHub 이슈 URL 수집 → rich_text 링크로 저장
-        gh_urls = _extract_github_issue_urls((result or "") + " " + (task or ""))
+        gh_urls = _extract_github_issue_urls((final_result or "") + " " + (task or ""))
         if gh_urls:
             props["GitHub Issue"] = {"rich_text": _make_github_rt(gh_urls)}
 
@@ -382,13 +492,20 @@ def _log_agent_sync(event: str, name: str, agent_id: str = "", project_id: str =
                       json={"parent": {"database_id": agent_db_id}, "properties": props},
                       timeout=10)
 
-        # 완료 시 Project 메트릭 누적 + 프로젝트 상태 업데이트
-        if project_notion_id and event == "agent_done":
+        # 완료 시 Project 메트릭 누적 + 페이지 본문에 결과 추가 + 프로젝트 상태 업데이트
+        if project_notion_id and event in ("agent_done", "agent_failed"):
             _update_project_metrics(
                 token, project_notion_id,
                 cost_delta=cost or 0.0,
                 elapsed_delta=elapsed or 0.0,
                 tokens_delta=(tokens_in or 0) + (tokens_out or 0),
+            )
+            _append_agent_result_to_page(
+                token, project_notion_id,
+                agent_name=name, agent_id=agent_id,
+                status="done" if event == "agent_done" else "failed",
+                elapsed=elapsed or 0.0, cost=cost or 0.0,
+                result=result,
             )
             _update_project_agent_count(token, project_notion_id, project_id)
 
@@ -579,32 +696,46 @@ def _update_dashboard_header(token: str):
 def _update_project_agent_count(token: str, project_notion_id: str, project_id: str):
     """Project의 Agent Count와 Status를 업데이트 (전체 에이전트 완료 시 done으로)"""
     try:
-        # 해당 프로젝트의 에이전트 수 카운트
+        # 해당 프로젝트의 에이전트를 Project relation으로 필터 (agent_start + agent_done 모두 포함)
         resp = requests.post(
             f"{_API}/databases/{_AGENT_DB_ID}/query",
             headers=_headers(token),
             json={
                 "filter": {
-                    "property": "Agent ID",
-                    "rich_text": {"starts_with": project_id}
+                    "property": "Project",
+                    "relation": {"contains": project_notion_id}
                 },
                 "page_size": 100,
             },
             timeout=10,
         )
         agents = resp.json().get("results", [])
-        agent_count = len(agents)
 
+        # agent_id 기준으로 최신 이벤트만 추적 (agent_start → agent_done 순서)
+        latest_by_agent: dict[str, str] = {}
+        for a in agents:
+            a_props = a.get("properties", {})
+            aid_rt = a_props.get("Agent ID", {}).get("rich_text", [])
+            aid = aid_rt[0].get("plain_text", "") if aid_rt else ""
+            event_sel = a_props.get("Event", {}).get("select", {}) or {}
+            event_name = event_sel.get("name", "")
+            if aid:
+                # agent_done/agent_failed가 agent_start보다 우선
+                if event_name in ("agent_done", "agent_failed"):
+                    latest_by_agent[aid] = event_name
+                elif aid not in latest_by_agent:
+                    latest_by_agent[aid] = event_name
+
+        agent_count = len(latest_by_agent)
         props: dict = {"Agent Count": {"number": agent_count}}
 
-        # 모든 에이전트가 done/failed인지 확인
-        all_terminal = all(
-            (a.get("properties", {}).get("Event", {}).get("select", {}) or {}).get("name", "")
-            in ("agent_done", "agent_failed")
-            for a in agents
-        ) if agents else False
+        # 모든 고유 에이전트가 done/failed인지 확인
+        all_terminal = (
+            agent_count > 0
+            and all(ev in ("agent_done", "agent_failed") for ev in latest_by_agent.values())
+        )
 
-        if all_terminal and agent_count > 0:
+        if all_terminal:
             props["Status"] = {"select": {"name": "done"}}
 
         requests.patch(
@@ -722,7 +853,7 @@ def log_event(event: str, name: str, agent_id: str = "", project_id: str = "",
               status: str = "", elapsed: float = None,
               tokens_in: int = None, tokens_out: int = None,
               cost: float = None, task: str = "", result: str = "",
-              summary: str = ""):    # summary: 이전 버전 호환 파라미터
+              summary: str = "", mcp_tools_used: dict = None):    # summary: 이전 버전 호환 파라미터
     """에이전트 이벤트 로그 (비동기, Agent DB 행 생성)"""
     # 이전 버전 summary → task / result 자동 매핑
     if summary:
@@ -741,7 +872,7 @@ def log_event(event: str, name: str, agent_id: str = "", project_id: str = "",
         kwargs=dict(event=event, name=name, agent_id=agent_id, project_id=project_id,
                     team_type=team_type, role=role, model=model, status=status,
                     elapsed=elapsed, tokens_in=tokens_in, tokens_out=tokens_out,
-                    cost=cost, task=task, result=result),
+                    cost=cost, task=task, result=result, mcp_tools_used=mcp_tools_used),
         daemon=False,
     )
     t.start()

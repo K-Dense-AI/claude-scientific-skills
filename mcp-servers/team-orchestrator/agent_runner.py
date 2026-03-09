@@ -16,6 +16,7 @@ sys.path.insert(0, str(DIR))
 
 import state as st
 import notion_logger as nl
+import telegram_notify as tg
 
 PYTHON_BIN = sys.executable
 BOARD_SCRIPT = str(DIR / "shared_board.py")
@@ -26,6 +27,40 @@ BOARD_MCP = {
 }
 
 SKILLS_BASE = Path.home() / "claude-scientific-skills" / "scientific-skills"
+
+
+def _notify_completion(team_id: str, team_type: str, role: str, status: str,
+                       elapsed: float, in_tok: int, out_tok: int, cost: float,
+                       result_text: str = "", project_id: str = ""):
+    """에이전트 완료/실패 시 Telegram 알림 전송 (비동기, 데몬 스레드).
+    send_with_session으로 답장 추적 가능하게 전송."""
+    import threading
+
+    def _send():
+        try:
+            emoji = "✅" if status == "done" else "❌"
+            role_kr = {"lead": "리드", "worker": "워커", "solo": "특무"}.get(role, role)
+            # 앞부분부터 자르기 (마지막 200자가 아닌, 처음 800자)
+            summary = (result_text or "").strip()[:800]
+            if len((result_text or "").strip()) > 800:
+                summary += "\n...(잘림)"
+            msg = (
+                f"{emoji} {role_kr} 완료: {team_type} [{team_id}]\n"
+                f"소요 {elapsed:.0f}초 | 토큰 in={in_tok:,} out={out_tok:,} | ${cost:.4f}\n"
+                f"---\n{summary}"
+            )
+            # session_id = project_id로 답장 추적 (프로젝트 단위)
+            session_id = project_id or team_id
+            workdir = str(Path.home() / "claude-scientific-skills")
+            tg.send_with_session(msg, session_id, workdir, team_id=team_id)
+        except Exception as e:
+            # 폴백: 기본 send
+            try:
+                tg.send(msg)
+            except Exception:
+                pass
+
+    threading.Thread(target=_send, daemon=True).start()
 
 
 def _build_skill_hint(skills: list) -> str:
@@ -398,6 +433,11 @@ async def run_agent(team_id: str, team_type: str, task: str,
         model = (LEAD_MODELS.get(team_type, "claude-sonnet-4-6")
                  if is_lead else
                  WORKER_MODELS.get(team_type, "claude-sonnet-4-6"))
+        # ResultMessage 없이 종료될 때를 대비한 usage 누적 추적
+        _acc_in_tok = 0
+        _acc_out_tok = 0
+        _acc_cost = 0.0
+        _last_result_text = ""
         async for message in query(
             prompt=prompt,
             options=ClaudeAgentOptions(
@@ -415,6 +455,11 @@ async def run_agent(team_id: str, team_type: str, task: str,
                 for block in message.content:
                     if isinstance(block, TextBlock):
                         st.append_team_output(team_id, block.text)
+                        _last_result_text = block.text
+                # AssistantMessage에서 usage 누적
+                if hasattr(message, "usage") and message.usage:
+                    _acc_in_tok += message.usage.get("input_tokens", 0)
+                    _acc_out_tok += message.usage.get("output_tokens", 0)
 
             elif isinstance(message, ResultMessage):
                 if message.result:
@@ -451,17 +496,44 @@ async def run_agent(team_id: str, team_type: str, task: str,
                              team_type=team_type, role=nl_role, model=model, status="done",
                              elapsed=elapsed, tokens_in=in_tok, tokens_out=out_tok, cost=cost,
                              task=task[:300], result=(message.result or "")[:300])
+                _notify_completion(team_id, team_type, nl_role, "done",
+                                   elapsed, in_tok, out_tok, cost,
+                                   (message.result or "")[:800],
+                                   project_id=project_id)
                 return
 
-        # ResultMessage 없이 스트림 종료 시
+        # ResultMessage 없이 스트림 종료 시 — 누적 usage 활용
         elapsed = time.time() - started_at
+        st.update_team_usage(
+            team_id,
+            input_tokens=_acc_in_tok,
+            output_tokens=_acc_out_tok,
+            model_used=model,
+            elapsed_seconds=elapsed,
+            total_cost_usd=_acc_cost,
+        )
         st.update_team_status(team_id, "done")
-        st.add_notification(team_id, f"✅ [{team_type}] 완료 (소요 {elapsed:.0f}초)")
-        st.append_team_output(team_id, f"\n[완료 | 소요 {elapsed:.1f}초]\n")
+        st.add_notification(
+            team_id,
+            f"✅ [{team_type}] 완료 (소요 {elapsed:.0f}초, "
+            f"토큰 in={_acc_in_tok:,} out={_acc_out_tok:,})"
+        )
+        st.append_team_output(
+            team_id,
+            f"\n[완료 | 소요 {elapsed:.1f}초 | "
+            f"토큰 in={_acc_in_tok:,} out={_acc_out_tok:,} | "
+            f"모델={model}]\n"
+        )
         nl.log_event("agent_done", task[:80],
                      agent_id=team_id, project_id=project_id,
-                     team_type=team_type, role=nl_role, model=model,
-                     status="done", elapsed=elapsed, task=task[:300])
+                     team_type=team_type, role=nl_role, model=model, status="done",
+                     elapsed=elapsed, tokens_in=_acc_in_tok, tokens_out=_acc_out_tok,
+                     cost=_acc_cost, task=task[:300],
+                     result=_last_result_text[:300])
+        _notify_completion(team_id, team_type, nl_role, "done",
+                           elapsed, _acc_in_tok, _acc_out_tok, _acc_cost,
+                           _last_result_text[:800],
+                           project_id=project_id)
 
     except Exception as e:
         err_str = str(e).lower()
@@ -478,6 +550,9 @@ async def run_agent(team_id: str, team_type: str, task: str,
                      agent_id=team_id, project_id=project_id,
                      team_type=team_type, role=nl_role, model=model, status="failed",
                      task=task[:300], result=str(e)[:300])
+        _notify_completion(team_id, team_type, nl_role, "failed",
+                           time.time() - started_at, 0, 0, 0.0, str(e)[:800],
+                           project_id=project_id)
 
 
 async def run_solo_agent(team_id: str, team_type: str, task: str,
@@ -524,6 +599,11 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
     model = WORKER_MODELS.get(team_type, "claude-sonnet-4-6")
 
     try:
+        # ResultMessage 없이 종료될 때를 대비한 usage 누적 추적
+        _acc_in_tok = 0
+        _acc_out_tok = 0
+        _acc_cost = 0.0
+        _last_result_text = ""
         async for message in query(
             prompt=prompt,
             options=ClaudeAgentOptions(
@@ -541,6 +621,11 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
                 for block in message.content:
                     if isinstance(block, TextBlock):
                         st.append_team_output(team_id, block.text)
+                        _last_result_text = block.text
+                # AssistantMessage에서 usage 누적
+                if hasattr(message, "usage") and message.usage:
+                    _acc_in_tok += message.usage.get("input_tokens", 0)
+                    _acc_out_tok += message.usage.get("output_tokens", 0)
 
             elif isinstance(message, ResultMessage):
                 if message.result:
@@ -575,16 +660,44 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
                              team_type=team_type, role="solo", model=solo_model, status="done",
                              elapsed=elapsed, tokens_in=in_tok, tokens_out=out_tok, cost=cost,
                              task=task[:300], result=(message.result or "")[:300])
+                _notify_completion(team_id, team_type, "solo", "done",
+                                   elapsed, in_tok, out_tok, cost,
+                                   (message.result or "")[:800],
+                                   project_id=project_id)
                 return
 
+        # ResultMessage 없이 스트림 종료 시 — 누적 usage 활용
         elapsed = time.time() - started_at
+        st.update_team_usage(
+            team_id,
+            input_tokens=_acc_in_tok,
+            output_tokens=_acc_out_tok,
+            model_used=model,
+            elapsed_seconds=elapsed,
+            total_cost_usd=_acc_cost,
+        )
         st.update_team_status(team_id, "done")
-        st.add_notification(team_id, f"✅ [특무/{team_type}] 완료 (소요 {elapsed:.0f}초)")
-        st.append_team_output(team_id, f"\n[완료 | 소요 {elapsed:.1f}초]\n")
+        st.add_notification(
+            team_id,
+            f"✅ [특무/{team_type}] 완료 (소요 {elapsed:.0f}초, "
+            f"토큰 in={_acc_in_tok:,} out={_acc_out_tok:,})"
+        )
+        st.append_team_output(
+            team_id,
+            f"\n[완료 | 소요 {elapsed:.1f}초 | "
+            f"토큰 in={_acc_in_tok:,} out={_acc_out_tok:,} | "
+            f"모델={model}]\n"
+        )
         nl.log_event("agent_done", task[:80],
                      agent_id=team_id, project_id=project_id,
-                     team_type=team_type, role="solo", model=solo_model,
-                     status="done", elapsed=elapsed, task=task[:300])
+                     team_type=team_type, role="solo", model=solo_model, status="done",
+                     elapsed=elapsed, tokens_in=_acc_in_tok, tokens_out=_acc_out_tok,
+                     cost=_acc_cost, task=task[:300],
+                     result=_last_result_text[:300])
+        _notify_completion(team_id, team_type, "solo", "done",
+                           elapsed, _acc_in_tok, _acc_out_tok, _acc_cost,
+                           _last_result_text[:800],
+                           project_id=project_id)
 
     except Exception as e:
         err_str = str(e).lower()
@@ -601,3 +714,6 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
                      agent_id=team_id, project_id=project_id,
                      team_type=team_type, role="solo", model=solo_model, status="failed",
                      task=task[:300], result=str(e)[:300])
+        _notify_completion(team_id, team_type, "solo", "failed",
+                           time.time() - started_at, 0, 0, 0.0, str(e)[:800],
+                           project_id=project_id)

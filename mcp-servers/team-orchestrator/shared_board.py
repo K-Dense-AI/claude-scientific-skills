@@ -182,6 +182,7 @@ def wait_for_workers(lead_id: str, worker_ids: list, timeout_per_check: int = 20
     """
     리드 에이전트가 워커 완료를 대기합니다. 내부적으로 sleep을 수행합니다.
     모든 워커가 "[완료 보고]"를 보낼 때까지 주기적으로 inbox를 확인합니다.
+    워커가 메시지 없이 완료/실패한 경우에도 orchestrator.db 상태로 감지합니다.
 
     Args:
         lead_id: 리드 에이전트의 team_id
@@ -194,14 +195,41 @@ def wait_for_workers(lead_id: str, worker_ids: list, timeout_per_check: int = 20
     """
     import time as _time
 
+    ORCH_DB = Path(__file__).parent / "orchestrator.db"
+
     pending = set(worker_ids)
     collected = {}
+
+    def _check_orchestrator_db(still_pending: set) -> dict:
+        """orchestrator.db에서 워커 상태를 직접 확인 (board 메시지 없이 완료된 워커 감지)"""
+        found = {}
+        if not still_pending or not ORCH_DB.exists():
+            return found
+        try:
+            orch_conn = sqlite3.connect(str(ORCH_DB), check_same_thread=False, timeout=5)
+            orch_conn.row_factory = sqlite3.Row
+            placeholders = ",".join("?" * len(still_pending))
+            rows = orch_conn.execute(
+                f"SELECT team_id, status, output FROM teams WHERE team_id IN ({placeholders})",
+                list(still_pending)
+            ).fetchall()
+            orch_conn.close()
+            for row in rows:
+                if row["status"] in ("done", "failed", "stuck"):
+                    output = row["output"] or ""
+                    # output 마지막 1000자에서 결과 추출
+                    result_text = output[-1000:] if len(output) > 1000 else output
+                    status_label = "완료" if row["status"] == "done" else f"실패({row['status']})"
+                    found[row["team_id"]] = f"[{status_label} — DB 감지] {result_text}"
+        except Exception:
+            pass
+        return found
 
     for check_num in range(max_checks):
         if not pending:
             break
 
-        # inbox 확인
+        # 1) board inbox 확인
         with get_conn() as conn:
             rows = conn.execute("""
                 SELECT msg_id, from_agent, content, read_by
@@ -225,6 +253,16 @@ def wait_for_workers(lead_id: str, worker_ids: list, timeout_per_check: int = 20
                 if "[완료 보고]" in row["content"] and row["from_agent"] in pending:
                     collected[row["from_agent"]] = row["content"]
                     pending.discard(row["from_agent"])
+
+        if not pending:
+            break
+
+        # 2) orchestrator.db 폴백: board 메시지 없이 완료된 워커 감지
+        db_results = _check_orchestrator_db(pending)
+        for wid, result in db_results.items():
+            if wid not in collected:
+                collected[wid] = result
+                pending.discard(wid)
 
         if not pending:
             break

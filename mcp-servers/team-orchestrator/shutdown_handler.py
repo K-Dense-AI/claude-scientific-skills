@@ -73,72 +73,49 @@ def update_asana_task(task_gid: str, notes: str) -> dict:
     return api.update_task(task_gid, notes=notes)
 
 
-# ── Claude 기반 동기화 플래너 ───────────────────────────────────────────────
+# ── 규칙 기반 동기화 플래너 (Claude API 불필요) ──────────────────────────────
 
 def plan_sync(team_outputs: list[dict], asana_tasks: list[dict]) -> dict:
     """
-    팀 산출물 + 현재 Asana 태스크를 Claude에게 주고
-    무엇을 새로 만들지/업데이트할지/건너뛸지 결정
+    팀 산출물을 기반으로 Asana 동기화 계획 수립.
+    Claude API 대신 규칙 기반으로 처리: 항상 새 태스크 생성.
+    (기존 태스크 이름 중복 시 업데이트, 아니면 새로 생성)
     """
-    import anthropic
-    client = anthropic.Anthropic(api_key=_get_anthropic_key())
+    existing_names = {t["name"].strip().lower(): t["gid"] for t in asana_tasks}
+    actions = []
 
-    system = """당신은 프로젝트 관리 전문가입니다.
-팀 작업 완료 후 Asana를 업데이트해야 합니다.
-주어진 팀 산출물과 현재 Asana 태스크 목록을 비교하여
-무엇을 해야 하는지 판단하세요.
+    for output in team_outputs:
+        agent_name = output.get("name", "agent")
+        agent_type = output.get("type", "")
+        content = output.get("output", "").strip()
+        if not content:
+            continue
 
-반드시 아래 JSON 형식으로만 응답하세요:
-{
-  "actions": [
-    {
-      "action": "create|update|skip",
-      "reason": "한 줄 이유",
-      "task_name": "태스크 이름",
-      "notes": "태스크 내용 (create/update 시)",
-      "asana_gid": "업데이트 대상 gid (update 시만)"
+        task_name = f"[팀작업] {agent_name} 완료 보고"
+        notes = f"에이전트: {agent_name} ({agent_type})\n\n{content[:2000]}"
+
+        # 동일 이름 태스크가 이미 있으면 업데이트, 없으면 생성
+        existing_gid = existing_names.get(task_name.strip().lower())
+        if existing_gid:
+            actions.append({
+                "action": "update",
+                "reason": "동일 이름 태스크 이미 존재",
+                "task_name": task_name,
+                "notes": notes,
+                "asana_gid": existing_gid,
+            })
+        else:
+            actions.append({
+                "action": "create",
+                "reason": "새 팀 작업 완료 보고",
+                "task_name": task_name,
+                "notes": notes,
+            })
+
+    return {
+        "actions": actions,
+        "summary": f"총 {len(actions)}개 태스크 동기화 계획 (규칙 기반)",
     }
-  ],
-  "summary": "전체 동기화 요약"
-}"""
-
-    outputs_text = "\n\n".join([
-        f"[{t['name']} ({t['type']})] {t['output'][:500]}..."
-        for t in team_outputs
-    ])
-
-    asana_text = "\n".join([
-        f"- [{t['gid']}] {t['name']}: {t.get('notes', '')[:100]}"
-        for t in asana_tasks
-    ])
-
-    prompt = f"""## 팀 산출물
-{outputs_text}
-
-## 현재 Asana 태스크 (미완료)
-{asana_text if asana_text else "(없음)"}
-
-중복 생성 없이 필요한 업데이트만 계획해주세요."""
-
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=2000,
-        system=system,
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    raw = response.content[0].text.strip()
-    # 코드블록 제거
-    import re
-    match = re.search(r"```(?:json)?\s*([\s\S]+?)\s*```", raw)
-    if match:
-        raw = match.group(1)
-    else:
-        # 중괄호 기준으로 JSON만 추출
-        match = re.search(r"\{[\s\S]+\}", raw)
-        if match:
-            raw = match.group(0)
-    return json.loads(raw)
 
 
 def execute_sync(plan: dict, workspace_gid: str) -> list[str]:

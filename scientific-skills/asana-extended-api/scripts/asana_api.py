@@ -70,6 +70,41 @@ class AsanaAPI:
         result = self._request("GET", "/workspaces")
         return result.get("data", [])
 
+    # ── Task CRUD ──
+
+    def get_my_tasks(self, workspace_gid: str = None) -> list:
+        """내 미완료 태스크 조회."""
+        if not workspace_gid:
+            workspaces = self.get_workspaces()
+            if not workspaces:
+                return []
+            workspace_gid = workspaces[0]["gid"]
+        # /user_task_lists/me 는 인식 안 됨 → 먼저 GID 조회
+        utl = self._request("GET", f"/users/me/user_task_list?workspace={workspace_gid}&opt_fields=gid")
+        utl_gid = utl.get("data", {}).get("gid")
+        if not utl_gid:
+            return []
+        result = self._request("GET", f"/user_task_lists/{utl_gid}/tasks?completed_since=now&opt_fields=gid,name,notes,due_on,completed")
+        return result.get("data", [])
+
+    def create_task(self, workspace_gid: str, name: str, notes: str = "", due_on: str = None) -> dict:
+        """태스크 생성."""
+        data = {"workspace": workspace_gid, "name": name, "notes": notes or ""}
+        if due_on:
+            data["due_on"] = due_on
+        result = self._request("POST", "/tasks", data)
+        return result.get("data", {})
+
+    def update_task(self, task_gid: str, notes: str = None, completed: bool = None) -> dict:
+        """태스크 업데이트."""
+        data = {}
+        if notes is not None:
+            data["notes"] = notes
+        if completed is not None:
+            data["completed"] = completed
+        result = self._request("PUT", f"/tasks/{task_gid}", data)
+        return result.get("data", {})
+
     # ── Task ↔ Project (multi-homing) ──
 
     def add_task_to_project(self, task_gid, project_gid, section_gid=None):

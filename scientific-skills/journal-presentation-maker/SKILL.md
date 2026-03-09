@@ -9,6 +9,44 @@ description: Automated academic presentation creation and review. Use when (1) c
 이 스킬의 모든 작업은 반드시 **Agent tool**을 사용해 서브에이전트로 실행할 것.
 직접 실행하지 말고, 작업 전체를 Agent에 위임한다.
 
+## 같이 쓰면 좋은 스킬들
+
+| 스킬 | 언제 같이 쓰는가 |
+|------|----------------|
+| **pubmed-database** | PubMed 직접 쿼리로 논문 검색 |
+| **perplexity-search** | Google·bioRxiv 등 범용 논문 검색 |
+| **openalex-database** | 논문 메타데이터·인용수 자동 수집 |
+| **biorxiv-database** | bioRxiv/medRxiv 프리프린트 전용 검색 |
+| **literature-review** | 체계적 문헌 리뷰 (PRISMA 기준) |
+| **research-assistant** | 문헌 리뷰·사실관계 확인 |
+| **markitdown** | 로컬 PDF → Markdown 변환 후 내용 추출 |
+| **paper-2-web** | 논문 PDF → 웹 페이지 변환 (figure 추출 용이) |
+| **scientific-schematics** | 메커니즘·워크플로우 다이어그램 생성 |
+| **scientific-visualization** | 그래프/figure 새로 만들 때 |
+| **infographics** | 복잡한 데이터 → 인포그래픽 자동 변환 |
+| **scientific-writing** | 슬라이드 텍스트 학술적 품질 검증 |
+| **citation-management** | Zotero·BibTeX 자동 정렬 및 포맷 변환 |
+| **academic-term-rules** | 생명공학·생화학 학술 표기 자동 검증 |
+| **pptx-reviewer** | PPT 생성 후 학술 표기 오류·레이아웃 검토 |
+
+### 권장 워크플로우
+
+```
+openalex-database / biorxiv-database / pubmed-database   ← 논문 모으기
+         ↓
+literature-review                      ← 체계적 검토
+         ↓
+markitdown / paper-2-web               ← PDF 내용 추출
+         ↓
+journal-presentation-maker             ← PPT 구성
+         ↓
+scientific-schematics / infographics   ← 새 그림 추가
+         ↓
+scientific-writing / citation-management ← 텍스트·인용 정리
+         ↓
+pptx-reviewer                          ← 최종 검토
+```
+
 ## Overview
 
 Create professional academic presentations from research literature. Search multiple databases (peer-reviewed journals and preprints), intelligently filter papers by relevance and impact, extract key content, and generate structured slides with proper citation tracking.
@@ -61,11 +99,16 @@ Use web_search and web_fetch tools to search academic literature:
 
 2. **Figure extraction strategy** (4-tier approach):
 
-   **우선순위**: Tier 0 (로컬 PDF) → Tier 1 (PMC) → Tier 2 (Chrome 스크린샷) → Tier 3 (Placeholder)
+   **우선순위**: Tier 0 (로컬 PDF xref) → Tier 1 (PMC) → Tier 2 (Chrome 스크린샷) → Tier 3 (Placeholder)
 
-   **Tier 0: 로컬 PDF 직접 추출 (최우선 시도 — 유료 저널에 가장 효과적)**
+   **CRITICAL: Figure 이미지만 추출할 것. 전체 페이지를 렌더링(get_pixmap)하여 PPT에 넣지 말 것.**
+   - 전체 페이지 렌더링은 Figure 외에 본문 텍스트, 캡션, 헤더/푸터가 모두 포함되어 부적절
+   - 반드시 `extract_image(xref)` 방식으로 embedded Figure 이미지만 추출
+   - xref 이미지가 불완전할 경우(벡터+래스터 혼합) → Tier 2(Chrome 스크린샷)로 fallback
 
-   사용자가 로컬 PDF 파일을 제공한 경우 PyMuPDF(fitz)로 직접 이미지를 추출합니다.
+   **Tier 0: 로컬 PDF xref 추출 (최우선 시도 — 유료 저널에 가장 효과적)**
+
+   사용자가 로컬 PDF 파일을 제공한 경우 PyMuPDF(fitz)로 embedded 이미지만 추출합니다.
 
    ```python
    import fitz  # PyMuPDF (pip install pymupdf)
@@ -82,11 +125,11 @@ Use web_search and web_fetch tools to search academic literature:
            info = doc.extract_image(xref)
            w, h = info["width"], info["height"]
            print(f"Page {page_num+1}: xref={xref}, {w}x{h}, {info['ext']}")
-           # 작은 이미지(로고, 아이콘 등)는 건너뜀
+           # 작은 이미지(로고, 아이콘, 데이터포인트 등)는 건너뜀
            if w < 500 or h < 300:
                continue
 
-   # 2. Figure 이미지 저장
+   # 2. Figure 이미지 저장 (xref 기반 — Figure 그림 부분만)
    doc.extract_image(xref)["image"]  # bytes로 반환
    with open(f"fig{n}.{ext}", "wb") as f:
        f.write(info["image"])
@@ -253,7 +296,16 @@ Use web_search and web_fetch tools to search academic literature:
    - Include complete original captions
    - Suggest 1-2 figures per major finding
 
-### Step 2.5: Academic Notation Enforcement
+### Step 2.5: Slide Language & Academic Notation Rules
+
+#### 슬라이드 언어 규칙 (MANDATORY)
+
+- **슬라이드 본문**: 반드시 **영어**로 작성. 한글 사용 금지.
+  - 제목, 불릿 포인트, 캡션, 레이블, References 모두 영어
+- **Speaker Notes**: 반드시 **한국어**로 작성. 발표자 편의를 위해 한국어 대본 형태.
+- 이 규칙은 모든 Journal Club 및 연구 발표 PPT에 적용됨.
+
+#### 학술 표기 규칙 (Academic Notation Enforcement)
 
 콘텐츠를 슬라이드에 배치하기 전에, 아래 학술 표기 규칙을 반드시 적용:
 
@@ -297,6 +349,73 @@ Use web_search and web_fetch tools to search academic literature:
 - 슬라이드별로 약어 목록 관리하여 누락 방지
 
 ### Step 3: Presentation Generation
+
+#### 출력 파일 규칙 (Output File Convention)
+
+- **저장 경로**: `C:\Users\Jahyun\OneDrive - 호서대학교\바탕 화면 [Labtop]\Team meeting\Journal Club\`
+- **파일명 형식**: `YYMMDD_Journal Club Presentation.pptx` (예: `260308_Journal Club Presentation.pptx`)
+  ```python
+  import datetime, os
+  JC_DIR = r"C:\Users\Jahyun\OneDrive - 호서대학교\바탕 화면 [Labtop]\Team meeting\Journal Club"
+  DATE_STR = datetime.date.today().strftime("%y%m%d")
+  out_path = os.path.join(JC_DIR, f"{DATE_STR}_Journal Club Presentation.pptx")
+  ```
+- 발표 날짜가 오늘과 다를 경우 `DATE_STR`을 해당 날짜로 직접 지정 (예: `DATE_STR = "260315"`)
+
+#### 줄간격 규칙 (Line Spacing — MANDATORY)
+
+**반드시 모든 paragraph에 `set_line_spacing()` 호출 필수. 미적용 시 PowerPoint 기본값(1.0x)으로 렌더링되어 빽빽해 보임.**
+
+**⚠️ CRITICAL: `disable_autofit()` 필수 적용**
+
+PowerPoint는 `spAutoFit`(자동 맞춤)이 활성화된 텍스트박스에서 줄간격 설정을 무시합니다.
+`set_line_spacing()`만으로는 부족하며, 반드시 `disable_autofit()`을 함께 호출해야 1.5x 줄간격이 실제로 적용됩니다.
+
+```python
+def disable_autofit(text_frame):
+    """Disable spAutoFit so line spacing is respected by PowerPoint."""
+    from pptx.oxml.ns import qn as _qn
+    bodyPr = text_frame._txBody.find(_qn('a:bodyPr'))
+    if bodyPr is not None:
+        for child in bodyPr.findall(_qn('a:spAutoFit')):
+            bodyPr.remove(child)
+        for child in bodyPr.findall(_qn('a:normAutofit')):
+            bodyPr.remove(child)
+        etree.SubElement(bodyPr, _qn('a:noAutofit'))
+```
+
+**적용 순서** (모든 텍스트박스/불릿 body에 공통):
+1. `disable_autofit(tf)` — 자동 맞춤 해제
+2. `set_line_spacing(paragraph, 1.5)` — 줄간격 설정
+
+`add_bullet_body`, `add_textbox`, `add_multiline_textbox` 등 텍스트를 추가하는 모든 헬퍼 함수에서 `disable_autofit(tf)`를 호출할 것.
+
+| 텍스트 유형 | 줄간격 | 적용 함수 |
+|------------|--------|----------|
+| 본문 불릿 (add_bullet_body) | **1.5x** | `line_spacing=1.5` (기본값) |
+| 일반 텍스트박스 (add_textbox) | **1.5x** | italic=False이면 자동 적용 |
+| 캡션/이탤릭/출처 텍스트 | **1.0x** | italic=True이면 자동 적용 |
+| References 슬라이드 | **1.0~1.2x** | `line_spacing=1.0` 또는 `1.2` 명시 |
+
+**`set_line_spacing()` 헬퍼 (필수 포함)**:
+```python
+def set_line_spacing(paragraph, spacing):
+    """Set paragraph line spacing using python-pptx API.
+    spacing=1.5 for 1.5x, 1.0 for single."""
+    paragraph.line_spacing = spacing
+```
+
+> **⚠️ XML 직접 조작 (`spcPct val=...`) 방식 사용 금지.** PowerPoint UI에서 인식 못하는 경우 발생.
+> 반드시 `paragraph.line_spacing = spacing` (python-pptx 내장 API) 사용할 것.
+
+`add_textbox` 줄간격 자동 적용 패턴:
+```python
+def add_textbox(..., italic=False, line_spacing=None):
+    ...
+    if line_spacing is None:
+        line_spacing = 1.0 if italic else 1.5
+    set_line_spacing(p, line_spacing)
+```
 
 #### python-pptx 폰트 크기 기준표 (13.33" × 7.5" 와이드스크린)
 
