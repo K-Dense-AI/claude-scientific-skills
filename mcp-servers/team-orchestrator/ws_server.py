@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 import state as st
 import team_manager
+import event_bus as eb
 
 # 구조화된 로깅 설정
 logger = logging.getLogger(__name__)
@@ -257,8 +258,15 @@ async def websocket_endpoint(
 
         # 100ms 간격으로 상태 브로드캐스트
         last_broadcast = 0.0
+        last_event_id = eb.get_latest_id()
         while True:
             await asyncio.sleep(0.1)  # CPU 부하 방지
+
+            # 새 이벤트 감지 시 즉시 브로드캐스트
+            new_events = eb.get_events_since(last_event_id)
+            if new_events:
+                last_event_id = new_events[-1]["id"]
+                last_broadcast = 0.0  # 즉시 상태 전송 트리거
 
             current_time = time.time()
             if current_time - last_broadcast >= 0.1:  # 100ms마다
