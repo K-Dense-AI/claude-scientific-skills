@@ -188,17 +188,17 @@ def _build_status_message(project_id: str = None) -> dict:
     # 팀 상세 정보
     teams_data = []
     for t in teams:
+        team = st.get_team(t["team_id"])
         elapsed = 0.0
         if t["status"] == "running":
-            team = st.get_team(t["team_id"])
             if team and team.started_at > 0:
                 elapsed = current_time - team.started_at
         else:
-            team = st.get_team(t["team_id"])
             if team:
                 elapsed = team.elapsed_seconds or 0.0
 
-        # task은 UTF-8 encoding 문제로 인해 빈 문자열로 반환 (대시보드에서 불필요)
+        total_tokens = ((team.input_tokens or 0) + (team.output_tokens or 0)) if team else 0
+
         teams_data.append({
             "team_id": t["team_id"],
             "name": t["name"],
@@ -206,6 +206,12 @@ def _build_status_message(project_id: str = None) -> dict:
             "status": t["status"],
             "elapsed_seconds": round(elapsed, 1),
             "task": "",  # 손상된 UTF-8 데이터 제외
+            "model": team.model_used if team and team.model_used else "",
+            "input_tokens": team.input_tokens if team else 0,
+            "output_tokens": team.output_tokens if team else 0,
+            "total_tokens": total_tokens,
+            "total_cost_usd": round(team.total_cost_usd or 0, 4) if team else 0,
+            "tok_per_sec": round(total_tokens / max(elapsed, 1), 1) if team else 0,
         })
 
     return {

@@ -1,5 +1,7 @@
 #!/bin/bash
 # WebSocket 서버 + ngrok 동시 실행 (macOS/Linux)
+# 고정 URL 사용: export NGROK_STATIC_URL="https://your-static-domain.ngrok-free.app"
+# server.py가 NGROK_STATIC_URL 환경변수를 감지하면 Cloudflare 터널 대신 해당 URL 사용
 
 echo ""
 echo "========================================"
