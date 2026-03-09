@@ -177,8 +177,10 @@ def _start_dashboard_background():
                 break
         if _DASHBOARD_PUBLIC_URL == "http://localhost:8765":
             print("[startup] Cloudflare 터널 URL 추출 실패 — 로컬 포트만 사용", file=sys.stderr, flush=True)
+            _update_notion_embed("http://localhost:8765")  # stale URL 방지: localhost로 업데이트
     except Exception as e:
         print(f"[startup] cloudflared 시작 실패: {e} — 로컬 포트만 사용", file=sys.stderr, flush=True)
+        _update_notion_embed("http://localhost:8765")  # stale URL 방지
 
 
 # Notion 대시보드 페이지 Embed URL 자동 갱신
