@@ -50,8 +50,26 @@ import state as st
 import task_router
 import team_manager
 import shutdown_handler
-import notion_logger as nl
 import telegram_notify as tg
+
+# notion_logger는 requests(~290ms)를 import하므로 lazy 로딩 — startup 시간 단축
+class _LazyModule:
+    """첫 접근 시 모듈을 import하는 lazy proxy"""
+    def __init__(self, name: str):
+        self.__dict__["_name"] = name
+        self.__dict__["_mod"] = None
+    def __getattr__(self, attr: str):
+        if self.__dict__["_mod"] is None:
+            import importlib
+            self.__dict__["_mod"] = importlib.import_module(self.__dict__["_name"])
+        return getattr(self.__dict__["_mod"], attr)
+    def __setattr__(self, attr: str, value):
+        if self.__dict__["_mod"] is None:
+            import importlib
+            self.__dict__["_mod"] = importlib.import_module(self.__dict__["_name"])
+        setattr(self.__dict__["_mod"], attr, value)
+
+nl = _LazyModule("notion_logger")
 
 SKILLS_BASE = Path.home() / "claude-scientific-skills" / "scientific-skills"
 
