@@ -501,11 +501,22 @@ def shutdown(project_id: str = None) -> str:
     except Exception as e:
         notion_msg = f"Notion 리포트 생략: {e}"
 
-    return (
+    result = (
         f"## Shutdown Complete\n\n"
         f"{asana_msg}\n\n"
         f"**Notion:** {notion_msg}"
     )
+
+    # Notion 보고 완료 후 MCP 서버 자동 종료
+    def _exit_after_delay():
+        import time as _t
+        _t.sleep(5)
+        print("[shutdown] MCP 서버 자동 종료.", file=sys.stderr, flush=True)
+        import os as _os
+        _os.exit(0)
+
+    threading.Thread(target=_exit_after_delay, daemon=True).start()
+    return result
 
 
 # ── 팀 수동 시작 (이미 pending인 팀) ─────────────────────────────────────────
