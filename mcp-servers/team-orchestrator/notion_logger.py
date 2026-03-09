@@ -402,8 +402,8 @@ def _update_project_metrics(token: str, project_notion_id: str,
         # 주간 한도 대비 사용률 계산 (Notion percent 포맷: 0.01 = 1%)
         weekly_pct = None
         usage = _get_weekly_usage()
-        if usage and usage.get("limit") and usage.get("totalTokens", 0) > 0:
-            weekly_pct = round(usage["totalTokens"] / usage["limit"], 6)
+        if usage and usage.get("limit") and new_tokens > 0:
+            weekly_pct = round(new_tokens / usage["limit"], 6)
 
         update_props = {
             "Total Cost ($)": {"number": new_cost},
