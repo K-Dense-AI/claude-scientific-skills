@@ -196,6 +196,26 @@ recs = recommend_re_pair(
 
 반환: `file_path`, `total_primers`, `total_length_nt`, `estimated_cost_krw`
 
+### Macrogen Sequencing 주문서 (`to_macrogen_seq`)
+
+| 파라미터 | 기본값 | 설명 |
+|---------|--------|------|
+| `sample_primer_pairs` | 필수 | `[{"sample_name": "...", "primer_name": "...", ...}]` |
+| `output_path` | None | 저장 경로 |
+
+각 항목 필드:
+
+| 필드 | 필수 | 설명 |
+|------|------|------|
+| `sample_name` | O | 샘플명 (영문, `-`, `_` 만 사용) |
+| `primer_name` | O | 프라이머명 |
+| `sample_conc` | X | **비워둘 것** — 실험자가 miniprep 후 실측값 직접 기입 |
+| `primer_seq` | X | 프라이머 서열 (5'→3') |
+| `primer_conc` | X | pmol/ul (universal primer면 생략) |
+| `product_size` | X | 템플릿 크기 (bp) |
+
+> **주의**: `sample_conc`에 임의 기본값(예: 100)을 넣지 말 것. 빈칸으로 두어야 실험자가 실측 농도를 기입할 수 있다.
+
 ---
 
 ## Python 직접 사용 — Mutagenesis

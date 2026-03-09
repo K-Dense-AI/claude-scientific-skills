@@ -13,6 +13,7 @@ uv.lock
 main.py
 
 __pycache__/
+*.egg-info/
 
 # 분석 스크립트/결과물 (lab-analyses/ 에 저장)
 output/
