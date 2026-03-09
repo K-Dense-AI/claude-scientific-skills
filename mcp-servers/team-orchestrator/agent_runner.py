@@ -21,6 +21,16 @@ import telegram_notify as tg
 PYTHON_BIN = sys.executable
 BOARD_SCRIPT = str(DIR / "shared_board.py")
 
+
+def _tok(usage, key: str) -> int:
+    """dict 또는 Pydantic 객체 모두에서 토큰 값 추출"""
+    if not usage:
+        return 0
+    if isinstance(usage, dict):
+        return int(usage.get(key, 0) or 0)
+    return int(getattr(usage, key, 0) or 0)
+
+
 BOARD_MCP = {
     "command": PYTHON_BIN,
     "args": [BOARD_SCRIPT],
@@ -458,16 +468,15 @@ async def run_agent(team_id: str, team_type: str, task: str,
                         _last_result_text = block.text
                 # AssistantMessage에서 usage 누적
                 if hasattr(message, "usage") and message.usage:
-                    _acc_in_tok += message.usage.get("input_tokens", 0)
-                    _acc_out_tok += message.usage.get("output_tokens", 0)
+                    _acc_in_tok += _tok(message.usage, "input_tokens")
+                    _acc_out_tok += _tok(message.usage, "output_tokens")
 
             elif isinstance(message, ResultMessage):
                 if message.result:
                     st.append_team_output(team_id, f"\n[최종 결과]\n{message.result}")
                 elapsed = time.time() - started_at
-                usage = message.usage or {}
-                in_tok = usage.get("input_tokens", 0)
-                out_tok = usage.get("output_tokens", 0)
+                in_tok = _tok(message.usage, "input_tokens")
+                out_tok = _tok(message.usage, "output_tokens")
                 cost = message.total_cost_usd or 0.0
                 st.update_team_usage(
                     team_id,
@@ -624,16 +633,15 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
                         _last_result_text = block.text
                 # AssistantMessage에서 usage 누적
                 if hasattr(message, "usage") and message.usage:
-                    _acc_in_tok += message.usage.get("input_tokens", 0)
-                    _acc_out_tok += message.usage.get("output_tokens", 0)
+                    _acc_in_tok += _tok(message.usage, "input_tokens")
+                    _acc_out_tok += _tok(message.usage, "output_tokens")
 
             elif isinstance(message, ResultMessage):
                 if message.result:
                     st.append_team_output(team_id, f"\n[최종 결과]\n{message.result}")
                 elapsed = time.time() - started_at
-                usage = message.usage or {}
-                in_tok = usage.get("input_tokens", 0)
-                out_tok = usage.get("output_tokens", 0)
+                in_tok = _tok(message.usage, "input_tokens")
+                out_tok = _tok(message.usage, "output_tokens")
                 cost = message.total_cost_usd or 0.0
                 st.update_team_usage(
                     team_id,

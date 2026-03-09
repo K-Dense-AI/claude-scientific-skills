@@ -205,7 +205,7 @@ def _build_status_message(project_id: str = None) -> dict:
             "type": t["type"],
             "status": t["status"],
             "elapsed_seconds": round(elapsed, 1),
-            "task": "",  # 손상된 UTF-8 데이터 제외
+            "task": _clean_surrogates(team.task if team else ""),
             "model": team.model_used if team and team.model_used else "",
             "input_tokens": team.input_tokens if team else 0,
             "output_tokens": team.output_tokens if team else 0,
