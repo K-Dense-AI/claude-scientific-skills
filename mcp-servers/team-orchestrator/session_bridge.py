@@ -17,11 +17,14 @@ def _get_conn() -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS sessions (
-            session_id  TEXT PRIMARY KEY,
+            session_id  TEXT,
             cwd         TEXT,
             tg_msg_id   INTEGER,
+            team_id     TEXT,
             created_at  TEXT
         );
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_tg_msg
+            ON sessions(tg_msg_id);
         CREATE TABLE IF NOT EXISTS inbox (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             session_id  TEXT,
@@ -30,15 +33,21 @@ def _get_conn() -> sqlite3.Connection:
             created_at  TEXT
         );
     """)
+    # team_id 컬럼 마이그레이션 (기존 DB 호환)
+    try:
+        conn.execute("SELECT team_id FROM sessions LIMIT 1")
+    except sqlite3.OperationalError:
+        conn.execute("ALTER TABLE sessions ADD COLUMN team_id TEXT")
+        conn.commit()
     return conn
 
 
-def save_session(session_id: str, cwd: str, tg_msg_id: int):
-    """Telegram 알림 전송 후 msg_id -> session_id 매핑 저장."""
+def save_session(session_id: str, cwd: str, tg_msg_id: int, team_id: str = None):
+    """Telegram 알림 전송 후 msg_id -> session_id + team_id 매핑 저장."""
     conn = _get_conn()
     conn.execute(
-        "INSERT OR REPLACE INTO sessions (session_id, cwd, tg_msg_id, created_at) VALUES (?,?,?,?)",
-        (session_id, cwd, tg_msg_id, datetime.now().isoformat()),
+        "INSERT OR REPLACE INTO sessions (session_id, cwd, tg_msg_id, team_id, created_at) VALUES (?,?,?,?,?)",
+        (session_id, cwd, tg_msg_id, team_id, datetime.now().isoformat()),
     )
     conn.commit()
     conn.close()

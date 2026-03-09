@@ -6,3 +6,4 @@ __pycache__/
 *.log
 *.bin
 watchdog.log
+.notion_cache.json

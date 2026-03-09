@@ -9,7 +9,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import asyncio
+import atexit
 import json
+import os
+import subprocess
+import threading
 import time
 import uuid
 
@@ -21,8 +25,14 @@ import task_router
 import team_manager
 import shutdown_handler
 import notion_logger as nl
+import telegram_notify as tg
 
 SKILLS_BASE = Path.home() / "claude-scientific-skills" / "scientific-skills"
+
+# ── PID 기록 (디버깅용) ───────────────────────────────────────────────────────
+_PID_FILE = Path.home() / ".claude" / "team-orchestrator.pid"
+_PID_FILE.write_text(str(os.getpid()))
+atexit.register(lambda: _PID_FILE.unlink(missing_ok=True))
 
 
 def _inject_skill_hints(task: str, skills: list) -> str:
@@ -41,7 +51,138 @@ st.init_db()
 # 서버 시작 시 2시간 이상 running/pending 상태인 stale 에이전트 자동 정리
 _stale = st.cleanup_stale_agents(max_age_hours=2.0)
 if _stale:
-    print(f"[startup] stale 에이전트 {len(_stale)}개 정리: {_stale}", flush=True)
+    print(f"[startup] stale 에이전트 {len(_stale)}개 정리: {_stale}", file=sys.stderr, flush=True)
+
+# Notion 자동 동기화 비활성화 — 실시간 대시보드(Cloudflare Tunnel)로 대체
+# nl.start_auto_sync(interval=30.0)
+# print("[startup] Notion 자동 동기화 시작 (30s 간격)", file=sys.stderr, flush=True)
+
+# ── 대시보드 (WS서버 + cloudflared) 백그라운드 자동 시작 ─────────────────────
+_DASHBOARD_PUBLIC_URL = None  # 외부에서 조회 가능하도록 모듈 레벨 저장
+_CLOUDFLARED_PATH = str(Path.home() / "cloudflared.exe")
+
+def _start_dashboard_background():
+    """WS 서버 + Cloudflare Tunnel을 백그라운드로 시작"""
+    global _DASHBOARD_PUBLIC_URL
+    script_dir = str(Path(__file__).parent)
+
+    # 1) WebSocket 서버 (ws_server.py) 서브프로세스
+    try:
+        _cflags = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
+        subprocess.Popen(
+            [sys.executable, os.path.join(script_dir, "ws_server.py")],
+            cwd=script_dir,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=_cflags,
+        )
+        print("[startup] WebSocket 대시보드 서버 시작 (포트 8765)", file=sys.stderr, flush=True)
+        # 로컬 호스트는 항상 사용 가능
+        _DASHBOARD_PUBLIC_URL = "http://localhost:8765"
+    except Exception as e:
+        print(f"[startup] WebSocket 서버 시작 실패: {e}", file=sys.stderr, flush=True)
+        return
+
+    # 2) Cloudflare Tunnel (무료, 인터스티셜 없음) — 선택사항
+    time.sleep(2)
+    if not os.path.exists(_CLOUDFLARED_PATH):
+        print(f"[startup] cloudflared 미설치 ({_CLOUDFLARED_PATH}) — 로컬 포트만 사용 (http://localhost:8765)", file=sys.stderr, flush=True)
+        return
+    try:
+        import re
+        _cflags2 = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
+        proc = subprocess.Popen(
+            [_CLOUDFLARED_PATH, "tunnel", "--url", "http://localhost:8765"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            creationflags=_cflags2,
+        )
+        # cloudflared 출력에서 URL 추출 (최대 30초 대기)
+        for _ in range(60):
+            line = proc.stdout.readline()
+            if not line:
+                break
+            m = re.search(r"(https://[a-z0-9-]+\.trycloudflare\.com)", line)
+            if m:
+                _DASHBOARD_PUBLIC_URL = m.group(1)
+                print(f"[startup] Cloudflare 터널 활성: {_DASHBOARD_PUBLIC_URL}", file=sys.stderr, flush=True)
+                _update_notion_embed(_DASHBOARD_PUBLIC_URL)
+                break
+        if _DASHBOARD_PUBLIC_URL == "http://localhost:8765":
+            print("[startup] Cloudflare 터널 URL 추출 실패 — 로컬 포트만 사용", file=sys.stderr, flush=True)
+    except Exception as e:
+        print(f"[startup] cloudflared 시작 실패: {e} — 로컬 포트만 사용", file=sys.stderr, flush=True)
+
+
+# Notion 대시보드 페이지 Embed URL 자동 갱신
+_NOTION_DASHBOARD_PAGE_ID = "31cf91aca96f8107819bef1d4b05900a"
+
+def _update_notion_embed(new_url: str):
+    """Notion 대시보드 페이지의 embed 블록 URL을 자동 갱신"""
+    try:
+        import requests as _req
+        secrets_path = Path.home() / ".claude" / "secrets.json"
+        notion_token = json.loads(secrets_path.read_text()).get("NOTION_TOKEN", "")
+        if not notion_token:
+            print("[startup] NOTION_TOKEN 없음 — Notion embed 갱신 생략", file=sys.stderr, flush=True)
+            return
+
+        headers = {
+            "Authorization": f"Bearer {notion_token}",
+            "Notion-Version": "2022-06-28",
+        }
+
+        # 1) 페이지의 블록 children 조회
+        resp = _req.get(
+            f"https://api.notion.com/v1/blocks/{_NOTION_DASHBOARD_PAGE_ID}/children?page_size=100",
+            headers=headers,
+        )
+        if resp.status_code != 200:
+            print(f"[startup] Notion 블록 조회 실패: {resp.status_code}", file=sys.stderr, flush=True)
+            return
+
+        # 2) embed 블록 찾기
+        for block in resp.json().get("results", []):
+            if block.get("type") == "embed":
+                block_id = block["id"]
+                # 3) embed URL 업데이트
+                update_resp = _req.patch(
+                    f"https://api.notion.com/v1/blocks/{block_id}",
+                    headers={**headers, "Content-Type": "application/json"},
+                    json={"embed": {"url": new_url}},
+                )
+                if update_resp.status_code == 200:
+                    print(f"[startup] Notion embed URL 자동 갱신 완료: {new_url}", file=sys.stderr, flush=True)
+                else:
+                    print(f"[startup] Notion embed 갱신 실패: {update_resp.status_code}", file=sys.stderr, flush=True)
+                return
+
+        print("[startup] Notion 페이지에 embed 블록 없음 — 갱신 생략", file=sys.stderr, flush=True)
+    except Exception as e:
+        print(f"[startup] Notion embed 갱신 오류: {e}", file=sys.stderr, flush=True)
+
+# 데몬 스레드로 실행 (MCP 서버 종료 시 같이 종료)
+threading.Thread(target=_start_dashboard_background, daemon=True).start()
+
+# ── Telegram 리스너 자동 시작 (답장 수신용) ──────────────────────────────────
+def _start_tg_listener():
+    """tg_listener.py를 서브프로세스로 시작"""
+    try:
+        script = str(Path(__file__).parent / "tg_listener.py")
+        _cflags3 = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
+        subprocess.Popen(
+            [sys.executable, script],
+            cwd=str(Path(__file__).parent),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=_cflags3,
+        )
+        print("[startup] Telegram 리스너 시작", file=sys.stderr, flush=True)
+    except Exception as e:
+        print(f"[startup] Telegram 리스너 시작 실패: {e}", file=sys.stderr, flush=True)
+
+threading.Thread(target=_start_tg_listener, daemon=True).start()
 
 mcp = FastMCP("team-orchestrator")
 
@@ -101,9 +242,10 @@ def start_project(description: str, feedback_timeout: int = 10) -> str:
         "project_id": project_id,
         "project_summary": plan.get("project_summary", ""),
         "teams": teams_created,
+        "dashboard_url": _DASHBOARD_PUBLIC_URL or "N/A",
         "message": (
             f"{len(teams_created)} agents created. Use get_status() to check progress.\n"
-            f"(모든 팀 완료 시 자동으로 Notion + Asana 보고 에이전트가 실행됩니다)"
+            f"(모든 팀 완료 시 자동으로 Telegram 알림 + Notion 보고 에이전트가 실행됩니다)"
         )
     }
     return json.dumps(result, ensure_ascii=False, indent=2)
@@ -487,6 +629,21 @@ def _trigger_auto_reporting(project_id: str):
     if not team_outputs:
         return
 
+    # Telegram 프로젝트 완료 알림
+    try:
+        total_cost = sum(t.total_cost_usd or 0.0 for t in teams)
+        total_elapsed = max((t.elapsed_seconds or 0.0 for t in teams), default=0.0)
+        done_count = sum(1 for t in teams if t.status == "done")
+        fail_count = sum(1 for t in teams if t.status == "failed")
+        team_names = ", ".join(t.name for t in teams if t.team_type not in ("report-notion", "report-asana"))
+        tg.send(
+            f"📋 프로젝트 완료: {project_id}\n"
+            f"팀: {team_names}\n"
+            f"결과: ✅{done_count} ❌{fail_count} | ${total_cost:.4f} | {total_elapsed:.0f}초"
+        )
+    except Exception:
+        pass
+
     # Notion 보고 에이전트 spawn
     try:
         outputs_summary = "\n\n".join(
@@ -497,14 +654,40 @@ def _trigger_auto_reporting(project_id: str):
             f"[보고서]\n## 프로젝트 완료 리포트\n\n{outputs_summary}\n\n"
             f"[태스크 컨텍스트]\n프로젝트ID: {project_id} | 팀 수: {len(team_outputs)}개"
         )
-        _spawn_solo_agent(
+        result = _spawn_solo_agent(
             task=notion_task,
             team_type="report-notion",
             name=f"NotionReport-{project_id[:6]}",
             project_id=project_id,
         )
+        notion_agent_id = result.get("agent_id") or result.get("team_id")
+        notion_proj_id = result.get("project_id")
+
+        # Notion 보고 완료 후 자동 종료 (백그라운드 폴링)
+        def _wait_and_exit():
+            import os
+            deadline = time.time() + 600  # 최대 10분 대기
+            while time.time() < deadline:
+                time.sleep(15)
+                try:
+                    teams_now = st.list_teams(notion_proj_id)
+                    report = next((t for t in teams_now if t.team_id == notion_agent_id), None)
+                    if report and report.status in ("done", "failed"):
+                        print(
+                            f"[auto-shutdown] Notion 보고 완료 ({report.status}). 30초 후 MCP 종료.",
+                            file=sys.stderr, flush=True,
+                        )
+                        time.sleep(30)
+                        print("[auto-shutdown] MCP 서버 자동 종료.", file=sys.stderr, flush=True)
+                        os._exit(0)
+                except Exception as ex:
+                    print(f"[auto-shutdown] 폴링 오류: {ex}", file=sys.stderr, flush=True)
+            print("[auto-shutdown] 타임아웃 — 자동 종료 포기.", file=sys.stderr, flush=True)
+
+        t = threading.Thread(target=_wait_and_exit, daemon=True)
+        t.start()
     except Exception as e:
-        print(f"[warning] Notion 보고 자동 실행 실패: {e}", flush=True)
+        print(f"[warning] Notion 보고 자동 실행 실패: {e}", file=sys.stderr, flush=True)
 
 
 # ── 내부 헬퍼: solo 에이전트 subprocess 실행 ──────────────────────────────────
@@ -733,6 +916,17 @@ def get_usage_report(project_id: str = None) -> str:
         lines.append(f"**모델 사용** — {model_summary}")
 
     return "\n".join(lines)
+
+
+@mcp.tool()
+def get_dashboard_url() -> str:
+    """
+    실시간 대시보드의 공개 Cloudflare Tunnel URL을 반환합니다.
+    Notion embed 등에 사용할 수 있습니다.
+    """
+    if _DASHBOARD_PUBLIC_URL:
+        return f"Dashboard URL: {_DASHBOARD_PUBLIC_URL}"
+    return "Dashboard URL not available (cloudflared not installed or tunnel not started)"
 
 
 if __name__ == "__main__":

@@ -28,40 +28,106 @@ USER_IDS = SECRETS.get("TELEGRAM_ALLOWED_USER_IDS", [])
 DB = Path(__file__).parent / "orchestrator.db"
 
 
-def send(message: str):
-    """모든 허용 사용자에게 텔레그램 메시지 발송."""
+def _format_table_for_telegram(text: str) -> str:
+    """
+    마크다운 테이블을 텔레그램 코드블록으로 감싸기.
+    텔레그램이 마크다운 테이블을 HTML로 렌더링하면 복사할 때 망가지므로,
+    코드블록으로 감싸면 순수 텍스트로 유지됨.
+    """
+    if "| " in text and " |" in text:  # 마크다운 테이블 감지
+        lines = text.split("\n")
+        result = []
+        in_table = False
+        for line in lines:
+            if "| " in line and " |" in line:
+                if not in_table:
+                    result.append("```")
+                    in_table = True
+                result.append(line)
+            else:
+                if in_table:
+                    result.append("```")
+                    in_table = False
+                result.append(line)
+        if in_table:
+            result.append("```")
+        return "\n".join(result)
+    return text
+
+
+TG_MAX_LEN = 4000  # 텔레그램 4096 한도, 여유분 확보
+
+
+def _split_message(text: str, max_len: int = TG_MAX_LEN) -> list[str]:
+    """긴 메시지를 max_len 이하 청크로 분할. 줄 단위로 자름."""
+    if len(text) <= max_len:
+        return [text]
+    chunks = []
+    while text:
+        if len(text) <= max_len:
+            chunks.append(text)
+            break
+        # 줄바꿈 기준으로 자르기
+        cut = text.rfind("\n", 0, max_len)
+        if cut <= 0:
+            cut = max_len
+        chunks.append(text[:cut])
+        text = text[cut:].lstrip("\n")
+    # 파트 번호 추가
+    if len(chunks) > 1:
+        total = len(chunks)
+        chunks = [f"[{i+1}/{total}]\n{c}" for i, c in enumerate(chunks)]
+    return chunks
+
+
+def send(message: str) -> int | None:
+    """모든 허용 사용자에게 텔레그램 메시지 발송. 4096자 초과 시 자동 분할."""
+    formatted_msg = _format_table_for_telegram(message)
+    chunks = _split_message(formatted_msg)
+    first_msg_id = None
     for uid in USER_IDS:
-        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        data = json.dumps({"chat_id": uid, "text": message}).encode()
-        req = urllib.request.Request(url, data=data, method="POST",
-                                     headers={"Content-Type": "application/json"})
-        try:
-            urllib.request.urlopen(req, timeout=10)
-        except Exception as e:
-            print(f"[notify] 전송 실패 uid={uid}: {e}")
+        for chunk in chunks:
+            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+            data = json.dumps({"chat_id": uid, "text": chunk}).encode()
+            req = urllib.request.Request(url, data=data, method="POST",
+                                         headers={"Content-Type": "application/json"})
+            try:
+                resp = urllib.request.urlopen(req, timeout=10)
+                if first_msg_id is None:
+                    result = json.loads(resp.read())
+                    first_msg_id = result.get("result", {}).get("message_id")
+            except Exception as e:
+                print(f"[notify] 전송 실패 uid={uid}: {e}")
+    return first_msg_id
 
 
-def send_with_session(message: str, session_id: str, cwd: str) -> int | None:
-    """메시지 전송 후 tg_msg_id -> session_id 매핑을 session_bridge DB에 저장."""
+def send_with_session(message: str, session_id: str, cwd: str,
+                      team_id: str = None) -> int | None:
+    """메시지 전송 후 tg_msg_id -> session_id 매핑을 session_bridge DB에 저장.
+    team_id가 있으면 답장→팀 전달 경로도 함께 저장."""
     import sys as _sys
     _sys.path.insert(0, str(Path(__file__).parent))
     from session_bridge import save_session
 
+    formatted_msg = _format_table_for_telegram(message)
+    chunks = _split_message(formatted_msg)
     first_msg_id = None
     for uid in USER_IDS:
-        url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        data = json.dumps({"chat_id": uid, "text": message}).encode()
-        req = urllib.request.Request(url, data=data, method="POST",
-                                     headers={"Content-Type": "application/json"})
-        try:
-            resp = urllib.request.urlopen(req, timeout=10)
-            result = json.loads(resp.read())
-            msg_id = result["result"]["message_id"]
-            if first_msg_id is None:
-                first_msg_id = msg_id
-            save_session(session_id, cwd, msg_id)
-        except Exception as e:
-            print(f"[notify] 전송 실패 uid={uid}: {e}")
+        for chunk in chunks:
+            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+            data = json.dumps({"chat_id": uid, "text": chunk}).encode()
+            req = urllib.request.Request(url, data=data, method="POST",
+                                         headers={"Content-Type": "application/json"})
+            try:
+                resp = urllib.request.urlopen(req, timeout=10)
+                result = json.loads(resp.read())
+                msg_id = result["result"]["message_id"]
+                if first_msg_id is None:
+                    first_msg_id = msg_id
+                # 각 청크의 msg_id를 세션에 매핑 (어느 청크에 답장해도 추적 가능)
+                save_session(session_id, cwd, msg_id, team_id=team_id)
+            except Exception as e:
+                print(f"[notify] 전송 실패 uid={uid}: {e}")
     return first_msg_id
 
 
@@ -80,15 +146,19 @@ def poll_and_notify(agent_id: str, interval: int = 20, timeout: int = 600):
                 if row and row[1] in ("done", "failed"):
                     name, status, output = row
                     emoji = "✅" if status == "done" else "❌"
-                    summary = (output or "").strip()[-200:]
+                    summary = (output or "").strip()[:800]
+                    if len((output or "").strip()) > 800:
+                        summary += "\n...(잘림)"
                     msg = f"{emoji} 에이전트 완료: {name} [{status}]\n---\n{summary}"
-                    send(msg)
+                    formatted_msg = _format_table_for_telegram(msg)
+                    send(formatted_msg)
                     print(f"[notify] 텔레그램 전송 완료: {agent_id} [{status}]")
                     sys.exit(0)
         except sqlite3.OperationalError:
             pass
         time.sleep(interval)
-    send(f"⏰ 에이전트 타임아웃: {agent_id} ({timeout}초 초과)")
+    formatted_msg = _format_table_for_telegram(f"⏰ 에이전트 타임아웃: {agent_id} ({timeout}초 초과)")
+    send(formatted_msg)
     sys.exit(1)
 
 
