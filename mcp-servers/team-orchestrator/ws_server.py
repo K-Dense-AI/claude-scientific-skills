@@ -320,12 +320,15 @@ async def websocket_endpoint(
         )
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 async def dashboard():
     """대시보드 HTML 페이지 (Notion Embed / 브라우저 직접 접속)"""
     if _dashboard_path.exists():
-        return HTMLResponse(content=_dashboard_path.read_text(encoding="utf-8"))
-    return HTMLResponse(content="<h1>Dashboard HTML not found</h1>", status_code=404)
+        return Response(
+            content=_dashboard_path.read_text(encoding="utf-8"),
+            media_type="text/html; charset=utf-8"
+        )
+    return Response(content="<h1>Dashboard HTML not found</h1>", status_code=404, media_type="text/html; charset=utf-8")
 
 
 @app.get("/health")
