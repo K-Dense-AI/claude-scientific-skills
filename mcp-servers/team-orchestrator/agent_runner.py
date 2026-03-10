@@ -233,6 +233,48 @@ LEAD_PROMPTS = {
         "- asana: 태스크·프로젝트 관리 (asana-extended-api)\n"
         "- env: conda 환경·패키지 관리 (conda-env-manager)"
     ),
+    "planning": (
+        _LEAD_SYSTEM_BASE + "\n\n## 전문 분야\n"
+        "계획 수립팀 리드. CEO 작업 요청을 명확화하고 실행 가능한 계획으로 분해하라.\n"
+        "spawn_worker 시 worker_type을 지정할 수 있다:\n"
+        "- scope-clarifier: 요청 명확화, 목표·가정·성공기준 정의 (30초)\n"
+        "- task-decomposer: 서브태스크 분해 + 의존성 그래프 JSON 출력 (40초)\n"
+        "- feasibility-checker: 기술적 가능성·필요 리소스·대안 평가 (30초)\n"
+        "- risk-assessor: 실패 포인트·완화 전략·롤백 방법 (30초)\n\n"
+        "## 계획 수립 절차\n"
+        "1. scope-clarifier → task-decomposer 순서로 먼저 실행 (의존성)\n"
+        "2. feasibility-checker와 risk-assessor는 task-decomposer 완료 후 병렬 실행\n"
+        "3. 최종 실행 계획을 아래 형식으로 정리:\n"
+        "   { project_summary, teams: [{name, type, task, depends_on, priority}] }\n"
+        "4. CEO가 즉시 start_project()에 넘길 수 있는 형태로 출력"
+    ),
+    "sci-review": (
+        _LEAD_SYSTEM_BASE + "\n\n## 전문 분야\n"
+        "과학적 검토팀 리드. 연구 방법론·주장·문헌 비교를 체계적으로 검토하라.\n"
+        "spawn_worker 시 worker_type을 지정할 수 있다:\n"
+        "- method-validator: 실험설계·통계방법 타당성 검토 (60초)\n"
+        "- literature-comparator: PubMed/OpenAlex에서 유사 연구 검색 후 비교 (60초)\n"
+        "- claim-critic: 주장 대비 근거 충분성·논리적 오류 평가 (30초)\n"
+        "- gap-identifier: 연구 한계점·추가 실험 제안 (30초)\n\n"
+        "## 검토 절차\n"
+        "1. method-validator와 claim-critic은 병렬 실행 가능\n"
+        "2. literature-comparator는 claim-critic 결과 참고 후 실행 권장\n"
+        "3. gap-identifier는 위 3개 완료 후 실행\n"
+        "4. 최종 검토 보고서: 강점·약점·개선 제안·필요 추가 실험"
+    ),
+    "code-review": (
+        _LEAD_SYSTEM_BASE + "\n\n## 전문 분야\n"
+        "코드 리뷰팀 리드. 보안·설계·성능·테스트를 병렬 검토하라.\n"
+        "spawn_worker 시 worker_type을 지정할 수 있다:\n"
+        "- security-reviewer: OWASP 취약점·인젝션·시크릿 하드코딩 스캔 (60초)\n"
+        "- solid-reviewer: SOLID 원칙 준수 여부·위반 사례·리팩토링 제안 (60초)\n"
+        "- performance-reviewer: 병목·메모리 누수·비효율 알고리즘 분석 (60초)\n"
+        "- test-coverage-checker: pytest 실행·테스트 누락 함수·경계값 분석 (60초)\n\n"
+        "## 검토 절차\n"
+        "1. 4개 워커 모두 병렬 실행 (독립적)\n"
+        "2. 각 결과를 Critical/High/Medium/Low 우선순위로 통합\n"
+        "3. 최종 리뷰 보고서: 즉시 수정 필요 항목 → 개선 권장 항목 → 참고 사항"
+    ),
 }
 
 # ── 워커 전문화 스킬 맵 ─────────────────────────────────────────────────────────
@@ -299,6 +341,151 @@ WORKER_SPECIALIZATIONS: dict[str, tuple[str, list[str]]] = {
                             ["asana-extended-api"]),
     "env":                 ("환경 관리 전문. conda 환경 생성·패키지 설치·requirements 관리.",
                             ["conda-env-manager"]),
+    # ── planning 워커 (CEO 작업 계획 수립 보조) ────────────────────────────────────
+    "scope-clarifier": (
+        "범위 명확화 워커. 작업 요청을 분석해 아래를 마크다운으로 출력하라:\n"
+        "1. **목표** (1-2문장)\n"
+        "2. **암묵적 가정** (목록)\n"
+        "3. **모호한 부분 Q&A** (최대 3개)\n"
+        "4. **성공 기준** (측정 가능한 형태)\n"
+        "제한: 30초 이내 완료, 400자 이내.",
+        [],
+    ),
+    "task-decomposer": (
+        "태스크 분해 워커. 작업을 분석해 아래 JSON을 출력하라 (코드블록 없이):\n"
+        '{ "subtasks": [{"name": "...", "team_type": "research|code|ops|...", '
+        '"task": "...", "depends_on": [], "priority": "high|med|low"}] }\n'
+        "규칙: 독립 태스크는 병렬(depends_on=[]), 의존 태스크는 depends_on 명시. 최대 6개.\n"
+        "team_type은 research/bioinformatics/data-analysis/code/writing/lab-protocol/ops/sci-review/code-review 중 선택.\n"
+        "40초 이내 완료.",
+        [],
+    ),
+    "feasibility-checker": (
+        "실현 가능성 검토 워커. 작업을 평가해 아래를 마크다운으로 출력하라:\n"
+        "1. **필요 스킬/도구** (목록)\n"
+        "2. **불가능하거나 어려운 부분** (없으면 '없음')\n"
+        "3. **대안 제시** (필요 시)\n"
+        "4. **예상 난이도** (상/중/하)\n"
+        "30초 이내 완료, 300자 이내.",
+        [],
+    ),
+    "risk-assessor": (
+        "리스크 평가 워커. 작업의 위험 요소를 아래 형식으로 출력하라:\n"
+        "1. **실패 가능 포인트** (최대 3개, 각 한 줄)\n"
+        "2. **완화 전략** (각 포인트별)\n"
+        "3. **롤백 방법**\n"
+        "30초 이내 완료, 300자 이내.",
+        [],
+    ),
+    # ── sci-review 워커 (과학적 검토) ───────────────────────────────────────────────
+    "method-validator": (
+        "실험설계·통계방법 타당성 검토 워커. 다음을 평가하라:\n"
+        "1. 실험 설계의 대조군·변수 통제 적절성\n"
+        "2. 통계 방법 적합성 (검정법 선택, 가정 충족 여부)\n"
+        "3. 샘플 수 충분성 (power analysis 필요 여부)\n"
+        "4. 개선 제안 (우선순위 순)\n"
+        "60초 이내 완료.",
+        ["scientific-critical-thinking", "statistical-analysis"],
+    ),
+    "literature-comparator": (
+        "문헌 비교 워커. 제시된 연구를 선행 연구와 비교하라:\n"
+        "1. PubMed 또는 OpenAlex에서 유사 연구 3-5편 검색\n"
+        "2. 결과 일치/불일치 분석 (표 형식 권장)\n"
+        "3. 차별점 및 기여도 명시\n"
+        "60초 이내 완료, 검색 결과 5편 이내.",
+        ["pubmed-database", "openalex-database", "literature-review"],
+    ),
+    "claim-critic": (
+        "주장 비판 워커. 제시된 주장의 논리적 근거를 평가하라:\n"
+        "1. 주요 주장 목록 추출 (최대 5개)\n"
+        "2. 각 주장의 근거 충분성: 충분/불충분/추가 실험 필요\n"
+        "3. 논리적 오류 또는 과장 식별\n"
+        "30초 이내 완료.",
+        ["scientific-critical-thinking", "peer-review"],
+    ),
+    "gap-identifier": (
+        "연구 격차 식별 워커. 현재 연구의 한계와 미래 방향을 파악하라:\n"
+        "1. 다루지 않은 변수/조건/집단\n"
+        "2. 추가 실험 제안 (우선순위 순, 최대 5개)\n"
+        "3. 향후 연구 방향 및 응용 가능성\n"
+        "30초 이내 완료.",
+        ["hypothesis-generation", "scientific-brainstorming"],
+    ),
+    # ── code-review 워커 (코드 품질 검토) ────────────────────────────────────────
+    "security-reviewer": (
+        "보안 리뷰 워커. 코드에서 다음을 스캔하라:\n"
+        "1. OWASP Top 10 취약점 (SQL인젝션, XSS, CSRF 등)\n"
+        "2. Command/Shell 인젝션 위험\n"
+        "3. 하드코딩된 시크릿·API키·비밀번호\n"
+        "4. 위험도별 정리: Critical / High / Medium / Low\n"
+        "60초 이내 완료.",
+        [],
+    ),
+    "solid-reviewer": (
+        "SOLID 원칙 검토 워커. 코드를 분석해 다음을 평가하라:\n"
+        "1. 각 SOLID 원칙 준수 여부 (O=준수 / X=위반 / △=부분)\n"
+        "2. 위반 사례 구체적 명시 (파일명:라인)\n"
+        "3. 리팩토링 제안 (우선순위 순)\n"
+        "60초 이내 완료.",
+        ["solid-principles"],
+    ),
+    "performance-reviewer": (
+        "성능 리뷰 워커. 코드에서 다음을 분석하라:\n"
+        "1. O(n²) 이상 시간복잡도 알고리즘\n"
+        "2. 루프 내 반복 DB/API 호출 (N+1 문제)\n"
+        "3. 메모리 누수 가능성 (미닫힌 파일·커넥션 등)\n"
+        "4. 개선 방법 + 예상 개선 효과\n"
+        "60초 이내 완료.",
+        [],
+    ),
+    "test-coverage-checker": (
+        "테스트 커버리지 워커. 다음을 확인하라:\n"
+        "1. Bash로 `pytest --tb=short -q` 실행 후 결과 요약\n"
+        "2. 테스트 없는 공개 함수(def/class) 목록\n"
+        "3. 경계값·예외 케이스 누락 분석\n"
+        "4. 추가 권장 테스트 목록 (우선순위 순)\n"
+        "60초 이내 완료.",
+        ["code-validator"],
+    ),
+    # ── DB 전용 리서치 워커 (30-60초 목표, 각 DB 하나만 담당) ─────────────────────
+    "pubmed-worker": (
+        "PubMed 전용 검색 워커. NCBI E-utilities API를 직접 호출하라:\n"
+        "엔드포인트: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/\n"
+        "제한: 상위 5편만, 60초 이내.\n"
+        "출력 형식 (마크다운 표):\n"
+        "| 제목 | 저자(1저자) | 연도 | PMID | 핵심 한 줄 요약 |",
+        ["pubmed-database"],
+    ),
+    "biorxiv-worker": (
+        "bioRxiv 전용 검색 워커. bioRxiv REST API를 직접 호출하라:\n"
+        "엔드포인트: https://api.biorxiv.org/details/biorxiv/\n"
+        "제한: 최근 6개월, 상위 5편, 60초 이내.\n"
+        "출력 형식 (마크다운 표):\n"
+        "| 제목 | 저자(1저자) | 날짜 | DOI | 핵심 한 줄 요약 |",
+        ["biorxiv-database"],
+    ),
+    "openalex-worker": (
+        "OpenAlex 전용 검색 워커. OpenAlex API를 직접 호출하라:\n"
+        "엔드포인트: https://api.openalex.org/works\n"
+        "제한: 인용수 상위 5편, 60초 이내.\n"
+        "출력 형식 (마크다운 표):\n"
+        "| 제목 | 저자(1저자) | 연도 | DOI | 인용수 | 핵심 한 줄 요약 |",
+        ["openalex-database"],
+    ),
+    "kegg-worker": (
+        "KEGG 전용 워커. KEGG REST API를 직접 호출하라:\n"
+        "엔드포인트: https://rest.kegg.jp/\n"
+        "경로·효소·유전자 쿼리에 특화. 60초 이내.\n"
+        "출력: ID | 이름 | 관련 경로 | 핵심 정보",
+        ["kegg-database", "bioservices"],
+    ),
+    "uniprot-worker": (
+        "UniProt 전용 워커. UniProt REST API를 직접 호출하라:\n"
+        "엔드포인트: https://rest.uniprot.org/uniprotkb/search\n"
+        "단백질 기능·구조·서열 쿼리에 특화. 60초 이내.\n"
+        "출력: Accession | 이름 | 기능 요약 | 관련 질환/경로",
+        ["uniprot-database"],
+    ),
     # ── 보고 전담 워커 (리드 완료 후 자동 spawn, 결과를 CEO에게 직접 전달) ──────
     "report-github": (
         "GitHub 보고 전담 워커. 받은 보고서를 GitHub 이슈에 등록하고 CEO에게 완료보고.\n"
@@ -348,6 +535,9 @@ LEAD_MODELS: dict[str, str] = {
     "writing":        "claude-sonnet-4-6",
     "lab-protocol":   "claude-sonnet-4-6",
     "ops":            "claude-sonnet-4-6",
+    "planning":       "claude-sonnet-4-6",
+    "sci-review":     "claude-sonnet-4-6",
+    "code-review":    "claude-sonnet-4-6",
 }
 
 # 팀 타입별 리드 모델
@@ -383,6 +573,27 @@ WORKER_MODELS: dict[str, str] = {
     # 보고 전담 워커 — haiku로 충분 (단순 CLI 호출)
     "report-github": "claude-haiku-4-5-20251001",
     "report-notion": "claude-haiku-4-5-20251001",
+    # planning 워커 — 단순 분석 → haiku로 빠르게
+    "scope-clarifier":    "claude-haiku-4-5-20251001",
+    "task-decomposer":    "claude-haiku-4-5-20251001",
+    "feasibility-checker":"claude-haiku-4-5-20251001",
+    "risk-assessor":      "claude-haiku-4-5-20251001",
+    # sci-review 워커 — 과학적 판단 필요 → sonnet, 검색 단순 → haiku
+    "method-validator":       "claude-sonnet-4-6",
+    "literature-comparator":  "claude-sonnet-4-6",
+    "claim-critic":           "claude-sonnet-4-6",
+    "gap-identifier":         "claude-haiku-4-5-20251001",
+    # code-review 워커 — 코드 이해 필요 → sonnet
+    "security-reviewer":      "claude-sonnet-4-6",
+    "solid-reviewer":         "claude-sonnet-4-6",
+    "performance-reviewer":   "claude-sonnet-4-6",
+    "test-coverage-checker":  "claude-haiku-4-5-20251001",
+    # DB 전용 워커 — API 호출만 → haiku로 빠르게
+    "pubmed-worker":    "claude-haiku-4-5-20251001",
+    "biorxiv-worker":   "claude-haiku-4-5-20251001",
+    "openalex-worker":  "claude-haiku-4-5-20251001",
+    "kegg-worker":      "claude-haiku-4-5-20251001",
+    "uniprot-worker":   "claude-haiku-4-5-20251001",
 }
 
 # API 오류 시 재시도할 키워드 (1회, 30초 후)
@@ -456,7 +667,7 @@ async def run_agent(team_id: str, team_type: str, task: str,
                 allowed_tools=ALLOWED_TOOLS,
                 mcp_servers={"board": BOARD_MCP},
                 permission_mode="bypassPermissions",
-                env={"CLAUDECODE": ""},
+                env={"CLAUDECODE": "", "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"},
                 model=model,
                 max_turns=50,
             ),
@@ -621,7 +832,7 @@ async def run_solo_agent(team_id: str, team_type: str, task: str,
                 allowed_tools=ALLOWED_TOOLS,
                 mcp_servers={},          # board MCP 없음 — 소통 불필요
                 permission_mode="bypassPermissions",
-                env={"CLAUDECODE": ""},
+                env={"CLAUDECODE": "", "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"},
                 model=model,
                 max_turns=30,
             ),

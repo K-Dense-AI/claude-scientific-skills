@@ -16,12 +16,15 @@ TEAM_DEFAULT_SKILLS: dict[str, list[str]] = {
     "writing":         ["manuscript-writer", "citation-management", "scientific-writing"],
     "lab-protocol":    ["experiment-hub", "research-commons", "hypothesis-generation"],
     "ops":             ["git-workflow-manager", "conda-env-manager", "asana-extended-api"],
+    "planning":        ["hypothesis-generation", "scientific-brainstorming", "research-commons"],
+    "sci-review":      ["scientific-critical-thinking", "peer-review", "literature-review"],
+    "code-review":     ["solid-principles", "code-validator", "git-workflow-manager"],
 }
 
 ROUTER_PROMPT = """당신은 프로젝트 관리 전문가입니다.
 주어진 프로젝트 설명을 분석해 아래 팀 유형 중 적합한 것에 서브태스크를 배정하세요.
 
-팀 유형 (7가지):
+팀 유형 (10가지):
 - research: 문헌 검색, 학술 DB 조회, 정보 수집, 문헌 리뷰
 - bioinformatics: 서열 분석, 단백질 구조, 오믹스(scRNA-seq/bulk), 대사경로 모델링
 - data-analysis: 통계 분석, 머신러닝, 데이터 시각화, EDA
@@ -29,6 +32,9 @@ ROUTER_PROMPT = """당신은 프로젝트 관리 전문가입니다.
 - writing: 논문 초안, 보고서, 발표자료, 포스터 제작
 - lab-protocol: 실험 설계, 조건 최적화, 프라이머 설계, 프로토콜 작성
 - ops: git 관리, Asana 업데이트, conda 환경 설정, 배포
+- planning: 작업 계획 수립, 범위 명확화, 태스크 분해, 실현 가능성 검토, 리스크 평가
+- sci-review: 과학적 검토, 방법론 타당성, 선행연구 비교, 주장 비판, 연구 격차 분석
+- code-review: 코드 리뷰, 보안 취약점 스캔, SOLID 원칙 검토, 성능 분석, 테스트 커버리지
 
 각 팀에서 쓸 수 있는 스킬 (1-3개 선택):
 research: pubmed-database, biorxiv-database, openalex-database, kegg-database, uniprot-database, brenda-database, gene-database, clinicaltrials-database, chembl-database
@@ -38,6 +44,9 @@ code: cobrapy, biopython, rdkit, biosteam, scikit-learn, pytorch-lightning
 writing: manuscript-writer, citation-management, scientific-writing, scientific-visualization, latex-posters, pptx-reviewer, scientific-slides
 lab-protocol: experiment-hub, research-commons, hypothesis-generation, ipcr-primer-design, primer-design
 ops: git-workflow-manager, conda-env-manager, asana-extended-api
+planning: hypothesis-generation, scientific-brainstorming, research-commons
+sci-review: scientific-critical-thinking, peer-review, literature-review, pubmed-database, openalex-database
+code-review: solid-principles, code-validator, git-workflow-manager
 
 배정 규칙:
 1. 독립적으로 병렬 실행 가능한 것은 각각 다른 팀으로
@@ -87,6 +96,21 @@ LAB_PROTOCOL_KEYWORDS = [
 ]
 OPS_KEYWORDS = ["git", "Asana", "환경", "설정", "배포", "하드코딩", "스캔", "커밋", "푸시", "conda"]
 WRITING_KEYWORDS = ["문서", "보고서", "논문 초안", "발표", "작성", "PFD", "포스터", "슬라이드"]
+PLANNING_KEYWORDS = [
+    "계획", "플래닝", "planning", "설계", "범위", "scope", "roadmap", "로드맵",
+    "전략", "방향", "우선순위", "어떻게", "무엇을", "방법론", "아키텍처",
+    "태스크 분해", "분해", "실현 가능성", "feasibility", "리스크", "risk",
+]
+SCI_REVIEW_KEYWORDS = [
+    "검토", "리뷰", "review", "타당성", "과학적", "scientific",
+    "통계 검토", "논리", "근거", "evidence", "claim", "주장", "비판",
+    "peer review", "선행연구 비교", "문헌 비교", "방법론 검토", "실험 검토",
+]
+CODE_REVIEW_KEYWORDS = [
+    "코드 리뷰", "code review", "security", "보안", "취약점", "SOLID",
+    "리팩토링 검토", "성능 검토", "버그 탐지", "품질", "quality",
+    "테스트 커버리지", "coverage", "코드 품질", "오와스프", "owasp",
+]
 
 CLAUDE_BIN = str(Path.home() / ".local" / "bin" / "claude.exe")
 
@@ -99,6 +123,9 @@ _KEYWORD_MAP = [
     ("lab-protocol",   LAB_PROTOCOL_KEYWORDS),
     ("ops",            OPS_KEYWORDS),
     ("writing",        WRITING_KEYWORDS),
+    ("planning",       PLANNING_KEYWORDS),
+    ("sci-review",     SCI_REVIEW_KEYWORDS),
+    ("code-review",    CODE_REVIEW_KEYWORDS),
 ]
 
 
@@ -188,7 +215,11 @@ def analyze_and_split(description: str) -> dict:
 
     # 키워드 기반 분류 — 태스크당 별도 팀 생성 (같은 유형도 병렬 실행)
     import re as _re
-    type_names = {"research": "Research", "code": "Dev", "ops": "Ops", "writing": "Writer"}
+    type_names = {
+        "research": "Research", "code": "Dev", "ops": "Ops", "writing": "Writer",
+        "bioinformatics": "BioInfo", "data-analysis": "DataAna", "lab-protocol": "LabProto",
+        "planning": "Planning", "sci-review": "SciReview", "code-review": "CodeReview",
+    }
     type_counters: dict = {}
     teams = []
     for task_block in tasks:
