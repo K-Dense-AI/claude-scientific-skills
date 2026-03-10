@@ -3,6 +3,18 @@
 Team Orchestrator MCP Server
 CEO 역할의 Claude Code에서 여러 팀을 실시간으로 관리하는 MCP 서버
 """
+# UTF-8 강제 설정 — Korean Windows cp949 기본값 오버라이드
+import os as _os_enc, sys as _sys_enc
+_os_enc.environ.setdefault("PYTHONUTF8", "1")
+_os_enc.environ.setdefault("PYTHONIOENCODING", "utf-8")
+if hasattr(_sys_enc.stdin, "reconfigure"):
+    try: _sys_enc.stdin.reconfigure(encoding="utf-8")
+    except Exception: pass
+if hasattr(_sys_enc.stdout, "reconfigure"):
+    try: _sys_enc.stdout.reconfigure(encoding="utf-8")
+    except Exception: pass
+del _os_enc, _sys_enc
+
 # [DIAGNOSTIC] 가장 첫 번째 로그 — import 전에 실행되는지 확인
 import os as _os_diag, time as _time_diag
 _DIAG_LOG = _os_diag.path.join(_os_diag.path.dirname(_os_diag.path.abspath(__file__)), "startup_diag.log")
@@ -47,12 +59,9 @@ sys.excepthook = _global_exception_hook
 from mcp.server.fastmcp import FastMCP
 
 import state as st
-import task_router
-import team_manager
-import shutdown_handler
-import telegram_notify as tg
 
-# notion_logger는 requests(~290ms)를 import하므로 lazy 로딩 — startup 시간 단축
+# 아래 모듈들은 tool 함수 내부에서만 사용되므로 lazy 로딩으로 startup 단축
+# notion_logger: requests ~290ms / telegram_notify: secrets.json + sqlite3 ~430ms
 class _LazyModule:
     """첫 접근 시 모듈을 import하는 lazy proxy"""
     def __init__(self, name: str):
@@ -70,6 +79,10 @@ class _LazyModule:
         setattr(self.__dict__["_mod"], attr, value)
 
 nl = _LazyModule("notion_logger")
+task_router = _LazyModule("task_router")
+team_manager = _LazyModule("team_manager")
+shutdown_handler = _LazyModule("shutdown_handler")
+tg = _LazyModule("telegram_notify")
 
 SKILLS_BASE = Path.home() / "claude-scientific-skills" / "scientific-skills"
 
@@ -143,17 +156,18 @@ def _start_dashboard_background():
         _DASHBOARD_PUBLIC_URL = static_url or "http://localhost:8765"
     else:
         try:
-            _cflags = 0x08000000 if sys.platform == "win32" else 0  # CREATE_NO_WINDOW
+            # DETACHED_PROCESS|CREATE_NEW_PROCESS_GROUP: server.py 종료 후에도 ws_server 생존
+            _cflags = (0x08000000 | 0x00000008 | 0x00000200) if sys.platform == "win32" else 0
             proc = subprocess.Popen(
                 [sys.executable, os.path.join(script_dir, "ws_server.py")],
                 cwd=script_dir,
-                stdin=subprocess.DEVNULL,   # MCP stdin 파이프 상속 차단
+                stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 creationflags=_cflags,
             )
-            _child_procs.append(proc)
-            print("[startup] WebSocket 대시보드 서버 시작 (포트 8765)", file=sys.stderr, flush=True)
+            # detached이므로 atexit 추적 목록에 추가하지 않음 (server.py 종료 시 kill 방지)
+            print("[startup] WebSocket 대시보드 서버 시작 (포트 8765, detached)", file=sys.stderr, flush=True)
             # 로컬 호스트는 항상 사용 가능
             _DASHBOARD_PUBLIC_URL = static_url or "http://localhost:8765"
         except Exception as e:
@@ -290,6 +304,60 @@ def _start_tg_listener():
         print(f"[startup] Telegram 리스너 시작 실패: {e}", file=sys.stderr, flush=True)
 
 mcp = FastMCP("team-orchestrator")
+
+
+# ── 프로젝트 미리보기 ────────────────────────────────────────────────────────
+
+@mcp.tool()
+def preview_project(description: str) -> str:
+    """
+    프로젝트를 분석해 팀 구조 계획을 미리 보여줍니다 (실제 실행 없음).
+    start_project 호출 전에 CEO가 팀 배정을 확인·수정할 수 있도록 사용합니다.
+
+    Args:
+        description: 프로젝트 설명 (자연어)
+
+    Returns:
+        계획된 팀 구조 요약 (시각적 트리 포함)
+    """
+    plan = task_router.analyze_and_split(description)
+    teams = plan.get("teams", [])
+    summary = plan.get("project_summary", "")
+
+    lines = [
+        f"## 팀 구조 미리보기\n",
+        f"**요약:** {summary}\n",
+        f"**총 팀 수:** {len(teams)}개\n",
+        "```",
+        "프로젝트",
+    ]
+
+    for i, t in enumerate(teams):
+        is_last = i == len(teams) - 1
+        branch = "└──" if is_last else "├──"
+        dep_str = f" (의존: {', '.join(t['depends_on'])})" if t.get("depends_on") else ""
+        skills_str = f"  [스킬: {', '.join(t['skills'])}]" if t.get("skills") else ""
+        lines.append(f"  {branch} [{t['type']}] {t['name']}{dep_str}")
+        # 태스크 첫 줄만 표시 (너무 길면 자름)
+        task_preview = t["task"].splitlines()[0][:80]
+        indent = "       " if is_last else "  │    "
+        lines.append(f"  {indent}→ {task_preview}")
+        if skills_str:
+            lines.append(f"  {indent}{skills_str}")
+
+    lines.append("```\n")
+
+    # 병렬 실행 가능 여부 표시
+    has_deps = any(t.get("depends_on") for t in teams)
+    parallel_note = (
+        "⚡ 의존성 있음 — 일부 팀은 다른 팀 완료 후 시작"
+        if has_deps
+        else "⚡ 모든 팀 병렬 실행 가능"
+    )
+    lines.append(parallel_note)
+    lines.append("\n이 구조로 시작하려면 `start_project(description)`을 호출하세요.")
+
+    return "\n".join(lines)
 
 
 # ── 프로젝트 시작 ────────────────────────────────────────────────────────────
@@ -872,6 +940,8 @@ def _spawn_solo_agent(task: str, team_type: str = "general", name: str = None,
     tmp.close()
 
     clean_env = {k: v for k, v in os.environ.items() if k != "CLAUDECODE"}
+    clean_env["PYTHONUTF8"] = "1"
+    clean_env["PYTHONIOENCODING"] = "utf-8"
     subprocess.Popen(
         [sys.executable, RUN_AGENT_SCRIPT,
          agent_id, team_type, proj_id, str(Path.home()), tmp.name, "solo"],
@@ -1112,8 +1182,11 @@ if __name__ == "__main__":
 
     # 백그라운드 스레드 시작 (mcp.run() 전에, __main__ 컨텍스트에서)
     threading.Thread(target=_start_dashboard_background, daemon=True).start()
-    threading.Thread(target=_start_tg_listener, daemon=True).start()
-    _logger.info("백그라운드 스레드 시작")
+    # tg_listener는 bot.py가 실행 중일 때 비활성화 (bot.py가 이미 session_bridge 라우팅 내장)
+    # bot.py 없이 팀 오케스트레이터만 사용할 때는 아래 줄 주석 해제
+    # threading.Thread(target=_start_tg_listener, daemon=True).start()
+    # inbox polling은 telegram MCP 서버로 이관됨
+    _logger.info("백그라운드 스레드 시작 (dashboard)")
 
     try:
         _logger.info("mcp.run() 호출")
