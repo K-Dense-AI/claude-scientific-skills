@@ -32,6 +32,35 @@ from typing import List, Dict, Optional, Any
 SCRIPT_URL = "https://simbad.cds.unistra.fr/simbad/sim-script"
 TAP_URL = "https://simbad.cds.unistra.fr/simbad/sim-tap/sync"
 
+# Characters that could enable script/SQL injection - must not appear in user input
+_FORBIDDEN_IN_NAME = frozenset("\n\r\t'\"\\;<>")
+
+
+def _sanitize_object_name(name: str) -> str:
+    """Validate and sanitize object name for script interface (no injection)."""
+    if not name or not isinstance(name, str):
+        raise ValueError("Object name must be a non-empty string")
+    name = " ".join(name.split())  # collapse whitespace
+    if len(name) > 128:
+        raise ValueError("Object name too long")
+    if any(c in _FORBIDDEN_IN_NAME for c in name):
+        raise ValueError("Object name contains disallowed characters")
+    return name.strip()
+
+
+def _sanitize_adql_string(s: str) -> str:
+    """Escape single quotes for safe use in ADQL string literals."""
+    if not s or not isinstance(s, str):
+        raise ValueError("Identifier must be a non-empty string")
+    if len(s) > 128:
+        raise ValueError("Identifier too long")
+    # Block newlines, semicolons, backslashes (injection vectors)
+    bad = frozenset("\n\r\t\\;<>\"")
+    if any(c in bad for c in s):
+        raise ValueError("Identifier contains disallowed characters")
+    return s.replace("'", "''")  # ADQL string literal escape
+
+
 FORMAT_STRINGS = {
     "basic": "%IDLIST(1) | %COO(A D;ICRS) | %OTYPE",
     "detailed": "%IDLIST(1) | %COO(A D;ICRS) | %OTYPE | %SP | %FLUXLIST(V)",
@@ -98,11 +127,12 @@ def query_object(
     Returns:
         List of result dicts with keys like main_id, coordinates, object_type, etc.
     """
+    safe_name = _sanitize_object_name(name)
     fmt = FORMAT_STRINGS.get(output_format, FORMAT_STRINGS["basic"])
     script = "\n".join([
         "output console=off script=off",
         f'format object "{fmt}"',
-        f"query id {name}",
+        f"query id {safe_name}",
     ])
     text = _execute_script(script)
     return _parse_script_response(text)
@@ -154,11 +184,12 @@ def query_identifiers(
     Returns:
         List of result dicts
     """
+    safe_pattern = _sanitize_object_name(pattern)
     fmt = FORMAT_STRINGS.get(output_format, FORMAT_STRINGS["basic"])
     script = "\n".join([
         "output console=off script=off",
         f'format object "{fmt}"',
-        f"query id wildcard {pattern}",
+        f"query id wildcard {safe_pattern}",
     ])
     text = _execute_script(script)
     return _parse_script_response(text, max_results=max_results)
@@ -208,10 +239,11 @@ def get_all_identifiers(name: str) -> List[str]:
     Returns:
         List of identifier strings
     """
+    safe_name = _sanitize_adql_string(name)
     result = tap_query(
         f"SELECT i.id FROM ident AS i "
         f"JOIN basic AS b ON i.oidref = b.oid "
-        f"WHERE b.main_id = '{name}'",
+        f"WHERE b.main_id = '{safe_name}'",
         max_results=500,
         fmt="json",
     )

@@ -372,6 +372,7 @@ for row in response.json().get("data", []):
 8. **Verify object types**: Use the condensed object type (`otype`) for filtering, not the long description
 9. **Cache results locally**: Store frequently accessed object data to minimize API calls
 10. **Use VOTable format for large TAP results**: It preserves data types and units better than JSON
+11. **Validate user input before querying**: When building ADQL or script queries from user-supplied object names, sanitize input to prevent injection. Use the provided `simbad_client.py` which validates and escapes inputs safely.
 
 ## Resources
 
