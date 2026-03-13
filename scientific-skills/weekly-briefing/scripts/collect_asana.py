@@ -1,14 +1,18 @@
 """Asana 태스크 수집 - 주간 브리핑용"""
 import json
 import sys
+import io
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+# Windows cp949 환경에서 한글 출력 시 깨짐 방지
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+
 sys.path.insert(0, r"C:\Users\Jahyun\claude-scientific-skills\scientific-skills\asana-extended-api\scripts")
 from asana_api import AsanaAPI
 
-TEMP_DIR = Path(r"C:\Users\Jahyun\lab-analyses\temp")
+TEMP_DIR = Path(r"C:\Users\Jahyun\.claude\briefing_temp")
 OUTPUT_FILE = TEMP_DIR / "briefing_asana.json"
 
 # secrets.json에서 토큰 로드

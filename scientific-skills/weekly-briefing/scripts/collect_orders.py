@@ -8,10 +8,13 @@ import openpyxl
 from datetime import datetime, timedelta
 from pathlib import Path
 
+# Windows cp949 환경에서 한글 출력 시 깨짐 방지
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+
 sys.path.insert(0, str(Path(__file__).parent))
 from google_auth import download_sheet_xlsx
 
-TEMP_DIR = Path(r"C:\Users\Jahyun\lab-analyses\temp")
+TEMP_DIR = Path(r"C:\Users\Jahyun\.claude\briefing_temp")
 OUTPUT_FILE = TEMP_DIR / "briefing_orders.json"
 FILE_ID = "1MD9pugKxYEjk8NX0Dr-YSHAigSFfSmOuQbr02qNQeGc"
 
