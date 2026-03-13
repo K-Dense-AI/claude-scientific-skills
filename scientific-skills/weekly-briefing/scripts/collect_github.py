@@ -1,11 +1,16 @@
 """GitHub 최근 커밋 수집 - 주간 브리핑용"""
 import json
+import sys
+import io
 import urllib.request
 import urllib.error
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-TEMP_DIR = Path(r"C:\Users\Jahyun\lab-analyses\temp")
+# Windows cp949 환경에서 한글 출력 시 깨짐 방지
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+
+TEMP_DIR = Path(r"C:\Users\Jahyun\.claude\briefing_temp")
 OUTPUT_FILE = TEMP_DIR / "briefing_github.json"
 
 secrets = json.loads(Path("~/.claude/secrets.json").expanduser().read_text())
