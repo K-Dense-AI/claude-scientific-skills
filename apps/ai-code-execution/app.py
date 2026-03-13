@@ -1,203 +1,248 @@
-"""Streamlit UI for AI-Powered Code Execution System."""
+"""MD Instruction Builder — create .md files to use with Claude web."""
 
 import streamlit as st
 import streamlit.components.v1 as components
-from config import AI_BACKEND, MAX_RETRIES, MAX_MD_TOKENS
-from ai_codegen import generate_code
-from executor import run_in_sandbox
 
 
-MERMAID_FLOW = """
-flowchart TD
-    A([":page_facing_up: Upload instruction.md\\n지시 파일 업로드"]) --> B{Has Python code?\\n파이썬 코드 있음?}
-    B -- YES / 있음 --> C["Extract code\\n코드 추출"]
-    B -- NO / 없음 --> D["AI generates code\\nAI 코드 생성 (Groq)"]
-    C --> E[":rocket: Run in E2B Sandbox\\nE2B 샌드박스 실행"]
-    D --> E
-    E --> F{Success?\\n성공?}
-    F -- YES / 성공 --> G([":white_check_mark: Show results\\n결과 출력"])
-    F -- NO / 실패 --> H{Retry < 3\\n재시도 가능?}
-    H -- YES --> D
-    H -- NO --> I([":x: Show error\\n오류 표시"])
+NO_CODE_TEMPLATE = """\
+# Task: [작업 제목 / Task Title]
+
+## Goal / 목표
+<!-- 하고 싶은 것을 자연어로 설명 / Describe what you want in plain language -->
+
+예시: "업로드한 엑셀 파일에서 월별 총 매출을 계산하고,
+상위 3개 제품을 찾아 막대그래프를 그려주세요."
+
+---
+
+## Input Data / 입력 데이터
+<!-- 첨부할 파일 목록 / List the files you will attach -->
+
+| 파일명 / File Name | 형식 / Format | 설명 / Description |
+|-------------------|--------------|-------------------|
+| sales_2024.xlsx   | Excel        | 월별 매출 (Date, Product, Amount 컬럼) |
+
+---
+
+## Output / 출력 요청
+
+### 텍스트 / Text
+- [ ] 월별 매출 합계 출력
+- [ ] 상위 3개 제품 출력
+
+### 차트 / Charts
+- [ ] 월별 매출 막대그래프 (monthly_sales.png)
+
+### 파일 / Files
+- [ ] 결과 요약 엑셀 (summary.xlsx)
+
+---
+
+## 특별 조건 / Special Requirements
+<!-- 필터, 단위, 날짜 형식 등 / Filters, units, date format, etc. -->
+
+- 수량 = 0인 행 제외
+- 금액 단위: 원(KRW)
+
+---
+
+## 참고 / Notes
+<!-- AI가 이해하는 데 도움이 되는 배경 설명 -->
+
+예시: "Price 컬럼은 단가이며, 총액 = Quantity × Price 입니다."
 """
 
+WITH_CODE_TEMPLATE = """\
+# Task: [작업 제목 / Task Title]
 
-def render_mermaid(diagram: str):
-    html = f"""
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({{startOnLoad:true, theme:'neutral'}});</script>
-    <div class="mermaid">{diagram}</div>
-    """
-    components.html(html, height=420)
+## 코드 설명 / What This Code Does
+<!-- 코드의 목적을 설명 / Describe what the code is supposed to do -->
 
+예시: "CSV 파일에서 중복 행을 제거하고 cleaned_data.csv로 저장하는 스크립트입니다."
 
-def detect_mode(md_text: str) -> str:
-    if "```python" in md_text:
-        return "with_code"
-    return "no_code"
+---
 
+## Input Data / 입력 데이터
 
-def estimate_tokens(text: str) -> int:
-    return len(text) // 4
+| 파일명 / File Name     | 형식 / Format | 설명 / Description |
+|-----------------------|--------------|-------------------|
+| customer_data.csv     | CSV          | 고객 데이터        |
+
+---
+
+## 코드 / The Code
+
+```python
+import pandas as pd
+
+# 첨부 파일을 읽을 때 파일명만 사용 (경로는 Claude가 처리)
+df = pd.read_csv("customer_data.csv")
+
+# TODO: 중복 제거
+# df = df.drop_duplicates()
+
+# 결과 저장
+df.to_csv("cleaned_data.csv", index=False)
+print(f"완료. {len(df)}개 행 처리됨.")
+```
+
+---
+
+## 수정 요청 / What Needs to Be Done
+<!-- AI에게 무엇을 고치거나 완성할지 알려주기 -->
+
+- "TODO 부분을 pandas 코드로 채워주세요"
+- "Age < 0 인 행을 추가로 제거해주세요"
+
+---
+
+## 오류 메시지 / Error Messages (있으면 / if any)
+
+```
+ValueError: could not convert string to float: 'N/A'
+  File "script.py", line 15, in <module>
+```
+
+---
+
+## 기대 출력 / Expected Output
+
+```
+완료. 1,248개 행 처리됨.
+중복 제거: 34행
+```
+"""
+
+CLAUDE_GUIDE_HTML = """
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'neutral'});</script>
+<div class="mermaid">
+flowchart LR
+    A([":pencil: 템플릿 편집\\nEdit template"]) --> B([":floppy_disk: .md 다운로드\\nDownload .md"])
+    B --> C([":paperclip: Claude 웹에 파일 첨부\\nAttach to Claude web"])
+    C --> D([":robot_face: Claude가 실행\\nClaude runs it"])
+    D --> E([":white_check_mark: 결과 확인\\nGet results"])
+</div>
+"""
 
 
 def sidebar_guide():
     with st.sidebar:
-        st.header("How to use / 사용법")
-
+        st.header("사용법 / How to Use")
         st.markdown("""
-**Step 1 / 1단계**
-Write an instruction `.md` file describing your task.
-작업 내용을 `.md` 파일에 작성하세요.
+**1단계 / Step 1**
+왼쪽 탭에서 모드 선택 후 내용 편집
+Select a mode tab and edit the template
 
-**Step 2 / 2단계**
-Upload the `.md` file (+ optional data files).
-`.md` 파일과 데이터 파일(선택)을 업로드하세요.
+**2단계 / Step 2**
+**📥 Download .md** 버튼으로 파일 저장
+Click **📥 Download .md** to save the file
 
-**Step 3 / 3단계**
-Click **▶ Run / 실행** and wait for results.
-실행 버튼을 누르고 결과를 기다리세요.
+**3단계 / Step 3**
+[claude.ai](https://claude.ai) 또는 Claude Code 열기
+Open [claude.ai](https://claude.ai) or Claude Code
+
+**4단계 / Step 4**
+`.md` 파일 + 데이터 파일을 함께 첨부하고 전송
+Attach the `.md` file + data files and send
         """)
 
         st.divider()
-        st.subheader("Two modes / 두 가지 모드")
+        st.subheader("두 가지 모드 / Two Modes")
         st.markdown("""
-**NO CODE mode / 코드 없음 모드**
-- Describe what you want in plain language
-- AI writes the Python code automatically
-- 하고 싶은 것을 자연어로 설명
-- AI가 파이썬 코드를 자동 생성
+**NO CODE 모드**
+- 하고 싶은 것을 자연어로만 설명
+- Claude가 코드 작성 + 실행
+- Describe in plain language; Claude writes & runs code
 
-**WITH CODE mode / 코드 있음 모드**
-- Include a ` ```python ``` ` block in your `.md`
-- AI fixes/completes it if needed
-- `.md` 파일에 파이썬 코드 블록 포함
-- AI가 필요 시 수정·보완
+**WITH CODE 모드**
+- 기존 코드를 붙여넣고 수정 요청
+- Claude가 코드 완성·수정 후 실행
+- Paste existing code; Claude fixes & runs it
         """)
 
         st.divider()
-        st.subheader("Tips / 팁")
+        st.subheader("팁 / Tips")
         st.markdown("""
-- Be specific about **output format** (chart, CSV, text...)
-  출력 형식을 구체적으로 명시하세요
-- List **column names** exactly as in your data
-  데이터의 컬럼명을 정확히 작성하세요
-- Output files are saved to `/home/user/output/`
-  출력 파일 경로: `/home/user/output/`
+- 컬럼명을 정확히 입력하세요 (대소문자 구분)
+  List column names exactly as in your data
+- 출력 형식을 구체적으로 명시 (차트, CSV, 텍스트)
+  Be specific about output format
+- 데이터 파일은 `.md`와 함께 첨부
+  Attach data files together with `.md`
         """)
-
-        st.divider()
-        st.subheader("Flow / 실행 흐름")
-        render_mermaid(MERMAID_FLOW)
 
 
 def main():
-    st.set_page_config(page_title="AI Code Execution", page_icon="▶", layout="wide")
+    st.set_page_config(
+        page_title="MD Instruction Builder",
+        page_icon="📝",
+        layout="wide",
+    )
     sidebar_guide()
 
-    st.title("AI-Powered Code Execution / AI 코드 실행기")
-    st.caption(f"Backend: **{AI_BACKEND}** | Max retries / 최대 재시도: {MAX_RETRIES}")
+    st.title("📝 MD Instruction Builder")
+    st.caption("Claude 웹/Code용 분석 지시 파일 생성기 · Build instruction files for Claude web/Code")
 
-    # --- File uploads ---
-    col1, col2 = st.columns(2)
-    with col1:
-        md_file = st.file_uploader(
-            "Instruction file / 지시 파일 (.md)",
-            type=["md", "txt"],
-            key="md_upload",
-            help="Upload a .md file describing the task. / 작업 내용을 담은 .md 파일을 업로드하세요.",
-        )
-    with col2:
-        data_files = st.file_uploader(
-            "Data files / 데이터 파일 (optional / 선택)",
-            accept_multiple_files=True,
-            key="data_upload",
-            help="CSV, Excel, JSON, images, etc. / CSV, 엑셀, JSON, 이미지 등",
-        )
+    st.markdown("#### 실행 흐름 / Workflow")
+    components.html(CLAUDE_GUIDE_HTML, height=130)
 
-    if not md_file:
-        st.info("Upload an instruction .md file to get started. / 지시 파일(.md)을 업로드하면 시작됩니다.")
-        return
-
-    # --- Read instruction ---
-    md_text = md_file.read().decode("utf-8", errors="replace")
-    mode = detect_mode(md_text)
-
-    token_est = estimate_tokens(md_text)
-    if token_est > MAX_MD_TOKENS:
-        st.warning(f"Instruction file is very large (~{token_est:,} tokens). Processing may be slow. / 파일이 매우 큽니다. 처리가 느릴 수 있습니다.")
-
-    mode_label = "WITH CODE / 코드 있음" if mode == "with_code" else "NO CODE / 코드 없음 (AI가 생성)"
-    st.markdown(f"**Mode / 모드:** `{mode_label}`")
-
-    with st.expander("Preview instruction / 지시 내용 미리보기", expanded=False):
-        st.markdown(md_text)
-
-    # --- Prepare data files ---
-    data_file_list: list[tuple[str, bytes]] = []
-    data_filenames: list[str] = []
-    for f in data_files:
-        content = f.read()
-        data_file_list.append((f.name, content))
-        data_filenames.append(f.name)
-
-    if data_filenames:
-        st.markdown(f"**Data files / 데이터 파일:** {', '.join(data_filenames)}")
-
-    # --- Run button ---
-    if not st.button("▶ Run / 실행", type="primary"):
-        return
-
-    # --- Generate & Execute with retry ---
-    error_feedback = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        with st.status(f"Attempt {attempt}/{MAX_RETRIES}: Generating code... / 코드 생성 중...", expanded=True):
-            try:
-                code = generate_code(md_text, data_filenames, error_feedback=error_feedback)
-            except Exception as e:
-                st.error(f"AI code generation failed / AI 코드 생성 실패: {e}")
-                return
-            st.code(code, language="python")
-
-        with st.status(f"Attempt {attempt}/{MAX_RETRIES}: Executing in sandbox... / 샌드박스 실행 중...", expanded=True):
-            result = run_in_sandbox(code, data_file_list)
-
-        if result.success:
-            break
-
-        st.warning(f"Attempt {attempt} failed / {attempt}회 실패: {result.error}")
-        error_feedback = result.error
-
-    # --- Display results ---
     st.divider()
 
-    if not result.success:
-        st.error(f"Execution failed after {MAX_RETRIES} attempts. / {MAX_RETRIES}회 시도 후 실패.\n지시 파일을 확인해주세요.")
-        st.text(result.error)
-        return
+    tab_no_code, tab_with_code = st.tabs(
+        ["🗒️ NO CODE — AI가 코드 생성", "💻 WITH CODE — 코드 있음"]
+    )
 
-    st.success("Execution completed successfully! / 실행 완료!")
+    with tab_no_code:
+        st.markdown(
+            "**코딩 없이 자연어로 설명** → Claude가 코드 작성 + 실행  \n"
+            "_Describe in plain language; Claude writes and runs the code._"
+        )
+        no_code_text = st.text_area(
+            "instruction.md 내용 편집 / Edit instruction.md",
+            value=NO_CODE_TEMPLATE,
+            height=500,
+            key="no_code_editor",
+        )
+        st.download_button(
+            label="📥 Download instruction_no_code.md",
+            data=no_code_text.encode("utf-8"),
+            file_name="instruction_no_code.md",
+            mime="text/markdown",
+            key="dl_no_code",
+        )
 
-    if result.stdout:
-        st.subheader("Output / 출력 결과")
-        st.text(result.stdout)
+    with tab_with_code:
+        st.markdown(
+            "**기존 코드를 붙여넣고 수정·완성 요청** → Claude가 실행  \n"
+            "_Paste your code and describe what to fix; Claude completes and runs it._"
+        )
+        with_code_text = st.text_area(
+            "instruction.md 내용 편집 / Edit instruction.md",
+            value=WITH_CODE_TEMPLATE,
+            height=500,
+            key="with_code_editor",
+        )
+        st.download_button(
+            label="📥 Download instruction_with_code.md",
+            data=with_code_text.encode("utf-8"),
+            file_name="instruction_with_code.md",
+            mime="text/markdown",
+            key="dl_with_code",
+        )
 
-    if result.output_files:
-        st.subheader("Output Files / 출력 파일")
-        for fname, fbytes in result.output_files:
-            ext = fname.rsplit(".", 1)[-1].lower() if "." in fname else ""
+    st.divider()
+    st.markdown("""
+#### Claude 웹에서 사용하는 방법 / How to use with Claude web
 
-            if ext in ("png", "jpg", "jpeg", "gif", "svg", "webp"):
-                st.image(fbytes, caption=fname)
-            elif ext in ("csv", "txt", "json", "log"):
-                st.text(fbytes.decode("utf-8", errors="replace"))
+1. 위에서 `.md` 파일 다운로드
+2. [claude.ai](https://claude.ai) → 새 대화 시작
+3. 📎 첨부 버튼 → `.md` 파일 + 데이터 파일(CSV, Excel 등) 함께 첨부
+4. 메시지 없이 전송 (또는 "이 파일을 분석해줘" 추가)
+5. Claude가 코드를 작성하고 분석 환경에서 실행 후 결과 제공
 
-            st.download_button(
-                label=f"Download / 다운로드: {fname}",
-                data=fbytes,
-                file_name=fname,
-                key=f"dl_{fname}",
-            )
+> **Claude Code 사용 시**: `claude` 명령어 실행 → `.md` 파일 경로를 채팅에 입력
+    """)
 
 
 if __name__ == "__main__":
