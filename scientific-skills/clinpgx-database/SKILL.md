@@ -1,7 +1,7 @@
 ---
 name: clinpgx-database
 description: Access ClinPGx pharmacogenomics data (successor to PharmGKB). Query gene-drug interactions, CPIC guidelines, allele functions, for precision medicine and genotype-guided dosing decisions.
-license: Unknown
+license: CC-BY-SA-4.0
 metadata:
     skill-author: K-Dense Inc.
 ---

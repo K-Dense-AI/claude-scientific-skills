@@ -1,7 +1,7 @@
 ---
 name: string-database
 description: Query STRING API for protein-protein interactions (59M proteins, 20B interactions). Network analysis, GO/KEGG enrichment, interaction discovery, 5000+ species, for systems biology.
-license: Unknown
+license: CC-BY-4.0
 metadata:
     skill-author: K-Dense Inc.
 ---

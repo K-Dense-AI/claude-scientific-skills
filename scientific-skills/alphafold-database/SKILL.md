@@ -1,7 +1,7 @@
 ---
 name: alphafold-database
 description: Access AlphaFold 200M+ AI-predicted protein structures. Retrieve structures by UniProt ID, download PDB/mmCIF files, analyze confidence metrics (pLDDT, PAE), for drug discovery and structural biology.
-license: Unknown
+license: CC-BY-4.0
 metadata:
     skill-author: K-Dense Inc.
 ---

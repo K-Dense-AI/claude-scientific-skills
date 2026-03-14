@@ -1,7 +1,7 @@
 ---
 name: uspto-database
 description: Access USPTO APIs for patent/trademark searches, examination history (PEDS), assignments, citations, office actions, TSDR, for IP analysis and prior art searches.
-license: Unknown
+license: LicenseRef-PublicDomain (US government)
 metadata:
     skill-author: K-Dense Inc.
 ---

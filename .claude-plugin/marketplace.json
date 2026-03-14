@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.23.0"
+    "version": "2.24.0"
   },
   "plugins": [
     {
@@ -43,6 +43,7 @@
         "./scientific-skills/gtars",
         "./scientific-skills/histolab",
         "./scientific-skills/imaging-data-commons",
+        "./scientific-skills/infographics",
         "./scientific-skills/hypogenic",
         "./scientific-skills/lamindb",
         "./scientific-skills/markitdown",
@@ -54,6 +55,7 @@
         "./scientific-skills/molfeat",
         "./scientific-skills/neurokit2",
         "./scientific-skills/networkx",
+        "./scientific-skills/neuropixels-analysis",
         "./scientific-skills/paper-2-web",
         "./scientific-skills/pathml",
         "./scientific-skills/pennylane",
