@@ -148,14 +148,62 @@ gh pr create --title "Add my-skill"
 | [K-Dense-AI/claude-scientific-skills](https://github.com/K-Dense-AI/claude-scientific-skills) | 142+ | Claude Code, Copilot |
 | [awesome-copilot](https://github.com/github/awesome-copilot) | Community | Copilot |
 
-## Microsoft 365 Copilot Cowork (Enterprise)
+## Microsoft 365 Copilot Cowork & Agent Extensibility
 
-Microsoft's Copilot Cowork (powered by Claude) provides agentic automation across M365 apps. This is a separate product from Agent Skills — it runs as a managed service, not as local skills.
+Copilot Cowork (powered by Claude) provides agentic automation across M365 apps. Unlike local Agent Skills, Cowork is a cloud service — but it **is extensible** via multiple developer pathways.
 
-Key differences:
-- **Agent Skills** = local SKILL.md files loaded by coding agents (Claude Code, Copilot)
-- **Copilot Cowork** = cloud service that automates tasks across Outlook, Teams, OneDrive, etc.
-- You cannot install Agent Skills into Copilot Cowork (different runtime)
+### How to Extend Copilot Cowork
+
+| Method | Description | Best For |
+|--------|-------------|----------|
+| **REST API tools** | Provide an OpenAPI spec to Copilot Studio; the agent calls your endpoints | Connecting to external data/APIs |
+| **MCP servers** | Model Context Protocol servers as tools in Copilot Studio | Reusing existing MCP infrastructure |
+| **Custom connectors** | Power Platform connectors for enterprise data | SharePoint, Dynamics, custom DBs |
+| **M365 Agents SDK** | Full pro-code agents in C#/Python published to M365 Copilot | Complex agent logic, multi-step workflows |
+
+### Creating an Agent for M365 Copilot (via Copilot Studio)
+
+1. Go to Copilot Studio → **Agents** → **Microsoft 365 Copilot** → **Add**
+2. Configure name, icon, description, and instructions
+3. Add **Knowledge** (SharePoint, Graph connectors, web browsing)
+4. Add **Tools** (REST API, MCP server, custom connector, prompt, agent flow)
+5. Add **Suggested prompts** for common user tasks
+6. **Publish** → distribute via share link, security groups, or org catalog
+
+### Adding an MCP Server as a Tool
+
+Since this project already uses MCP servers (biothings, gget, pharmacology, etc.), you can expose them to Copilot Cowork:
+
+1. In Copilot Studio, select **Add tool** → **Model Context Protocol**
+2. Provide the MCP server endpoint URL
+3. Configure authentication (if needed)
+4. Add a description so the LLM knows when to invoke it
+
+### Pro-Code: M365 Agents SDK
+
+```bash
+# Install the SDK
+dotnet new install Microsoft.Agents.Sdk.Templates
+
+# Create a new agent project
+dotnet new agent -n MyScientificAgent
+
+# Or in Python
+pip install microsoft-365-agents-sdk
+```
+
+The agent can be published to M365 Copilot, Teams, and 15+ other channels.
+
+### Key Differences Between Platforms
+
+| Aspect | Agent Skills (local) | Copilot Cowork (cloud) |
+|--------|---------------------|----------------------|
+| Runtime | Local coding agent (Claude Code, VS Code) | Microsoft 365 cloud |
+| Format | SKILL.md files | Copilot Studio config or M365 Agents SDK |
+| Tools | Bash, Edit, Read, etc. | REST APIs, MCP, connectors |
+| Auth | Local filesystem | Microsoft Entra ID (Azure AD) |
+| Data | Project files | SharePoint, Graph, OneDrive |
+| Distribution | Copy folders / git clone | Org catalog / Teams store |
 
 ## Troubleshooting
 
