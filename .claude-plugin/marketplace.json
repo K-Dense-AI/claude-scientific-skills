@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.20.0"
+    "version": "2.21.0"
   },
   "plugins": [
     {
@@ -25,6 +25,7 @@
         "./scientific-skills/cellxgene-census",
         "./scientific-skills/cirq",
         "./scientific-skills/cobrapy",
+        "./scientific-skills/copilot-skills-integration",
         "./scientific-skills/dask",
         "./scientific-skills/datacommons-client",
         "./scientific-skills/datamol",
