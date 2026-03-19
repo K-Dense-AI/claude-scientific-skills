@@ -37,7 +37,7 @@ def _get_store():
     return store
 
 
-def _get_wa_client():
+def _get_whatsapp_client():
     from rayban_meta.whatsapp.api import WhatsAppClient
     return WhatsAppClient()
 
@@ -50,9 +50,9 @@ async def send_message_to_glasses(message: str) -> str:
     """Send a text message to the Ray-Ban Meta glasses via WhatsApp.
 
     The wearer will hear/see this message. Keep under 15 words for best
-    glasses display. Longer messages are auto-chunked with 2s delays.
+    glasses display. Longer messages are auto-chunked.
     """
-    wa = _get_wa_client()
+    wa = _get_whatsapp_client()
     try:
         await wa.send_text(settings.whatsapp_recipient_phone, message)
         return f"Message sent to glasses: {message[:80]}..."
@@ -219,7 +219,7 @@ async def get_glasses_status() -> dict:
     today_count = sum(1 for m in all_today if m.timestamp >= today_start)
 
     return {
-        "connected": bool(settings.whatsapp_auth_token),
+        "connected": bool(settings.whatsapp_access_token),
         "last_message": messages[0].timestamp.isoformat() if messages else None,
         "messages_today": today_count,
         "llm_provider": settings.llm_default_provider,

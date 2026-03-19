@@ -15,13 +15,13 @@ class Settings(BaseSettings):
     )
 
     # ── WhatsApp Cloud API ──
-    whatsapp_auth_token: str = ""
+    whatsapp_access_token: str = ""
     whatsapp_phone_number_id: str = ""
     whatsapp_webhook_verify_token: str = "my-secret-token"
-    whatsapp_recipient_phone: str = ""
+    whatsapp_recipient_phone: str = ""  # Your phone number (e.g. +40722889321)
 
     # ── LLM ──
-    llm_default_provider: Literal["claude", "openai", "gemini"] = "claude"
+    llm_default_provider: Literal["claude", "openai", "gemini"] = "gemini"
     anthropic_api_key: str = ""
     openai_api_key: str = ""
     google_gemini_api_key: str = ""

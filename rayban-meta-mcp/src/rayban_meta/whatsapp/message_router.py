@@ -2,8 +2,8 @@
 
 Flow:
   1. Extract message type (text / audio / image)
-  2. Audio → transcribe → treat as text
-  3. Image → download + store + send to vision LLM
+  2. Audio → download via media_id + transcribe → treat as text
+  3. Image → download via media_id + store + send to vision LLM
   4. Text → classify intent → dispatch to tool or conversation
   5. Record activity for RAG learning
   6. Send response back via WhatsApp
@@ -29,16 +29,16 @@ from rayban_meta.whatsapp.api import WhatsAppClient
 logger = logging.getLogger(__name__)
 
 # Singletons (initialized on first call)
-_wa_client: WhatsAppClient | None = None
+_whatsapp_client: WhatsAppClient | None = None
 _llm_router: LLMRouter | None = None
 _tool_registry: ToolRegistry | None = None
 
 
-def _get_wa_client() -> WhatsAppClient:
-    global _wa_client
-    if _wa_client is None:
-        _wa_client = WhatsAppClient()
-    return _wa_client
+def _get_whatsapp_client() -> WhatsAppClient:
+    global _whatsapp_client
+    if _whatsapp_client is None:
+        _whatsapp_client = WhatsAppClient()
+    return _whatsapp_client
 
 
 def _get_llm_router() -> LLMRouter:
@@ -77,31 +77,49 @@ User's frequent actions: {frequent}
 """
 
 
-async def handle_message(app, raw_message: dict) -> None:
+async def handle_message(app, sender_phone: str, raw_message: dict) -> None:
     """Process a single incoming WhatsApp message."""
     store: SQLiteStore = app.state.store
-    wa = _get_wa_client()
+    wa = _get_whatsapp_client()
     llm_router = _get_llm_router()
     registry = _get_tool_registry()
-
-    msg_type = raw_message.get("type", "text")
-    phone = raw_message.get("from", "")
-    msg_id = raw_message.get("id", "")
-
-    # Mark as read
-    await wa.mark_as_read(msg_id)
 
     llm = llm_router.get()
     response_text = ""
 
+    # Mark as read
+    msg_id = raw_message.get("id", "")
+    if msg_id:
+        await wa.mark_as_read(msg_id)
+
     try:
+        msg_type = raw_message.get("type", "")
+
         if msg_type == "audio":
-            response_text = await _handle_audio(raw_message, phone, store, llm, registry, wa)
+            audio_data = raw_message.get("audio", {})
+            media_id = audio_data.get("id", "")
+            if media_id:
+                response_text = await _handle_audio(media_id, "", sender_phone, store, llm, registry)
+            else:
+                response_text = "I received audio but couldn't process it."
+
         elif msg_type == "image":
-            response_text = await _handle_image(raw_message, phone, store, llm, wa)
+            image_data = raw_message.get("image", {})
+            media_id = image_data.get("id", "")
+            caption = image_data.get("caption", "")
+            if media_id:
+                response_text = await _handle_image(media_id, caption, sender_phone, store, llm)
+            else:
+                response_text = "I received an image but couldn't process it."
+
         elif msg_type == "text":
-            text = raw_message.get("text", {}).get("body", "")
-            response_text = await _handle_text(text, phone, store, llm, registry)
+            text_data = raw_message.get("text", {})
+            text = text_data.get("body", "") if isinstance(text_data, dict) else ""
+            if text:
+                response_text = await _handle_text(text, sender_phone, store, llm, registry)
+            else:
+                response_text = "I didn't catch that. Could you repeat?"
+
         else:
             response_text = f"I received a {msg_type} message but I can only handle text, voice, and images for now."
 
@@ -111,45 +129,36 @@ async def handle_message(app, raw_message: dict) -> None:
 
     # Send response
     if response_text:
-        await wa.send_text(phone, response_text)
+        await wa.send_text(sender_phone, response_text)
 
 
-async def _handle_audio(raw_message: dict, phone: str, store, llm, registry, wa) -> str:
-    """Download audio → transcribe → process as text."""
-    media_id = raw_message.get("audio", {}).get("id", "")
-    if not media_id:
-        return "Couldn't process the voice message."
-
+async def _handle_audio(media_id: str, caption: str, sender_phone: str, store, llm, registry) -> str:
+    """Download audio via media_id → transcribe → process as text."""
+    wa = _get_whatsapp_client()
     audio_bytes = await wa.download_media(media_id)
     text = await transcribe(audio_bytes)
-    logger.info("Transcribed audio from %s: %s", phone, text[:100])
+    logger.info("Transcribed audio from %s: %s", sender_phone, text[:100])
 
-    # Store the transcription
-    await store.add_message(phone, "user", f"[voice] {text}", media_id=media_id, media_type="audio")
+    await store.add_message(sender_phone, "user", f"[voice] {text}", media_type="audio")
 
-    response = await _handle_text(text, phone, store, llm, registry)
-
-    await store.add_message(phone, "assistant", response)
+    response = await _handle_text(text, sender_phone, store, llm, registry)
+    await store.add_message(sender_phone, "assistant", response)
     return response
 
 
-async def _handle_image(raw_message: dict, phone: str, store, llm, wa) -> str:
-    """Download image → analyze with vision LLM."""
-    media_id = raw_message.get("image", {}).get("id", "")
-    caption = raw_message.get("image", {}).get("caption", "")
-    if not media_id:
-        return "Couldn't process the image."
-
+async def _handle_image(media_id: str, caption: str, sender_phone: str, store, llm) -> str:
+    """Download image via media_id → analyze with vision LLM."""
+    wa = _get_whatsapp_client()
     image_bytes = await wa.download_media(media_id)
-    mime_type = raw_message.get("image", {}).get("mime_type", "image/jpeg")
 
     # Store image
-    await store.store_media(media_id, image_bytes, mime_type, phone)
-    await store.add_message(phone, "user", f"[photo] {caption or 'Image sent'}", media_id=media_id, media_type="image")
+    stored_id = f"wa_{sender_phone}_{int(datetime.now().timestamp())}"
+    await store.store_media(stored_id, image_bytes, "image/jpeg", sender_phone)
+    await store.add_message(sender_phone, "user", f"[photo] {caption or 'Image sent'}", media_id=stored_id, media_type="image")
 
     # Analyze with vision
     prompt = caption or "Describe what you see in this image. Be concise."
-    history = await _build_context(phone, store)
+    history = await _build_context(sender_phone, store)
     response = await llm.complete_with_vision(
         messages=history + [{"role": "user", "content": prompt}],
         images=[image_bytes],
@@ -157,11 +166,11 @@ async def _handle_image(raw_message: dict, phone: str, store, llm, wa) -> str:
         max_tokens=150,
     )
 
-    await store.add_message(phone, "assistant", response)
+    await store.add_message(sender_phone, "assistant", response)
     return response
 
 
-async def _handle_text(text: str, phone: str, store, llm, registry) -> str:
+async def _handle_text(text: str, sender_phone: str, store, llm, registry) -> str:
     """Classify intent → dispatch to tool or general conversation."""
     if not text.strip():
         return "I didn't catch that. Could you repeat?"
@@ -172,35 +181,33 @@ async def _handle_text(text: str, phone: str, store, llm, registry) -> str:
         tool = registry.get("save")
         if tool:
             result = await tool.execute(text, store, llm)
-            await store.record_activity(phone, "save", text)
-            await store.add_message(phone, "user", text, intent="save")
-            await store.add_message(phone, "assistant", result.text)
+            await store.record_activity(sender_phone, "save", text)
+            await store.add_message(sender_phone, "user", text, intent="save")
+            await store.add_message(sender_phone, "assistant", result.text)
             return result.text
 
     # Classify intent using LLM
-    # First check user patterns for faster classification
-    frequent = await store.get_frequent_intents(phone, limit=5)
+    frequent = await store.get_frequent_intents(sender_phone, limit=5)
     intent = await llm.classify(text, INTENT_CATEGORIES)
     logger.info("Intent for '%s': %s", text[:50], intent)
 
     # Record activity for learning
-    await store.record_activity(phone, intent, text)
-    await store.add_message(phone, "user", text, intent=intent)
+    await store.record_activity(sender_phone, intent, text)
+    await store.add_message(sender_phone, "user", text, intent=intent)
 
     # Dispatch to tool
     tool = registry.match_intent(intent)
     if tool and intent != "conversation":
         result = await tool.execute(text, store, llm)
 
-        # Auto-save to folder if tool requests it
         if result.save_to_folder:
             await store.add_knowledge(result.text, source=tool.name, folder=result.save_to_folder)
 
-        await store.add_message(phone, "assistant", result.text)
+        await store.add_message(sender_phone, "assistant", result.text)
         return result.text
 
     # General conversation
-    history = await _build_context(phone, store)
+    history = await _build_context(sender_phone, store)
     frequent_str = ", ".join(f"{f['intent']}({f['count']}x)" for f in frequent) if frequent else "none yet"
     tools_str = registry.tools_description()
 
@@ -215,11 +222,11 @@ async def _handle_text(text: str, phone: str, store, llm, registry) -> str:
         system=system,
         max_tokens=200,
     )
-    await store.add_message(phone, "assistant", response)
+    await store.add_message(sender_phone, "assistant", response)
     return response
 
 
-async def _build_context(phone: str, store) -> list[dict]:
+async def _build_context(sender_phone: str, store) -> list[dict]:
     """Build conversation context from recent messages."""
-    history = await store.get_history(phone, limit=10)
+    history = await store.get_history(sender_phone, limit=10)
     return [{"role": m.role, "content": m.content} for m in history]

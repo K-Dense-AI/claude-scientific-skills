@@ -7,57 +7,68 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
-class WhatsAppMedia(BaseModel):
-    mime_type: str = ""
-    sha256: str = ""
-    id: str = ""
+# ── Incoming webhook models ──
 
 
-class WhatsAppText(BaseModel):
+class WhatsAppProfile(BaseModel):
+    name: str = ""
+
+
+class WhatsAppContact(BaseModel):
+    profile: WhatsAppProfile = WhatsAppProfile()
+    wa_id: str = ""
+
+
+class WhatsAppTextMessage(BaseModel):
     body: str = ""
 
 
+class WhatsAppAudioMessage(BaseModel):
+    id: str = ""
+    mime_type: str = ""
+
+
+class WhatsAppImageMessage(BaseModel):
+    id: str = ""
+    mime_type: str = ""
+    caption: str | None = None
+
+
 class WhatsAppMessage(BaseModel):
+    """A single incoming WhatsApp message."""
     from_: str = Field("", alias="from")
     id: str = ""
     timestamp: str = ""
-    type: str = "text"
-    text: WhatsAppText | None = None
-    image: WhatsAppMedia | None = None
-    audio: WhatsAppMedia | None = None
-    video: WhatsAppMedia | None = None
+    type: str = ""  # "text", "audio", "image", "video", etc.
+    text: WhatsAppTextMessage | None = None
+    audio: WhatsAppAudioMessage | None = None
+    image: WhatsAppImageMessage | None = None
 
     model_config = {"populate_by_name": True}
 
 
-class WhatsAppContact(BaseModel):
-    wa_id: str = ""
-    profile: dict[str, Any] = {}
-
-
-class WebhookMetadata(BaseModel):
+class WhatsAppMetadata(BaseModel):
     display_phone_number: str = ""
     phone_number_id: str = ""
 
 
-class WebhookValue(BaseModel):
+class WhatsAppValue(BaseModel):
     messaging_product: str = ""
-    metadata: WebhookMetadata = WebhookMetadata()
+    metadata: WhatsAppMetadata = WhatsAppMetadata()
     contacts: list[WhatsAppContact] = []
     messages: list[WhatsAppMessage] = []
-    statuses: list[dict[str, Any]] = []
 
 
-class WebhookChange(BaseModel):
-    value: WebhookValue = WebhookValue()
+class WhatsAppChange(BaseModel):
+    value: WhatsAppValue = WhatsAppValue()
     field: str = ""
 
 
-class WebhookEntry(BaseModel):
+class WhatsAppEntry(BaseModel):
     id: str = ""
-    changes: list[WebhookChange] = []
+    changes: list[WhatsAppChange] = []
 
 
-class WebhookPayload(BaseModel):
+class WhatsAppWebhookPayload(BaseModel):
     object: str = ""
-    entry: list[WebhookEntry] = []
+    entry: list[WhatsAppEntry] = []
