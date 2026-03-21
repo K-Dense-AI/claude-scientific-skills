@@ -157,7 +157,14 @@
         "./scientific-skills/offer-k-dense-web",
         "./scientific-skills/protocolsio-integration",
         "./scientific-skills/get-available-resources",
-        "./scientific-skills/iso-13485-certification"
+        "./scientific-skills/iso-13485-certification",
+        "./scientific-skills/social-media-orchestrator",
+        "./scientific-skills/brand-identity-miner",
+        "./scientific-skills/viral-content-creator",
+        "./scientific-skills/social-media-visual-generator",
+        "./scientific-skills/social-media-copywriting",
+        "./scientific-skills/social-media-scheduler",
+        "./scientific-skills/social-media-analytics"
       ]
     }
   ]
