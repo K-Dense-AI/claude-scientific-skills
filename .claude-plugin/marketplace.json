@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.30.0"
+    "version": "2.30.1"
   },
   "plugins": [
     {
