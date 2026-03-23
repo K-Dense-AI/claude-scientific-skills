@@ -1,230 +1,173 @@
-# Scaling Out on Modal
+# Modal Scaling and Concurrency
 
-## Automatic Autoscaling
+## Table of Contents
 
-Every Modal Function corresponds to an autoscaling pool of containers. Modal's autoscaler:
-- Spins up containers when no capacity available
-- Spins down containers when resources idle
-- Scales to zero by default when no inputs to process
+- [Autoscaling](#autoscaling)
+- [Configuration](#configuration)
+- [Parallel Execution](#parallel-execution)
+- [Concurrent Inputs](#concurrent-inputs)
+- [Dynamic Batching](#dynamic-batching)
+- [Dynamic Autoscaler Updates](#dynamic-autoscaler-updates)
+- [Limits](#limits)
 
-Autoscaling decisions are made quickly and frequently.
+## Autoscaling
 
-## Parallel Execution with `.map()`
+Modal automatically manages a pool of containers for each function:
+- Spins up containers when there's no capacity for new inputs
+- Spins down idle containers to save costs
+- Scales from zero (no cost when idle) to thousands of containers
 
-Run function repeatedly with different inputs in parallel:
+No configuration needed for basic autoscaling — it works out of the box.
 
-```python
-@app.function()
-def evaluate_model(x):
-    return x ** 2
+## Configuration
 
-@app.local_entrypoint()
-def main():
-    inputs = list(range(100))
-    # Runs 100 inputs in parallel across containers
-    for result in evaluate_model.map(inputs):
-        print(result)
-```
-
-### Multiple Arguments with `.starmap()`
-
-For functions with multiple arguments:
-
-```python
-@app.function()
-def add(a, b):
-    return a + b
-
-@app.local_entrypoint()
-def main():
-    results = list(add.starmap([(1, 2), (3, 4)]))
-    # [3, 7]
-```
-
-### Exception Handling
-
-```python
-@app.function()
-def may_fail(a):
-    if a == 2:
-        raise Exception("error")
-    return a ** 2
-
-@app.local_entrypoint()
-def main():
-    results = list(may_fail.map(
-        range(3),
-        return_exceptions=True,
-        wrap_returned_exceptions=False
-    ))
-    # [0, 1, Exception('error')]
-```
-
-## Autoscaling Configuration
-
-Configure autoscaler behavior with parameters:
+Fine-tune autoscaling behavior:
 
 ```python
 @app.function(
-    max_containers=100,      # Upper limit on containers
-    min_containers=2,        # Keep warm even when inactive
-    buffer_containers=5,     # Maintain buffer while active
-    scaledown_window=60,     # Max idle time before scaling down (seconds)
+    max_containers=100,     # Upper limit on container count
+    min_containers=2,       # Keep 2 warm (reduces cold starts)
+    buffer_containers=5,    # Reserve 5 extra for burst traffic
+    scaledown_window=300,   # Wait 5 min idle before shutting down
 )
-def my_function():
+def handle_request(data):
     ...
 ```
 
-Parameters:
-- **max_containers**: Upper limit on total containers
-- **min_containers**: Minimum kept warm even when inactive
-- **buffer_containers**: Buffer size while function active (additional inputs won't need to queue)
-- **scaledown_window**: Maximum idle duration before scale down (seconds)
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `max_containers` | Unlimited | Hard cap on total containers |
+| `min_containers` | 0 | Minimum warm containers (costs money even when idle) |
+| `buffer_containers` | 0 | Extra containers to prevent queuing |
+| `scaledown_window` | 60 | Seconds of idle time before shutdown |
 
-Trade-offs:
-- Larger warm pool/buffer → Higher cost, lower latency
-- Longer scaledown window → Less churn for infrequent requests
+### Trade-offs
+
+- Higher `min_containers` = lower latency, higher cost
+- Higher `buffer_containers` = less queuing, higher cost
+- Lower `scaledown_window` = faster cost savings, more cold starts
+
+## Parallel Execution
+
+### `.map()` — Process Many Inputs
+
+```python
+@app.function()
+def process(item):
+    return heavy_computation(item)
+
+@app.local_entrypoint()
+def main():
+    items = list(range(10_000))
+    results = list(process.map(items))
+```
+
+Modal automatically scales containers to handle the workload. Results maintain input order.
+
+### `.map()` Options
+
+```python
+# Unordered results (faster)
+for result in process.map(items, order_outputs=False):
+    handle(result)
+
+# Collect errors instead of raising
+results = list(process.map(items, return_exceptions=True))
+for r in results:
+    if isinstance(r, Exception):
+        print(f"Error: {r}")
+```
+
+### `.starmap()` — Multi-Argument
+
+```python
+@app.function()
+def add(x, y):
+    return x + y
+
+results = list(add.starmap([(1, 2), (3, 4), (5, 6)]))
+# [3, 7, 11]
+```
+
+### `.spawn()` — Fire-and-Forget
+
+```python
+# Returns immediately
+call = process.spawn(large_data)
+
+# Check status or get result later
+result = call.get()
+```
+
+Up to 1 million pending `.spawn()` calls.
+
+## Concurrent Inputs
+
+By default, each container handles one input at a time. Use `@modal.concurrent` to handle multiple:
+
+```python
+@app.function(gpu="L40S")
+@modal.concurrent(max_inputs=10)
+async def predict(text: str):
+    result = await model.predict_async(text)
+    return result
+```
+
+This is ideal for I/O-bound workloads or async inference where a single GPU can handle multiple requests.
+
+### With Web Endpoints
+
+```python
+@app.function(gpu="L40S")
+@modal.concurrent(max_inputs=20)
+@modal.asgi_app()
+def web_service():
+    return fastapi_app
+```
+
+## Dynamic Batching
+
+Collect inputs into batches for efficient GPU utilization:
+
+```python
+@app.function(gpu="L40S")
+@modal.batched(max_batch_size=32, wait_ms=100)
+async def batch_predict(texts: list[str]):
+    # Called with up to 32 texts at once
+    embeddings = model.encode(texts)
+    return list(embeddings)
+```
+
+- `max_batch_size` — Maximum inputs per batch
+- `wait_ms` — How long to wait for more inputs before processing
+- The function receives a list and must return a list of the same length
 
 ## Dynamic Autoscaler Updates
 
-Update autoscaler settings without redeployment:
-
-```python
-f = modal.Function.from_name("my-app", "f")
-f.update_autoscaler(max_containers=100)
-```
-
-Settings revert to decorator configuration on next deploy, or are overridden by further updates:
-
-```python
-f.update_autoscaler(min_containers=2, max_containers=10)
-f.update_autoscaler(min_containers=4)  # max_containers=10 still in effect
-```
-
-### Time-Based Scaling
-
-Adjust warm pool based on time of day:
+Adjust autoscaling at runtime without redeploying:
 
 ```python
 @app.function()
-def inference_server():
-    ...
+def scale_up_for_peak():
+    process = modal.Function.from_name("my-app", "process")
+    process.update_autoscaler(min_containers=10, buffer_containers=20)
 
-@app.function(schedule=modal.Cron("0 6 * * *", timezone="America/New_York"))
-def increase_warm_pool():
-    inference_server.update_autoscaler(min_containers=4)
-
-@app.function(schedule=modal.Cron("0 22 * * *", timezone="America/New_York"))
-def decrease_warm_pool():
-    inference_server.update_autoscaler(min_containers=0)
-```
-
-### For Classes
-
-Update autoscaler for specific parameter instances:
-
-```python
-MyClass = modal.Cls.from_name("my-app", "MyClass")
-obj = MyClass(model_version="3.5")
-obj.update_autoscaler(buffer_containers=2)  # type: ignore
-```
-
-## Input Concurrency
-
-Process multiple inputs per container with `@modal.concurrent`:
-
-```python
 @app.function()
-@modal.concurrent(max_inputs=100)
-def my_function(input: str):
-    # Container can handle up to 100 concurrent inputs
-    ...
+def scale_down_after_peak():
+    process = modal.Function.from_name("my-app", "process")
+    process.update_autoscaler(min_containers=1, buffer_containers=2)
 ```
 
-Ideal for I/O-bound workloads:
-- Database queries
-- External API requests
-- Remote Modal Function calls
+Settings revert to the decorator values on the next deployment.
 
-### Concurrency Mechanisms
+## Limits
 
-**Synchronous Functions**: Separate threads (must be thread-safe)
+| Resource | Limit |
+|----------|-------|
+| Pending inputs (unassigned) | 2,000 |
+| Total inputs (running + pending) | 25,000 |
+| Pending `.spawn()` inputs | 1,000,000 |
+| Concurrent inputs per `.map()` | 1,000 |
+| Rate limit (web endpoints) | 200 req/s |
 
-```python
-@app.function()
-@modal.concurrent(max_inputs=10)
-def sync_function():
-    time.sleep(1)  # Must be thread-safe
-```
-
-**Async Functions**: Separate asyncio tasks (must not block event loop)
-
-```python
-@app.function()
-@modal.concurrent(max_inputs=10)
-async def async_function():
-    await asyncio.sleep(1)  # Must not block event loop
-```
-
-### Target vs Max Inputs
-
-```python
-@app.function()
-@modal.concurrent(
-    max_inputs=120,    # Hard limit
-    target_inputs=100  # Autoscaler target
-)
-def my_function(input: str):
-    # Allow 20% burst above target
-    ...
-```
-
-Autoscaler aims for `target_inputs`, but containers can burst to `max_inputs` during scale-up.
-
-## Scaling Limits
-
-Modal enforces limits per function:
-- 2,000 pending inputs (not yet assigned to containers)
-- 25,000 total inputs (running + pending)
-
-For `.spawn()` async jobs: up to 1 million pending inputs.
-
-Exceeding limits returns `Resource Exhausted` error - retry later.
-
-Each `.map()` invocation: max 1,000 concurrent inputs.
-
-## Async Usage
-
-Use async APIs for arbitrary parallel execution patterns:
-
-```python
-@app.function()
-async def async_task(x):
-    await asyncio.sleep(1)
-    return x * 2
-
-@app.local_entrypoint()
-async def main():
-    tasks = [async_task.remote.aio(i) for i in range(100)]
-    results = await asyncio.gather(*tasks)
-```
-
-## Common Gotchas
-
-**Incorrect**: Using Python's builtin map (runs sequentially)
-```python
-# DON'T DO THIS
-results = map(evaluate_model, inputs)
-```
-
-**Incorrect**: Calling function first
-```python
-# DON'T DO THIS
-results = evaluate_model(inputs).map()
-```
-
-**Correct**: Call .map() on Modal function object
-```python
-# DO THIS
-results = evaluate_model.map(inputs)
-```
+Exceeding these limits triggers `Resource Exhausted` errors. Implement retry logic for resilience.
