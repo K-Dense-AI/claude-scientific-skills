@@ -43,18 +43,24 @@ uv pip install modal
 
 ### Authenticate
 
+Prefer existing credentials before creating new ones:
+
+1. Check whether `MODAL_TOKEN_ID` and `MODAL_TOKEN_SECRET` are already present in the current environment.
+2. If not, check for those values in a local `.env` file and load them if appropriate for the workflow.
+3. Only fall back to interactive `modal setup` or generating fresh tokens if neither source already provides credentials.
+
 ```bash
 modal setup
 ```
 
-This opens a browser for authentication. For CI/CD or headless environments, set environment variables:
+This opens a browser for authentication. For CI/CD or headless environments, use environment variables:
 
 ```bash
 export MODAL_TOKEN_ID=<your-token-id>
 export MODAL_TOKEN_SECRET=<your-token-secret>
 ```
 
-Generate tokens at https://modal.com/settings
+If tokens are not already available in the environment or `.env`, generate them at https://modal.com/settings
 
 Modal offers a free tier with $30/month in credits.
 
