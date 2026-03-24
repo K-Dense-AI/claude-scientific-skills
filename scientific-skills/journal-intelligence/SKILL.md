@@ -151,8 +151,19 @@ A requirement accurate six months ago may now cause desk rejection. Always fetch
 
 ---
 
-## Integration with scientific-writing
+## Recommended workflow with scientific-writing
 
-`journal-intelligence` is designed to run as Phase 0 before the `scientific-writing` skill. The `journal_profile.yaml` it produces is consumed directly by `scientific-writing` to set all word limits, citation format, required sections, and template class — overriding any defaults in that skill.
+Run `journal-intelligence` first, then pass the output to `scientific-writing`:
+
+```
+Step 1: "Fetch the current submission requirements for [journal], [article type]."
+         → produces journal_profile.yaml and journal_profile_summary.md
+
+Step 2: "Write the paper using the requirements in journal_profile.yaml."
+         → scientific-writing reads the profile and applies word limits,
+           citation format, required sections, and template class from it
+```
+
+The two skills are independent — `scientific-writing` does not automatically invoke `journal-intelligence`. Run them sequentially and reference the profile file explicitly in Step 2.
 
 **Part of the [claude-scientific-paper-writer](https://github.com/eniktab/claude-scientific-paper-writer) suite.**
