@@ -61,39 +61,37 @@ Your context window will be automatically compacted as it approaches its limit, 
 
 ## CRITICAL: Real Citations Only Policy
 
-**Every citation must be a real, verifiable paper found through research-lookup.**
+**Every citation must be a real, verifiable paper found through the `research-lookup` skill.**
 
 - ZERO tolerance for placeholder citations ("Smith et al. 2023" unless verified)
 - ZERO tolerance for invented citations or "[citation needed]" placeholders
-- Use research-lookup extensively to find actual published papers
+- Activate the **`research-lookup`** skill extensively to find actual published papers
 - Verify every citation exists before adding to references.bib
 
 **Research-Lookup First Approach:**
-1. Before writing ANY section, perform extensive research-lookup (uses Parallel Deep Research by default)
+1. Before writing ANY section, activate **`research-lookup`** to perform extensive literature search
 2. Find 5-10 real papers per major section
 3. Begin writing, integrating ONLY the real papers found
 4. If additional citations needed, perform more research-lookup first
 
-## CRITICAL: Parallel Web Search Policy
+## CRITICAL: Web Search and Research Policy
 
-**Use Parallel Web Systems APIs for ALL web searches, URL extraction, and deep research.**
+**Activate the `research-lookup` skill for all academic paper searches and deep research.** It automatically routes queries to the best backend (Parallel Chat API for general research, Perplexity for academic paper searches).
 
-Parallel is the **primary tool for all web-related operations**. Do NOT use the built-in WebSearch tool except as a last-resort fallback.
+**Activate the `parallel-web` skill for all web searches, URL extraction, and general web research.** Do NOT use built-in WebSearch tools except as a last-resort fallback.
 
-**Required Environment Variable:** `PARALLEL_API_KEY`
-
-| Task | Tool | Command |
-|------|------|---------|
-| Web search (any) | `parallel-web` skill | `python scripts/parallel_web.py search "query" -o sources/search_<topic>.md` |
-| Extract URL content | `parallel-web` skill | `python scripts/parallel_web.py extract "url" -o sources/extract_<source>.md` |
-| Deep research | `parallel-web` skill | `python scripts/parallel_web.py research "query" --processor pro-fast -o sources/research_<topic>.md` |
-| Academic paper search | `research-lookup` skill | `python research_lookup.py "find papers on..." -o sources/papers_<topic>.md` (routes to Perplexity) |
-| DOI/metadata verification | `parallel-web` skill | `python scripts/parallel_web.py search -o sources/search_<topic>.md` or `extract` |
-| Current events/news | `parallel-web` skill | `python scripts/parallel_web.py search "news query" -o sources/search_<topic>.md` |
+| Task | Skill to Activate |
+|------|-------------------|
+| Web search (any) | `parallel-web` |
+| Extract URL content | `parallel-web` |
+| Deep research | `parallel-web` or `research-lookup` |
+| Academic paper search | `research-lookup` |
+| DOI/metadata verification | `parallel-web` |
+| Current events/news | `parallel-web` |
 
 ## CRITICAL: Save All Research Results to Sources Folder
 
-**Every web search, URL extraction, deep research, and research-lookup result MUST be saved to the project's `sources/` folder using the `-o` flag.**
+**Every research result MUST be saved to the project's `sources/` folder.**
 
 This is non-negotiable. Research results are expensive to obtain and critical for reproducibility, auditability, and context window recovery.
 
@@ -107,13 +105,12 @@ This is non-negotiable. Research results are expensive to obtain and critical fo
 | Academic Paper Search | `papers_YYYYMMDD_HHMMSS_<topic>.md` | `sources/papers_20250217_144500_crispr_offtarget.md` |
 
 **Key Rules:**
-- **ALWAYS** use the `-o` flag to save results to `sources/` -- never discard research output
-- **ALWAYS** ensure saved files preserve all citations, source URLs, and DOIs (the scripts do this automatically -- text format includes a Sources/References section; `--json` preserves full citation objects)
+- **ALWAYS** save research output to `sources/` -- never discard it
+- **ALWAYS** ensure saved files preserve all citations, source URLs, and DOIs
 - **ALWAYS** check `sources/` for existing results before making new API calls (avoid duplicate queries)
 - **ALWAYS** log saved results: `[HH:MM:SS] SAVED: [type] to sources/[filename] ([N] words/results, [N] citations)`
 - The `sources/` folder provides a complete audit trail of all research conducted for the project
 - Saved results enable context window recovery -- re-read from `sources/` instead of re-querying APIs
-- Use `--json` format when maximum citation metadata is needed for BibTeX generation or DOI verification
 
 ## Workflow Protocol
 
@@ -148,14 +145,14 @@ This is non-negotiable. Research results are expensive to obtain and critical fo
 
 1. **Verify All Deliverables** - files created, citations verified, PDF clean
 2. **Create Summary Report** - `SUMMARY.md` with files list and usage instructions
-3. **Conduct Peer Review** - Use peer-review skill, save as `PEER_REVIEW.md`
+3. **Conduct Peer Review** - Activate the `peer-review` skill, save as `PEER_REVIEW.md`
 
 ## Special Document Types
 
-For specialized documents, use the dedicated skill which contains detailed templates, workflows, and requirements:
+For specialized documents, activate the dedicated skill which contains detailed templates, workflows, and requirements:
 
-| Document Type | Skill to Use |
-|--------------|--------------|
+| Document Type | Skill to Activate |
+|--------------|-------------------|
 | Hypothesis generation | `hypothesis-generation` |
 | Treatment plans (individual patients) | `treatment-plans` |
 | Clinical decision support (cohorts, guidelines) | `clinical-decision-support` |
@@ -167,7 +164,7 @@ For specialized documents, use the dedicated skill which contains detailed templ
 | Infographics | `infographics` |
 | Web search, URL extraction, deep research | `parallel-web` |
 
-**INFOGRAPHICS: Do NOT use LaTeX or PDF compilation.** When the user asks for an infographic, use the `infographics` skill directly. Infographics are generated as standalone PNG images via Nano Banana Pro AI, not as LaTeX documents. No `.tex` files, no `pdflatex`, no BibTeX.
+**INFOGRAPHICS: Do NOT use LaTeX or PDF compilation.** When the user asks for an infographic, activate the `infographics` skill directly. Infographics are generated as standalone PNG images, not as LaTeX documents.
 
 ## File Organization
 
@@ -212,7 +209,7 @@ When .tex files are present in drafts/, EDIT the existing manuscript.
 
 #### Pass 2+: Fill Sections with Research
 For each section:
-1. **Research-lookup BEFORE writing** - find 5-10 real papers
+1. **Activate `research-lookup` BEFORE writing** - find 5-10 real papers
 2. Write content integrating real citations only
 3. Add BibTeX entries as you cite
 4. Log: `[HH:MM:SS] COMPLETED: [Section] - [words] words, [N] citations`
@@ -226,34 +223,43 @@ For each section:
 
 ### PDF Formatting Review (MANDATORY)
 
-After compiling any PDF:
+After compiling any PDF, you must visually inspect it for formatting issues. Convert the PDF to images for inspection:
 
-1. **Convert to images** (NEVER read PDF directly):
-      ```bash
-   python scripts/pdf_to_images.py document.pdf review/page --dpi 150
-   ```
+```bash
+# Use Python with pdf2image (install via: uv add pdf2image)
+python -c "
+from pdf2image import convert_from_path
+pages = convert_from_path('document.pdf', dpi=150)
+for i, page in enumerate(pages):
+    page.save(f'review/page_{i+1}.png', 'PNG')
+"
+```
 
-2. **Inspect each page image** for: text overlaps, figure placement, margins, spacing
+If `pdf2image` is not available, use ImageMagick or poppler-utils:
+```bash
+# ImageMagick
+convert -density 150 document.pdf review/page_%d.png
 
-3. **Fix issues and recompile** (max 3 iterations)
+# poppler-utils
+pdftoppm -png -r 150 document.pdf review/page
+```
 
-4. **Clean up**: `rm -rf review/`
+Then:
+1. **Inspect each page image** for: text overlaps, figure placement, margins, spacing
+2. **Fix issues and recompile** (max 3 iterations)
+3. **Clean up**: `rm -rf review/`
 
 **Focus Areas:** Text overlaps, figure placement, table issues, margins, page breaks, caption spacing, bibliography formatting
 
 ### Figure Generation (EXTENSIVE USE REQUIRED)
 
-**CRITICAL: Every document MUST be richly illustrated using scientific-schematics and generate-image skills extensively.**
+**CRITICAL: Every document MUST be richly illustrated. Activate the `scientific-schematics` and `generate-image` skills extensively.**
 
 Documents without sufficient visual elements are incomplete. Generate figures liberally throughout all outputs.
 
 **MANDATORY: Graphical Abstract**
 
-Every scientific writeup (research papers, literature reviews, reports) MUST include a graphical abstract as the first figure. Generate this using the scientific-schematics skill:
-
-```bash
-python scripts/generate_schematic.py "Graphical abstract for [paper title]: [brief description of key finding/concept showing main workflow and conclusions]" -o figures/graphical_abstract.png
-```
+Every scientific writeup (research papers, literature reviews, reports) MUST include a graphical abstract as the first figure. Activate the **`scientific-schematics`** skill and describe the desired graphical abstract.
 
 **Graphical Abstract Requirements:**
 - **Position**: Always Figure 1 or placed before the abstract in the document
@@ -263,7 +269,7 @@ python scripts/generate_schematic.py "Graphical abstract for [paper title]: [bri
 - **Elements**: Include key workflow steps, main results visualization, and conclusions
 - Log: `[HH:MM:SS] GENERATED: Graphical abstract for paper summary`
 
-**Use scientific-schematics skill EXTENSIVELY for technical diagrams:**
+**Activate the `scientific-schematics` skill EXTENSIVELY for technical diagrams:**
 - Graphical abstracts (MANDATORY for all writeups)
 - Flowcharts, process diagrams, CONSORT/PRISMA diagrams
 - System architecture, neural network diagrams
@@ -274,11 +280,7 @@ python scripts/generate_schematic.py "Graphical abstract for [paper title]: [bri
 - Timeline diagrams, Gantt charts
 - Any concept that benefits from schematic visualization
 
-```bash
-python scripts/generate_schematic.py "diagram description" -o figures/output.png
-```
-
-**Use generate-image skill EXTENSIVELY for visual content:**
+**Activate the `generate-image` skill EXTENSIVELY for visual content:**
 - Photorealistic illustrations of concepts
 - Artistic visualizations
 - Medical/anatomical illustrations
@@ -288,21 +290,17 @@ python scripts/generate_schematic.py "diagram description" -o figures/output.png
 - Cover images, header graphics
 - Any visual that enhances understanding or engagement
 
-```bash
-python scripts/generate_image.py "image description" -o figures/output.png
-```
-
 **MINIMUM Figure Requirements by Document Type:**
 
-| Document Type | Minimum Figures | Recommended | Tools to Use |
-|--------------|-----------------|-------------|--------------|
-| Research papers | 5 | 6-8 | scientific-schematics + generate-image |
-| Literature reviews | 4 | 5-7 | scientific-schematics (PRISMA, frameworks) |
+| Document Type | Minimum Figures | Recommended | Skills to Activate |
+|--------------|-----------------|-------------|-------------------|
+| Research papers | 5 | 6-8 | `scientific-schematics` + `generate-image` |
+| Literature reviews | 4 | 5-7 | `scientific-schematics` (PRISMA, frameworks) |
 | Market research | 20 | 25-30 | Both extensively |
 | Presentations | 1 per slide | 1-2 per slide | Both |
 | Posters | 6 | 8-10 | Both |
-| Grants | 4 | 5-7 | scientific-schematics (aims, design) |
-| Clinical reports | 3 | 4-6 | scientific-schematics (pathways, algorithms) |
+| Grants | 4 | 5-7 | `scientific-schematics` (aims, design) |
+| Clinical reports | 3 | 4-6 | `scientific-schematics` (pathways, algorithms) |
 
 **Figure Generation Workflow:**
 1. **Plan figures BEFORE writing** - identify all concepts needing visualization
@@ -312,7 +310,7 @@ python scripts/generate_image.py "image description" -o figures/output.png
 5. **Log each generation**: `[HH:MM:SS] GENERATED: [figure type] - [description]`
 
 **When in Doubt, Generate a Figure:**
-- If a concept is complex -> generate a schematic
+- If a concept is complex -> activate `scientific-schematics`
 - If data is being discussed -> generate a visualization
 - If a process is described -> generate a flowchart
 - If comparisons are made -> generate a comparison diagram
@@ -328,8 +326,8 @@ For each citation in references.bib:
 - @book: author/editor, title, publisher, year
 
 **Verification process:**
-1. Use research-lookup to find and verify paper exists
-2. Use `parallel_web.py search` or `parallel_web.py extract` for metadata (DOI, volume, pages)
+1. Activate `research-lookup` to find and verify paper exists
+2. Activate `parallel-web` to retrieve metadata (DOI, volume, pages)
 3. Cross-check at least 2 sources
 4. Log: `[HH:MM:SS] VERIFIED: [Author Year]`
 
@@ -337,19 +335,15 @@ For each citation in references.bib:
 
 1. **Follow IMRaD Structure**: Introduction, Methods, Results, Discussion, Abstract (last)
 2. **Use LaTeX as default** with BibTeX citations
-3. **Generate 3-6 figures** using scientific-schematics skill
-4. **Adapt writing style to venue** using venue-templates skill style guides
+3. **Generate 3-6 figures** by activating `scientific-schematics` skill
+4. **Adapt writing style to venue** by activating `venue-templates` skill
 
-**Venue Writing Styles:** Before writing for a specific venue (Nature, Science, Cell, NeurIPS, etc.), consult the **venue-templates** skill for writing style guides:
-- `venue_writing_styles.md` - Master style comparison
-- Venue-specific guides: `nature_science_style.md`, `cell_press_style.md`, `medical_journal_styles.md`, `ml_conference_style.md`, `cs_conference_style.md`
-- `reviewer_expectations.md` - What reviewers look for at each venue
-- Examples in `assets/examples/` for abstracts and introductions
+**Venue Writing Styles:** Before writing for a specific venue (Nature, Science, Cell, NeurIPS, etc.), activate the **`venue-templates`** skill for writing style guides covering tone, abstract format, structure, and reviewer expectations.
 
 ## Literature Reviews
 
 1. **Systematic Organization**: Clear search strategy, inclusion/exclusion criteria
-2. **PRISMA flow diagram** if applicable (generate with scientific-schematics)
+2. **PRISMA flow diagram** if applicable (activate `scientific-schematics` to generate)
 3. **Comprehensive bibliography** organized by theme
 
 ## Decision Making
@@ -370,15 +364,15 @@ For each citation in references.bib:
 Before marking complete:
 - [ ] All files created and properly formatted
 - [ ] Version numbers incremented if editing
-- [ ] 100% citations are REAL papers from research-lookup
+- [ ] 100% citations are REAL papers found via `research-lookup` skill
 - [ ] All citation metadata verified with DOIs
-- [ ] **All research results saved to `sources/`** (web searches, deep research, URL extracts, paper lookups)
-- [ ] **Graphical abstract generated** using scientific-schematics skill
+- [ ] **All research results saved to `sources/`**
+- [ ] **Graphical abstract generated** via `scientific-schematics` skill
 - [ ] **Minimum figure count met** (see table above)
-- [ ] **Figures generated extensively** using scientific-schematics and generate-image
+- [ ] **Figures generated extensively** via `scientific-schematics` and `generate-image` skills
 - [ ] Figures properly integrated with captions and references
 - [ ] progress.md and SUMMARY.md complete
-- [ ] PEER_REVIEW.md completed
+- [ ] PEER_REVIEW.md completed via `peer-review` skill
 - [ ] PDF formatting review passed
 - [ ] **Output length verified** -- `wc -w` matches expected length; no empty/truncated sections
 
@@ -389,31 +383,32 @@ Request: "Create a NeurIPS paper on attention mechanisms"
 1. Present plan: LaTeX, IMRaD, NeurIPS template, ~30-40 citations
 2. Create folder: `writing_outputs/20241027_143022_neurips_attention_paper/`
 3. Build LaTeX skeleton with all sections
-4. Research-lookup per section (finding REAL papers only)
+4. Activate `research-lookup` per section (finding REAL papers only)
 5. Write section-by-section with verified citations; **`wc -w` after each section**
-6. Generate 4-5 figures with scientific-schematics
-7. Compile LaTeX (3-pass)
+6. Activate `scientific-schematics` to generate 4-5 figures
+7. Compile LaTeX (3-pass: pdflatex -> bibtex -> pdflatex x 2)
 8. PDF formatting review and fixes
 9. **Final completeness gate** -- re-read entire file, confirm no gaps
-10. Comprehensive peer review
+10. Activate `peer-review` for comprehensive review
 11. Deliver with SUMMARY.md
 
 ## Key Principles
 
-- **Use Parallel for ALL web searches** - `parallel_web.py search/extract/research` replaces WebSearch; WebSearch is last-resort fallback only
-- **SAVE ALL RESEARCH TO sources/** - every web search, URL extraction, deep research, and research-lookup result MUST be saved to `sources/` using the `-o` flag; check `sources/` before making new queries
+- **Activate `parallel-web` for ALL web searches** -- do not use built-in WebSearch; WebSearch is last-resort fallback only
+- **Activate `research-lookup` for ALL academic searches** -- routes to Parallel or Perplexity automatically
+- **SAVE ALL RESEARCH TO sources/** -- check `sources/` before making new queries
 - **LaTeX is the default format**
-- **Consult venue-templates for writing style** - adapt tone, abstract format, and structure to target venue
-- **Research before writing** - lookup papers BEFORE writing each section
-- **ONLY REAL CITATIONS** - never placeholder or invented
+- **Activate `venue-templates` for writing style** -- adapt tone, abstract format, and structure to target venue
+- **Research before writing** -- activate `research-lookup` BEFORE writing each section
+- **ONLY REAL CITATIONS** -- never placeholder or invented
 - **Skeleton first, content second**
 - **One section at a time** with research -> write -> cite -> log cycle
 - **INCREMENT VERSION NUMBERS** when editing
-- **ALWAYS include graphical abstract** - use scientific-schematics skill for every writeup
-- **GENERATE FIGURES EXTENSIVELY** - use scientific-schematics and generate-image liberally; every document should be richly illustrated
-- **When in doubt, add a figure** - visual content enhances all scientific communication
-- **PDF review via images** - never read PDFs directly
-- **Complete tasks fully** - never stop mid-task to ask permission
-- **Write to files, not stdout** - always use Write/Edit tools for document content
-- **Verify output length after every major write** - run `wc -w` and compare to expectation
-- **Assume the model may truncate silently** - never trust that a single write produced the full content; always verify and fill gaps
+- **ALWAYS include graphical abstract** -- activate `scientific-schematics` skill for every writeup
+- **GENERATE FIGURES EXTENSIVELY** -- activate `scientific-schematics` and `generate-image` liberally; every document should be richly illustrated
+- **When in doubt, add a figure** -- visual content enhances all scientific communication
+- **PDF review via images** -- never read PDFs directly; convert to images first
+- **Complete tasks fully** -- never stop mid-task to ask permission
+- **Write to files, not stdout** -- always use Write/Edit tools for document content
+- **Verify output length after every major write** -- run `wc -w` and compare to expectation
+- **Assume the model may truncate silently** -- never trust that a single write produced the full content; always verify and fill gaps
