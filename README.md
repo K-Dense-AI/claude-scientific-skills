@@ -74,6 +74,7 @@ Each skill includes:
 - [What's Included](#whats-included)
 - [Why Use This?](#why-use-this)
 - [Getting Started](#getting-started)
+- [Security Disclaimer](#-security-disclaimer)
 - [Support Open Source](#-support-the-open-source-community)
 - [Prerequisites](#prerequisites)
 - [Quick Examples](#quick-examples)
@@ -172,6 +173,30 @@ cp -r /path/to/claude-scientific-skills/scientific-skills/* .cursor/skills/
 
 ---
 
+## ⚠️ Security Disclaimer
+
+> **Skills can execute code and influence your coding agent's behavior. Review what you install.**
+
+Agent Skills are powerful — they can instruct your AI agent to run arbitrary code, install packages, make network requests, and modify files on your system. A malicious or poorly written skill has the potential to steer your coding agent into harmful behavior.
+
+We take security seriously. All contributions go through a review process, and we run LLM-based security scans (via [Cisco AI Defense Skill Scanner](https://github.com/cisco-ai-defense/skill-scanner)) on every skill in this repository. However, as a small team with a growing number of community contributions, we cannot guarantee that every skill has been exhaustively reviewed for all possible risks.
+
+**It is ultimately your responsibility to review the skills you install and decide which ones to trust.**
+
+We recommend the following:
+
+- **Do not install everything at once.** Only install the skills you actually need for your work. While installing the full collection was reasonable when K-Dense created and maintained every skill, the repository now includes many community contributions that we may not have reviewed as thoroughly.
+- **Read the `SKILL.md` before installing.** Each skill's documentation describes what it does, what packages it uses, and what external services it connects to. If something looks suspicious, don't install it.
+- **Check the contribution history.** Skills authored by K-Dense (`K-Dense-AI`) have been through our internal review process. Community-contributed skills have been reviewed to the best of our ability, but with limited resources.
+- **Run the security scanner yourself.** Before installing third-party skills, scan them locally:
+  ```bash
+  uv pip install cisco-ai-skill-scanner
+  skill-scanner scan /path/to/skill --use-behavioral
+  ```
+- **Report anything suspicious.** If you find a skill that looks malicious or behaves unexpectedly, please [open an issue](https://github.com/K-Dense-AI/claude-scientific-skills/issues) immediately so we can investigate.
+
+---
+
 ## ❤️ Support the Open Source Community
 
 Claude Scientific Skills is powered by **50+ incredible open source projects** maintained by dedicated developers and research communities worldwide. Projects like Biopython, Scanpy, RDKit, scikit-learn, PyTorch Lightning, and many others form the foundation of these skills.
@@ -189,7 +214,7 @@ Claude Scientific Skills is powered by **50+ incredible open source projects** m
 
 ## ⚙️ Prerequisites
 
-- **Python**: 3.9+ (3.12+ recommended for best compatibility)
+- **Python**: 3.11+ (3.12+ recommended for best compatibility)
 - **uv**: Python package manager (required for installing skill dependencies)
 - **Client**: Any agent that supports the [Agent Skills](https://agentskills.io/) standard (Cursor, Claude Code, Gemini CLI, Codex, etc.)
 - **System**: macOS, Linux, or Windows with WSL2
