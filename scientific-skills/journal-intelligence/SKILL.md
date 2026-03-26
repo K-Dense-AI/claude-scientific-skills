@@ -1,7 +1,6 @@
 ---
 name: journal-intelligence
 description: "Fetch live submission requirements for any scientific journal before writing. Use before scientific-writing or any manuscript task: retrieves author guidelines, word limits, abstract format, figure limits, citation style, AI authorship policy (exact disclosure language), and LaTeX template via WebSearch/WebFetch. Stores results in journal_profile.yaml as the single source of truth for all formatting decisions. Covers Nature family, Cell Press, Elsevier, Wiley, Springer, PLOS, PNAS, ACS, RSC, IEEE, ACM, and any other journal."
-allowed-tools: [Read, Write, Edit, Bash, WebSearch, WebFetch]
 ---
 
 # Journal Intelligence
@@ -20,6 +19,8 @@ Run this before every manuscript session. The output (`journal_profile.yaml`) be
 - To download the current LaTeX template before writing
 - To check desk-rejection criteria before investing time in a submission
 
+**Requirements:** This skill requires **WebSearch** and **WebFetch** to be enabled in the agent's tool set. It cannot fetch live guidelines without these tools. If they are unavailable, see the fallback behavior below.
+
 ---
 
 ## What It Does
@@ -28,12 +29,14 @@ Run this before every manuscript session. The output (`journal_profile.yaml`) be
 
 Searches and fetches the journal's official submission/author guidelines page.
 
-URL patterns tried automatically:
+Example URL patterns to try (publisher structures vary — these are starting points, not authoritative):
 - Nature family: `https://www.nature.com/[journal]/submission-guidelines`
 - Elsevier: `https://www.elsevier.com/journals/[journal]/[issn]/guide-for-authors`
 - Cell Press: `https://www.cell.com/[journal]/authors`
 - PLOS: `https://journals.plos.org/[journal]/s/submission-guidelines`
 - Wiley, Springer, ACS, RSC, IEEE, ACM — searched via WebSearch
+
+If the pattern-based URL fails, fall back to a direct WebSearch for `"[journal name] author guidelines submission"`.
 
 ### Step 2 — Extract and Store Requirements
 
@@ -129,7 +132,7 @@ Write an Article for Nature Methods on our sequencing pipeline.
 
 ## Fallback When Guidelines Cannot Be Fetched
 
-If WebSearch and WebFetch both fail (network unavailable or journal behind hard paywall):
+If WebSearch and WebFetch are unavailable, or if both fail (network unavailable or journal behind hard paywall):
 
 1. Uses conservative defaults: ≤4,000 words, ≤250-word abstract, Vancouver numbered references
 2. Flags every format-dependent decision with `[VERIFY AGAINST AUTHOR GUIDELINES]`
@@ -165,5 +168,3 @@ Step 2: "Write the paper using the requirements in journal_profile.yaml."
 ```
 
 The two skills are independent — `scientific-writing` does not automatically invoke `journal-intelligence`. Run them sequentially and reference the profile file explicitly in Step 2.
-
-**Part of the [claude-scientific-paper-writer](https://github.com/eniktab/claude-scientific-paper-writer) suite.**
