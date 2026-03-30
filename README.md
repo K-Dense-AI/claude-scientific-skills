@@ -1,5 +1,15 @@
 # Claude Scientific Skills
 
+Claude Scientific Skills is a local collection of 141 scientific skills for people who want Claude to use domain-specific workflows, tools, and references without manually assembling prompts for each task.
+
+## Documentation
+
+- [docs/SKILLS_INDEX.md](docs/SKILLS_INDEX.md): Alphabetical list of skills with one-line descriptions and direct links to each `SKILL.md` file.
+- [docs/scientific-skills.md](docs/scientific-skills.md): Detailed catalog of skill coverage by category.
+- [docs/examples.md](docs/examples.md): Example prompts and usage patterns.
+- [docs/open-source-sponsors.md](docs/open-source-sponsors.md): Upstream projects that power many skills.
+
+## Quick start
 > **New: [K-Dense BYOK](https://github.com/K-Dense-AI/k-dense-byok)** — A free, open-source AI co-scientist that runs on your desktop, powered by Claude Scientific Skills. Bring your own API keys, pick from 40+ models, and get a full research workspace with web search, file handling, 250+ scientific databases, and access to all 170+ skills in this repo. Your data stays on your computer, and you can optionally scale to cloud compute via [Modal](https://modal.com/) for heavy workloads. [Get started here.](https://github.com/K-Dense-AI/k-dense-byok)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
@@ -21,8 +31,11 @@ A comprehensive collection of **170+ ready-to-use scientific and research skills
   <em>The demo above shows <a href="https://k-dense.ai">K-Dense Web</a> — the hosted platform built on top of these skills. Claude Scientific Skills is the open-source skill collection; K-Dense Web is the full AI co-scientist platform with more power and zero setup.</em>
 </p>
 
----
+Primary path: discover and open skills directly from this repo.
 
+```bash
+# List all skill folders that contain SKILL.md
+find scientific-skills -mindepth 2 -maxdepth 2 -name SKILL.md | sort
 These skills enable your AI agent to seamlessly work with specialized scientific libraries, databases, and tools across multiple scientific domains. While the agent can use any Python package or API on its own, these explicitly defined skills provide curated documentation and examples that make it significantly stronger and more reliable for the workflows below:
 - 🧬 Bioinformatics & Genomics - Sequence analysis, single-cell RNA-seq, gene regulatory networks, variant annotation, phylogenetic analysis
 - 🧪 Cheminformatics & Drug Discovery - Molecular property prediction, virtual screening, ADMET analysis, molecular docking, lead optimization
@@ -337,17 +350,11 @@ clinical report with document processing tools, and find matching trials on Clin
 
 ---
 
-### 🌐 Systems Biology Network Analysis
-**Goal**: Analyze gene regulatory networks from RNA-seq data
-
-**Prompt**:
-```
-Use available skills you have access to whenever possible. Query NCBI Gene for annotations, retrieve sequences from UniProt, identify interactions via 
-STRING, map to Reactome/KEGG pathways, analyze topology with Torch Geometric, reconstruct 
-GRNs with Arboreto, assess druggability with Open Targets, model with PyMC, visualize 
-networks, and search GEO for similar patterns.
+# Read one skill
+sed -n '1,200p' scientific-skills/rdkit/SKILL.md
 ```
 
+If you use Claude Code plugin workflows, install and manage this repository from your client and use the skills index above to pick relevant skills faster.
 **Skills Used**: NCBI Gene, UniProt, STRING, Reactome, KEGG, Torch Geometric, Arboreto, Open Targets, PyMC, GEO
 
 *Want end-to-end pipelines with shareable outputs and no setup? [Try K-Dense Web free.](https://k-dense.ai)*
@@ -803,6 +810,6 @@ See [LICENSE.md](LICENSE.md) for full terms.
 
 > ⚠️ **Important**: Each skill has its own license specified in the `license` metadata field within its `SKILL.md` file. These licenses may differ from the repository's MIT License and may include additional terms or restrictions. **Users are responsible for reviewing and adhering to the license terms of each individual skill they use.**
 
-## Star History
+## License
 
-[![Star History Chart](https://api.star-history.com/svg?repos=K-Dense-AI/claude-scientific-skills&type=date&legend=top-left)](https://www.star-history.com/#K-Dense-AI/claude-scientific-skills&type=date&legend=top-left)
+- [LICENSE.md](LICENSE.md)
