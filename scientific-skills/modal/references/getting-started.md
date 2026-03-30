@@ -1,92 +1,175 @@
-# Getting Started with Modal
+# Modal Getting Started Guide
 
-## Sign Up
+## Installation
 
-Sign up for free at https://modal.com and get $30/month of credits.
+Install Modal using uv (recommended) or pip:
+
+```bash
+# Recommended
+uv pip install modal
+
+# Alternative
+pip install modal
+```
 
 ## Authentication
 
-Set up authentication using the Modal CLI:
+### Interactive Setup
 
 ```bash
-modal token new
+modal setup
 ```
 
-This creates credentials in `~/.modal.toml`. Alternatively, set environment variables:
-- `MODAL_TOKEN_ID`
-- `MODAL_TOKEN_SECRET`
+This opens a browser for authentication and stores credentials locally.
 
-## Basic Concepts
+### Headless / CI/CD Setup
 
-### Modal is Serverless
+For environments without a browser, use token-based authentication:
 
-Modal is a serverless platform - only pay for resources used and spin up containers on demand in seconds.
+1. Generate tokens at https://modal.com/settings
+2. Set environment variables:
 
-### Core Components
+```bash
+export MODAL_TOKEN_ID=<your-token-id>
+export MODAL_TOKEN_SECRET=<your-token-secret>
+```
 
-**App**: Represents an application running on Modal, grouping one or more Functions for atomic deployment.
+Or use the CLI:
 
-**Function**: Acts as an independent unit that scales up and down independently. No containers run (and no charges) when there are no live inputs.
+```bash
+modal token set --token-id <id> --token-secret <secret>
+```
 
-**Image**: The environment code runs in - a container snapshot with dependencies installed.
+### Free Tier
 
-## First Modal App
+Modal provides $30/month in free credits. No credit card required for the free tier.
 
-Create a file `hello_modal.py`:
+## Your First App
+
+### Hello World
+
+Create a file `hello.py`:
 
 ```python
 import modal
 
-app = modal.App(name="hello-modal")
+app = modal.App("hello-world")
 
 @app.function()
-def hello():
-    print("Hello from Modal!")
-    return "success"
+def greet(name: str) -> str:
+    return f"Hello, {name}! This ran in the cloud."
 
 @app.local_entrypoint()
 def main():
-    hello.remote()
+    result = greet.remote("World")
+    print(result)
 ```
 
-Run with:
+Run it:
+
 ```bash
-modal run hello_modal.py
+modal run hello.py
 ```
 
-## Running Apps
+What happens:
+1. Modal packages your code
+2. Creates a container in the cloud
+3. Executes `greet()` remotely
+4. Returns the result to your local machine
 
-### Ephemeral Apps (Development)
+### Understanding the Flow
 
-Run temporarily with `modal run`:
-```bash
-modal run script.py
+- `modal.App("name")` — Creates a named application
+- `@app.function()` — Marks a function for remote execution
+- `@app.local_entrypoint()` — Defines the local entry point (runs on your machine)
+- `.remote()` — Calls the function in the cloud
+- `.local()` — Calls the function locally (for testing)
+
+### Running Modes
+
+| Command | Description |
+|---------|-------------|
+| `modal run script.py` | Run the `@app.local_entrypoint()` function |
+| `modal serve script.py` | Start a dev server with hot reload (for web endpoints) |
+| `modal deploy script.py` | Deploy to production (persistent) |
+
+### A Simple Web Scraper
+
+```python
+import modal
+
+app = modal.App("web-scraper")
+
+image = modal.Image.debian_slim().uv_pip_install("httpx", "beautifulsoup4")
+
+@app.function(image=image)
+def scrape(url: str) -> str:
+    import httpx
+    from bs4 import BeautifulSoup
+
+    response = httpx.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    return soup.get_text()[:1000]
+
+@app.local_entrypoint()
+def main():
+    result = scrape.remote("https://example.com")
+    print(result)
 ```
 
-The app stops when the script exits. Use `--detach` to keep running after client exits.
+### GPU-Accelerated Inference
 
-### Deployed Apps (Production)
+```python
+import modal
 
-Deploy persistently with `modal deploy`:
-```bash
-modal deploy script.py
+app = modal.App("gpu-inference")
+
+image = (
+    modal.Image.debian_slim(python_version="3.11")
+    .uv_pip_install("torch", "transformers", "accelerate")
+)
+
+@app.function(gpu="L40S", image=image)
+def generate(prompt: str) -> str:
+    from transformers import pipeline
+    pipe = pipeline("text-generation", model="gpt2", device="cuda")
+    result = pipe(prompt, max_length=100)
+    return result[0]["generated_text"]
+
+@app.local_entrypoint()
+def main():
+    print(generate.remote("The future of AI is"))
 ```
 
-View deployed apps at https://modal.com/apps or with:
-```bash
-modal app list
+## Project Structure
+
+Modal apps are typically single Python files, but can be organized into modules:
+
+```
+my-project/
+├── app.py           # Main app with @app.local_entrypoint()
+├── inference.py     # Inference functions
+├── training.py      # Training functions
+└── common.py        # Shared utilities
 ```
 
-Stop deployed apps:
-```bash
-modal app stop app-name
-```
+Use `modal.Image.add_local_python_source()` to include local modules in the container image.
 
-## Key Features
+## Key Concepts Summary
 
-- **Fast prototyping**: Write Python, run on GPUs in seconds
-- **Serverless APIs**: Create web endpoints with a decorator
-- **Scheduled jobs**: Run cron jobs in the cloud
-- **GPU inference**: Access T4, L4, A10, A100, H100, H200, B200 GPUs
-- **Distributed volumes**: Persistent storage for ML models
-- **Sandboxes**: Secure containers for untrusted code
+| Concept | What It Does |
+|---------|-------------|
+| `App` | Groups related functions into a deployable unit |
+| `Function` | A serverless function backed by autoscaling containers |
+| `Image` | Defines the container environment (packages, files) |
+| `Volume` | Persistent distributed file storage |
+| `Secret` | Secure credential injection |
+| `Schedule` | Cron or periodic job scheduling |
+| `gpu` | GPU type/count for the function |
+
+## Next Steps
+
+- See `functions.md` for advanced function patterns
+- See `images.md` for custom container environments
+- See `gpu.md` for GPU selection and configuration
+- See `web-endpoints.md` for serving APIs

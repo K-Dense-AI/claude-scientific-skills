@@ -1,8 +1,8 @@
-# Scientific Schematics - Nano Banana Pro
+# Scientific Schematics - Nano Banana 2
 
 **Generate any scientific diagram by describing it in natural language.**
 
-Nano Banana Pro creates publication-quality diagrams automatically - no coding, no templates, no manual drawing required.
+Nano Banana 2 creates publication-quality diagrams automatically - no coding, no templates, no manual drawing required.
 
 ## Quick Start
 
@@ -223,9 +223,9 @@ Each generation produces a JSON review log:
 }
 ```
 
-## Why Use Nano Banana Pro
+## Why Use Nano Banana 2
 
-**Simply describe what you want - Nano Banana Pro creates it:**
+**Simply describe what you want - Nano Banana 2 creates it:**
 
 - ✓ **Fast**: Results in minutes
 - ✓ **Easy**: Natural language descriptions (no coding)
@@ -297,7 +297,7 @@ This tests:
 ## Cost Considerations
 
 OpenRouter pricing for models used:
-- **Nano Banana Pro**: ~$2/M input tokens, ~$12/M output tokens
+- **Nano Banana 2**: ~$2/M input tokens, ~$12/M output tokens
 
 Typical costs per diagram:
 - Simple diagram (1 iteration): ~$0.05-0.15

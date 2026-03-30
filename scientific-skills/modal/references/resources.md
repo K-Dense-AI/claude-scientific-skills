@@ -1,129 +1,117 @@
-# CPU, Memory, and Disk Resources
+# Modal Resource Configuration
 
-## Default Resources
+## CPU
 
-Each Modal container has default reservations:
-- **CPU**: 0.125 cores
-- **Memory**: 128 MiB
-
-Containers can exceed minimum if worker has available resources.
-
-## CPU Cores
-
-Request CPU cores as floating-point number:
+### Requesting CPU
 
 ```python
-@app.function(cpu=8.0)
-def my_function():
-    # Guaranteed access to at least 8 physical cores
+@app.function(cpu=4.0)
+def compute():
     ...
 ```
 
-Values correspond to physical cores, not vCPUs.
-
-Modal sets multi-threading environment variables based on CPU reservation:
-- `OPENBLAS_NUM_THREADS`
-- `OMP_NUM_THREADS`
-- `MKL_NUM_THREADS`
-
-## Memory
-
-Request memory in megabytes (integer):
-
-```python
-@app.function(memory=32768)
-def my_function():
-    # Guaranteed access to at least 32 GiB RAM
-    ...
-```
-
-## Resource Limits
+- Values are **physical cores**, not vCPUs
+- Default: 0.125 cores
+- Modal auto-sets `OPENBLAS_NUM_THREADS`, `OMP_NUM_THREADS`, `MKL_NUM_THREADS` based on your CPU request
 
 ### CPU Limits
 
-Default soft CPU limit: request + 16 cores
-- Default request: 0.125 cores → default limit: 16.125 cores
-- Above limit, host throttles CPU usage
-
-Set explicit CPU limit:
+- Default soft limit: 16 physical cores above the CPU request
+- Set explicit limits to prevent noisy-neighbor effects:
 
 ```python
-cpu_request = 1.0
-cpu_limit = 4.0
-
-@app.function(cpu=(cpu_request, cpu_limit))
-def f():
+@app.function(cpu=4.0)  # Request 4 cores
+def bounded_compute():
     ...
 ```
+
+## Memory
+
+### Requesting Memory
+
+```python
+@app.function(memory=16384)  # 16 GiB in MiB
+def large_data():
+    ...
+```
+
+- Value in **MiB** (megabytes)
+- Default: 128 MiB
 
 ### Memory Limits
 
-Set hard memory limit to OOM kill containers at threshold:
+Set hard memory limits to OOM-kill containers that exceed them:
 
 ```python
-mem_request = 1024  # MB
-mem_limit = 2048    # MB
-
-@app.function(memory=(mem_request, mem_limit))
-def f():
-    # Container killed if exceeds 2048 MB
+@app.function(memory=8192)  # 8 GiB request and limit
+def bounded_memory():
     ...
 ```
 
-Useful for catching memory leaks early.
+This prevents paying for runaway memory leaks.
 
-### Disk Limits
+## Ephemeral Disk
 
-Running containers have access to many GBs of SSD disk, limited by:
-1. Underlying worker's SSD capacity
-2. Per-container disk quota (100s of GBs)
-
-Hitting limits causes `OSError` on disk writes.
-
-Request larger disk with `ephemeral_disk`:
+For temporary storage within a container's lifetime:
 
 ```python
-@app.function(ephemeral_disk=10240)  # 10 GiB
-def process_large_files():
+@app.function(ephemeral_disk=102400)  # 100 GiB in MiB
+def process_dataset():
+    # Temporary files at /tmp or anywhere in the container filesystem
     ...
 ```
 
-Maximum disk size: 3.0 TiB (3,145,728 MiB)
-Intended use: dataset processing
+- Value in **MiB**
+- Default: 512 GiB quota per container
+- Maximum: 3,145,728 MiB (3 TiB)
+- Data is lost when the container shuts down
+- Use Volumes for persistent storage
+
+Larger disk requests increase the memory request at a 20:1 ratio for billing purposes.
+
+## Timeout
+
+```python
+@app.function(timeout=3600)  # 1 hour in seconds
+def long_running():
+    ...
+```
+
+- Default: 300 seconds (5 minutes)
+- Maximum: 86,400 seconds (24 hours)
+- Function is killed when timeout expires
 
 ## Billing
 
-Charged based on whichever is higher: reservation or actual usage.
+You are charged based on **whichever is higher**: your resource request or actual usage.
 
-Disk requests increase memory request at 20:1 ratio:
-- Requesting 500 GiB disk → increases memory request to 25 GiB (if not already higher)
+| Resource | Billing Basis |
+|----------|--------------|
+| CPU | max(requested, used) |
+| Memory | max(requested, used) |
+| GPU | Time GPU is allocated |
+| Disk | Increases memory billing at 20:1 ratio |
 
-## Maximum Requests
+### Cost Optimization Tips
 
-Modal enforces maximums at Function creation time. Requests exceeding maximum will be rejected with `InvalidError`.
+- Request only what you need
+- Use appropriate GPU tiers (L40S over H100 for inference)
+- Set `scaledown_window` to minimize idle time
+- Use `min_containers=0` when cold starts are acceptable
+- Batch inputs with `.map()` instead of individual `.remote()` calls
 
-Contact support if you need higher limits.
-
-## Example: Resource Configuration
+## Complete Example
 
 ```python
 @app.function(
-    cpu=4.0,              # 4 physical cores
-    memory=16384,         # 16 GiB RAM
-    ephemeral_disk=51200, # 50 GiB disk
-    timeout=3600,         # 1 hour timeout
+    cpu=8.0,              # 8 physical cores
+    memory=32768,         # 32 GiB
+    gpu="L40S",           # L40S GPU
+    ephemeral_disk=204800, # 200 GiB temp disk
+    timeout=7200,         # 2 hours
+    max_containers=50,
+    min_containers=1,
 )
-def process_data():
-    # Heavy processing with large files
+def full_pipeline(data_path: str):
     ...
 ```
-
-## Monitoring Resource Usage
-
-View resource usage in Modal dashboard:
-- CPU utilization
-- Memory usage
-- Disk usage
-- GPU metrics (if applicable)
-
-Access via https://modal.com/apps

@@ -1,337 +1,254 @@
-# Web Endpoints
+# Modal Web Endpoints
 
-## Quick Start
+## Table of Contents
 
-Create web endpoint with single decorator:
-
-```python
-image = modal.Image.debian_slim().pip_install("fastapi[standard]")
-
-@app.function(image=image)
-@modal.fastapi_endpoint()
-def hello():
-    return "Hello world!"
-```
-
-## Development and Deployment
-
-### Development with `modal serve`
-
-```bash
-modal serve server.py
-```
-
-Creates ephemeral app with live-reloading. Changes to endpoints appear almost immediately.
-
-### Deployment with `modal deploy`
-
-```bash
-modal deploy server.py
-```
-
-Creates persistent endpoint with stable URL.
+- [Simple Endpoints](#simple-endpoints)
+- [Deployment](#deployment)
+- [ASGI Apps](#asgi-apps-fastapi-starlette-fasthtml)
+- [WSGI Apps](#wsgi-apps-flask-django)
+- [Custom Web Servers](#custom-web-servers)
+- [WebSockets](#websockets)
+- [Authentication](#authentication)
+- [Streaming](#streaming)
+- [Concurrency](#concurrency)
+- [Limits](#limits)
 
 ## Simple Endpoints
 
-### Query Parameters
+The easiest way to create a web endpoint:
 
 ```python
-@app.function(image=image)
-@modal.fastapi_endpoint()
-def square(x: int):
-    return {"square": x**2}
-```
+import modal
 
-Call with:
-```bash
-curl "https://workspace--app-square.modal.run?x=42"
-```
-
-### POST Requests
-
-```python
-@app.function(image=image)
-@modal.fastapi_endpoint(method="POST")
-def square(item: dict):
-    return {"square": item['x']**2}
-```
-
-Call with:
-```bash
-curl -X POST -H 'Content-Type: application/json' \
-  --data '{"x": 42}' \
-  https://workspace--app-square.modal.run
-```
-
-### Pydantic Models
-
-```python
-from pydantic import BaseModel
-
-class Item(BaseModel):
-    name: str
-    qty: int = 42
+app = modal.App("api-service")
 
 @app.function()
-@modal.fastapi_endpoint(method="POST")
-def process(item: Item):
-    return {"processed": item.name, "quantity": item.qty}
+@modal.fastapi_endpoint()
+def hello(name: str = "World"):
+    return {"message": f"Hello, {name}!"}
 ```
+
+### POST Endpoints
+
+```python
+@app.function()
+@modal.fastapi_endpoint(method="POST")
+def predict(data: dict):
+    result = model.predict(data["text"])
+    return {"prediction": result}
+```
+
+### Query Parameters
+
+Parameters are automatically parsed from query strings:
+
+```python
+@app.function()
+@modal.fastapi_endpoint()
+def search(query: str, limit: int = 10):
+    return {"results": do_search(query, limit)}
+```
+
+Access via: `https://your-app.modal.run?query=hello&limit=5`
+
+## Deployment
+
+### Development Mode
+
+```bash
+modal serve script.py
+```
+
+- Creates a temporary public URL
+- Hot-reloads on file changes
+- Perfect for development and testing
+- URL expires when you stop the command
+
+### Production Deployment
+
+```bash
+modal deploy script.py
+```
+
+- Creates a permanent URL
+- Runs persistently in the cloud
+- Autoscales based on traffic
+- URL format: `https://<workspace>--<app-name>-<function-name>.modal.run`
 
 ## ASGI Apps (FastAPI, Starlette, FastHTML)
 
-Serve full ASGI applications:
+For full framework applications, use `@modal.asgi_app`:
 
 ```python
-image = modal.Image.debian_slim().pip_install("fastapi[standard]")
+from fastapi import FastAPI
 
-@app.function(image=image)
-@modal.concurrent(max_inputs=100)
+web_app = FastAPI()
+
+@web_app.get("/")
+async def root():
+    return {"status": "ok"}
+
+@web_app.post("/predict")
+async def predict(request: dict):
+    return {"result": model.run(request["input"])}
+
+@app.function(image=image, gpu="L40S")
 @modal.asgi_app()
 def fastapi_app():
-    from fastapi import FastAPI
-
-    web_app = FastAPI()
-
-    @web_app.get("/")
-    async def root():
-        return {"message": "Hello"}
-
-    @web_app.post("/echo")
-    async def echo(request: Request):
-        body = await request.json()
-        return body
-
     return web_app
+```
+
+### With Class Lifecycle
+
+```python
+@app.cls(gpu="L40S", image=image)
+class InferenceService:
+    @modal.enter()
+    def load_model(self):
+        self.model = load_model()
+
+    @modal.asgi_app()
+    def serve(self):
+        from fastapi import FastAPI
+        app = FastAPI()
+
+        @app.post("/generate")
+        async def generate(request: dict):
+            return self.model.generate(request["prompt"])
+
+        return app
 ```
 
 ## WSGI Apps (Flask, Django)
 
-Serve synchronous web frameworks:
-
 ```python
-image = modal.Image.debian_slim().pip_install("flask")
+from flask import Flask
+
+flask_app = Flask(__name__)
+
+@flask_app.route("/")
+def index():
+    return {"status": "ok"}
 
 @app.function(image=image)
-@modal.concurrent(max_inputs=100)
 @modal.wsgi_app()
-def flask_app():
-    from flask import Flask, request
-
-    web_app = Flask(__name__)
-
-    @web_app.post("/echo")
-    def echo():
-        return request.json
-
-    return web_app
+def flask_server():
+    return flask_app
 ```
 
-## Non-ASGI Web Servers
+WSGI is synchronous — concurrent inputs run on separate threads.
 
-For frameworks with custom network binding:
+## Custom Web Servers
 
-> ⚠️ **Security Note**: The example below uses `shell=True` for simplicity. In production environments, prefer using `subprocess.Popen()` with a list of arguments to prevent command injection vulnerabilities.
+For non-standard web frameworks (aiohttp, Tornado, TGI):
 
 ```python
-@app.function()
-@modal.concurrent(max_inputs=100)
-@modal.web_server(8000)
-def my_server():
+@app.function(image=image, gpu="H100")
+@modal.web_server(port=8000)
+def serve():
     import subprocess
-    # Must bind to 0.0.0.0, not 127.0.0.1
-    # Use list form instead of shell=True for security
-    subprocess.Popen(["python", "-m", "http.server", "-d", "/", "8000"])
+    subprocess.Popen([
+        "python", "-m", "vllm.entrypoints.openai.api_server",
+        "--model", "meta-llama/Llama-3-70B",
+        "--host", "0.0.0.0",  # Must bind to 0.0.0.0, not localhost
+        "--port", "8000",
+    ])
 ```
 
-## Streaming Responses
-
-Use FastAPI's `StreamingResponse`:
-
-```python
-import time
-
-def event_generator():
-    for i in range(10):
-        yield f"data: event {i}\n\n".encode()
-        time.sleep(0.5)
-
-@app.function(image=modal.Image.debian_slim().pip_install("fastapi[standard]"))
-@modal.fastapi_endpoint()
-def stream():
-    from fastapi.responses import StreamingResponse
-    return StreamingResponse(
-        event_generator(),
-        media_type="text/event-stream"
-    )
-```
-
-### Streaming from Modal Functions
-
-```python
-@app.function(gpu="any")
-def process_gpu():
-    for i in range(10):
-        yield f"data: result {i}\n\n".encode()
-        time.sleep(1)
-
-@app.function(image=modal.Image.debian_slim().pip_install("fastapi[standard]"))
-@modal.fastapi_endpoint()
-def hook():
-    from fastapi.responses import StreamingResponse
-    return StreamingResponse(
-        process_gpu.remote_gen(),
-        media_type="text/event-stream"
-    )
-```
-
-### With .map()
-
-```python
-@app.function()
-def process_segment(i):
-    return f"segment {i}\n"
-
-@app.function(image=modal.Image.debian_slim().pip_install("fastapi[standard]"))
-@modal.fastapi_endpoint()
-def stream_parallel():
-    from fastapi.responses import StreamingResponse
-    return StreamingResponse(
-        process_segment.map(range(10)),
-        media_type="text/plain"
-    )
-```
+The application must bind to `0.0.0.0` (not `127.0.0.1`).
 
 ## WebSockets
 
-Supported with `@web_server`, `@asgi_app`, and `@wsgi_app`. Maintains single function call per connection. Use with `@modal.concurrent` for multiple simultaneous connections.
+Supported with `@modal.asgi_app`, `@modal.wsgi_app`, and `@modal.web_server`:
 
-Full WebSocket protocol (RFC 6455) supported. Messages up to 2 MiB each.
+```python
+from fastapi import FastAPI, WebSocket
+
+web_app = FastAPI()
+
+@web_app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        result = process(data)
+        await websocket.send_text(result)
+
+@app.function()
+@modal.asgi_app()
+def ws_app():
+    return web_app
+```
+
+- Full WebSocket protocol (RFC 6455)
+- Messages up to 2 MiB each
+- No RFC 8441 or RFC 7692 support yet
 
 ## Authentication
 
-### Proxy Auth Tokens
+### Proxy Auth Tokens (Built-in)
 
-First-class authentication via Modal:
+Modal provides first-class endpoint protection via proxy auth tokens:
 
 ```python
 @app.function()
 @modal.fastapi_endpoint()
-def protected():
-    return "authenticated!"
+def protected(text: str):
+    return {"result": process(text)}
 ```
 
-Protect with tokens in settings, pass in headers:
-- `Modal-Key`
-- `Modal-Secret`
+Clients include `Modal-Key` and `Modal-Secret` headers to authenticate.
 
-### Bearer Token Authentication
+### Custom Bearer Tokens
 
 ```python
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Header, HTTPException
 
-auth_scheme = HTTPBearer()
-
-@app.function(secrets=[modal.Secret.from_name("auth-token")])
-@modal.fastapi_endpoint()
-async def protected(token: HTTPAuthorizationCredentials = Depends(auth_scheme)):
+@app.function(secrets=[modal.Secret.from_name("auth-secret")])
+@modal.fastapi_endpoint(method="POST")
+def secure_predict(data: dict, authorization: str = Header(None)):
     import os
-    if token.credentials != os.environ["AUTH_TOKEN"]:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token"
-        )
-    return "success!"
+    expected = os.environ["AUTH_TOKEN"]
+    if authorization != f"Bearer {expected}":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return {"result": model.predict(data["text"])}
 ```
 
-### Client IP Address
+### Client IP Access
+
+Available for geolocation, rate limiting, and access control.
+
+## Streaming
+
+### Server-Sent Events (SSE)
 
 ```python
-from fastapi import Request
+from fastapi.responses import StreamingResponse
 
-@app.function()
+@app.function(gpu="H100")
 @modal.fastapi_endpoint()
-def get_ip(request: Request):
-    return f"Your IP: {request.client.host}"
+def stream_generate(prompt: str):
+    def generate():
+        for token in model.stream(prompt):
+            yield f"data: {token}\n\n"
+    return StreamingResponse(generate(), media_type="text/event-stream")
 ```
 
-## Web Endpoint URLs
+## Concurrency
 
-### Auto-Generated URLs
-
-Format: `https://<workspace>--<app>-<function>.modal.run`
-
-With environment suffix: `https://<workspace>-<suffix>--<app>-<function>.modal.run`
-
-### Custom Labels
+Handle multiple requests per container using `@modal.concurrent`:
 
 ```python
-@app.function()
-@modal.fastapi_endpoint(label="api")
-def handler():
-    ...
-# URL: https://workspace--api.modal.run
+@app.function(gpu="L40S")
+@modal.concurrent(max_inputs=10)
+@modal.fastapi_endpoint(method="POST")
+async def batch_predict(data: dict):
+    return {"result": await model.predict_async(data["text"])}
 ```
 
-### Programmatic URL Retrieval
-
-```python
-@app.function()
-@modal.fastapi_endpoint()
-def my_endpoint():
-    url = my_endpoint.get_web_url()
-    return {"url": url}
-
-# From deployed function
-f = modal.Function.from_name("app-name", "my_endpoint")
-url = f.get_web_url()
-```
-
-### Custom Domains
-
-Available on Team and Enterprise plans:
-
-```python
-@app.function()
-@modal.fastapi_endpoint(custom_domains=["api.example.com"])
-def hello(message: str):
-    return {"message": f"hello {message}"}
-```
-
-Multiple domains:
-```python
-@modal.fastapi_endpoint(custom_domains=["api.example.com", "api.example.net"])
-```
-
-Wildcard domains:
-```python
-@modal.fastapi_endpoint(custom_domains=["*.example.com"])
-```
-
-TLS certificates automatically generated and renewed.
-
-## Performance
-
-### Cold Starts
-
-First request may experience cold start (few seconds). Modal keeps containers alive for subsequent requests.
-
-### Scaling
-
-- Autoscaling based on traffic
-- Use `@modal.concurrent` for multiple requests per container
-- Beyond concurrency limit, additional containers spin up
-- Requests queue when at max containers
-
-### Rate Limits
-
-Default: 200 requests/second with 5-second burst multiplier
-- Excess returns 429 status code
-- Contact support to increase limits
-
-### Size Limits
+## Limits
 
 - Request body: up to 4 GiB
 - Response body: unlimited
-- WebSocket messages: up to 2 MiB
+- Rate limit: 200 requests/second (5-second burst for new accounts)
+- Cold starts occur when no containers are active (use `min_containers` to avoid)

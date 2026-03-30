@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-AI-powered scientific schematic generation using Nano Banana Pro.
+AI-powered scientific schematic generation using Nano Banana 2.
 
 This script uses a smart iterative refinement approach:
-1. Generate initial image with Nano Banana Pro
-2. AI quality review using Gemini 3 Pro for scientific critique
+1. Generate initial image with Nano Banana 2
+2. AI quality review using Gemini 3.1 Pro Preview for scientific critique
 3. Only regenerate if quality is below threshold for document type
 4. Repeat until quality meets standards (max iterations)
 
@@ -79,7 +79,7 @@ def _load_env_file():
 class ScientificSchematicGenerator:
     """Generate scientific schematics using AI with smart iterative refinement.
     
-    Uses Gemini 3 Pro for quality review to determine if regeneration is needed.
+    Uses Gemini 3.1 Pro Preview for quality review to determine if regeneration is needed.
     Multiple passes only occur if the generated schematic doesn't meet the
     quality threshold for the target document type.
     """
@@ -171,11 +171,11 @@ IMPORTANT - NO FIGURE NUMBERS:
         self.verbose = verbose
         self._last_error = None  # Track last error for better reporting
         self.base_url = "https://openrouter.ai/api/v1"
-        # Nano Banana Pro - Google's advanced image generation model
+        # Nano Banana 2 - Google's advanced image generation model
         # https://openrouter.ai/google/gemini-3-pro-image-preview
-        self.image_model = "google/gemini-3-pro-image-preview"
-        # Gemini 3 Pro for quality review - excellent vision and reasoning
-        self.review_model = "google/gemini-3-pro"
+        self.image_model = "google/gemini-3.1-flash-image-preview"
+        # Gemini 3.1 Pro Preview for quality review - excellent vision and reasoning
+        self.review_model = "google/gemini-3.1-pro-preview"
         
     def _log(self, message: str):
         """Log message if verbose mode is enabled."""
@@ -242,7 +242,7 @@ IMPORTANT - NO FIGURE NUMBERS:
         """
         Extract base64-encoded image from API response.
         
-        For Nano Banana Pro, images are returned in the 'images' field of the message,
+        For Nano Banana 2, images are returned in the 'images' field of the message,
         not in the 'content' field.
         
         Args:
@@ -259,7 +259,7 @@ IMPORTANT - NO FIGURE NUMBERS:
             
             message = choices[0].get("message", {})
             
-            # IMPORTANT: Nano Banana Pro returns images in the 'images' field
+            # IMPORTANT: Nano Banana 2 returns images in the 'images' field
             images = message.get("images", [])
             if images and len(images) > 0:
                 self._log(f"Found {len(images)} image(s) in 'images' field")
@@ -347,7 +347,7 @@ IMPORTANT - NO FIGURE NUMBERS:
     
     def generate_image(self, prompt: str) -> Optional[bytes]:
         """
-        Generate an image using Nano Banana Pro.
+        Generate an image using Nano Banana 2.
         
         Args:
             prompt: Description of the diagram to generate
@@ -427,9 +427,9 @@ IMPORTANT - NO FIGURE NUMBERS:
                     iteration: int, doc_type: str = "default",
                     max_iterations: int = 2) -> Tuple[str, float, bool]:
         """
-        Review generated image using Gemini 3 Pro for quality analysis.
+        Review generated image using Gemini 3.1 Pro Preview for quality analysis.
         
-        Uses Gemini 3 Pro's superior vision and reasoning capabilities to
+        Uses Gemini 3.1 Pro Preview's superior vision and reasoning capabilities to
         evaluate the schematic quality and determine if regeneration is needed.
         
         Args:
@@ -442,7 +442,7 @@ IMPORTANT - NO FIGURE NUMBERS:
         Returns:
             Tuple of (critique text, quality score 0-10, needs_improvement bool)
         """
-        # Use Gemini 3 Pro for review - excellent vision and analysis
+        # Use Gemini 3.1 Pro Preview for review - excellent vision and analysis
         image_data_url = self._image_to_base64(image_path)
         
         # Get quality threshold for this document type
@@ -518,7 +518,7 @@ If score < {threshold}, mark as NEEDS_IMPROVEMENT with specific suggestions."""
         ]
         
         try:
-            # Use Gemini 3 Pro for high-quality review
+            # Use Gemini 3.1 Pro Preview for high-quality review
             response = self._make_request(
                 model=self.review_model,
                 messages=messages
@@ -532,7 +532,7 @@ If score < {threshold}, mark as NEEDS_IMPROVEMENT with specific suggestions."""
             message = choices[0].get("message", {})
             content = message.get("content", "")
             
-            # Check reasoning field (Nano Banana Pro puts analysis here)
+            # Check reasoning field (Nano Banana 2 puts analysis here)
             reasoning = message.get("reasoning", "")
             if reasoning and not content:
                 content = reasoning
@@ -683,8 +683,8 @@ Generate a publication-quality scientific diagram that meets all the guidelines 
                 f.write(image_data)
             print(f"✓ Saved: {iter_path}")
             
-            # Review image using Gemini 3 Pro
-            print(f"Reviewing image with Gemini 3 Pro...")
+            # Review image using Gemini 3.1 Pro Preview
+            print(f"Reviewing image with Gemini 3.1 Pro Preview...")
             critique, score, needs_improvement = self.review_image(
                 str(iter_path), user_prompt, i, doc_type, iterations
             )
