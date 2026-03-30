@@ -39,16 +39,13 @@ This document provides comprehensive, practical examples demonstrating how to co
 **Objective**: Identify novel small molecule inhibitors of EGFR with improved properties compared to existing drugs.
 
 **Skills Used**:
-- `chembl-database` - Query bioactivity data
-- `pubchem-database` - Search compound libraries
+- `database-lookup` - Query ChEMBL, PubChem, COSMIC, AlphaFold DB
+- `paper-lookup` - Search PubMed for literature
 - `rdkit` - Analyze molecular properties
 - `datamol` - Generate analogs
 - `medchem` - Medicinal chemistry filters
 - `molfeat` - Molecular featurization
 - `diffdock` - Molecular docking
-- `alphafold-database` - Retrieve protein structure
-- `pubmed-database` - Literature review
-- `cosmic-database` - Query mutations
 - `deepchem` - Property prediction
 - `torchdrug` - Graph neural networks for molecules
 - `scientific-visualization` - Create figures
@@ -134,18 +131,11 @@ Expected Output:
 **Objective**: Identify FDA-approved drugs that could be repurposed for treating a rare metabolic disorder.
 
 **Skills Used**:
-- `drugbank-database` - Query approved drugs
-- `opentargets-database` - Target-disease associations
-- `string-database` - Protein interactions
-- `kegg-database` - Pathway analysis
-- `reactome-database` - Pathway enrichment
-- `clinicaltrials-database` - Check ongoing trials
-- `fda-database` - Drug approvals and safety
+- `database-lookup` - Query DrugBank, Open Targets, STRING, KEGG, Reactome, ClinicalTrials.gov, FDA
+- `paper-lookup` - Search OpenAlex, bioRxiv, PubMed
 - `networkx` - Network analysis
 - `bioservices` - Biological database queries
 - `literature-review` - Systematic review
-- `openalex-database` - Academic literature search
-- `biorxiv-database` - Preprint search
 
 **Workflow**:
 
@@ -221,18 +211,10 @@ Expected Output:
 **Objective**: Analyze a patient's tumor sequencing data to identify actionable mutations and therapeutic recommendations.
 
 **Skills Used**:
+- `database-lookup` - Query Ensembl, ClinVar, COSMIC, NCBI Gene, UniProt, ClinPGx, DrugBank, ClinicalTrials.gov, Open Targets
+- `paper-lookup` - Search PubMed for literature evidence
 - `pysam` - Parse VCF files
-- `ensembl-database` - Variant annotation
 - `gget` - Unified gene/protein data retrieval
-- `clinvar-database` - Clinical significance
-- `cosmic-database` - Somatic mutations
-- `gene-database` - Gene information
-- `uniprot-database` - Protein impact
-- `clinpgx-database` - Pharmacogenomics data
-- `drugbank-database` - Drug-gene associations
-- `clinicaltrials-database` - Matching trials
-- `opentargets-database` - Target validation
-- `pubmed-database` - Literature evidence
 - `clinical-reports` - Generate clinical report PDF
 
 **Workflow**:
@@ -326,14 +308,12 @@ Expected Output:
 **Objective**: Classify breast cancer subtypes using RNA-seq data and identify subtype-specific therapeutic vulnerabilities.
 
 **Skills Used**:
+- `database-lookup` - Query NCBI Gene, Reactome, Open Targets
+- `paper-lookup` - Search PubMed for literature validation
 - `pydeseq2` - Differential expression
 - `scanpy` - Clustering and visualization
 - `scikit-learn` - Machine learning classification
-- `gene-database` - Gene annotation
 - `gget` - Gene data retrieval
-- `reactome-database` - Pathway analysis
-- `opentargets-database` - Drug targets
-- `pubmed-database` - Literature validation
 - `matplotlib` - Visualization
 - `seaborn` - Heatmaps
 - `plotly` - Interactive visualization
@@ -423,10 +403,10 @@ Expected Output:
 **Objective**: Characterize immune cell populations in tumor microenvironment and identify immunotherapy biomarkers.
 
 **Skills Used**:
+- `database-lookup` - Query NCBI Gene for cell type markers
 - `scanpy` - Single-cell analysis
 - `scvi-tools` - Batch correction and integration
 - `cellxgene-census` - Reference data
-- `gene-database` - Cell type markers
 - `gget` - Gene data retrieval
 - `anndata` - Data structure
 - `arboreto` - Gene regulatory networks
@@ -540,15 +520,12 @@ Expected Output:
 **Objective**: Design small molecules to disrupt a therapeutically relevant protein-protein interaction.
 
 **Skills Used**:
-- `alphafold-database` - Protein structures
-- `pdb-database` - Experimental structures
-- `uniprot-database` - Protein information
+- `database-lookup` - Query AlphaFold DB, PDB, UniProt, ZINC
 - `biopython` - Structure analysis
 - `esm` - Protein language models and embeddings
 - `rdkit` - Chemical library generation
 - `datamol` - Molecule manipulation
 - `diffdock` - Molecular docking
-- `zinc-database` - Screening library
 - `deepchem` - Property prediction
 - `scientific-visualization` - Structure visualization
 - `medchem` - Medicinal chemistry filters
@@ -657,15 +634,11 @@ Expected Output:
 **Objective**: Assess potential toxicity and safety liabilities of drug candidates before synthesis.
 
 **Skills Used**:
+- `database-lookup` - Query ChEMBL, PubChem, DrugBank, FDA, HMDB
 - `rdkit` - Molecular descriptors
 - `medchem` - Toxicophore detection
 - `deepchem` - Toxicity prediction
 - `pytdc` - Therapeutics data commons
-- `chembl-database` - Toxicity data
-- `pubchem-database` - Bioassay data
-- `drugbank-database` - Known drug toxicities
-- `fda-database` - Adverse events
-- `hmdb-database` - Metabolite prediction
 - `scikit-learn` - Classification models
 - `shap` - Model interpretability
 - `clinical-reports` - Safety assessment reports
@@ -789,12 +762,8 @@ Expected Output:
 **Objective**: Analyze the clinical trial landscape for a specific indication to inform development strategy.
 
 **Skills Used**:
-- `clinicaltrials-database` - Trial registry
-- `fda-database` - Drug approvals
-- `pubmed-database` - Published results
-- `openalex-database` - Academic literature
-- `drugbank-database` - Approved drugs
-- `opentargets-database` - Target validation
+- `database-lookup` - Query ClinicalTrials.gov, FDA, DrugBank, Open Targets
+- `paper-lookup` - Search PubMed, OpenAlex for published results
 - `polars` - Data manipulation
 - `matplotlib` - Visualization
 - `seaborn` - Statistical plots
@@ -918,14 +887,10 @@ Expected Output:
 **Objective**: Integrate transcriptomics, proteomics, and metabolomics to identify dysregulated pathways in metabolic disease.
 
 **Skills Used**:
+- `database-lookup` - Query HMDB, Metabolomics Workbench, KEGG, Reactome, STRING
 - `pydeseq2` - RNA-seq analysis
 - `pyopenms` - Mass spectrometry
 - `matchms` - Mass spectra matching
-- `hmdb-database` - Metabolite identification
-- `metabolomics-workbench-database` - Public datasets
-- `kegg-database` - Pathway mapping
-- `reactome-database` - Pathway analysis
-- `string-database` - Protein interactions
 - `cobrapy` - Constraint-based metabolic modeling
 - `statsmodels` - Multi-omics correlation
 - `networkx` - Network analysis
@@ -1435,11 +1400,9 @@ Expected Output:
 **Objective**: Identify genetic markers associated with drought tolerance and yield in a crop species.
 
 **Skills Used**:
+- `database-lookup` - Query GWAS Catalog, Ensembl, NCBI Gene
 - `biopython` - Sequence analysis
 - `pysam` - VCF processing
-- `gwas-database` - Public GWAS data
-- `ensembl-database` - Plant genomics
-- `gene-database` - Gene annotation
 - `gget` - Gene data retrieval
 - `scanpy` - Population structure analysis
 - `scikit-learn` - PCA and clustering
@@ -1577,7 +1540,7 @@ Expected Output:
 - `networkx` - Graph theory analysis
 - `statsmodels` - Statistical testing
 - `statistical-analysis` - Hypothesis testing
-- `torch_geometric` - Graph neural networks
+- `torch-geometric` - Graph neural networks
 - `pymc` - Bayesian modeling
 - `matplotlib` - Brain visualization
 - `seaborn` - Connectivity matrices
@@ -1711,12 +1674,9 @@ Expected Output:
 **Objective**: Characterize microbial community composition and functional potential from environmental DNA samples.
 
 **Skills Used**:
+- `database-lookup` - Query ENA, GEO, UniProt, KEGG
 - `biopython` - Sequence processing
 - `pysam` - BAM file handling
-- `ena-database` - Sequence data
-- `geo-database` - Public datasets
-- `uniprot-database` - Protein annotation
-- `kegg-database` - Pathway analysis
 - `etetoolkit` - Phylogenetic trees
 - `scikit-bio` - Microbial ecology
 - `networkx` - Co-occurrence networks
@@ -1859,11 +1819,9 @@ Expected Output:
 **Objective**: Track antimicrobial resistance trends and predict resistance phenotypes from genomic data.
 
 **Skills Used**:
+- `database-lookup` - Query ENA, UniProt, NCBI Gene
 - `biopython` - Sequence analysis
 - `pysam` - Genome assembly analysis
-- `ena-database` - Public genomic data
-- `uniprot-database` - Resistance protein annotation
-- `gene-database` - Resistance gene catalogs
 - `etetoolkit` - Phylogenetic analysis
 - `scikit-learn` - Resistance prediction
 - `networkx` - Transmission networks
@@ -2011,16 +1969,12 @@ Expected Output:
 **Objective**: Integrate genomics, transcriptomics, proteomics, and clinical data to identify cancer subtypes and therapeutic strategies.
 
 **Skills Used**:
+- `database-lookup` - Query Ensembl, COSMIC, STRING, Reactome, Open Targets
 - `pydeseq2` - RNA-seq DE analysis
 - `pysam` - Variant calling
-- `ensembl-database` - Gene annotation
 - `gget` - Gene data retrieval
-- `cosmic-database` - Cancer mutations
-- `string-database` - Protein interactions
-- `reactome-database` - Pathway analysis
-- `opentargets-database` - Drug targets
 - `scikit-learn` - Clustering and classification
-- `torch_geometric` - Graph neural networks
+- `torch-geometric` - Graph neural networks
 - `umap-learn` - Dimensionality reduction
 - `scikit-survival` - Survival analysis
 - `statsmodels` - Statistical modeling
@@ -2356,7 +2310,7 @@ Expected Output:
 - `plotly` - Interactive process visualization
 - `fluidsim` - Fluid dynamics simulation
 - `scientific-writing` - Engineering reports
-- `document-skills` - Technical documentation
+- `pdf` - Technical documentation
 
 **Workflow**:
 
@@ -2560,7 +2514,7 @@ Expected Output:
 - `scientific-slides` - Presentation materials
 - `latex-posters` - Conference posters
 - `pptx-posters` - PowerPoint posters
-- `document-skills` - PDF report generation
+- `pdf` - PDF report generation
 
 **Workflow**:
 
@@ -2676,7 +2630,7 @@ Step 12: Assemble final publication package
 - Organize all figures in publication order
 - Create high-resolution exports (300+ DPI for print)
 - Generate both RGB (web) and CMYK (print) versions
-- Compile into PDF using document-skills:
+- Compile into PDF using pdf skill:
   * Title page with graphical abstract
   * All figures with captions
   * Supplementary figures section
@@ -2795,16 +2749,15 @@ Expected Output:
 **Objective**: Develop a comprehensive research grant proposal with literature review, specific aims, and budget justification.
 
 **Skills Used**:
+- `database-lookup` - Query ClinicalTrials.gov for preliminary data context
+- `paper-lookup` - Search PubMed, OpenAlex for literature and citations
 - `research-grants` - Grant writing templates and guidelines
 - `literature-review` - Systematic literature analysis
-- `pubmed-database` - Literature search
-- `openalex-database` - Citation analysis
-- `clinicaltrials-database` - Preliminary data context
 - `hypothesis-generation` - Scientific hypothesis development
 - `scientific-writing` - Technical writing
 - `scientific-critical-thinking` - Research design
 - `citation-management` - Reference formatting
-- `document-skills` - PDF generation
+- `pdf` - PDF generation
 
 **Workflow**:
 
@@ -3036,15 +2989,15 @@ These examples demonstrate:
 The examples in this document cover the following skill categories:
 
 **Databases & Data Sources:**
-- Biological: `chembl-database`, `pubchem-database`, `drugbank-database`, `uniprot-database`, `gene-database`, `ensembl-database`, `clinvar-database`, `cosmic-database`, `string-database`, `kegg-database`, `reactome-database`, `hmdb-database`, `pdb-database`, `alphafold-database`, `zinc-database`, `gwas-database`, `geo-database`, `ena-database`, `cellxgene-census`, `metabolomics-workbench-database`, `brenda-database`, `clinpgx-database`
-- Clinical: `clinicaltrials-database`, `fda-database`
-- Literature: `pubmed-database`, `openalex-database`, `biorxiv-database`
+- `database-lookup` — unified access to 78 databases including ChEMBL, PubChem, DrugBank, UniProt, NCBI Gene, Ensembl, ClinVar, COSMIC, STRING, KEGG, Reactome, HMDB, PDB, AlphaFold DB, ZINC, GWAS Catalog, GEO, ENA, ClinicalTrials.gov, FDA, Open Targets, ClinPGx, Metabolomics Workbench, and more
+- `paper-lookup` — unified access to 10 academic paper databases including PubMed, PMC, bioRxiv, medRxiv, arXiv, OpenAlex, Crossref, Semantic Scholar, CORE, Unpaywall
+- `cellxgene-census` — CZ CELLxGENE single-cell reference data
 
 **Analysis Packages:**
 - Chemistry: `rdkit`, `datamol`, `medchem`, `molfeat`, `deepchem`, `torchdrug`, `pytdc`, `diffdock`, `pyopenms`, `matchms`, `cobrapy`
 - Genomics: `biopython`, `pysam`, `pydeseq2`, `scanpy`, `scvi-tools`, `anndata`, `gget`, `geniml`, `deeptools`, `etetoolkit`, `scikit-bio`
 - Proteins: `esm`, `bioservices`
-- Machine Learning: `scikit-learn`, `pytorch-lightning`, `torch_geometric`, `transformers`, `stable-baselines3`, `shap`
+- Machine Learning: `scikit-learn`, `pytorch-lightning`, `torch-geometric`, `transformers`, `stable-baselines3`, `shap`
 - Statistics: `statsmodels`, `statistical-analysis`, `pymc`, `scikit-survival`
 - Visualization: `matplotlib`, `seaborn`, `plotly`, `scientific-visualization`
 - Data Processing: `polars`, `dask`, `vaex`, `networkx`
@@ -3063,7 +3016,7 @@ The examples in this document cover the following skill categories:
 - `clinical-reports`, `clinical-decision-support`
 - `literature-review`, `hypothesis-generation`, `scientific-critical-thinking`
 - `research-grants`, `peer-review`
-- `document-skills`, `latex-posters`, `pptx-posters`
+- `pdf`, `docx`, `pptx`, `xlsx`, `latex-posters`, `pptx-posters`
 - `citation-management`, `market-research-reports`
 
 **Image & Media:**
