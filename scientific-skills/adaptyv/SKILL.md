@@ -1,112 +1,211 @@
 ---
 name: adaptyv
-description: Cloud laboratory platform for automated protein testing and validation. Use when designing proteins and needing experimental validation including binding assays, expression testing, thermostability measurements, enzyme activity assays, or protein sequence optimization. Also use for submitting experiments via API, tracking experiment status, downloading results, optimizing protein sequences for better expression using computational tools (NetSolP, SoluProt, SolubleMPNN, ESM), or managing protein design workflows with wet-lab validation.
-license: Unknown
-metadata:
-    skill-author: K-Dense Inc.
+author: "K-Dense, Inc."
+description: "How to use the Adaptyv Bio Foundry API and Python SDK for protein experiment design, submission, and results retrieval. Use this skill whenever the user mentions Adaptyv, Foundry API, protein binding assays, protein screening experiments, BLI/SPR assays, thermostability assays, or wants to submit protein sequences for experimental characterization. Also trigger when code imports `adaptyv`, `adaptyv_sdk`, or `FoundryClient`, or references `foundry-api-public.adaptyvbio.com`."
 ---
 
-# Adaptyv
+# Adaptyv Bio Foundry API
 
-Adaptyv is a cloud laboratory platform that provides automated protein testing and validation services. Submit protein sequences via API or web interface and receive experimental results in approximately 21 days.
+Adaptyv Bio is a cloud lab that turns protein sequences into experimental data. Users submit amino acid sequences via API or UI; Adaptyv's automated lab runs assays (binding, thermostability, expression, fluorescence) and delivers results in ~21 days.
 
 ## Quick Start
 
-### Authentication Setup
+**Base URL:** `https://foundry-api-public.adaptyvbio.com/api/v1`
 
-Adaptyv requires API authentication. Set up your credentials:
+**Authentication:** Bearer token in the `Authorization` header. Tokens are obtained from [foundry.adaptyvbio.com](https://foundry.adaptyvbio.com/) sidebar.
 
-1. Contact support@adaptyvbio.com to request API access (platform is in alpha/beta)
-2. Receive your API access token
-3. Set environment variable:
+When writing code, always read the API key from the environment variable `ADAPTYV_API_KEY` or from a `.env` file — never hardcode tokens. Check for a `.env` file in the project root first; if one exists, use a library like `python-dotenv` to load it.
 
 ```bash
-export ADAPTYV_API_KEY="your_api_key_here"
+export FOUNDRY_API_TOKEN="abs0_..."
+curl https://foundry-api-public.adaptyvbio.com/api/v1/targets?limit=3 \
+  -H "Authorization: Bearer $FOUNDRY_API_TOKEN"
 ```
 
-Or create a `.env` file:
+Every request except `GET /openapi.json` requires authentication. Store tokens in environment variables or `.env` files — never commit them to source control.
 
-```
-ADAPTYV_API_KEY=your_api_key_here
-```
+## Python SDK
 
-### Installation
+Install: `uv add adaptyv-sdk` (falls back to `uv pip install adaptyv-sdk` if no `pyproject.toml` exists)
 
-Install the required package using uv:
-
+**Environment variables** (set in shell or `.env` file):
 ```bash
-uv pip install requests python-dotenv
+ADAPTYV_API_KEY=your_api_key
+ADAPTYV_API_URL=https://foundry-api-public.adaptyvbio.com/api/v1
 ```
 
-### Basic Usage
-
-Submit protein sequences for testing:
+### Decorator Pattern
 
 ```python
-import os
-import requests
-from dotenv import load_dotenv
+from adaptyv import lab
 
-load_dotenv()
+@lab.experiment(target="PD-L1", experiment_type="screening", method="bli")
+def design_binders():
+    return {"design_a": "MVKVGVNG...", "design_b": "MKVLVAG..."}
 
-api_key = os.getenv("ADAPTYV_API_KEY")
-base_url = "https://kq5jp7qj7wdqklhsxmovkzn4l40obksv.lambda-url.eu-central-1.on.aws"
-
-headers = {
-    "Authorization": f"Bearer {api_key}",
-    "Content-Type": "application/json"
-}
-
-# Submit experiment
-response = requests.post(
-    f"{base_url}/experiments",
-    headers=headers,
-    json={
-        "sequences": ">protein1\nMKVLWALLGLLGAA...",
-        "experiment_type": "binding",
-        "webhook_url": "https://your-webhook.com/callback"
-    }
-)
-
-experiment_id = response.json()["experiment_id"]
+result = design_binders()
+print(f"Experiment: {result.experiment_url}")
 ```
 
-## Available Experiment Types
-Adaptyv supports multiple assay types:
-- **Binding assays** - Test protein-target interactions using biolayer interferometry
-- **Expression testing** - Measure protein expression levels
-- **Thermostability** - Characterize protein thermal stability
-- **Enzyme activity** - Assess enzymatic function
+### Client Pattern
 
-See `reference/experiments.md` for detailed information on each experiment type and workflows.
+```python
+from adaptyv import FoundryClient
 
-## Protein Sequence Optimization
-Before submitting sequences, optimize them for better expression and stability:
+client = FoundryClient(api_key="...", base_url="https://foundry-api-public.adaptyvbio.com/api/v1")
 
-**Common issues to address:**
-- Unpaired cysteines that create unwanted disulfides
-- Excessive hydrophobic regions causing aggregation
-- Poor solubility predictions
+# Browse targets
+targets = client.targets.list(search="EGFR", selfservice_only=True)
 
-**Recommended tools:**
-- NetSolP / SoluProt - Initial solubility filtering
-- SolubleMPNN - Sequence redesign for improved solubility
-- ESM - Sequence likelihood scoring
-- ipTM - Interface stability assessment
-- pSAE - Hydrophobic exposure quantification
+# Estimate cost
+estimate = client.experiments.cost_estimate({
+    "experiment_spec": {
+        "experiment_type": "screening",
+        "method": "bli",
+        "target_id": "target-uuid",
+        "sequences": {"seq1": "EVQLVESGGGLVQ..."},
+        "n_replicates": 3
+    }
+})
 
-See `reference/protein_optimization.md` for detailed optimization workflows and tool usage.
+# Create and submit
+exp = client.experiments.create({...})
+client.experiments.submit(exp.experiment_id)
 
-## API Reference
-For complete API documentation including all endpoints, request/response formats, and authentication details, see `reference/api_reference.md`.
+# Later: retrieve results
+results = client.experiments.get_results(exp.experiment_id)
+```
 
-## Examples
-For concrete code examples covering common use cases (experiment submission, status tracking, result retrieval, batch processing), see `reference/examples.md`.
+## Experiment Types
 
-## Important Notes
-- Platform is currently in alpha/beta phase with features subject to change
-- Not all platform features are available via API yet
-- Results typically delivered in ~21 days
-- Contact support@adaptyvbio.com for access requests or questions
-- Suitable for high-throughput AI-driven protein design workflows
+| Type | Method | Measures | Requires Target |
+|---|---|---|---|
+| `affinity` | `bli` or `spr` | KD, kon, koff kinetics | Yes |
+| `screening` | `bli` or `spr` | Yes/no binding | Yes |
+| `thermostability` | — | Melting temperature (Tm) | No |
+| `expression` | — | Expression yield | No |
+| `fluorescence` | — | Fluorescence intensity | No |
 
+## Experiment Lifecycle
+
+```
+Draft → WaitingForConfirmation → QuoteSent → WaitingForMaterials → InQueue → InProduction → DataAnalysis → InReview → Done
+```
+
+| Status | Who Acts | Description |
+|---|---|---|
+| `Draft` | You | Editable, no cost commitment |
+| `WaitingForConfirmation` | Adaptyv | Under review, quote being prepared |
+| `QuoteSent` | You | Review and confirm the quote |
+| `WaitingForMaterials` | Adaptyv | Gene fragments and target ordered |
+| `InQueue` | Adaptyv | Materials arrived, queued for lab |
+| `InProduction` | Adaptyv | Assay running |
+| `DataAnalysis` | Adaptyv | Raw data processing and QC |
+| `InReview` | Adaptyv | Final validation |
+| `Done` | You | Results available |
+| `Canceled` | Either | Experiment canceled |
+
+The `results_status` field on an experiment tracks: `none`, `partial`, or `all`.
+
+## Common Workflows
+
+### 1. Submit a Binding Screen (Step by Step)
+
+```python
+# 1. Find a target
+targets = client.targets.list(search="EGFR", selfservice_only=True)
+target_id = targets.items[0].id
+
+# 2. Preview cost
+estimate = client.experiments.cost_estimate({
+    "experiment_spec": {
+        "experiment_type": "screening",
+        "method": "bli",
+        "target_id": target_id,
+        "sequences": {"seq1": "EVQLVESGGGLVQ...", "seq2": "MKVLVAG..."},
+        "n_replicates": 3
+    }
+})
+
+# 3. Create experiment (starts as Draft)
+exp = client.experiments.create({
+    "name": "EGFR binder screen batch 1",
+    "experiment_spec": {
+        "experiment_type": "screening",
+        "method": "bli",
+        "target_id": target_id,
+        "sequences": {"seq1": "EVQLVESGGGLVQ...", "seq2": "MKVLVAG..."},
+        "n_replicates": 3
+    }
+})
+
+# 4. Submit for review
+client.experiments.submit(exp.experiment_id)
+
+# 5. Poll or use webhooks until Done
+# 6. Retrieve results
+results = client.experiments.get_results(exp.experiment_id)
+```
+
+### 2. Automated Pipeline (Skip Draft + Auto-Accept Quote)
+
+```python
+exp = client.experiments.create({
+    "name": "Auto pipeline run",
+    "experiment_spec": {...},
+    "skip_draft": True,
+    "auto_accept_quote": True,
+    "webhook_url": "https://my-server.com/webhook"
+})
+# Webhook fires on each status transition; poll or wait for Done
+```
+
+### 3. Using Webhooks
+
+Pass `webhook_url` when creating an experiment. Adaptyv POSTs to that URL on every status transition with the experiment ID, previous status, and new status.
+
+## Sequences
+
+- Simple format: `{"seq1": "EVQLVESGGGLVQPGGSLRLSCAAS"}`
+- Rich format: `{"seq1": {"aa_string": "EVQLVESGGGLVQ...", "control": false, "metadata": {"type": "scfv"}}}`
+- Multi-chain: use colon separator — `"MVLS:EVQL"`
+- Valid amino acids: A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y (case-insensitive, stored uppercase)
+- Sequences can only be added to experiments in `Draft` status
+
+## Filtering, Sorting, and Pagination
+
+All list endpoints support pagination (`limit` 1-100, default 50; `offset`), search (free-text on name fields), and sorting.
+
+**Filtering** uses s-expression syntax via the `filter` query parameter:
+- Comparison: `eq(field,value)`, `neq`, `gt`, `gte`, `lt`, `lte`, `contains(field,substring)`
+- Range/set: `between(field,lo,hi)`, `in(field,v1,v2,...)`
+- Logic: `and(expr1,expr2,...)`, `or(...)`, `not(expr)`
+- Null: `is_null(field)`, `is_not_null(field)`
+- JSONB: `at(field,key)` — e.g., `eq(at(metadata,score),42)`
+- Cast: `float()`, `int()`, `text()`, `timestamp()`, `date()`
+
+**Sorting** uses `asc(field)` or `desc(field)`, comma-separated (max 8):
+```
+sort=desc(created_at),asc(name)
+```
+
+**Example:** `filter=and(gte(created_at,2026-01-01),eq(status,done))`
+
+## Error Handling
+
+All errors return:
+```json
+{
+  "error": "Human-readable description",
+  "request_id": "req_019462a4-b1c2-7def-8901-23456789abcd"
+}
+```
+The `request_id` is also in the `x-request-id` response header — include it when contacting support.
+
+## Token Management
+
+Tokens use Biscuit-based cryptographic attenuation. You can create restricted tokens scoped by organization, resource type, actions (read/create/update), and expiry via `POST /tokens/attenuate`. Revoking a token (`POST /tokens/revoke`) revokes it and all its descendants.
+
+## Detailed API Reference
+
+For the full list of all 32 endpoints with request/response schemas, read `references/api-endpoints.md`.
