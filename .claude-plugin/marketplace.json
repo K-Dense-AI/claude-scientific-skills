@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.34.0"
+    "version": "2.34.1"
   },
   "plugins": [
     {
@@ -36,7 +36,6 @@
         "./scientific-skills/datamol",
         "./scientific-skills/deepchem",
         "./scientific-skills/deeptools",
-        "./scientific-skills/denario",
         "./scientific-skills/depmap",
         "./scientific-skills/dhdna-profiler",
         "./scientific-skills/diffdock",
@@ -84,7 +83,6 @@
         "./scientific-skills/open-notebook",
         "./scientific-skills/optimize-for-gpu",
         "./scientific-skills/opentrons-integration",
-        "./scientific-skills/paper-2-web",
         "./scientific-skills/paper-lookup",
         "./scientific-skills/parallel-web",
         "./scientific-skills/pathml",
@@ -93,7 +91,6 @@
         "./scientific-skills/pennylane",
         "./scientific-skills/perplexity-search",
         "./scientific-skills/phylogenetics",
-        "./scientific-skills/plotly",
         "./scientific-skills/polars",
         "./scientific-skills/polars-bio",
         "./scientific-skills/pptx",
