@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude scientific skills from K-Dense Inc",
-    "version": "2.33.0"
+    "version": "2.34.0"
   },
   "plugins": [
     {
@@ -82,6 +82,7 @@
         "./scientific-skills/neuropixels-analysis",
         "./scientific-skills/omero-integration",
         "./scientific-skills/open-notebook",
+        "./scientific-skills/optimize-for-gpu",
         "./scientific-skills/opentrons-integration",
         "./scientific-skills/paper-2-web",
         "./scientific-skills/paper-lookup",
