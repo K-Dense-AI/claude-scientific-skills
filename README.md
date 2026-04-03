@@ -116,58 +116,13 @@ Each skill includes:
 
 ## 🎯 Getting Started
 
-Claude Scientific Skills follows the open [Agent Skills](https://agentskills.io/) standard. Simply copy the skill folders into your skills directory and your AI agent will automatically discover and use them.
-
-### Step 1: Clone the Repository
+Install Claude Scientific Skills with a single command:
 
 ```bash
-git clone https://github.com/K-Dense-AI/claude-scientific-skills.git
+npx skills add K-Dense-AI/claude-scientific-skills
 ```
 
-### Step 2: Copy Skills to Your Skills Directory
-
-Copy the individual skill folders from `scientific-skills/` to one of the supported skill directories below. You can install skills **globally** (available across all projects) or **per-project** (available only in that project).
-
-**Global installation** (recommended — skills available everywhere):
-
-| Tool | Directory |
-|------|-----------|
-| Cursor | `~/.cursor/skills/` |
-| Claude Code | `~/.claude/skills/` |
-| Codex | `~/.codex/skills/` |
-| Gemini CLI | `~/.gemini/skills/` |
-
-**Project-level installation** (skills scoped to a single project):
-
-| Tool | Directory |
-|------|-----------|
-| Cursor | `.cursor/skills/` (in your project root) |
-| Claude Code | `.claude/skills/` (in your project root) |
-| Codex | `.codex/skills/` (in your project root) |
-| Gemini CLI | `.gemini/skills/` (in your project root) |
-
-> **Note:** Cursor also reads from `.claude/skills/`, `.codex/skills/`, and `.gemini/skills/` directories, and vice versa, so skills are cross-compatible between tools.
-
-**Example — global install for Cursor:**
-```bash
-cp -r claude-scientific-skills/scientific-skills/* ~/.cursor/skills/
-```
-
-**Example — global install for Claude Code:**
-```bash
-cp -r claude-scientific-skills/scientific-skills/* ~/.claude/skills/
-```
-
-**Example — global install for Gemini CLI:**
-```bash
-cp -r claude-scientific-skills/scientific-skills/* ~/.gemini/skills/
-```
-
-**Example — project-level install:**
-```bash
-mkdir -p .cursor/skills
-cp -r /path/to/claude-scientific-skills/scientific-skills/* .cursor/skills/
-```
+This is the official standard approach for installing Agent Skills across **all platforms**, including **Claude Code**, **Claude Cowork**, **Codex**, **Gemini CLI**, **Cursor**, and any other agent that supports the open [Agent Skills](https://agentskills.io/) standard.
 
 **That's it!** Your AI agent will automatically discover the skills and use them when relevant to your scientific tasks. You can also invoke any skill manually by mentioning the skill name in your prompt.
 
