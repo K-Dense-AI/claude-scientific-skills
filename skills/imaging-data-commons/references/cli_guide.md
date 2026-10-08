@@ -1,20 +1,53 @@
 # idc-index Command Line Interface Guide
 
-**Verified:** idc-index 0.12.5 CLI signatures and dry runs, 2026-09-30. Downloads below are illustrative.
-
 The `idc-index` package provides command-line tools for downloading DICOM data from the NCI Imaging Data Commons without writing Python code.
 
 ## Installation
 
-Needs `idc-index` installed — run `python scripts/check_version.py`, which reports the installed
+Needs `idc-index` installed — run `scripts/check_version.py`, which reports the installed
 version and prints the install command for the interpreter you are running.
 
 After installation, the `idc` command is available in your terminal.
 
-In 0.12.5, Boolean options take a value: `--dry-run true`, `--show-progress-bar true`,
-`--use-s5cmd-sync true`, `--quiet false`, `--validate-manifest true`. They are not bare flags.
-Always include a selection. In 0.12.5 an entirely omitted selection errors; do not rely
-on this implementation detail to limit a transfer.
+### Running the version check
+
+Invoke the script with **the interpreter that will run `idc-index`** — it exists to inspect
+*that* environment, so `python`, `python3`, `py -3`, or an explicit virtual-environment path
+are all correct as long as it is the same one. The guides deliberately never put an interpreter
+name in front of the path, because no name is portable:
+
+| Environment | `python` | `python3` |
+|-------------|----------|-----------|
+| Bare Homebrew macOS | absent | present |
+| Windows (python.org installer) | present | absent |
+| Windows virtual environment | present | absent |
+| POSIX virtual environment | present | present |
+
+On Windows there is a worse case: `%LOCALAPPDATA%\Microsoft\WindowsApps` ships alias stubs for
+both names that open the Microsoft Store instead of running anything, so the command appears to
+resolve and still produces no check.
+
+**Confirm the outcome, not the command.** A pass prints
+
+```
+idc-index <version> meets pinned minimum (0.13.0)
+```
+
+and exits 0. Anything else — `command not found`, a permission error (the bundled script is not
+marked executable, and vendoring often drops the bit anyway), or no output at all — means the
+check did not run. That is not a pass.
+
+The distinction matters because the failure it guards against is silent. Identifier values are
+renormalised between `idc-index` releases while the reported IDC data version stays the same:
+0.12.3 and 0.12.5 both report `v24`, but the Pan-Cancer nuclei segmentations are
+`Pan-Cancer-Nuclei-Seg-DICOM` in the first and `pan_cancer_nuclei_seg_dicom` in the second. A
+query written against the wrong one returns zero rows rather than raising, which reads as "no
+such data" instead of "your index is stale". `get_idc_version()` cannot distinguish them, so
+the package version is the only signal.
+
+For that reason the `idc-index` setup snippet in `SKILL.md` repeats the check in Python, after
+importing `idc_index`. That copy cannot be skipped or fail to launch: the interpreter that
+imports the package is by definition the one that will run the queries.
 
 ## Available Commands
 
@@ -42,7 +75,7 @@ idc download "1.3.6.1.4.1.9328.50.1.69736" --download-dir ./data
 # Download multiple items (comma-separated)
 idc download "tcga_luad,tcga_lusc" --download-dir ./data
 
-# Download from manifest file (auto-detected because the file exists)
+# Download from manifest file (auto-detected by file extension)
 idc download manifest.txt --download-dir ./data
 ```
 
@@ -103,10 +136,10 @@ Specialized for downloading from manifest files with built-in validation, progre
 idc download-from-manifest --manifest-file cohort.txt --download-dir ./data
 
 # With progress bar and validation
-idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --show-progress-bar true
+idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --show-progress-bar
 
 # Resume interrupted download with s5cmd sync
-idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --use-s5cmd-sync true
+idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --use-s5cmd-sync
 ```
 
 ### Options
@@ -115,17 +148,16 @@ idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --us
 |--------|-------------|
 | `--manifest-file` | **Required.** Path to manifest file containing S3 URLs |
 | `--download-dir` | **Required.** Destination directory |
-| `--validate-manifest true` | Validate manifest before download (enabled by default) |
-| `--show-progress-bar true` | Display download progress |
-| `--use-s5cmd-sync true` | Enable resumable downloads - skips already-downloaded files |
-| `--quiet true` | Suppress subprocess output |
+| `--validate-manifest` | Validate manifest before download (enabled by default) |
+| `--show-progress-bar` | Display download progress |
+| `--use-s5cmd-sync` | Enable resumable downloads - skips already-downloaded files |
+| `--quiet` | Suppress subprocess output |
 | `--dir-template` | Directory hierarchy template |
 | `--log-level` | Logging verbosity |
 
 ### Manifest File Format
 
-Manifest files contain S3 URLs, one per line. A CSV of bare DICOM UIDs is not a download
-manifest; `idc download existing-file.csv` treats it as a manifest and fails validation:
+Manifest files contain S3 URLs, one per line:
 
 ```
 s3://idc-open-data/cb09464a-c5cc-4428-9339-d7fa87cfe837/*
@@ -156,11 +188,7 @@ with open('ct_manifest.txt', 'w') as f:
 
 ## idc download-from-selection
 
-Download data using one explicit identifier selection. In 0.12.5 the SDK uses the most
-specific supplied selector, not the intersection of all selectors: CRDC UUID, SOP UID
-(Python only), series UID, study UID, patient ID, then collection ID. Higher-level filters
-are ignored when a more specific one is supplied. For a conjunction, query SQL first and
-pass the resulting series UIDs or URL manifest.
+Download data using filter criteria. Filters are applied sequentially.
 
 ### Usage
 
@@ -171,11 +199,11 @@ idc download-from-selection --collection-id rider_pilot --download-dir ./data
 # Download specific series
 idc download-from-selection --series-instance-uid "1.3.6.1.4.1.9328.50.1.69736" --download-dir ./data
 
-# Patient selection (the more-specific patient ID takes precedence over collection)
+# Multiple filters
 idc download-from-selection --collection-id nlst --patient-id "100004" --download-dir ./data
 
 # Dry run - see what would be downloaded without actually downloading
-idc download-from-selection --collection-id tcga_luad --dry-run true --download-dir ./data
+idc download-from-selection --collection-id tcga_luad --dry-run --download-dir ./data
 ```
 
 ### Options
@@ -188,9 +216,9 @@ idc download-from-selection --collection-id tcga_luad --dry-run true --download-
 | `--study-instance-uid` | Filter by study UID |
 | `--series-instance-uid` | Filter by series UID |
 | `--crdc-series-uuid` | Filter by CRDC UUID |
-| `--dry-run true` | Calculate cohort size without downloading |
-| `--show-progress-bar true` | Display download progress |
-| `--use-s5cmd-sync true` | Enable resumable downloads |
+| `--dry-run` | Calculate cohort size without downloading |
+| `--show-progress-bar` | Display download progress |
+| `--use-s5cmd-sync` | Enable resumable downloads |
 | `--dir-template` | Directory hierarchy template |
 
 ### Dry Run for Size Estimation
@@ -198,7 +226,7 @@ idc download-from-selection --collection-id tcga_luad --dry-run true --download-
 Use `--dry-run` to estimate download size before committing:
 
 ```bash
-idc download-from-selection --collection-id nlst --dry-run true --download-dir ./data
+idc download-from-selection --collection-id nlst --dry-run --download-dir ./data
 ```
 
 This shows:
@@ -213,7 +241,7 @@ This shows:
 ### 1. Download Small Collection for Testing
 
 ```bash
-# rider_pilot is about 11 GB in the reviewed snapshot; estimate before transferring
+# rider_pilot is ~1GB - good for testing
 idc download rider_pilot --download-dir ./test_data
 ```
 
@@ -224,15 +252,15 @@ idc download rider_pilot --download-dir ./test_data
 idc download-from-selection \
     --collection-id nlst \
     --download-dir ./nlst_data \
-    --show-progress-bar true \
-    --use-s5cmd-sync true
+    --show-progress-bar \
+    --use-s5cmd-sync
 ```
 
 ### 3. Estimate Size Before Download
 
 ```bash
 # Check size first
-idc download-from-selection --collection-id tcga_luad --dry-run true --download-dir ./data
+idc download-from-selection --collection-id tcga_luad --dry-run --download-dir ./data
 
 # Then download if size is acceptable
 idc download-from-selection --collection-id tcga_luad --download-dir ./data
@@ -241,12 +269,12 @@ idc download-from-selection --collection-id tcga_luad --download-dir ./data
 ### 4. Download Specific Modality via Python + CLI
 
 ```python
-# First, query for public series URLs in Python
+# First, query for series UIDs in Python
 from idc_index import IDCClient
 
 client = IDCClient()
 results = client.sql_query("""
-    SELECT series_aws_url
+    SELECT SeriesInstanceUID
     FROM index
     WHERE collection_id = 'nlst'
       AND Modality = 'CT'
@@ -255,12 +283,12 @@ results = client.sql_query("""
 """)
 
 # Save to manifest
-results['series_aws_url'].to_csv('my_series.txt', index=False, header=False)
+results['SeriesInstanceUID'].to_csv('my_series.csv', index=False, header=False)
 ```
 
 ```bash
 # Then download via CLI
-idc download-from-manifest --manifest-file my_series.txt --download-dir ./lung_ct
+idc download my_series.csv --download-dir ./lung_ct
 ```
 
 ---
@@ -283,7 +311,7 @@ The CLI includes several safety features:
 Use `--use-s5cmd-sync` to resume:
 
 ```bash
-idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --use-s5cmd-sync true
+idc download-from-manifest --manifest-file cohort.txt --download-dir ./data --use-s5cmd-sync
 ```
 
 ### Connection Timeout

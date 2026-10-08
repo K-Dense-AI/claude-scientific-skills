@@ -628,6 +628,7 @@ packages = ["pybids", "nibabel", "pydicom", "heudiconv", "dcm2bids", "bids-valid
 packages = [
     "idc-index",
     "duckdb",
+    "requests",
     "google-cloud-bigquery[pandas]",
     "pydicom",
     "simpleitk",

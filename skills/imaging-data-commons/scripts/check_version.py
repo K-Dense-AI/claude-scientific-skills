@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Check the idc-index package and this skill for required/available updates.
 
-Run FIRST at the start of an IDC session:  python scripts/check_version.py
+Run FIRST at the start of an IDC session, with the interpreter that will run
+idc-index -- the point is to inspect that environment. No interpreter name is
+portable enough to hardcode in the docs (`python` is missing on a bare Homebrew
+macOS install, `python3` inside a Windows venv), so SKILL.md tells the caller to
+confirm the "meets pinned minimum" line rather than to type a fixed command.
 
 - Verifies that idc-index is installed and at least MIN_VERSION. It never
   installs or upgrades anything itself: if the requirement is not met it prints
@@ -11,16 +15,14 @@ Run FIRST at the start of an IDC session:  python scripts/check_version.py
 - Notifies (only) when a newer idc-index (PyPI) or skill release (GitHub) is
   available. Network checks are best-effort and silently skipped offline.
 
-Keep MIN_VERSION and SKILL_VERSION in sync with metadata.idc-index and
-metadata.source-skill-version, respectively, in SKILL.md.
+Keep MIN_VERSION and SKILL_VERSION in sync with the SKILL.md frontmatter.
 """
 import re
-import shlex
 import shutil
 import sys
 
-MIN_VERSION = "0.12.5"   # keep in sync with metadata.idc-index in SKILL.md
-SKILL_VERSION = "1.8.1"  # upstream metadata.source-skill-version, not local metadata.version
+MIN_VERSION = "0.13.0"   # keep in sync with metadata.idc-index in SKILL.md
+SKILL_VERSION = "1.9.0"  # keep in sync with metadata.version in SKILL.md
 REPO = "ImagingDataCommons/imaging-data-commons-skill"
 
 _LEADING_DIGITS = re.compile(r"\d+")
@@ -47,8 +49,7 @@ def fetch_json(url, *keys):
     import json
     import urllib.request
     try:
-        with urllib.request.urlopen(url, timeout=5) as response:
-            data = json.load(response)
+        data = json.load(urllib.request.urlopen(url, timeout=5))
         for key in keys:
             data = data[key]
         return data
@@ -59,7 +60,7 @@ def fetch_json(url, *keys):
 def install_commands(spec, upgrade=False):
     """Install commands for the interpreter running this script, preferred first.
 
-    `-m pip` is offered when pip is available in that environment; naming the
+    `-m pip` is always offered: every standard interpreter ships it, and naming the
     interpreter explicitly keeps the install out of whatever other environment a bare
     `pip` on PATH would resolve to. `uv` is offered ahead of it when it is on PATH, with
     `--python` for the same reason — otherwise `uv pip install` targets the active
@@ -68,13 +69,10 @@ def install_commands(spec, upgrade=False):
     Neither form overrides the PEP 668 guard on an externally managed interpreter. Both
     refuse there, which is the intended outcome, not a gap to work around.
     """
-    # Print POSIX-shell commands; paths and specifications must remain single arguments.
     flag = "--upgrade " if upgrade else ""
-    interpreter = shlex.quote(sys.executable)
-    requirement = shlex.quote(spec)
-    commands = [f"{interpreter} -m pip install {flag}{requirement}"]
+    commands = [f"{sys.executable} -m pip install {flag}'{spec}'"]
     if shutil.which("uv"):
-        commands.insert(0, f"uv pip install --python {interpreter} {flag}{requirement}")
+        commands.insert(0, f"uv pip install --python {sys.executable} {flag}'{spec}'")
     return commands
 
 
@@ -85,7 +83,7 @@ def print_install_instructions(spec):
         print(f"    {command}")
     print()
     print("Use a virtual environment where you can; on an externally managed system Python")
-    print("(PEP 668), create and activate a virtual environment, then re-run this script there.")
+    print("(PEP 668) the install is refused until you use a virtual environment or `--user`.")
     print("Re-run this script once the install finishes.")
 
 
@@ -106,6 +104,10 @@ def check_minimum():
     installed = idc_index.__version__
     if parse_version(installed) < parse_version(MIN_VERSION):
         print(f"idc-index {installed} is below the pinned minimum {MIN_VERSION}.")
+        print("Identifier values change between releases even when the reported IDC data")
+        print("version does not, so a stale index returns zero rows instead of an error:")
+        print("the Pan-Cancer nuclei segmentations are 'Pan-Cancer-Nuclei-Seg-DICOM' in")
+        print("0.12.3 and 'pan_cancer_nuclei_seg_dicom' in 0.12.5, and both report v24.")
         print_install_instructions(f"idc-index=={MIN_VERSION}")
         return None
 

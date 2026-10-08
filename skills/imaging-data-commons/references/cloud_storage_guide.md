@@ -20,9 +20,9 @@ IDC organizes data across multiple buckets based on licensing and content type. 
 
 | Purpose | AWS S3 Bucket | GCS Bucket | License | Content |
 |---------|---------------|------------|---------|---------|
-| Primary data | `idc-open-data` | `idc-open-data` | Mixed; query metadata | Most IDC series |
-| Head scans | `idc-open-data-two` | `idc-open-idc1` | Query metadata | Collections potentially containing head imaging |
-| Commercial-restricted | `idc-open-data-cr` | `idc-open-cr` | Query metadata | Some CC BY-NC data |
+| Primary data | `idc-open-data` | `idc-open-data` | No commercial restriction | >90% of IDC data |
+| Head scans | `idc-open-data-two` | `idc-open-idc1` | No commercial restriction | Collections potentially containing head imaging |
+| Commercial-restricted | `idc-open-data-cr` | `idc-open-cr` | Commercial use restricted (CC BY-NC) | ~4% of data |
 
 **Notes:**
 - All AWS buckets are in AWS region `us-east-1`
@@ -32,7 +32,7 @@ IDC organizes data across multiple buckets based on licensing and content type. 
 
 ### Why Multiple Buckets?
 
-1. **Licensing separation**: Some CC BY-NC data is separated into `idc-open-data-cr` / `idc-open-cr`, but restricted series also exist in `idc-open-data`; use metadata, not bucket names
+1. **Licensing separation**: Data with commercial-use restrictions (CC BY-NC) is isolated in `idc-open-data-cr` / `idc-open-cr` to prevent accidental commercial use
 2. **Head scan handling**: Collections labeled by TCIA as potentially containing head scans are in separate buckets (`idc-open-data-two` / `idc-open-idc1`) for potential future policy compliance
 3. **Historical reasons**: The bucket structure evolved as IDC grew and partnered with different cloud programs
 
@@ -102,9 +102,7 @@ print(result[['SeriesInstanceUID', 'series_aws_url']])
 **Available URL column in index:**
 - `series_aws_url`: S3 URL to series folder (e.g., `s3://idc-open-data/uuid/*`)
 
-GCS object keys are the same, but bucket names differ: map `idc-open-data-two` to
-`idc-open-idc1` and `idc-open-data-cr` to `idc-open-cr`; `idc-open-data` stays unchanged.
-Then use `gs://` for GCS tools. `idc-index` handles this mapping internally.
+GCS URLs follow the same path structure—replace `s3://` with `gs://` (e.g., `gs://idc-open-data/uuid/*`). When using `idc-index` download methods, GCS access is handled internally.
 
 ## Accessing Cloud Storage
 
@@ -194,26 +192,20 @@ files = s3.ls(series_path)
 with s3.open(files[0], 'rb') as f:
     data = f.read()
 
-# GCS access: translate the bucket as well as the scheme
-aws_bucket, object_prefix = series_path.split('/', 1)
-gcs_bucket = {
-    'idc-open-data': 'idc-open-data',
-    'idc-open-data-two': 'idc-open-idc1',
-    'idc-open-data-cr': 'idc-open-cr',
-}[aws_bucket]
+# GCS access (same path structure as AWS)
 gcs = gcsfs.GCSFileSystem(token='anon')
-files = gcs.ls(f'{gcs_bucket}/{object_prefix}')
+files = gcs.ls(series_path)
 with gcs.open(files[0], 'rb') as f:
     data = f.read()
 ```
 
 ## Versioning and Reproducibility
 
-IDC releases versioned snapshots. Retained historical objects support reproducibility, subject to removals described below.
+IDC releases new data versions every 2-4 months. The versioning system ensures reproducibility by preserving all historical data.
 
 ### How Versioning Works
 
-1. **Snapshots**: Each IDC version (v1, v2, ..., v24, etc.) represents a complete snapshot of all data at release time
+1. **Snapshots**: Each IDC version (v1, v2, ..., v25, etc.) represents a complete snapshot of all data at release time
 2. **UUID-based**: When data changes, new CRDC UUIDs are assigned; old UUIDs remain accessible
 3. **Cumulative buckets**: All versions coexist in the same buckets—old series folders
 
@@ -231,7 +223,7 @@ IDC releases versioned snapshots. Retained historical objects support reproducib
 
 For querying version-specific metadata, BigQuery provides versioned tables. See `bigquery_guide.md` for details.
 - `bigquery-public-data.idc_current` — alias to latest version
-- `bigquery-public-data.idc_v24` — specific version (replace 24 with desired version)
+- `bigquery-public-data.idc_v25` — specific version (replace 25 with desired version)
 
 ### Reproducing a Previous Analysis
 
@@ -240,7 +232,6 @@ The simplest way to ensure reproducibility is to save the `crdc_series_uuid` val
 ```python
 from idc_index import IDCClient
 import json
-from datetime import datetime, timezone
 
 client = IDCClient()
 
@@ -255,12 +246,12 @@ selection = client.sql_query("""
 series_uuids = list(selection['crdc_series_uuid'])
 
 # Download the data
-client.download_from_selection(crdc_series_uuid=series_uuids, downloadDir="./data")
+client.download_from_selection(seriesInstanceUID=series_uuids, downloadDir="./data")
 
 # Save a manifest for reproducibility
 manifest = {
     "crdc_series_uuids": series_uuids,
-    "download_date": datetime.now(timezone.utc).isoformat(),
+    "download_date": "2024-01-15",
     "idc_version": client.get_idc_version(),
     "description": "CT scans for lung cancer analysis"
 }
@@ -271,14 +262,12 @@ with open("analysis_manifest.json", "w") as f:
 with open("analysis_manifest.json") as f:
     manifest = json.load(f)
 client.download_from_selection(
-    crdc_series_uuid=manifest["crdc_series_uuids"],
+    seriesInstanceUID=manifest["crdc_series_uuids"],
     downloadDir="./reproduced_data"
 )
 ```
 
-Since `crdc_series_uuid` identifies an immutable version of each series, saving these UUIDs identifies the exact files while they remain available. Also save the
-URLs and check the requested UUIDs against the current/prior indices before downloading;
-unrecognized selections may otherwise be skipped.
+Since `crdc_series_uuid` identifies an immutable version of each series, saving these UUIDs guarantees you can retrieve the exact same files later.
 
 ## Relationship Between Buckets, Versions, and Other Access Methods
 
@@ -290,9 +279,9 @@ unrecognized selections may otherwise be skipped.
 | `idc-index` download | All 3 buckets | 100% | Current + prior_versions_index |
 | IDC Portal | All 3 buckets | 100% | Current only |
 | DICOMweb public proxy | All 3 buckets | 100% | Current only |
-| Google Healthcare DICOM | `idc-open-data` only | Most series; verify release | Store-specific |
+| Google Healthcare DICOM | `idc-open-data` only | ~96% | Current only |
 
-**Important:** The Google Healthcare API DICOM store only replicates data from `idc-open-data`. Data in `idc-open-data-two` and `idc-open-data-cr` (fraction depends on the release) is not available via Google Healthcare DICOMweb endpoint.
+**Important:** The Google Healthcare API DICOM store only replicates data from `idc-open-data`. Data in `idc-open-data-two` and `idc-open-data-cr` (approximately 4% of total) is not available via Google Healthcare DICOMweb endpoint.
 
 ## Best Practices
 
@@ -317,7 +306,7 @@ unrecognized selections may otherwise be skipped.
 - **Solution:** Use `prior_versions_index` to find the exact version you need; compare `crdc_series_uuid` values
 
 ### Issue: Some data missing from Google Healthcare DICOMweb
-- **Cause:** Google Healthcare only mirrors `idc-open-data` bucket
+- **Cause:** Google Healthcare only mirrors `idc-open-data` bucket (~96% of data)
 - **Solution:** Use IDC public proxy for 100% coverage, or access buckets directly
 
 ## Resources

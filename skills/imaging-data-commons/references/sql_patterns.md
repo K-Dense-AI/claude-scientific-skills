@@ -1,6 +1,6 @@
 # SQL Query Patterns for IDC
 
-**Tested with:** idc-index 0.12.5 (IDC data version v24)
+**Tested with:** idc-index 0.13.0 (IDC data version v25)
 
 Quick reference for common SQL query patterns when working with IDC data. For detailed examples with context, see the "Core Capabilities" section in the main SKILL.md.
 
@@ -20,7 +20,7 @@ For table schemas, DataFrame access, and join column references, see `references
 
 ## Prerequisites
 
-Needs `idc-index` installed — run `python scripts/check_version.py`, which reports the installed
+Needs `idc-index` installed — run `scripts/check_version.py`, which reports the installed
 version and prints the install command for the interpreter you are running.
 
 ```python
@@ -38,7 +38,7 @@ stats = client.sql_query("""
     SELECT
         COUNT(DISTINCT collection_id) as collections,
         COUNT(DISTINCT analysis_result_id) as analysis_results,
-        COUNT(DISTINCT (collection_id, PatientID)) as patients,
+        COUNT(DISTINCT PatientID) as patients,
         COUNT(DISTINCT StudyInstanceUID) as studies,
         COUNT(DISTINCT SeriesInstanceUID) as series,
         SUM(instanceCount) as instances,
@@ -243,8 +243,7 @@ See `references/clinical_data_guide.md` for complete patterns including value ma
 ## Version Tracking — "What's New in IDC vX?"
 
 Use `series_init_idc_version` and `series_revised_idc_version` in the main `index` table. Do NOT
-use `prior_versions_index` as a list of new series: it contains historical revisions,
-including UIDs that still exist with different CRDC UUIDs in the current index.
+use `prior_versions_index` for this — it contains only removed series.
 
 ```python
 VERSION = 24  # Replace with target version
@@ -286,6 +285,65 @@ client.sql_query("""
 """)
 ```
 
+## Data Provenance — "Where did this come from, and who de-identified it?"
+
+New in IDC v25. Provenance is recorded per **source** (`source_DOI`), not per collection, because
+collections mix components with different lineage. `collections_index.sources` is a list of
+structs, so unnest it; `analysis_results_index.provenance` is a plain struct. See
+`references/index_tables_guide.md` for the field definitions and sentinel values.
+
+```python
+client.fetch_index("collections_index")
+
+# Which datasets did IDC itself convert to DICOM (rather than receive as DICOM)?
+client.sql_query("""
+    SELECT collection_id, src.source_doi,
+           src.provenance.source_data_provider AS converted_from
+    FROM (SELECT collection_id, unnest(sources) AS src FROM collections_index)
+    WHERE src.provenance.dicom_conversion_by = 'IDC'
+    ORDER BY collection_id
+""")
+
+# Who performed de-identification, across the archive?
+client.sql_query("""
+    SELECT src.provenance.deidentification_party AS party, COUNT(*) AS sources
+    FROM (SELECT unnest(sources) AS src FROM collections_index)
+    WHERE src.provenance.deidentification_party IS NOT NULL
+    GROUP BY party ORDER BY sources DESC
+""")
+```
+
+Provenance for the series you actually selected — join on `source_DOI`:
+
+```python
+client.sql_query("""
+    SELECT i.collection_id, i.Modality, COUNT(*) AS series,
+           s.src.provenance.data_contributor AS contributed_by,
+           s.src.provenance.deidentification_party AS deidentified_by
+    FROM index i
+    JOIN (SELECT collection_id, unnest(sources) AS src FROM collections_index) s
+      ON s.collection_id = i.collection_id
+     AND lower(s.src.source_doi) = lower(i.source_DOI)
+    WHERE i.collection_id = 'tcga_brca'
+    GROUP BY ALL ORDER BY series DESC
+""")
+# tcga_brca splits by lineage: MR/MG contributed by TCIA (dicom_conversion_by NOT_APPLICABLE),
+# SM converted by IDC from GDC source material under a separate Zenodo DOI. The SEG/ANN/SR rows
+# come back NULL because they are analysis results — resolve those via analysis_results_index.
+```
+
+A `NULL` provenance struct in `collections_index` means the source is an **analysis result** —
+look it up in `analysis_results_index`, where provenance is fully populated:
+
+```python
+client.fetch_index("analysis_results_index")
+client.sql_query("""
+    SELECT analysis_result_id, source_DOI,
+           provenance.data_contributor, provenance.dicom_conversion_by
+    FROM analysis_results_index ORDER BY analysis_result_id
+""")
+```
+
 ## Troubleshooting
 
 **Issue:** Query returns error "table not found"
@@ -307,7 +365,7 @@ client.sql_query("""
 ```python
 client.fetch_index("volume_geometry_index")
 
-# Candidate regularly spaced series; verify geometry and task-specific resampling needs
+# Series that form a regularly-spaced 3D volume (no resampling needed)
 client.sql_query("""
     SELECT i.collection_id, i.SeriesInstanceUID, i.BodyPartExamined,
            v.obliquity_degrees
@@ -337,8 +395,7 @@ Key columns: `regularly_spaced_3d_volume` (composite flag), `obliquity_degrees` 
 
 ## RT Structure Sets
 
-`rtstruct_index` has one row per RTSTRUCT series. `ROINames`, `ROIGenerationAlgorithms`, and `RTROIInterpretedTypes` are string arrays
-(`VARCHAR[]` in DuckDB); use `list_contains` for membership.
+`rtstruct_index` has one row per RTSTRUCT series. Array columns (`ROINames`, `ROIGenerationAlgorithms`, `RTROIInterpretedTypes`) are stored as strings.
 
 ```python
 client.fetch_index("rtstruct_index")
@@ -424,19 +481,18 @@ client.sql_query("""
            m.EchoTime, m.EchoTrainLength, m.ScanningSequence
     FROM index i
     JOIN mr_index m ON i.SeriesInstanceUID = m.SeriesInstanceUID
-    WHERE array_length(m.EchoTime) > 1
+    WHERE m.EchoTrainLength > 1
     LIMIT 10
 """)
 
-# PET: discover FDG spellings in Radiopharmaceutical; radionuclide alone does not identify FDG
+# PET: FDG studies with specific reconstruction method
 client.sql_query("""
     SELECT i.collection_id, i.SeriesInstanceUID,
-           p.RadionuclideCodeMeaning, p.Radiopharmaceutical, p.ReconstructionMethod,
+           p.RadionuclideCodeMeaning, p.ReconstructionMethod,
            p.Units, p.DecayCorrection
     FROM index i
     JOIN pt_index p ON i.SeriesInstanceUID = p.SeriesInstanceUID
-    WHERE LOWER(p.Radiopharmaceutical) LIKE '%fluorodeoxyglucose%'
-       OR LOWER(p.Radiopharmaceutical) LIKE '%fdg%'
+    WHERE p.RadionuclideCodeMeaning LIKE '%fluorodeoxyglucose%'
     LIMIT 10
 """)
 
@@ -450,10 +506,6 @@ client.sql_query("""
     LIMIT 10
 """)
 ```
-
-`EchoTrainLength` is the echoes within an acquisition train, not the number of distinct
-`EchoTime` values. Fluorine-18 is a radionuclide used by multiple tracers; inspect
-`Radiopharmaceutical` values and source DICOM metadata before declaring a complete FDG cohort.
 
 Key columns by table (use `client.indices_overview["ct_index"]["schema"]` for the full list):
 - **ct_index**: `SliceThickness`, `KVP`, `ConvolutionKernel`, `SpiralPitchFactor`, `XRayTubeCurrent_min/max`, `Exposure_min/max`, `PixelSpacing_row_mm/col_mm`, `Rows`, `Columns`

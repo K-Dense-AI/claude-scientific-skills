@@ -1,15 +1,13 @@
 ---
 name: imaging-data-commons
-description: Queries and downloads public cancer imaging data from NCI Imaging Data Commons. Supports IDC collection discovery, DICOM access, radiology (CT, MR, PET) and pathology AI datasets, metadata SQL, visualization, licensing, and citations. Uses public metadata and download routes without authentication; optional BigQuery and Google Healthcare routes require Google credentials.
-compatibility: Requires network access for hosted APIs, index fetching, citations, and downloads. Local Python workflows target idc-index 0.12.5; BigQuery and Google Healthcare require Google credentials.
+description: Query and download public cancer imaging data from NCI Imaging Data Commons. Invoke for any question about IDC collections, cancer imaging datasets, DICOM data access, radiology (CT, MR, PET) or pathology AI training sets, metadata queries, visualization, or license checks — even when the user doesn't explicitly mention "IDC". No authentication required.
 license: This skill is provided under the MIT License. IDC data itself has individual licensing (mostly CC-BY, some CC-NC) that must be respected when using the data.
 metadata:
-  version: "1.8"
-  last-reviewed: "2026-09-30"
-  source-skill-version: "1.8.1"
+  version: "1.9"
+  source-skill-version: "1.9.0"
   skill-author: Andrey Fedorov, @fedorov
-  idc-index: "0.12.5"
-  idc-data-version: "v24"
+  idc-index: "0.13.0"
+  idc-data-version: "v25"
   repository: https://github.com/ImagingDataCommons/imaging-data-commons-skill
 ---
 
@@ -19,17 +17,18 @@ metadata:
 
 Query and download public cancer imaging data from the National Cancer Institute Imaging Data Commons (IDC). No authentication required for data access.
 
-**Expected network access:** IDC metadata is reachable three ways — a bundled local DuckDB index (offline after installation; additional indices are fetched from GitHub and clinical tables from S3), or the hosted IDC service over MCP or REST (`api.imaging.datacommons.cancer.gov`, no authentication). File downloads use public GCS (`storage.googleapis.com`) and AWS S3 (`s3.amazonaws.com`) — no authentication required. DICOMweb access uses either the public IDC proxy (`proxy.imaging.datacommons.cancer.gov`, no auth) or the Google Cloud Healthcare API (`healthcare.googleapis.com`, requires GCP authentication). Optional BigQuery queries (`bigquery.googleapis.com`) also require GCP authentication. Citation resolution contacts DOI services. Public IDC routes require no credentials; optional Google clients use Application Default Credentials.
+**Expected network access:** IDC metadata is reachable three ways — a local DuckDB index shipped with the `idc-index` Python package (no network), or the hosted IDC service over MCP or REST (`api.imaging.datacommons.cancer.gov`, no authentication). File downloads use public GCS (`storage.googleapis.com`) and AWS S3 (`s3.amazonaws.com`) — no authentication required. DICOMweb access uses either the public IDC proxy (`proxy.imaging.datacommons.cancer.gov`, no auth) or the Google Cloud Healthcare API (`healthcare.googleapis.com`, requires GCP authentication). Optional BigQuery queries (`bigquery.googleapis.com`) also require GCP authentication. No credentials or environment variables are accessed by this skill.
 
-**Reviewed 2026-09-30:** idc-index 0.12.5, idc-index-data 24.2.2, IDC v24; hosted API 3.0.0b3. Recheck at use time.
+**Current IDC Data Version: v25** (always verify — see *Best Practices*)
 
 **Choose the access path first.** There is no single default: the cheapest correct path depends
 on the session and the task.
 
 1. **Session already has the IDC MCP server?** Route discovery and metadata there — see *IDC
    MCP Server*.
-2. **Otherwise, is `idc-index` installed and current?** Run `python scripts/check_version.py`. If it passes,
-   use `idc-index` for everything.
+2. **Otherwise, is `idc-index` installed and current?** Run `scripts/check_version.py`; confirm
+   it prints `meets pinned minimum` — a `command not found` is not a pass, see
+   `references/cli_guide.md`. If it passes, use `idc-index` for everything.
 3. **Not installed, and the task is read-only metadata** — counts, attribute values, collection
    lookups, SQL under 10 000 rows, licenses, citations, viewer URLs? **Use the REST API over
    `curl`; do not install anything.** Installing costs ~77 MB of packaged index data plus
@@ -41,22 +40,24 @@ on the session and the task.
    the exact install command for the running interpreter. Prefer a virtual environment, then
    restart Python.
 
-`idc-index` ([GitHub](https://github.com/imagingdatacommons/idc-index)) is still the most
-capable Python path, with query and download helpers in one client. `check_version.py` never installs anything itself — it also flags a newer
+`idc-index` ([GitHub](https://github.com/imagingdatacommons/idc-index)) is still the most capable
+path and the only one that moves image bytes; the rule is just not to pay for it before the task
+calls for it. `check_version.py` never installs anything itself — it also flags a newer
 `idc-index` or skill release when one exists.
 
-**Setup for the `idc-index` path:** use the intended interpreter for `scripts/check_version.py`
-and confirm its `meets pinned minimum` message before continuing. A launch failure is not a pass.
+**Setup for the `idc-index` path:**
 
 ```python
+import re, idc_index
 from idc_index import IDCClient
+# Repeat the startup check where it cannot be skipped — see references/cli_guide.md.
+if [int(re.sub(r"\D.*", "", p) or 0) for p in idc_index.__version__.split(".")[:3]] < [0, 13, 0]:
+    raise RuntimeError(f"idc-index {idc_index.__version__} is stale (need 0.13.0): a stale "
+                       "index returns zero rows, not an error. Run scripts/check_version.py.")
+
 client = IDCClient()
-
-# Verify IDC data version (should be "v24")
-print(f"IDC data version: {client.get_idc_version()}")
+print(f"IDC data version: {client.get_idc_version()}")  # should be "v25"
 ```
-
-Download and image-processing examples are illustrative unless noted; see the reference review notes for verification scope.
 
 **Core workflow:** query metadata with `client.sql_query()` → download with
 `client.download_from_selection()` → visualize with `client.get_viewer_URL()`. Python examples
@@ -129,7 +130,7 @@ troubleshooting.
 
 IDC adds two grouping levels above the standard DICOM hierarchy (Patient → Study → Series → Instance):
 
-- **collection_id**: Groups patients by disease, modality, or research focus (e.g., `tcga_luad`, `nlst`). Treat `(collection_id, PatientID)` as the patient key; do not assume PatientID is globally unique.
+- **collection_id**: Groups patients by disease, modality, or research focus (e.g., `tcga_luad`, `nlst`). A patient belongs to exactly one collection.
 - **analysis_result_id**: Identifies derived objects (segmentations, annotations, radiomics features) across one or more original collections. Use it to find AI-generated or expert annotations, while `collection_id` finds original imaging data (which may itself include deposited annotations).
 
 **Key identifiers for queries:**
@@ -158,14 +159,12 @@ Always call `client.fetch_index("table_name")` before querying any index table �
 | Microscopy | `sm_index`, `sm_instance_index` | 1 row = 1 SM series / instance |
 | Geometry, clinical, history | `volume_geometry_index`, `clinical_index`, `version_metadata_index`, `prior_versions_index` | see guide |
 
-`references/index_tables_guide.md` has the full inventory with each table's columns and
-contents — load it when you need to know what a specialized table actually holds.
+`references/index_tables_guide.md` has the full inventory, each table's columns, and join examples.
 
-**`prior_versions_index` contains historical series versions**, including revised versions
-whose DICOM SeriesInstanceUID still occurs in `index`. Pin `crdc_series_uuid` for historical
-content. For "what's new" in the current release use
-`series_init_idc_version` / `series_revised_idc_version` in the main `index` table, which are
-not equivalent to this table's `min_idc_version` / `max_idc_version`.
+**`prior_versions_index` is for reproducibility only** — series permanently *removed* from IDC,
+zero overlap with `index`. Do NOT use it for version history or "what's new": those use
+`series_init_idc_version` / `series_revised_idc_version` in `index`, which are not equivalent to
+this table's `min_idc_version` / `max_idc_version`.
 
 ### Joining Tables
 
@@ -175,13 +174,15 @@ not equivalent to this table's `min_idc_version` / `max_idc_version`.
 |-------------|--------|----------|
 | `collection_id` | index, prior_versions_index, collections_index, clinical_index | Link series to collection metadata or clinical data |
 | `analysis_result_id` | index, analysis_results_index | Link series to analysis result metadata (annotations, segmentations) |
-| `source_DOI` | index, analysis_results_index | Link by publication DOI |
+| `source_DOI` | index, analysis_results_index, `collections_index.sources` | Link by publication DOI; also the key for provenance (below) |
 | `segmented_SeriesInstanceUID` | seg_index → index | Link segmentation to its source image series (`seg_index.segmented_SeriesInstanceUID = index.SeriesInstanceUID`) |
 | `referenced_SeriesInstanceUID` | ann_index → index, rtstruct_index → index | Link annotation or RTSTRUCT to its source image series |
 
-**Note:** `subjects`, `updated`, and `description` appear in multiple tables but have different meanings (counts vs identifiers, different update contexts). A UID-only join to `prior_versions_index` can match several historical revisions; use CRDC UUIDs to distinguish them.
+**Note:** `subjects`, `updated`, and `description` mean different things in different tables; joining `prior_versions_index` to `index` on `SeriesInstanceUID` always returns zero rows.
 
-For detailed join examples, schema discovery patterns, key columns reference, and DataFrame access, see `references/index_tables_guide.md`.
+**Provenance (new in v25) is recorded per source, not per collection**, keyed on `source_DOI`. `collections_index.sources` is a list of structs (unnest it) whose `provenance` names who contributed, de-identified, and DICOM-converted that component; `analysis_results_index.provenance` is a plain struct.
+
+A NULL provenance struct in `collections_index` means that source is an analysis result — look it up in `analysis_results_index`, where it is always populated. `NOT_APPLICABLE` and `UNKNOWN` are values, not nulls. See `references/index_tables_guide.md`.
 
 ### Clinical Data Access
 
@@ -232,22 +233,22 @@ curl -s $B/cohort/counts -H 'content-type: application/json' \
 **The filter object always goes under `filters`** — on `cohort/counts`, `cohort/manifest`,
 `cohort/manifest.txt`, `licenses`, and `citations` alike. A bare filter or an unrecognized key is
 a 422 naming the fix; an unfiltered series-enumerating request is a 400, not the whole archive.
-Filtered JSON responses echo `filters_applied` and `warnings` (inside `counts` for manifests) — read them, because they name
+Every filtered response echoes `filters_applied` and `warnings` — read them, because they name
 any predicate the server dropped. A zero count with empty `warnings` therefore means the filter
 matched nothing, not that a value was miscased; miscasing produces a warning that says so.
 
 `POST /sql` takes one read-only `SELECT`/`WITH` over the tables `idc-index` exposes plus
 `clinical.<table>`; `max_rows` defaults to 5 000, caps at 10 000, and `truncated` flags clipping.
 `GET /attributes` lists the 19 filterable attributes — clinical values, segmented anatomy, and
-acquisition parameters are not among them and need SQL. Request limits still apply. **Use
+acquisition parameters are not among them and need SQL. There is no rate limit or quota. **Use
 v3 only:** V1 and V2 are superseded and scheduled for shutdown, so port any `/v1/`- or
 `Modality_btw`-style example a user brings rather than extending it.
 
 Both sides build on `idc-index-data`, so compare the API's `idc_index_data_version` against local
-`idc_index_data.__version__` before mixing them: the **major is the IDC data release** (`24.x.y`
-serves `v24`); minor/patch index builds may correct metadata. If the API is a whole
-release ahead, `idc-index` **cannot download the extra series** — mixed selections can omit
-unrecognized UIDs, while wholly unmatched selections raise — so either upgrade it (run `scripts/check_version.py` for the right command)
+`idc_index_data.__version__` before mixing them: the **major is the IDC data release** (`25.x.y`
+serves `v25`), so differing minor/patch means the series are identical. If the API is a whole
+release ahead, `idc-index` **cannot download the extra series** — it silently skips what its own
+index does not list — so either upgrade it (run `scripts/check_version.py` for the right command)
 or transfer directly from the bucket with `s5cmd --no-sign-request`.
 
 See `references/rest_api_guide.md` for the endpoint reference, filter grounding, limits, and the
@@ -258,7 +259,8 @@ manifest-based download flow.
 All DICOM files live in public buckets mirrored between AWS S3 and GCS, organized by CRDC UUIDs
 (not DICOM UIDs) to support versioning, as `<crdc_series_uuid>/<crdc_instance_uuid>.dcm`. Access
 is free (no egress fees) via AWS CLI, gsutil, or s5cmd with anonymous access; use the
-`series_aws_url` column for S3 URLs. Bucket names do not establish a license; query `license_short_name` for each selected series. See `references/cloud_storage_guide.md` for the full
+`series_aws_url` column for S3 URLs. Note that `idc-open-data-cr` / `idc-open-cr` (~4% of data)
+is commercial-use restricted (CC BY-NC). See `references/cloud_storage_guide.md` for the full
 bucket list and UUID mapping.
 
 **DICOMweb access**
@@ -272,8 +274,8 @@ queries, or Google Healthcare (GCP auth) for production volumes. See
 
 The idc-index metadata tables are also published as Parquet on a public GCS bucket
 (`idc-index-data-artifacts`), queryable with DuckDB or pandas. This needs DuckDB installed
-For ad-hoc metadata prefer REST `/sql`; choose Parquet for pinned versions or large results.
-A separate public S3 export also includes clinical tables and full BigQuery metadata. See
+and cannot reach the per-collection clinical tables, so prefer REST `/sql` for ad-hoc metadata;
+choose Parquet to pin a data version or for results past the REST row cap. See
 `references/parquet_access_guide.md`.
 
 ## Core Capabilities
@@ -327,7 +329,7 @@ than assuming them.
 
 See `references/sql_patterns.md` for filter-value discovery, annotation and segmentation
 queries, size estimation, clinical linking, and version tracking ("what's new in vX" — use
-`series_init_idc_version` / `series_revised_idc_version` in `index`; historical objects use
+`series_init_idc_version` / `series_revised_idc_version` in `index`, never
 `prior_versions_index`).
 
 ### 2. Downloading DICOM files
@@ -374,12 +376,11 @@ client.download_dicom_series(
 client.download_from_selection(downloadDir="./data/rider", collection_id="rider_pilot")
 ```
 
-Both default to AWS; use `source_bucket_location="gcs"` for Google. In 0.12.5 the most-specific
-selector wins, so use SQL first for intersecting criteria and verify every requested UID exists.
+Both methods default to AWS; pass `source_bucket_location="gcs"` to pull from Google Storage.
 
 **Downloaded files are named `<crdc_instance_uuid>.dcm`, not by SOPInstanceUID.** The DICOM
-UIDs are preserved inside the file metadata, not in the filename. Read DICOM headers for the
-series UID; `crdc_instance_uuid` is not a column of the series-level `index`.
+UIDs are preserved inside the file metadata, not in the filename. Use the `crdc_instance_uuid`
+column to map files back to the series they came from.
 
 `idc download <collection|series-uid|manifest> --download-dir ./data` does the same from a
 shell. See `references/cli_guide.md` for the `dirTemplate` hierarchy options (Python default:
@@ -416,10 +417,10 @@ for citation in client.citations_from_selection(collection_id="rider_pilot"):
     print(citation)
 ```
 
-In the reviewed v24 snapshot, about 97% of IDC data by size is CC BY (commercial use allowed with attribution) and about 3% is
-CC BY-NC (non-commercial only). **Licenses attach to series, not collections** — 39 of 176
+About 97% of IDC data is CC BY (commercial use allowed with attribution) and about 3% is
+CC BY-NC (non-commercial only). **Licenses attach to series, not collections** — 39 of 179
 collections carry more than one — so check the selection you actually intend to use, and note
-that each component retains its license obligations.
+that the most restrictive term governs a mixed cohort.
 
 Both tasks are available from all three access paths, so stay on whichever one the session is
 already using: `idc-index` as above, `POST /v3/licenses` and `POST /v3/citations` over REST,
@@ -432,17 +433,18 @@ citation formats (APA, BibTeX, CSL JSON, RDF Turtle), and what to include when p
 Pick the access path with the routing gate in *Overview*; *Data Access Options* above is the
 full routing table.
 
-Before reaching for BigQuery (which needs a Google Cloud project and access), check whether a
+Before reaching for BigQuery (which needs a billing-enabled GCP account), check whether a
 specialized index table already has the column you want: search `client.indices_overview`,
-then `client.fetch_index(...)` and query locally for free. Full instance metadata, per-segment
-rows, and SR measurement tables require BigQuery or its public Parquet exports; these are
-outside the compact idc-index tables.
+then `client.fetch_index(...)` and query locally for free. BigQuery is required only for
+private DICOM elements, per-segment anatomy (`segmentations`), and pre-extracted SR
+measurements (`quantitative_measurements`, `qualitative_measurements`) — these have no
+idc-index equivalent.
 
 ## Best Practices
 
 - **Check schema before writing queries** — Use `client.get_index_schema('index')` (reads cached metadata, no SQL executed) or `client.indices_overview` to see all available columns and their descriptions. The version-tracking columns `series_init_idc_version` and `series_revised_idc_version` in the main `index` table directly answer "what's new / when was this added" questions without touching `prior_versions_index`.
-- **Use the index for IDC data content questions** - Query the IDC index directly, via `client.sql_query()` locally or `POST /v3/sql` over HTTP. Web sources (release notes, blog posts, documentation pages) are frequently out of date and will produce incorrect answers. The index is the authoritative source; use it even when web search is available.
-- **Verify the IDC data version at the start of a session** - `client.get_idc_version()`, `GET /v3/version`, or the MCP `get_idc_version` tool, depending on the path in use (currently v24). For a stale local index, run `scripts/check_version.py` and use the upgrade command it prints
+- **Never use web search for IDC data content questions** - Always query the IDC index directly, via `client.sql_query()` locally or `POST /v3/sql` over HTTP. Web sources (release notes, blog posts, documentation pages) are frequently out of date and will produce incorrect answers. The index is the authoritative source; use it even when web search is available.
+- **Verify the IDC data version at the start of a session** - `client.get_idc_version()`, `GET /v3/version`, or the MCP `get_idc_version` tool, depending on the path in use (currently v25). For a stale local index, run `scripts/check_version.py` and use the upgrade command it prints
 - **Check licenses and generate citations** - Query `license_short_name` and respect CC BY vs CC BY-NC terms; use `citations_from_selection()` to produce citations from `source_DOI` for publications
 - **Explore small, then commit** - Use `LIMIT` (or a low `max_rows`) while exploring, and check collection size before downloading — some collections are terabytes. See `references/cli_guide.md`
 - **Keep downloads reproducible** - Organize with `dirTemplate` (e.g. `%collection_id/%PatientID/%Modality`) and save the Series UIDs or manifest behind any dataset you build
@@ -455,11 +457,10 @@ outside the compact idc-index tables.
 
 **Issue: Download fails with connection timeout**
 - **Cause:** Network instability or large download size
-- **Solution:** Download in smaller batches (10-20 series); see `references/cli_guide.md` for
-  `--use-s5cmd-sync` resume and retry guidance
+- **Solution:** Download in smaller batches (10-20 series); see `references/cli_guide.md` for `--use-s5cmd-sync` resume and retry guidance
 
 **Issue: `BigQuery quota exceeded` or billing errors**
-- **Cause:** Project quotas, sandbox limits, or billing configuration prevent the query
+- **Cause:** BigQuery requires billing-enabled GCP project
 - **Solution:** Use idc-index mini-index for simple queries (no billing required), or see `references/bigquery_guide.md` for cost optimization tips
 
 **Issue: Series UID not found or no data returned**
@@ -483,9 +484,9 @@ outside the compact idc-index tables.
 **Issue: Downloaded DICOM files won't open**
 - **Cause:** Corrupted download, or an object type the viewer does not handle — SEG, RTSTRUCT,
   SR, and slide microscopy all need specialized tools
-- **Solution:** Inspect `Modality`, `SOPClassUID`, and transfer syntax with normal `pydicom.dcmread`;
-  [forced parsing is not validation](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.filereader.dcmread.html).
-  Check download integrity and decoder/viewer support before re-downloading; reserve `force=True` for diagnosed non-Part-10 inputs.
+- **Solution:** Check `Modality` and `SOPClassUID` first, validate with
+  `pydicom.dcmread(file, force=True)`, try another viewer (3D Slicer, QuPath for pathology),
+  then re-download
 
 ## Resources
 
