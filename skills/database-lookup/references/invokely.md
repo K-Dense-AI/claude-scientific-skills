@@ -6,7 +6,7 @@ Invokely is a hosted access layer for official statistical data. It routes reque
 
 The MCP endpoint is `https://invokely.ai/mcp`. It requires an API key or OAuth through a supported client. The no-account trial is `https://invokely.ai/mcp/trial`, limited to 25 calls per day per IP address. The account Free plan includes 500 MCP calls per month and lists a burst limit of 300 requests per minute. MCP calls use the account's call allowance.
 
-The REST API base is `https://invokely.ai/api/v1`. REST data calls require Builder, Pro, or prepaid credits; they are not included in the Free plan. MCP and REST expose the same six statistics operations and share usage accounting. Check the current [pricing page](https://invokely.ai/pricing) before planning sustained use.
+The REST API base is `https://invokely.ai/api/v1`. REST statistical data queries require Builder, Pro, or prepaid credits. Catalog lookups are free, and CSV, Excel, and chart exports are included on every plan. MCP and REST expose the same six statistics operations and share usage accounting for data calls. Check the current [pricing page](https://invokely.ai/pricing) before planning sustained use.
 
 For an MCP client that requires local stdio, the separate [MIT-licensed Node.js 22 connector](https://github.com/estevecastells/invokely-mcp-connector) forwards requests to the hosted service. It contains client code, not the Invokely backend. Workspace tools are separate from the six statistics operations and are outside this lookup workflow.
 
