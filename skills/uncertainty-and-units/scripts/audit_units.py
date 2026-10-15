@@ -20,10 +20,13 @@ import math
 import re
 import sys
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
-import _common
-from _common import CliError
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import _common  # noqa: E402
+from _common import CliError  # noqa: E402
 
 
 SEVERITY_ORDER = {"low": 1, "medium": 2, "high": 3}

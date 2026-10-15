@@ -13,10 +13,13 @@ import argparse
 import math
 import sys
 from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN, ROUND_HALF_UP
+from pathlib import Path
 from typing import Any
 
-import _common
-from _common import CliError
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import _common  # noqa: E402
+from _common import CliError  # noqa: E402
 
 
 ROUNDING_MODES = {"half-even": ROUND_HALF_EVEN, "half-up": ROUND_HALF_UP}

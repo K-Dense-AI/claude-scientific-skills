@@ -14,10 +14,13 @@ from __future__ import annotations
 import argparse
 import math
 import sys
+from pathlib import Path
 from typing import Any
 
-import _common
-from _common import CliError
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import _common  # noqa: E402
+from _common import CliError  # noqa: E402
 
 
 TEMPLATE: dict[str, Any] = {

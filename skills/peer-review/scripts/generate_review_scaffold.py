@@ -4,17 +4,20 @@
 from __future__ import annotations
 
 import argparse
+import sys
 import re
 from pathlib import Path
 from typing import Any
 
-from _common import (
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _common import (  # noqa: E402
     ValidationError,
     error_exit,
     read_markdown,
     write_markdown,
 )
-from validate_review_intake import validate_intake
+from validate_review_intake import validate_intake  # noqa: E402
 
 TEMPLATE_PATH = (
     Path(__file__).resolve().parents[1] / "assets" / "review_scaffold_template.md"

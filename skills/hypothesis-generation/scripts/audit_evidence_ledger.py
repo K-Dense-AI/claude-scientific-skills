@@ -4,11 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from collections import Counter
 from datetime import date
+from pathlib import Path
 from typing import Any
 
-from _common import (
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _common import (  # noqa: E402
     ValidationError,
     error_exit,
     issue,
@@ -27,7 +31,7 @@ from _common import (
     split_identifiers,
     write_json_report,
 )
-from validate_hypothesis_schema import load_hypothesis_record, validate_record
+from validate_hypothesis_schema import load_hypothesis_record, validate_record  # noqa: E402
 
 FIELDS = (
     "source_id",

@@ -4,9 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
 from typing import Any
 
-from _common import (
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _common import (  # noqa: E402
     ValidationError,
     error_exit,
     issue,

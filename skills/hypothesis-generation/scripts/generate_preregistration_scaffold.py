@@ -4,19 +4,22 @@
 from __future__ import annotations
 
 import argparse
+import sys
 import html
 import re
 from pathlib import Path
 from typing import Any
 
-from _common import (
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from _common import (  # noqa: E402
     ValidationError,
     error_exit,
     read_json,
     read_markdown,
     write_markdown,
 )
-from validate_hypothesis_schema import load_hypothesis_record, validate_record
+from validate_hypothesis_schema import load_hypothesis_record, validate_record  # noqa: E402
 
 TEMPLATE_PATH = (
     Path(__file__).resolve().parents[1]

@@ -23,11 +23,14 @@ from __future__ import annotations
 import argparse
 import math
 import sys
+from pathlib import Path
 from typing import Any
 
-import _common
-from _common import CliError
-from convert_units import build_registry, checked_unit
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import _common  # noqa: E402
+from _common import CliError  # noqa: E402
+from convert_units import build_registry, checked_unit  # noqa: E402
 
 
 MAX_ENTRIES = 64
