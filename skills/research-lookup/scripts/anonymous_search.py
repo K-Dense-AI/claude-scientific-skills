@@ -53,6 +53,9 @@ async def research(query, *, max_results, fetch_limit, timeout):
             await self.stream.aclose()
 
     async def bound_response(response):
+        # A compressed wire body can expand beyond the limit before JSON parsing.
+        if response.headers.get("content-encoding", "identity").lower() != "identity":
+            raise ValueError("Parallel MCP must return an uncompressed response")
         if response.is_stream_consumed:
             if len(response.content) > 4 * 1024 * 1024:
                 raise ValueError("Parallel MCP response exceeds 4 MiB")
@@ -61,7 +64,7 @@ async def research(query, *, max_results, fetch_limit, timeout):
 
     with anyio.fail_after(timeout):
         async with httpx.AsyncClient(
-            headers={"User-Agent": USER_AGENT}, timeout=timeout,
+            headers={"User-Agent": USER_AGENT, "Accept-Encoding": "identity"}, timeout=timeout,
             follow_redirects=False, event_hooks={"response": [bound_response]},
         ) as client:
             async with streamable_http_client(MCP_URL, http_client=client) as (read, write, _):

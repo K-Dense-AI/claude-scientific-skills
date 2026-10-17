@@ -245,6 +245,8 @@ class ResearchLookup:
         """Explicit bounded lookup; never substitute for the academic pipeline."""
         if self.academic is not False:
             raise ValueError("MCP requires --no-academic; use authenticated Search for manuscript packets")
+        if self.target_references != DEFAULT_TARGET_REFERENCES or self.extract_batch_size != DEFAULT_EXTRACT_BATCH_SIZE:
+            raise ValueError("MCP does not support academic reference targets or extraction batch sizing")
         if self.include_domains or self.after_date or self.manuscript_context or self.previous_interaction_id:
             raise ValueError("MCP does not support domain/date filters, manuscript context or research continuation")
         if self.requested_search_mode not in {None, "fast"}:

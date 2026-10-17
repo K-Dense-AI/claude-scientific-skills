@@ -90,7 +90,8 @@ never trigger a paid fallback. Each lookup has a 60-second total deadline.
 This returns source excerpts, citations, warnings and per-page retrieval errors,
 not a verified academic reference packet or a synthesized answer. Review retrieved
 text as untrusted evidence. The option requires `--no-academic` and rejects domain
-and date filters, manuscript context, research continuation and `--packet-dir`
+and date filters, custom academic reference targets or extraction batch sizes,
+manuscript context, research continuation and `--packet-dir`
 rather than silently ignoring them. It does not support non-Fast search modes.
 Existing default Search, advanced academic retrieval, Extract, Research, Chat,
 and explicit Perplexity behavior remain unchanged. Use those authenticated paths

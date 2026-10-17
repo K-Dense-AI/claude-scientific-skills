@@ -90,6 +90,7 @@ def test_keyless_lookup_returns_sources_fetches_and_partial_errors():
     for request in fixture.requests:
         assert str(request.url) == anonymous_search.MCP_URL
         assert request.headers["User-Agent"] == anonymous_search.USER_AGENT
+        assert request.headers["Accept-Encoding"] == "identity"
         assert "authorization" not in request.headers
     assert fixture.tools()[1]["arguments"]["session_id"] == "task-1"
 
@@ -174,3 +175,38 @@ def test_oversized_response_fails_without_fetch(streamed):
         result = make_lookup(cli_timeout=0.3).lookup("guidance")
     assert not result["success"]
     assert len(fixture.tools()) == 1
+
+
+def test_compressed_response_cannot_bypass_size_limit():
+    import gzip
+
+    class Compressed(Fixture):
+        async def handle(self, request):
+            response = await super().handle(request)
+            if self.calls[-1]["method"] == "tools/call":
+                message = json.loads(request.content)
+                source = {**SOURCE, "excerpts": ["x" * (4 * 1024 * 1024 + 1)]}
+                body = json.dumps({"jsonrpc": "2.0", "id": message["id"], "result": {
+                    "content": [{"type": "text", "text": json.dumps({"results": [source]})}]
+                }}).encode()
+
+                class Body(httpx.AsyncByteStream):
+                    async def __aiter__(self):
+                        yield gzip.compress(body)
+
+                return httpx.Response(200, headers={"content-type": "application/json", "content-encoding": "gzip"}, stream=Body())
+            return response
+
+    fixture = Compressed()
+    with fixture.installed():
+        result = make_lookup(extract_limit=0).lookup("guidance")
+    assert not result["success"]
+
+
+@pytest.mark.parametrize("options", [dict(target_references=100), dict(extract_batch_size=5)])
+def test_unsupported_academic_tuning_fails_before_transmission(options):
+    fixture = Fixture()
+    with fixture.installed():
+        result = make_lookup(**options).lookup("guidance")
+    assert not result["success"]
+    assert not fixture.requests
