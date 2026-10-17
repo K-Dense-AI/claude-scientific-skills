@@ -146,7 +146,7 @@ Each skill records its own compatibility requirements and validation scope. Chec
 - **Multi-Step Workflows** - Execute complex pipelines with a single prompt
 
 ### 🎯 **Comprehensive Coverage**
-- **177 Skills** - Extensive coverage across all major scientific domains
+- **178 Skills** - Extensive coverage across all major scientific domains
 - **100+ Databases** - 80 databases documented by Database Lookup, plus dedicated data access skills and multi-database packages such as BioServices, Biopython, and gget
 - **70+ Optimized Python Package Skills** - Current, version-scoped guidance for packages including RDKit, Scanpy, PyTorch Lightning, scikit-learn, PyTDC, pydicom, PufferLib, QuTiP, GeoPandas, pymatgen, Qiskit, Molecular Dynamics (OpenMM/MDAnalysis), scVelo, and TimesFM (the agent can use any Python package; these are the pre-documented paths)
 
@@ -496,7 +496,7 @@ This repository contains **178 scientific and research skills** organized across
 
 > **Note:** The Python package and integration skills listed below are *explicitly defined* skills — curated with documentation, examples, and best practices for stronger, more reliable performance. They are not a ceiling: the agent can install and use *any* Python package or call *any* API, even without a dedicated skill. The skills listed simply make common workflows faster and more dependable.
 
-Categories overlap: a skill may appear in more than one domain, so the category counts do not sum to the 177 unique skills.
+Categories overlap: a skill may appear in more than one domain, so the category counts do not sum to the 178 unique skills.
 
 Package versions below identify the baselines documented by the skills. Follow each linked `SKILL.md` for its complete dependency stack, runtime requirements, and validation scope.
 

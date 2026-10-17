@@ -46,6 +46,7 @@ python3 scripts/analyze_pair.py reference.pdb mobile.pdb \
   --align-range 108:139 --align-range 151:173 \
   --segments-tsv gpcr_segments.tsv \
   --mobile-ligand-resname RET \
+  --mobile-ligand-residue A:501 \
   --output-dir derived/state-comparison
 ```
 
@@ -54,6 +55,13 @@ The script writes `reference.pdb`, `mobile_aligned.pdb`,
 `ligand_contacts.tsv`. It matches Cα atoms by author residue number/insertion
 code, so do not use it when renumbering or nontrivial sequence alignment is
 required; prepare an explicit mapping with an appropriate structure tool instead.
+Ligand contacts are scoped to an individual HETATM ligand instance identified by
+chain, author residue number and insertion code. If a residue name/chain matches
+multiple instances, the CLI rejects ambiguous analysis rather than pooling them.
+Supply `--mobile-ligand-residue A:501` (or `A:501:B` for insertion code B);
+repeat the flag for separate contact calculations on several instances. Contact
+TSV rows identify each ligand's chain, `ligand_auth_seq_id` and `ligand_icode`,
+while `comparison_metrics.json` records the explicit `selected_instances` list.
 Complete modified-polymer residues stored as `HETATM` (for example, MSE) are
 accepted only when one complete `(auth_seq_id, insertion_code, resname)` group
 contains N/CA/C/O; the accepted groups and this rule are recorded under

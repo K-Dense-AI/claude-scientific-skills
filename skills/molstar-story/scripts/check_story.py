@@ -137,7 +137,10 @@ def vector_error(left: list[float], right: list[float]) -> float:
     return math.sqrt(sum((a - b) ** 2 for a, b in zip(left, right)))
 
 
-def wait_for_scene(page, scene_index: int, timeout_ms: int) -> dict[str, object]:
+def wait_for_scene(
+    page, scene_index: int, timeout_ms: int,
+    previous_snapshot_id: str | None = None,
+) -> dict[str, object]:
     """Wait until the requested snapshot, rather than only its camera, is current."""
     started = time.monotonic()
     initial = camera_state(page, scene_index)
@@ -156,10 +159,15 @@ def wait_for_scene(page, scene_index: int, timeout_ms: int) -> dict[str, object]
     while True:
         current = state["current_snapshot_id"]
         waited_ms = round((time.monotonic() - started) * 1000)
-        if current == expected and not state["busy"]:
+        changed = previous_snapshot_id is not None and current != previous_snapshot_id
+        already_active = previous_snapshot_id == expected
+        if current == expected and not state["busy"] and (changed or already_active or previous_snapshot_id is None):
             return {
                 "method": "snapshot_id",
                 "converged": True,
+                "previous_snapshot_id": previous_snapshot_id,
+                "active_snapshot_changed": changed,
+                "already_active": already_active,
                 "waited_ms": waited_ms,
                 "expected_snapshot_id": expected,
                 "current_snapshot_id": current,
@@ -424,9 +432,11 @@ def main() -> int:
             canvas.wait_for(state="visible", timeout=args.timeout_ms)
             report["webgl"] = webgl_report(page)
             for scene_index in selected:
+                previous_snapshot_id = camera_state(page, scene_index - 1)["current_snapshot_id"]
                 selector.select_option(index=scene_index - 1)
                 scene_switch = wait_for_scene(
-                    page, scene_index - 1, max(args.scene_settle_ms, 1)
+                    page, scene_index - 1, max(args.scene_settle_ms, 1),
+                    previous_snapshot_id=previous_snapshot_id,
                 )
                 camera = wait_for_camera(
                     page,

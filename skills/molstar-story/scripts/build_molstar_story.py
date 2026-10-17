@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 from urllib.parse import quote
@@ -167,21 +168,20 @@ def ensure_clean_checkout(repo: Path) -> None:
 
 
 def validate_output_directory(output: Path, *, name: str, full_package: bool) -> None:
-    """Reject stale full-package artifacts that could outlive the manifest."""
-    stale: list[Path] = []
-    stale.extend(sorted(output.glob("*.mvsx")))
-    stale.extend(sorted(output.glob("*_self_hosted.zip")))
-    viewer = output / "viewer"
-    if viewer.exists():
-        stale.append(viewer)
-    if stale:
-        rendered = ", ".join(path.name for path in stale)
-        profile = "full-package" if full_package else "file-review"
-        raise RuntimeError(
-            f"output directory contains existing full-package artifacts ({rendered}); "
-            f"refuse {profile} build because stale artifacts could be mistaken for "
-            "current outputs. Use a new directory or remove them explicitly."
-        )
+    """Clear only wrapper-owned outputs from an earlier build of this story."""
+    owned = (
+        output / f"{name}.mvsx",
+        output / f"{name}_self_hosted.zip",
+        output / f"{name}.mvstory",
+        output / f"{name}_file_openable.html",
+        output / "build_manifest.json",
+        output / "viewer",
+    )
+    for path in owned:
+        if path.is_dir() and not path.is_symlink():
+            shutil.rmtree(path)
+        elif path.exists() or path.is_symlink():
+            path.unlink()
 
 
 def safe_extract(archive: Path, destination: Path) -> list[str]:

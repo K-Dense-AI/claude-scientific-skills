@@ -194,6 +194,55 @@ class PairAnalysisTests(unittest.TestCase):
         self.assertEqual(contacts[0]["ligand_chain"], "B")
         self.assertEqual(contacts[0]["min_distance_A"], 0.5)
 
+    def test_same_chain_copies_require_an_unambiguous_residue_selector(self) -> None:
+        atom = analyze_pair.Atom
+        atoms = [
+            atom(0, "ATOM", "CA", "", "ALA", "A", 1, "", "C", np.zeros(3)),
+            atom(1, "HETATM", "C1", "", "LIG", "A", 50, "", "C",
+                 np.array([2.0, 0.0, 0.0])),
+            atom(2, "HETATM", "C1", "", "LIG", "A", 51, "", "C",
+                 np.array([0.5, 0.0, 0.0])),
+        ]
+        with self.assertRaisesRegex(ValueError, "multiple ligand instances"):
+            analyze_pair.ligand_contacts(atoms, "A", {"LIG"}, 4.0)
+        contacts = analyze_pair.ligand_contacts(
+            atoms, "A", {"LIG"}, 4.0,
+            ligand_residue=analyze_pair.parse_ligand_residue("A:50"),
+        )
+        self.assertEqual(len(contacts), 1)
+        self.assertEqual(contacts[0]["min_distance_A"], 2.0)
+        self.assertEqual(contacts[0]["ligand_auth_seq_id"], 50)
+        separate = analyze_pair.ligand_contacts(
+            atoms, "A", {"LIG"}, 4.0,
+            ligand_residues=[("A", 50, ""), ("A", 51, "")],
+        )
+        self.assertEqual(
+            [(row["ligand_auth_seq_id"], row["min_distance_A"]) for row in separate],
+            [(50, 2.0), (51, 0.5)],
+        )
+
+    def test_insertion_code_disambiguates_ligand_instance(self) -> None:
+        atom = analyze_pair.Atom
+        atoms = [
+            atom(0, "ATOM", "CA", "", "ALA", "A", 1, "", "C", np.zeros(3)),
+            atom(1, "HETATM", "C1", "", "LIG", "A", 50, "A", "C",
+                 np.array([2.0, 0.0, 0.0])),
+            atom(2, "HETATM", "C1", "", "LIG", "A", 50, "B", "C",
+                 np.array([0.5, 0.0, 0.0])),
+        ]
+        with self.assertRaisesRegex(ValueError, "multiple ligand instances"):
+            analyze_pair.ligand_contacts(atoms, "A", {"LIG"}, 4.0)
+        contacts = analyze_pair.ligand_contacts(
+            atoms, "A", {"LIG"}, 4.0,
+            ligand_residue=analyze_pair.parse_ligand_residue("A:50:A"),
+        )
+        self.assertEqual(contacts[0]["ligand_icode"], "A")
+        self.assertEqual(contacts[0]["min_distance_A"], 2.0)
+        with self.assertRaisesRegex(ValueError, "no HETATM ligand instance"):
+            analyze_pair.ligand_contacts(
+                atoms, "A", {"LIG"}, 4.0, ligand_residue=("A", 51, "")
+            )
+
     def test_modified_polymer_atoms_are_included_in_contacts(self) -> None:
         atom = analyze_pair.Atom
         atoms = [
@@ -343,15 +392,19 @@ class BuildSourceTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "checkout is dirty"):
                 build_story.ensure_clean_checkout(root)
 
-    def test_stale_full_package_outputs_are_rejected(self) -> None:
+    def test_stale_wrapper_outputs_are_replaced_without_touching_unrelated_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
-            (output / "old.mvsx").write_bytes(b"stale")
-
-            with self.assertRaisesRegex(RuntimeError, "stale artifacts"):
-                build_story.validate_output_directory(
-                    output, name="story", full_package=False
-                )
+            (output / "story.mvsx").write_bytes(b"stale")
+            (output / "story_self_hosted.zip").write_bytes(b"stale")
+            (output / "other.mvsx").write_bytes(b"keep")
+            (output / "viewer").mkdir()
+            (output / "viewer" / "index.html").write_text("old")
+            build_story.validate_output_directory(output, name="story", full_package=False)
+            self.assertFalse((output / "story.mvsx").exists())
+            self.assertFalse((output / "story_self_hosted.zip").exists())
+            self.assertFalse((output / "viewer").exists())
+            self.assertEqual((output / "other.mvsx").read_bytes(), b"keep")
 
 
 class StoryCheckTests(unittest.TestCase):
@@ -381,10 +434,28 @@ class StoryCheckTests(unittest.TestCase):
             def wait_for_timeout(self, _milliseconds):
                 return None
 
-        result = check_story.wait_for_scene(FakePage(), 1, 1000)
+        result = check_story.wait_for_scene(FakePage(), 1, 1000, previous_snapshot_id="old")
 
         self.assertTrue(result["converged"])
         self.assertEqual(result["current_snapshot_id"], "new")
+        self.assertTrue(result["active_snapshot_changed"])
+
+    def test_dom_scene_selection_cannot_pass_with_stale_active_snapshot(self) -> None:
+        class StalePage:
+            def evaluate(self, _script, _scene_index):
+                return {
+                    "expected_snapshot_id": "new",
+                    "current_snapshot_id": "old",
+                    "busy": False,
+                }
+
+            def wait_for_timeout(self, _milliseconds):
+                return None
+
+        result = check_story.wait_for_scene(
+            StalePage(), 1, 1, previous_snapshot_id="old"
+        )
+        self.assertFalse(result["converged"])
 
     def test_camera_delta_requires_a_real_change(self) -> None:
         snapshot = {
@@ -532,6 +603,57 @@ class PairCliMetricsTests(unittest.TestCase):
             with patch.object(sys, "argv", argv):
                 analyze_pair.main()
             self.assertFalse((output / "ligand_contacts.tsv").exists())
+
+    def test_cli_rejects_pooled_ligands_and_records_selected_instance(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ref, mobile, output = root / "ref.pdb", root / "mob.pdb", root / "out"
+            backbone = "".join(
+                self._atom_line(i, i, *coords)
+                for i, coords in enumerate([(0, 0, 0), (0, 10, 0), (0, 0, 10)], 1)
+            )
+            ref.write_text(backbone + "END\n")
+            mobile.write_text(
+                backbone
+                + self._custom_atom_line(4, "HETATM", "C1", "LIG", 50,
+                                         2, 0, 0, "C")
+                + self._custom_atom_line(5, "HETATM", "C1", "LIG", 51,
+                                         0.5, 0, 0, "C")
+                + "END\n"
+            )
+            argv = [
+                "analyze_pair.py", str(ref), str(mobile),
+                "--reference-chain", "A", "--mobile-chain", "A",
+                "--align-range", "1:3", "--mobile-ligand-resname", "LIG",
+                "--output-dir", str(output),
+            ]
+            with patch.object(sys, "argv", argv):
+                with self.assertRaisesRegex(SystemExit, "multiple ligand instances"):
+                    analyze_pair.main()
+            self.assertFalse((output / "comparison_metrics.json").exists())
+            with patch.object(sys, "argv", argv + ["--mobile-ligand-residue", "A:50"]):
+                analyze_pair.main()
+            metrics = json.loads((output / "comparison_metrics.json").read_text())
+            self.assertEqual(
+                metrics["ligand_contacts"]["selected_instances"],
+                [{"chain": "A", "auth_seq_id": 50, "icode": "", "resname": "LIG"}],
+            )
+            self.assertEqual(metrics["ligand_contacts"]["contacts"][0]["min_distance_A"], 2.0)
+            with patch.object(sys, "argv", argv + [
+                "--mobile-ligand-residue", "A:50", "--mobile-ligand-residue", "A:51"
+            ]):
+                analyze_pair.main()
+            metrics = json.loads((output / "comparison_metrics.json").read_text())
+            self.assertEqual(len(metrics["ligand_contacts"]["selected_instances"]), 2)
+            self.assertEqual(
+                {row["ligand_auth_seq_id"] for row in metrics["ligand_contacts"]["contacts"]},
+                {50, 51},
+            )
+            with (output / "ligand_contacts.tsv").open(newline="") as handle:
+                self.assertEqual(
+                    {row["ligand_auth_seq_id"] for row in csv.DictReader(handle, delimiter="\t")},
+                    {"50", "51"},
+                )
 
     def test_metrics_record_accepted_modified_polymer_residues(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

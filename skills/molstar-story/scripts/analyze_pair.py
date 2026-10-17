@@ -24,6 +24,7 @@ except ImportError as exc:  # pragma: no cover - depends on the caller's runtime
 
 
 RANGE_RE = re.compile(r"^(-?\d+):(-?\d+)$")
+LIGAND_RESIDUE_RE = re.compile(r"^([^:]):(-?\d+)(?::([^:]))?$")
 BACKBONE_ATOMS = {"N", "CA", "C", "O"}
 ALLOWED_ALTLOCS = frozenset({"", "A"})
 ALTLOC_POLICY = (
@@ -97,6 +98,17 @@ def parse_args() -> argparse.Namespace:
             "--mobile-chain; use this to explicitly include a ligand on another chain"
         ),
     )
+    parser.add_argument(
+        "--mobile-ligand-residue",
+        action="append",
+        default=[],
+        metavar="CHAIN:AUTH_SEQ_ID[:ICODE]",
+        help=(
+            "select one mobile ligand instance by chain, author residue number, "
+            "and optional insertion code (e.g. A:501 or A:501:B); repeat for "
+            "multiple instances, each analyzed independently; required when ambiguous"
+        ),
+    )
     parser.add_argument("--contact-cutoff", type=float, default=4.0)
     parser.add_argument("--top", type=int, default=12)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -168,6 +180,16 @@ def parse_ranges(values: Iterable[str]) -> list[tuple[int, int]]:
             raise ValueError(f"range start exceeds end: {value}")
         ranges.append((start, end))
     return ranges
+
+
+def parse_ligand_residue(value: str) -> tuple[str, int, str]:
+    match = LIGAND_RESIDUE_RE.fullmatch(value)
+    if not match:
+        raise ValueError(
+            f"invalid ligand residue {value!r}; expected CHAIN:AUTH_SEQ_ID[:ICODE]"
+        )
+    chain, number, icode = match.groups()
+    return chain, int(number), icode or ""
 
 
 def in_ranges(resseq: int, ranges: list[tuple[int, int]]) -> bool:
@@ -410,25 +432,78 @@ def segment_summaries(
     return summaries
 
 
+def select_ligand_instance(
+    atoms: list[Atom],
+    ligand_resnames: set[str],
+    ligand_chains: set[str],
+    ligand_residue: tuple[str, int, str] | None = None,
+) -> tuple[str, int, str, str]:
+    """Resolve one chemically named PDB ligand instance; never pool copies."""
+    identities = {
+        (atom.chain, atom.resseq, atom.icode, atom.resname)
+        for atom in atoms
+        if atom.record == "HETATM"
+        and atom.chain in ligand_chains
+        and atom.resname.upper() in ligand_resnames
+    }
+    if ligand_residue is not None:
+        identities = {key for key in identities if key[:3] == ligand_residue}
+    if not identities:
+        raise ValueError(
+            "no HETATM ligand instance matched names "
+            + ", ".join(sorted(ligand_resnames))
+            + " on chains " + ", ".join(sorted(ligand_chains))
+            + (f" at {ligand_residue!r}" if ligand_residue else "")
+        )
+    if len(identities) != 1:
+        found = ", ".join(
+            f"{chain}:{seq}{':' + icode if icode else ''} ({resname})"
+            for chain, seq, icode, resname in sorted(identities)
+        )
+        raise ValueError(
+            "multiple ligand instances matched; select exactly one with "
+            f"--mobile-ligand-residue CHAIN:AUTH_SEQ_ID[:ICODE]: {found}"
+        )
+    return next(iter(identities))
+
+
 def ligand_contacts(
     atoms: list[Atom],
     receptor_chain: str,
     ligand_resnames: set[str],
     cutoff: float,
     ligand_chains: set[str] | None = None,
+    ligand_residue: tuple[str, int, str] | None = None,
+    ligand_residues: list[tuple[str, int, str]] | None = None,
 ) -> list[dict[str, object]]:
+    if ligand_residues is not None:
+        if ligand_residue is not None:
+            raise ValueError("pass either ligand_residue or ligand_residues, not both")
+        if len(set(ligand_residues)) != len(ligand_residues):
+            raise ValueError("duplicate --mobile-ligand-residue selector")
+        if ligand_residues:
+            return [
+                row
+                for selector in ligand_residues
+                for row in ligand_contacts(
+                    atoms, receptor_chain, ligand_resnames, cutoff,
+                    ligand_chains, ligand_residue=selector,
+                )
+            ]
     normalized_resnames = {name.upper() for name in ligand_resnames}
     if not normalized_resnames:
         return []
     if ligand_chains is None:
         ligand_chains = {receptor_chain}
+    instance = select_ligand_instance(
+        atoms, normalized_resnames, ligand_chains, ligand_residue
+    )
     selected_atoms = selected_altloc_atoms(atoms)
     ligand = [
         atom
         for atom in selected_atoms
         if atom.record == "HETATM"
-        and atom.chain in ligand_chains
-        and atom.resname.upper() in normalized_resnames
+        and (atom.chain, atom.resseq, atom.icode, atom.resname) == instance
         and atom.element not in {"H", "D"}
     ]
     if not ligand:
@@ -441,10 +516,7 @@ def ligand_contacts(
             "selected conformer with blank/A labels before analysis"
         )
     modified_polymer_keys = modified_polymer_residue_keys(atoms, receptor_chain)
-    ligand_keys = {
-        (atom.chain, atom.resseq, atom.icode, atom.resname)
-        for atom in ligand
-    }
+    ligand_keys = {instance}
     receptor = [
         atom
         for atom in selected_atoms
@@ -505,9 +577,22 @@ def main() -> int:
     args = parse_args()
     if len(args.reference_chain) != 1 or len(args.mobile_chain) != 1:
         raise SystemExit("PDB chain IDs must be exactly one character")
-    ligand_chains = set(args.mobile_ligand_chain or [args.mobile_chain])
+    try:
+        ligand_residues = [parse_ligand_residue(s) for s in args.mobile_ligand_residue]
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    if len(set(ligand_residues)) != len(ligand_residues):
+        raise SystemExit("duplicate --mobile-ligand-residue selector")
+    ligand_chains = set(
+        args.mobile_ligand_chain or
+        ([item[0] for item in ligand_residues] if ligand_residues else [args.mobile_chain])
+    )
     if any(len(chain) != 1 for chain in ligand_chains):
         raise SystemExit("--mobile-ligand-chain values must be exactly one character")
+    if any(item[0] not in ligand_chains for item in ligand_residues):
+        raise SystemExit("--mobile-ligand-residue chains must be among --mobile-ligand-chain values")
+    if ligand_residues and not args.mobile_ligand_resname:
+        raise SystemExit("--mobile-ligand-residue requires --mobile-ligand-resname")
     if args.contact_cutoff <= 0:
         raise SystemExit("--contact-cutoff must be positive")
     if args.top <= 0:
@@ -583,12 +668,21 @@ def main() -> int:
                 }
             )
 
+        ligand_names = {name.upper() for name in args.mobile_ligand_resname}
+        selected_ligands = (
+            [select_ligand_instance(mobile_atoms, ligand_names, ligand_chains, item)
+             for item in ligand_residues]
+            if ligand_residues else
+            ([select_ligand_instance(mobile_atoms, ligand_names, ligand_chains)]
+             if ligand_names else [])
+        )
         contacts = ligand_contacts(
             mobile_atoms,
             args.mobile_chain,
-            {name.upper() for name in args.mobile_ligand_resname},
+            ligand_names,
             args.contact_cutoff,
             ligand_chains,
+            ligand_residues=ligand_residues,
         )
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
@@ -705,6 +799,11 @@ def main() -> int:
         "ligand_contacts": {
             "mobile_resnames": sorted({name.upper() for name in args.mobile_ligand_resname}),
             "mobile_chains": sorted(ligand_chains),
+            "selected_instances": [
+                {"chain": key[0], "auth_seq_id": key[1],
+                 "icode": key[2], "resname": key[3]}
+                for key in selected_ligands
+            ],
             "cutoff_A": args.contact_cutoff,
             "count": len(contacts),
             "contacts": contacts,
