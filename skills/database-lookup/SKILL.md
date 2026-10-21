@@ -127,7 +127,7 @@ Some databases require API keys or have access restrictions. When an API key is 
 | OMIM | `OMIM_API_KEY` | https://omim.org/api (academic license application) |
 | BioGRID | `BIOGRID_API_KEY` | https://webservice.thebiogrid.org (free) |
 | Alpha Vantage | `ALPHAVANTAGE_API_KEY` | https://www.alphavantage.co/support/#api-key |
-| FXMacroData (optional for USD) | `FXMACRODATA_API_KEY` | https://fxmacrodata.com/documentation/reference?utm_source=github&utm_medium=referral&utm_campaign=scientific-agent-skills&utm_content=docs |
+| FXMacroData (USD keyless; other currencies need a paid plan) | `FXMACRODATA_API_KEY` | https://fxmacrodata.com/documentation/reference |
 | US Census (optional below anonymous quota) | `CENSUS_API_KEY` | https://api.census.gov/data/key_signup.html |
 | DisGeNET | `DISGENET_API_KEY` | https://www.disgenet.com (academic subset or licensed plan) |
 | Addgene | `ADDGENE_API_KEY` | https://developers.addgene.org (approved license and scopes) |
@@ -139,6 +139,7 @@ Approval, entitlement and cost vary by provider; a website account may not grant
 
 | Database | Restriction | Free alternative |
 |---|---|---|
+| FXMacroData | Non-USD data requires an Individual or Business paid subscription | **ECB**, **FRED** or **World Bank**, depending on the requested series; verify coverage and access requirements |
 | DrugBank | Paid API license required | Use **ChEMBL** + **PubChem** + **OpenFDA** instead |
 | COSMIC | Licensed downloads; academic registration and use terms apply | **GDC** or **cBioPortal** may cover the requested cohort, with different coverage |
 | BRENDA | Free registration required (SOAP, not REST) | Use **KEGG** for enzyme/pathway data |
