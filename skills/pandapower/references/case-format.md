@@ -103,6 +103,29 @@ With the magnetising branch given only by `pfe_kw` and `i0_percent`, the
 transformer is modelled as the standard T equivalent used by pandapower's
 `create_transformer_from_parameters`.
 
+## Validation
+
+Numeric fields are checked before any pandapower object is created, because a
+bad number otherwise surfaces as a solver symptom (a singular matrix, an
+`invalid value encountered in divide`, or "did not converge after 10
+iterations") that hides the actual cause. A rejected run prints one
+`[FAIL] invalid case: <section>[<index>].<field>: ...` line and exits `3`.
+
+- Every number must be a finite JSON number. `NaN`, `Infinity`, `-Infinity`
+  and strings are rejected; Python's `json` accepts the first three as
+  literals, so they are a realistic transcription error.
+- `vn_kv`, `length_km`, `x_ohm_per_km`, `max_i_ka`, `parallel`, `sn_mva`,
+  `vn_hv_kv`, `vn_lv_kv`, `vk_percent`, `vm_pu` and `base_mva` must be positive;
+  `r_ohm_per_km`, `c_nf_per_km`, `pfe_kw` and `i0_percent` may be zero but not
+  negative.
+- `parallel` must be a whole number and `vkr_percent` must be smaller than
+  `vk_percent`.
+
+The limit flags are checked the same way: `--max-n1` must be `>= 1`,
+`--vm-min`/`--vm-max` must be finite, positive and ordered
+(`0 < vm_min < vm_max`), and `--loading-limit` must be finite and positive.
+These also exit `3`, with `[FAIL] invalid arguments: ...`.
+
 ## Not modelled by this helper
 
 Three-winding transformers, shunts, SVC/STATCOM, DC lines, switches and
@@ -126,8 +149,14 @@ power_flow
 n1            (only with --n1)
   screenings   [{outage, converged, violations, vm_min_pu,
                  de_energized_buses, max_loading_percent, worst[]}]
+  targets_total, screened, skipped
   non_converged, with_violations
 ```
+
+`screened`/`targets_total`/`skipped` make a truncated screening explicit: when
+`--max-n1` is smaller than the number of branches, the summary line reads
+`N-1: 2/5 outages screened, 3 skipped by --max-n1` instead of silently
+reporting fewer contingencies as a complete result.
 
 Violation `kind` is one of `undervoltage`, `overvoltage`, `overload`,
 `de_energized` and — appended to `power_flow.violations` when any screening

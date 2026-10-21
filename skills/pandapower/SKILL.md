@@ -85,7 +85,9 @@ supplying a 10 kV load bus.
    line and transformer in turn. It answers "does this single outage violate a
    limit or island a bus" for the given case and limits. It does not cover
    multiple outages, protection behaviour, or remedial action, and it caps the
-   number of screenings (`--max-n1`, default 40) on large networks.
+   number of screenings (`--max-n1`, default 40, must be >= 1) on large
+   networks. The report states how many contingencies were screened out of how
+   many branches, so a capped run is never read as a complete one.
 6. **Report the assumptions with the numbers.** MVA base, voltage limits,
    loading limit, slack setpoint and the pandapower version all change the
    answer's meaning; the JSON report records each of them.
@@ -101,7 +103,8 @@ pf-env/bin/python scripts/run_power_flow.py case.json \
 ```
 
 Exit codes: `0` converged with no violation, `2` converged but at least one
-limit violation (or an N-1 finding), `3` invalid case or non-convergent solve.
+limit violation (or an N-1 finding), `3` invalid arguments, invalid case or
+non-convergent solve.
 The JSON report holds `versions`, `limits`, `power_flow` (buses, branches,
 violations, summary) and, with `--n1`, one entry per outage.
 

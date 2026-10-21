@@ -8,7 +8,7 @@ voltages, branch loadings and limit violations. Exit codes:
 
     0  converged, no violations
     2  converged, at least one limit violation
-    3  case rejected or power flow did not converge
+    3  invalid arguments, case rejected, or power flow did not converge
 
 See references/case-format.md for the field-by-field contract.
 """
@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -31,11 +32,51 @@ def _require(mapping: dict, key: str, where: str):
     return mapping[key]
 
 
+def _number(
+    value,
+    where: str,
+    field: str,
+    *,
+    positive: bool = False,
+    non_negative: bool = False,
+) -> float:
+    """Reject malformed or non-finite numbers before they reach pandapower.
+
+    JSON permits ``NaN``/``Infinity`` literals and any value may be a string, so
+    an unchecked ``float()`` either raises an unhelpful TypeError deep in the
+    solver or, worse, produces a singular matrix that surfaces as a generic
+    "did not converge". Both hide the real cause: the case file is invalid.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{where}.{field}: expected a number, got {value!r}")
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError(f"{where}.{field}: expected a finite number, got {value!r}")
+    if positive and number <= 0:
+        raise ValueError(f"{where}.{field}: expected a positive number, got {value!r}")
+    if non_negative and number < 0:
+        raise ValueError(f"{where}.{field}: expected a non-negative number, got {value!r}")
+    return number
+
+
+def _required_number(mapping: dict, key: str, where: str, **limits) -> float:
+    return _number(_require(mapping, key, where), where, key, **limits)
+
+
+def _optional_number(mapping: dict, key: str, where: str, default=None, **limits) -> float | None:
+    value = mapping.get(key, default)
+    if value is None:
+        return None
+    return _number(value, where, key, **limits)
+
+
 def build_network(case: dict):
     """Translate a validated case description into a pandapower network."""
     import pandapower as pp
 
-    net = pp.create_empty_network(sn_mva=float(case.get("base_mva", 100.0)))
+    net = pp.create_empty_network(
+        sn_mva=_optional_number(case, "base_mva", "case", 100.0, positive=True)
+    )
     index: dict[str, int] = {}
 
     for i, bus in enumerate(case.get("buses", [])):
@@ -43,7 +84,9 @@ def build_network(case: dict):
         if name in index:
             raise ValueError(f"buses[{i}]: duplicate bus id '{name}'")
         index[name] = pp.create_bus(
-            net, vn_kv=float(_require(bus, "vn_kv", f"buses[{i}]")), name=name
+            net,
+            vn_kv=_required_number(bus, "vn_kv", f"buses[{i}]", positive=True),
+            name=name,
         )
     if not index:
         raise ValueError("case has no buses")
@@ -58,8 +101,8 @@ def build_network(case: dict):
         pp.create_ext_grid(
             net,
             bus=bus_of(_require(grid, "bus", where), where),
-            vm_pu=float(grid.get("vm_pu", 1.0)),
-            va_degree=float(grid.get("va_degree", 0.0)),
+            vm_pu=_optional_number(grid, "vm_pu", where, 1.0, positive=True),
+            va_degree=_optional_number(grid, "va_degree", where, 0.0),
             name=grid.get("id", f"ext{i}"),
         )
 
@@ -68,10 +111,10 @@ def build_network(case: dict):
         pp.create_gen(
             net,
             bus=bus_of(_require(gen, "bus", where), where),
-            p_mw=float(_require(gen, "p_mw", where)),
-            vm_pu=float(gen.get("vm_pu", 1.0)),
-            min_q_mvar=gen.get("min_q_mvar"),
-            max_q_mvar=gen.get("max_q_mvar"),
+            p_mw=_required_number(gen, "p_mw", where),
+            vm_pu=_optional_number(gen, "vm_pu", where, 1.0, positive=True),
+            min_q_mvar=_optional_number(gen, "min_q_mvar", where),
+            max_q_mvar=_optional_number(gen, "max_q_mvar", where),
             name=gen.get("id", f"gen{i}"),
         )
 
@@ -80,8 +123,8 @@ def build_network(case: dict):
         pp.create_sgen(
             net,
             bus=bus_of(_require(sgen, "bus", where), where),
-            p_mw=float(_require(sgen, "p_mw", where)),
-            q_mvar=float(sgen.get("q_mvar", 0.0)),
+            p_mw=_required_number(sgen, "p_mw", where),
+            q_mvar=_optional_number(sgen, "q_mvar", where, 0.0),
             name=sgen.get("id", f"sgen{i}"),
         )
 
@@ -90,39 +133,50 @@ def build_network(case: dict):
         pp.create_load(
             net,
             bus=bus_of(_require(load, "bus", where), where),
-            p_mw=float(_require(load, "p_mw", where)),
-            q_mvar=float(load.get("q_mvar", 0.0)),
+            p_mw=_required_number(load, "p_mw", where),
+            q_mvar=_optional_number(load, "q_mvar", where, 0.0),
             name=load.get("id", f"load{i}"),
         )
 
     for i, line in enumerate(case.get("lines", [])):
         where = f"lines[{i}]"
+        parallel_raw = _optional_number(line, "parallel", where, 1, positive=True)
+        if parallel_raw is None or parallel_raw != int(parallel_raw):
+            raise ValueError(f"{where}.parallel: expected a whole number, got {parallel_raw!r}")
+        parallel = int(parallel_raw)
         pp.create_line_from_parameters(
             net,
             from_bus=bus_of(_require(line, "from", where), where),
             to_bus=bus_of(_require(line, "to", where), where),
-            length_km=float(_require(line, "length_km", where)),
-            r_ohm_per_km=float(_require(line, "r_ohm_per_km", where)),
-            x_ohm_per_km=float(_require(line, "x_ohm_per_km", where)),
-            c_nf_per_km=float(line.get("c_nf_per_km", 0.0)),
-            max_i_ka=float(_require(line, "max_i_ka", where)),
-            parallel=int(line.get("parallel", 1)),
+            length_km=_required_number(line, "length_km", where, positive=True),
+            r_ohm_per_km=_required_number(line, "r_ohm_per_km", where, non_negative=True),
+            x_ohm_per_km=_required_number(line, "x_ohm_per_km", where, positive=True),
+            c_nf_per_km=_optional_number(line, "c_nf_per_km", where, 0.0, non_negative=True),
+            max_i_ka=_required_number(line, "max_i_ka", where, positive=True),
+            parallel=int(parallel),
             name=line.get("id", f"line{i}"),
         )
 
     for i, trafo in enumerate(case.get("trafos", [])):
         where = f"trafos[{i}]"
+        vk_percent = _required_number(trafo, "vk_percent", where, positive=True)
+        vkr_percent = _required_number(trafo, "vkr_percent", where, non_negative=True)
+        if vkr_percent >= vk_percent:
+            raise ValueError(
+                f"{where}.vkr_percent: expected less than vk_percent "
+                f"({vkr_percent!r} >= {vk_percent!r})"
+            )
         pp.create_transformer_from_parameters(
             net,
             hv_bus=bus_of(_require(trafo, "hv_bus", where), where),
             lv_bus=bus_of(_require(trafo, "lv_bus", where), where),
-            sn_mva=float(_require(trafo, "sn_mva", where)),
-            vn_hv_kv=float(_require(trafo, "vn_hv_kv", where)),
-            vn_lv_kv=float(_require(trafo, "vn_lv_kv", where)),
-            vk_percent=float(_require(trafo, "vk_percent", where)),
-            vkr_percent=float(_require(trafo, "vkr_percent", where)),
-            pfe_kw=float(trafo.get("pfe_kw", 0.0)),
-            i0_percent=float(trafo.get("i0_percent", 0.0)),
+            sn_mva=_required_number(trafo, "sn_mva", where, positive=True),
+            vn_hv_kv=_required_number(trafo, "vn_hv_kv", where, positive=True),
+            vn_lv_kv=_required_number(trafo, "vn_lv_kv", where, positive=True),
+            vk_percent=vk_percent,
+            vkr_percent=vkr_percent,
+            pfe_kw=_optional_number(trafo, "pfe_kw", where, 0.0, non_negative=True),
+            i0_percent=_optional_number(trafo, "i0_percent", where, 0.0, non_negative=True),
             name=trafo.get("id", f"trafo{i}"),
         )
 
@@ -233,8 +287,8 @@ def screen_n1(case: dict, net, vm_min: float, vm_max: float, loading_limit: floa
     targets = [("line", i) for i in net.line.index] + [
         ("trafo", i) for i in net.trafo.index
     ]
-    if max_outages and len(targets) > max_outages:
-        targets = targets[:max_outages]
+    total = len(targets)
+    targets = targets[:max_outages]
     for kind, idx in targets:
         table = getattr(net, kind)
         original = bool(table.at[idx, "in_service"])
@@ -267,9 +321,42 @@ def screen_n1(case: dict, net, vm_min: float, vm_max: float, loading_limit: floa
             table.at[idx, "in_service"] = original
     return {
         "screenings": results,
+        "targets_total": total,
+        "screened": len(results),
+        "skipped": total - len(results),
         "non_converged": sum(1 for r in results if not r.get("converged", False)),
         "with_violations": sum(1 for r in results if r.get("violations", 0)),
     }
+
+
+def validate_arguments(args) -> list[str]:
+    """Reject limit flags that would silently change what is screened.
+
+    A negative or zero ``--max-n1`` used to slice the outage list
+    (``targets[:-3]``) or disable the cap, both without a word in the output;
+    a non-finite ``--vm-min`` made every ``<=`` comparison false and reported
+    the whole grid as overvoltage. These are rejected up front instead.
+    """
+    problems: list[str] = []
+    if args.max_n1 < 1:
+        problems.append(f"--max-n1 must be a positive integer, got {args.max_n1}")
+    for flag, value in (("--vm-min", args.vm_min), ("--vm-max", args.vm_max)):
+        if not math.isfinite(value):
+            problems.append(f"{flag} must be finite, got {value!r}")
+    if not problems:
+        if args.vm_min <= 0 or args.vm_max <= 0:
+            problems.append(
+                f"voltage limits must be positive, got {args.vm_min} and {args.vm_max}"
+            )
+        elif args.vm_min >= args.vm_max:
+            problems.append(
+                f"--vm-min must be below --vm-max, got {args.vm_min} >= {args.vm_max}"
+            )
+    if not math.isfinite(args.loading_limit):
+        problems.append(f"--loading-limit must be finite, got {args.loading_limit!r}")
+    elif args.loading_limit <= 0:
+        problems.append(f"--loading-limit must be positive, got {args.loading_limit!r}")
+    return problems
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -280,7 +367,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-out", help="write the full report to this path")
     parser.add_argument("--n1", action="store_true", help="run N-1 line/transformer screening")
     parser.add_argument(
-        "--max-n1", type=int, default=40, help="cap the number of N-1 screenings (default 40)"
+        "--max-n1",
+        type=int,
+        default=40,
+        help="cap the number of N-1 screenings; must be >= 1 (default 40)",
     )
     parser.add_argument("--vm-min", type=float, default=0.95, help="lower voltage limit in pu")
     parser.add_argument("--vm-max", type=float, default=1.05, help="upper voltage limit in pu")
@@ -288,6 +378,12 @@ def main(argv: list[str] | None = None) -> int:
         "--loading-limit", type=float, default=100.0, help="branch loading limit in percent"
     )
     args = parser.parse_args(argv)
+
+    problems = validate_arguments(args)
+    if problems:
+        for problem in problems:
+            print(f"[FAIL] invalid arguments: {problem}")
+        return EXIT_FAILED
 
     try:
         case = json.loads(Path(args.case).read_text(encoding="utf-8"))
@@ -365,8 +461,10 @@ def main(argv: list[str] | None = None) -> int:
         )
     if args.n1:
         n1 = report["n1"]
+        skipped = n1["skipped"]
+        cap_note = f", {skipped} skipped by --max-n1" if skipped else ""
         print(
-            f"-> N-1: {len(n1['screenings'])} outages, "
+            f"-> N-1: {n1['screened']}/{n1['targets_total']} outages screened{cap_note}, "
             f"{n1['with_violations']} with violations, "
             f"{n1['non_converged']} non-converged"
         )

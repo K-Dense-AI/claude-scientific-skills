@@ -11,7 +11,9 @@ mocks:
   a healthy grid;
 * an N-1 outage that islands a bus is reported as de-energized rather than as
   an undervoltage (pandapower returns NaN for an isolated bus, and a naive
-  comparison turns that into a bogus overvoltage).
+  comparison turns that into a bogus overvoltage);
+* malformed input is rejected with the offending field named, instead of
+  reaching the solver as a NaN/inf network or a silently truncated N-1 list.
 
 Skipped when pandapower is not installed; the repo's `--isolated` runner
 installs it from `tests/skill-requirements.toml`.
@@ -49,6 +51,19 @@ def run_script(case: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
         timeout=300,
         check=False,
     )
+
+
+def demo_case() -> dict:
+    """A fresh copy of the documented demo case."""
+    return json.loads(DEMO_CASE.read_text(encoding="utf-8"))
+
+
+def run_case(case: dict) -> subprocess.CompletedProcess[str]:
+    """Write a case to a temporary file and run the helper against it."""
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "case.json"
+        path.write_text(json.dumps(case), encoding="utf-8")
+        return run_script(path)
 
 
 class DemoCaseTests(unittest.TestCase):
@@ -193,6 +208,92 @@ class CaseValidationTests(unittest.TestCase):
         result = run_script(FIXTURES / "does-not-exist.json")
         self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
         self.assertIn("cannot read case", result.stdout)
+
+    def test_non_finite_bus_voltage_is_rejected(self) -> None:
+        # JSON allows a bare NaN, and it used to reach pandapower as a NaN
+        # vn_kv: the run then died inside the solver with "invalid value
+        # encountered in divide", which says nothing about the case file.
+        case = demo_case()
+        case["buses"][1]["vn_kv"] = float("nan")
+        result = run_case(case)
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("buses[1].vn_kv: expected a finite number", result.stdout)
+        self.assertNotIn("invalid value encountered", result.stdout)
+
+    def test_non_numeric_branch_parameter_is_rejected(self) -> None:
+        case = demo_case()
+        case["lines"][0]["r_ohm_per_km"] = "abc"
+        result = run_case(case)
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("lines[0].r_ohm_per_km: expected a number", result.stdout)
+
+    def test_infinite_load_is_rejected(self) -> None:
+        # An inf load is not a solvable network; before validation it surfaced
+        # as "Power Flow nr did not converge", blaming the solver for bad input.
+        case = demo_case()
+        case["loads"][0]["p_mw"] = float("inf")
+        result = run_case(case)
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("loads[0].p_mw: expected a finite number", result.stdout)
+        self.assertNotIn("did not converge", result.stdout)
+
+    def test_negative_impedance_is_rejected(self) -> None:
+        case = demo_case()
+        case["lines"][0]["x_ohm_per_km"] = -0.1
+        result = run_case(case)
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("lines[0].x_ohm_per_km: expected a positive number", result.stdout)
+
+
+class ArgumentValidationTests(unittest.TestCase):
+    """Caps and limits are checked instead of being silently reinterpreted."""
+
+    def test_zero_max_n1_is_rejected(self) -> None:
+        # 0 is falsy, so the old cap check skipped the slice and screened
+        # every branch: the opposite of "screen nothing".
+        result = run_script(DEMO_CASE, "--n1", "--max-n1", "0")
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("--max-n1 must be a positive integer, got 0", result.stdout)
+
+    def test_negative_max_n1_is_rejected(self) -> None:
+        # targets[:-3] used to drop the last three contingencies unnoticed.
+        result = run_script(DEMO_CASE, "--n1", "--max-n1", "-3")
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("--max-n1 must be a positive integer, got -3", result.stdout)
+
+    def test_max_n1_cap_is_honoured_and_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            report_path = Path(tmp) / "n1.json"
+            result = run_script(
+                DEMO_CASE, "--n1", "--max-n1", "2", "--json-out", str(report_path)
+            )
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        n1 = report["n1"]
+        self.assertEqual((n1["screened"], n1["targets_total"], n1["skipped"]), (2, 5, 3))
+        self.assertEqual(
+            [item["outage"] for item in n1["screenings"]], ["line L12", "line L23"]
+        )
+        self.assertIn("2/5 outages screened, 3 skipped by --max-n1", result.stdout)
+
+    def test_non_finite_voltage_limit_is_rejected(self) -> None:
+        # NaN made every "vm < vm_min" comparison false, so all five buses were
+        # reported as overvoltage against the upper limit.
+        result = run_script(DEMO_CASE, "--vm-min", "nan")
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("--vm-min must be finite", result.stdout)
+
+    def test_inverted_voltage_band_is_rejected(self) -> None:
+        result = run_script(DEMO_CASE, "--vm-min", "1.10", "--vm-max", "1.05")
+        self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+        self.assertIn("--vm-min must be below --vm-max", result.stdout)
+
+    def test_non_positive_loading_limit_is_rejected(self) -> None:
+        for value in ("0", "-5", "inf"):
+            with self.subTest(loading_limit=value):
+                result = run_script(DEMO_CASE, "--loading-limit", value)
+                self.assertEqual(result.returncode, 3, result.stdout + result.stderr)
+                self.assertIn("--loading-limit must be", result.stdout)
 
 
 if __name__ == "__main__":
