@@ -39,8 +39,17 @@ def normalize_doi(value: str) -> str:
 
 def normalize_title(value: str) -> str:
     decomposed = unicodedata.normalize("NFKD", value).casefold()
-    # Keep Unicode letters and numbers, but still treat underscores as separators.
-    return " ".join(re.findall(r"[^\W_]+", decomposed))
+    tokens: list[str] = []
+    token: list[str] = []
+    for char in decomposed:
+        if char.isalnum() or (token and unicodedata.category(char).startswith("M")):
+            token.append(char)
+        elif token:
+            tokens.append("".join(token))
+            token = []
+    if token:
+        tokens.append("".join(token))
+    return " ".join(tokens)
 
 
 def normalize_isbn(value: str) -> str:
