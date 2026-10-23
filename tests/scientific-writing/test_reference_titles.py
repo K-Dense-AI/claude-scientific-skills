@@ -55,6 +55,22 @@ def test_title_tokens_keep_unicode_alphanumerics(title, expected):
         (("细胞研究", "细胞研究"), True),
         (("细胞研究", "蛋白研究"), False),
         (("Α-Synuclein", "α synuclein"), True),
+        (("कला", "कली"), False),
+        (("が", "か"), False),
+        (("عَلَم", "علم"), False),
+        (("שָׁלוֹם", "שלום"), False),
+        (("ก้", "ก๊"), False),
+        (("কলা", "কলি"), False),
+        (("கல்", "கலி"), False),
+        (("ά", "α\u0301"), True),
+        (("が", "か\u3099"), True),
+        (("क़", "क\u093c"), True),
+        (("café", "cafe\u0301"), True),
+        (("각", "\u1100\u1161\u11a8"), True),
+        (("a\u0301\u0327", "a\u0327\u0301"), True),
+        # Accents remain data, not a script-specific fuzzy matching rule.
+        (("café", "cafe"), False),
+        (("résumé", "re sume"), False),
     ],
 )
 def test_unicode_title_duplicates(titles, duplicate):
@@ -73,6 +89,10 @@ def test_unicode_title_duplicates(titles, duplicate):
     [
         (("α-synuclein aggregation", "β-synuclein aggregation"), 0),
         (("细胞研究", "细胞研究"), 1),
+        (("कला", "कली"), 0),
+        (("が", "か"), 0),
+        (("ά", "α\u0301"), 1),
+        (("café", "cafe"), 0),
     ],
 )
 def test_cli_title_check_exit_status(tmp_path, titles, exit_code):
